@@ -1,0 +1,128 @@
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, setDoc, getDoc, onSnapshot }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+// ══ 여기에 Firebase 프로젝트 설정값을 붙여넣으세요 ══
+const firebaseConfig = {
+  apiKey:            "여기에_apiKey",
+  authDomain:        "여기에_authDomain",
+  projectId:         "여기에_projectId",
+  storageBucket:     "여기에_storageBucket",
+  messagingSenderId: "여기에_messagingSenderId",
+  appId:             "여기에_appId"
+};
+// ════════════════════════════════════════════════════
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+let _uid = null;
+let _unsubscribe = null;
+
+// ── 로그인 상태 감지
+onAuthStateChanged(auth, async user => {
+  if(user){
+    _uid = user.uid;
+    showUserBar(user);
+    await loadFromFirestore();
+    startRealtimeSync();
+  } else {
+    _uid = null;
+    hideUserBar();
+    if(_unsubscribe){ _unsubscribe(); _unsubscribe = null; }
+    // 로그아웃 시 로컬 데이터로 복원
+    window._firebaseReady = false;
+    if(window.restore) window.restore();
+    if(window.renderAll) window.renderAll();
+  }
+});
+
+// ── Firestore에서 불러오기
+async function loadFromFirestore(){
+  try {
+    const ref = doc(db, 'users', _uid, 'data', 'main');
+    const snap = await getDoc(ref);
+    if(snap.exists()){
+      const d = snap.data();
+      const S = window.S;
+      if(d.hl)      S.hl = d.hl;
+      if(d.bk)      S.bk = new Set(d.bk);
+      if(d.notes)   S.notes = d.notes;
+      if(d.folders) S.folders = d.folders;
+      if(d.openFolders) S.openFolders = new Set(d.openFolders);
+      window._firebaseReady = true;
+      if(window.renderAll) window.renderAll();
+      if(window.newNote)   window.newNote();
+    } else {
+      // 첫 로그인 - localStorage 데이터 마이그레이션
+      window._firebaseReady = true;
+      await saveToFirestore();
+    }
+  } catch(e){ console.error('Firestore 로드 실패:', e); }
+}
+
+// ── Firestore에 저장 (window.persistToCloud로 노출)
+async function saveToFirestore(){
+  if(!_uid) return;
+  try {
+    const S = window.S;
+    const ref = doc(db, 'users', _uid, 'data', 'main');
+    await setDoc(ref, {
+      hl: S.hl,
+      bk: [...S.bk],
+      notes: S.notes,
+      folders: S.folders,
+      openFolders: [...S.openFolders],
+      updatedAt: Date.now()
+    });
+  } catch(e){ console.error('Firestore 저장 실패:', e); }
+}
+window.persistToCloud = saveToFirestore;
+
+// ── 실시간 동기화 (다기기 지원)
+function startRealtimeSync(){
+  if(_unsubscribe) _unsubscribe();
+  const ref = doc(db, 'users', _uid, 'data', 'main');
+  _unsubscribe = onSnapshot(ref, snap => {
+    if(!snap.exists() || !snap.metadata.hasPendingWrites) return;
+    // 다른 기기에서 변경됐을 때만 반영 (자신의 저장은 무시)
+  });
+}
+
+// ── Google 로그인
+window.signInWithGoogle = async () => {
+  try {
+    const provider = new GoogleAuthProvider();
+    await signInWithPopup(auth, provider);
+  } catch(e){ console.error('로그인 실패:', e); }
+};
+
+// ── 로그아웃
+window.signOutUser = async () => {
+  await signOut(auth);
+};
+
+// ── 로그인 UI 제어
+function showUserBar(user){
+  const bar = document.getElementById('userBar');
+  const avatar = document.getElementById('userAvatar');
+  const name   = document.getElementById('userName');
+  if(bar)    bar.style.display = 'flex';
+  if(avatar) avatar.src = user.photoURL || '';
+  if(name)   name.textContent = user.displayName || user.email;
+  const loginBtn = document.getElementById('loginBtn');
+  if(loginBtn) loginBtn.style.display = 'none';
+  const syncBadge = document.getElementById('syncBadge');
+  if(syncBadge) syncBadge.style.display = 'flex';
+}
+function hideUserBar(){
+  const bar = document.getElementById('userBar');
+  if(bar) bar.style.display = 'none';
+  const loginBtn = document.getElementById('loginBtn');
+  if(loginBtn) loginBtn.style.display = 'flex';
+  const syncBadge = document.getElementById('syncBadge');
+  if(syncBadge) syncBadge.style.display = 'none';
+}

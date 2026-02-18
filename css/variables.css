@@ -1,0 +1,82 @@
+/* ═══════════════════════════════════════════════
+   VARIABLES — 테마 색상은 여기서만 수정하면 전체 적용
+═══════════════════════════════════════════════ */
+/* ── 다크 테마 — Deep Navy ── */
+:root, :root[data-theme="dark"] {
+  --bg:       #0b0d15;       /* 본문: 가장 짙은 네이비 */
+  --bg2:      #141825;       /* 탑바/사이드바: 한 단계 밝음 */
+  --bg3:      #1c2235;       /* 카드/호버: 밝은 네이비 */
+  --bg4:      #252d44;       /* 강조/활성 배경 */
+  --bg5:      #303a55;       /* 비활성 요소 */
+  --border:   #1e2540;       /* 경계선: 뚜렷 */
+  --border2:  #2a3458;       /* 강조 경계선 */
+  --accent:   #e8a030;       /* 골드 악센트 */
+  --accent2:  #f0b848;       /* 밝은 골드 */
+  --accent-dim: rgba(232,160,48,0.12);
+  --accent-sel: rgba(80,140,232,0.20);
+  --text:     #eef0f6;       /* 선명한 화이트 */
+  --text2:    #8890a8;       /* 중간 블루그레이 */
+  --text3:    #4e5670;       /* 어두운 블루그레이 */
+  --red:      #f05050;
+  --blue:     #4a9ef0;
+  --green:    #30c870;
+  --purple:   #a06cf0;
+  --shadow:   0 8px 40px rgba(0,0,0,.65);
+  --radius:   8px;
+  --gold:     var(--accent);
+  --gold2:    var(--accent2);
+  --gold-dim: var(--accent-dim);
+  --gold-sel: var(--accent-sel);
+}
+
+/* ── 라이트 테마 — Crisp White ── */
+:root[data-theme="light"] {
+  --bg:       #ffffff;       /* 본문: 순백 */
+  --bg2:      #e6e8f0;       /* 사이드바/탑바/패널 */
+  --bg3:      #d8dae4;       /* 호버/카드 */
+  --bg4:      #cacdd8;       /* 활성 배경 */
+  --bg5:      #babdc8;       /* 비활성 */
+  --border:   #c0c4d0;       /* 경계선 */
+  --border2:  #a8aeba;       /* 강조 경계선 */
+  --accent:   #b86e10;       /* 진한 앰버 */
+  --accent2:  #d08020;       /* 밝은 앰버 */
+  --accent-dim: rgba(184,110,16,0.08);
+  --accent-sel: rgba(56,100,180,0.12);  /* 선택: 쿨 블루톤 */
+  --text:     #141414;       /* 진한 블랙 */
+  --text2:    #4a4e5c;       /* 중간 다크그레이 */
+  --text3:    #7c8090;       /* 연한 그레이 */
+  --red:      #e03e3e;
+  --blue:     #2f80ed;
+  --green:    #0f7b3f;
+  --purple:   #7b40c0;
+  --shadow:   0 2px 16px rgba(0,0,0,.10);
+  --radius:   8px;
+  --gold:     var(--accent);
+  --gold2:    var(--accent2);
+  --gold-dim: var(--accent-dim);
+  --gold-sel: var(--accent-sel);
+}
+/* 라이트 테마: 영역별 배경 강제 */
+[data-theme="light"] #topbar { background:#dfe2ec; border-bottom-color:#c0c4d0 }
+[data-theme="light"] #bookNav { background:#e4e6f0; border-right-color:#c0c4d0 }
+[data-theme="light"] #biblePane { background:#ffffff }
+[data-theme="light"] #bibleScroll { background:#ffffff }
+[data-theme="light"] #bibleTabBar { background:#e4e6f0 }
+[data-theme="light"] #rightPanel { background:#e8eaf2; border-left-color:#c0c4d0 }
+[data-theme="light"] .rp-tabs { background:#dfe2ec }
+[data-theme="light"] .btab { background:#d8dae4; border-color:#c0c4d0 }
+[data-theme="light"] .btab.btab-active { background:#ffffff }
+[data-theme="light"] .ch-head h1 { color:#905a10 }
+[data-theme="light"] .vnum { color:#b86e10 }
+[data-theme="light"] .vrow:hover { background:#f0f1f6 }
+[data-theme="light"] .vrow.vsel { background:rgba(56,100,180,0.10) !important; outline:1px solid rgba(56,100,180,.25) }
+
+
+:root {
+
+  --topbar-h:   46px;
+  --hlbar-h:    36px;
+  --book-sw:    110px;   /* left book sidebar */
+  --note-sw:    220px;   /* note file explorer */
+  --note-sw-collapsed: 0px;
+}

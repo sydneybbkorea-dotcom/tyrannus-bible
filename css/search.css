@@ -1,0 +1,28 @@
+/* ═══════════════════════════════════════════════
+   SEARCH
+═══════════════════════════════════════════════ */
+.search-wrap { display:flex; flex-direction:column; gap:8px; flex:1; overflow:hidden; padding:10px }
+.sch-row { display:flex; gap:6px }
+.sch-row input {
+  flex:1; background:var(--bg3); border:1px solid var(--border2); color:var(--text);
+  border-radius:var(--radius); padding:7px 10px; font-size:13px; outline:none;
+}
+.sch-row input:focus { border-color:var(--gold) }
+.sch-row button { padding:7px 14px; border-radius:var(--radius); background:var(--gold); color:var(--bg); font-size:12px; font-weight:700 }
+.sch-filters { display:flex; gap:5px; flex-wrap:wrap }
+.sch-chip {
+  padding:3px 10px; border-radius:20px; font-size:11px;
+  background:var(--bg3); border:1px solid var(--border); color:var(--text3); cursor:pointer; transition:all .13s;
+}
+.sch-chip.on { background:var(--gold-dim); border-color:var(--gold); color:var(--gold) }
+.sch-count { font-size:11px; color:var(--text3) }
+#schList { flex:1; overflow-y:auto }
+.sri {
+  background:var(--bg3); border:1px solid var(--border); border-radius:5px;
+  padding:8px 10px; margin-bottom:5px; cursor:pointer; transition:all .13s;
+}
+.sri:hover { border-color:var(--border2); background:var(--bg4) }
+.sri-ref { font-size:10px; color:var(--gold); font-family:'JetBrains Mono',monospace; margin-bottom:3px }
+.sri-txt { font-size:12px; color:var(--text2); line-height:1.65 }
+.sri-txt em { background:rgba(201,151,58,.25); color:var(--gold2); font-style:normal; border-radius:2px; padding:0 2px }
+

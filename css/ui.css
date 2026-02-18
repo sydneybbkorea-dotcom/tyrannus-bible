@@ -1,0 +1,87 @@
+/* ═══════════════════════════════════════════════
+   CONTEXT MENU
+═══════════════════════════════════════════════ */
+#ctxMenu {
+  position:fixed !important; 
+  background:var(--bg3); 
+  border:1px solid var(--border2);
+  border-radius:8px; 
+  box-shadow:var(--shadow); 
+  padding:4px;
+  z-index:99999 !important; 
+  display:none !important; 
+  min-width:180px;
+  animation:cmin .1s ease;
+  pointer-events:auto !important;
+}
+@keyframes cmin { from{opacity:0;transform:scale(.96)} to{opacity:1;transform:scale(1)} }
+#ctxMenu.show { 
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+}
+.citem {
+  padding:7px 12px; border-radius:4px; font-size:12px; color:var(--text2);
+  cursor:pointer; transition:background .1s; display:flex; align-items:center; gap:8px;
+}
+.citem:hover { background:var(--bg4); color:var(--text) }
+.citem i { width:13px; font-size:10px; color:var(--text3) }
+.cdiv { height:1px; background:var(--border); margin:3px 0 }
+
+/* ═══════════════════════════════════════════════
+   MODAL
+═══════════════════════════════════════════════ */
+.modal-bg {
+  position:fixed; inset:0; background:rgba(0,0,0,.65);
+  display:none; align-items:center; justify-content:center; z-index:10000;
+}
+.modal-bg.show { display:flex }
+.modal-box {
+  background:var(--bg2); border:1px solid var(--border2); border-radius:10px;
+  padding:22px; width:380px; max-width:90vw; box-shadow:var(--shadow);
+}
+.modal-title { font-size:15px; font-weight:700; color:var(--text); margin-bottom:14px }
+.modal-inp {
+  width:100%; background:var(--bg); border:1px solid var(--border2); color:var(--text);
+  border-radius:5px; padding:8px 10px; font-size:13px; outline:none; margin-bottom:10px;
+}
+.modal-inp:focus { border-color:var(--gold) }
+.modal-btns { display:flex; gap:8px; justify-content:flex-end }
+.mbtn { padding:7px 18px; border-radius:5px; font-size:12px; font-weight:700; cursor:pointer; border:none }
+.mbtn-ok { background:var(--gold); color:var(--bg) }
+.mbtn-ok:hover { background:var(--gold2) }
+.mbtn-cancel { background:var(--bg3); color:var(--text2); border:1px solid var(--border) }
+
+/* Note picker modal */
+#notePicker { max-height:300px; overflow-y:auto; margin-bottom:10px }
+.npick-item {
+  padding:7px 10px; border-radius:4px; cursor:pointer; font-size:13px; color:var(--text2);
+  transition:background .1s; display:flex; align-items:center; gap:6px;
+}
+.npick-item:hover { background:var(--bg4); color:var(--text) }
+.npick-item i { font-size:10px; color:var(--text3) }
+.npick-folder { font-size:10px; color:var(--text3) }
+
+/* ═══════════════════════════════════════════════
+   VERSE TOOLTIP
+═══════════════════════════════════════════════ */
+#vtip {
+  position:fixed; background:var(--bg3); border:1px solid var(--border2);
+  border-radius:7px; padding:10px 12px; max-width:270px;
+  box-shadow:var(--shadow); z-index:8000; display:none;
+  font-family:'Noto Serif KR',serif; font-size:13px; color:var(--text2);
+  line-height:1.75; pointer-events:none;
+}
+#vtip-ref { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--gold); margin-bottom:5px }
+
+/* ═══════════════════════════════════════════════
+   TOAST
+═══════════════════════════════════════════════ */
+#toast {
+  position:fixed; bottom:18px; left:50%; transform:translateX(-50%) translateY(6px);
+  background:var(--bg3); border:1px solid var(--border2); color:var(--text);
+  padding:7px 16px; border-radius:20px; font-size:12px;
+  opacity:0; transition:all .22s; z-index:20000; pointer-events:none;
+  box-shadow:var(--shadow);
+}
+#toast.show { opacity:1; transform:translateX(-50%) translateY(0) }
