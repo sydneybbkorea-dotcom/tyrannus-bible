@@ -7,7 +7,7 @@ function setTheme(t){
     if(!btn) return;
     const active = (n === t);
     btn.style.background = active ? 'var(--gold-dim)' : 'transparent';
-    btn.style.color = active ? 'var(--gold)' : 'var(--text3)';
+    btn.style.color = active ? (n==='dark' ? '#fff' : 'var(--gold)') : 'var(--text3)';
   });
 }
 function initTheme(){
