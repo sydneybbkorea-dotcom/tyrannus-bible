@@ -48,17 +48,14 @@
       <i class="fa fa-search qs-icon" onclick="doQS()"></i>
     </div>
     <!-- 테마 전환 버튼 -->
-    <div id="themePicker" style="display:flex;align-items:center;gap:3px;background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:3px;flex-shrink:0;">
-      <button onclick="setTheme('dark')"  id="themeBtn-dark"  title="다크 테마"  style="width:22px;height:22px;border-radius:5px;border:none;cursor:pointer;font-size:13px;background:transparent;transition:.15s;">🌙</button>
-      <button onclick="setTheme('light')" id="themeBtn-light" title="라이트 테마" style="width:22px;height:22px;border-radius:5px;border:none;cursor:pointer;font-size:13px;background:transparent;transition:.15s;">☀️</button>
+    <div id="themePicker">
+      <button onclick="setTheme('dark')" id="themeBtn-dark" title="다크 테마"><i class="fa fa-moon"></i></button>
+      <span class="theme-sep"></span>
+      <button onclick="setTheme('light')" id="themeBtn-light" title="라이트 테마"><i class="fa fa-sun"></i></button>
     </div>
     <!-- 로그인 버튼 -->
-    <button id="loginBtn" onclick="signInWithGoogle()" style="
-      display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:6px;
-      background:#fff;border:1px solid #ddd;cursor:pointer;font-size:12px;
-      color:#444;font-weight:600;transition:all .15s;white-space:nowrap;flex-shrink:0;">
-      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width:16px;height:16px;">
-      Google 로그인
+    <button id="loginBtn" onclick="signInWithGoogle()">
+      <i class="fa fa-sign-in-alt"></i> 로그인
     </button>
     <!-- 로그인 후 사용자 정보 -->
     <div id="userBar" style="display:none;align-items:center;gap:8px;flex-shrink:0;">

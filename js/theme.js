@@ -1,10 +1,13 @@
+// theme.js — 다크/라이트 테마 전환
 function setTheme(t){
   document.documentElement.setAttribute('data-theme', t);
   localStorage.setItem('kjb2-theme', t);
-  // 활성 버튼 강조
   ['dark','light'].forEach(n => {
     const btn = document.getElementById('themeBtn-'+n);
-    if(btn) btn.style.background = (n===t) ? 'var(--gold-dim)' : 'transparent';
+    if(!btn) return;
+    const active = (n === t);
+    btn.style.background = active ? 'var(--gold-dim)' : 'transparent';
+    btn.style.color = active ? 'var(--gold)' : 'var(--text3)';
   });
 }
 function initTheme(){

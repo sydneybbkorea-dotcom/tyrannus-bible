@@ -68,3 +68,34 @@
 .bl-item.act { background:var(--gold-dim); color:var(--gold); font-weight:600 }
 .bl-dot { width:5px; height:5px; border-radius:50%; background:var(--gold); opacity:0 }
 .bl-item.act .bl-dot { opacity:1 }
+
+/* 테마 전환 버튼 */
+#themePicker {
+  display:flex; align-items:center; gap:0;
+  background:var(--bg3); border:1px solid var(--border);
+  border-radius:7px; padding:2px; flex-shrink:0;
+}
+#themePicker button {
+  width:24px; height:24px; border-radius:5px;
+  border:none; cursor:pointer; font-size:12px;
+  background:transparent; color:var(--text3);
+  display:flex; align-items:center; justify-content:center;
+  transition:all .15s;
+}
+#themePicker button:hover { color:var(--text); background:var(--bg4); }
+.theme-sep {
+  width:1px; height:14px;
+  background:var(--border); margin:0 1px;
+}
+
+/* 로그인 버튼 */
+#loginBtn {
+  display:flex; align-items:center; gap:5px;
+  padding:5px 10px; border-radius:var(--radius);
+  background:transparent; border:1px solid var(--border);
+  color:var(--text3); font-size:12px; cursor:pointer;
+  font-family:'KoPub Dotum',sans-serif;
+  transition:all .15s; white-space:nowrap; flex-shrink:0;
+}
+#loginBtn:hover { color:var(--text); border-color:var(--text3); }
+#loginBtn i { font-size:11px; }
