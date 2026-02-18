@@ -4,16 +4,14 @@ import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChang
 import { getFirestore, doc, setDoc, getDoc, onSnapshot }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-// ══ 여기에 Firebase 프로젝트 설정값을 붙여넣으세요 ══
 const firebaseConfig = {
-  apiKey:            "여기에_apiKey",
-  authDomain:        "여기에_authDomain",
-  projectId:         "여기에_projectId",
-  storageBucket:     "여기에_storageBucket",
-  messagingSenderId: "여기에_messagingSenderId",
-  appId:             "여기에_appId"
+  apiKey:            "AIzaSyDMeWQk6o39IcctkLERX7b6uWWXXTJST30",
+  authDomain:        "tyrannus-kjb1611.firebaseapp.com",
+  projectId:         "tyrannus-kjb1611",
+  storageBucket:     "tyrannus-kjb1611.firebasestorage.app",
+  messagingSenderId: "86251720686",
+  appId:             "1:86251720686:web:bac7cde382e99dcfe588ff"
 };
-// ════════════════════════════════════════════════════
 
 const app  = initializeApp(firebaseConfig);
 const auth = getAuth(app);
