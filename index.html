@@ -20,6 +20,7 @@
 <link rel="stylesheet" href="css/commentary.css">
 <link rel="stylesheet" href="css/search.css">
 <link rel="stylesheet" href="css/ui.css">
+<link rel="stylesheet" href="css/nav-picker.css">
 
 <!-- Firebase (ES module — 병렬 로드) -->
 <script type="module" src="js/firebase.js"></script>
@@ -30,10 +31,16 @@
 <!-- ══ TOPBAR ══════════════════════════════════ -->
 <div id="topbar">
   <span class="logo">Tyrannus</span>
-  <div class="nav-group" style="display:flex;gap:6px">
-    <select id="bookSel" class="nav-sel" onchange="onBookChange()"></select>
-    <select id="chSel" class="nav-sel" onchange="onChChange()"></select>
-  </div>
+  <!-- 숨겨진 select (내부 호환용) -->
+  <select id="bookSel" style="display:none" onchange="onBookChange()"></select>
+  <select id="chSel" style="display:none" onchange="onChChange()"></select>
+  <!-- 통합 책/장 선택 버튼 -->
+  <button id="navPickerBtn" class="nav-picker-btn" onclick="toggleNavPicker()">
+    <span id="navPickerLabel">창세기 1장</span>
+    <i class="fa fa-chevron-down nav-picker-arrow"></i>
+  </button>
+  <!-- 책/장 선택 팝업 -->
+  <div id="navPickerPopup" class="nav-picker-popup"></div>
   <div class="tb-sep"></div>
   <button class="tb-btn on" id="tbBook" onclick="toggleBookNav()"><i class="fa fa-book"></i> 목차</button>
   <button class="tb-btn on" id="tbNotes" onclick="togglePanel('notes')"><i class="fa fa-pen"></i> 노트</button>
@@ -398,6 +405,9 @@
 <!-- 성경 관련 -->
 <script src="js/bible-renderer.js"></script>
 <script src="js/book-nav.js"></script>
+<script src="js/nav-picker.js"></script>
+<script src="js/nav-picker-ui.js"></script>
+<script src="js/nav-picker-render.js"></script>
 <script src="js/bible-tabs.js"></script>
 
 <!-- 하이라이트 & 절 선택 -->

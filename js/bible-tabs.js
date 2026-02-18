@@ -128,6 +128,7 @@ window.renderAll = function renderAll(){
   renderBible(); renderFolderTree(); updateStat();
   document.getElementById('bookSel').value=S.book;
   document.getElementById('chSel').value=S.ch;
+  if(typeof updateNavPickerLabel==='function') updateNavPickerLabel();
   syncCurrentTab();
 }
 
