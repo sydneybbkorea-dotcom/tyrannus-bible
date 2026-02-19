@@ -30,6 +30,7 @@
 <link rel="stylesheet" href="css/visual-filter.css?v=15">
 <link rel="stylesheet" href="css/reading-plan.css?v=15">
 <link rel="stylesheet" href="css/adv-search.css?v=15">
+<link rel="stylesheet" href="css/dict.css?v=17">
 <link rel="stylesheet" href="css/sync.css?v=15">
 
 <!-- Firebase (ES module — 병렬 로드) -->
@@ -361,12 +362,34 @@
           </div>
         </div>
         <div class="rp-sec" id="sec-dict-webster" style="display:none;flex-direction:column">
-          <iframe id="websterFrame" src="https://webstersdictionary1828.com/" style="flex:1;border:none;width:100%;min-height:0"></iframe>
+          <div style="padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:6px;align-items:center">
+            <input type="text" id="websterSearchInput" placeholder="English word (e.g., grace, faith)..."
+              style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:6px 10px;font-size:12px;color:var(--text);outline:none;"
+              onkeydown="if(event.key==='Enter')searchWebster()">
+            <button onclick="searchWebster()" style="padding:6px 12px;border-radius:5px;font-size:11px;font-weight:700;background:var(--gold);color:var(--bg);border:none;cursor:pointer;flex-shrink:0"><i class="fa fa-search"></i></button>
+          </div>
+          <div class="comm-body-wrap" id="dictWebster" style="overflow-y:auto;flex:1">
+            <div class="comm-hint"><i class="fa fa-spell-check"></i> English Dictionary<br>영어 단어의 정의를 검색하세요<br><br><span style="font-size:10px;color:var(--text3)">발음 · 품사 · 정의 · 예문 · 동의어</span></div>
+          </div>
         </div>
         <div class="rp-sec" id="sec-dict-enko" style="display:none;flex-direction:column">
-          <iframe id="enkoFrame" src="https://en.dict.naver.com/" style="flex:1;border:none;width:100%;min-height:0"></iframe>
+          <div style="padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:6px;align-items:center">
+            <input type="text" id="enkoSearchInput" placeholder="영한 검색 (e.g., salvation, mercy)..."
+              style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:6px 10px;font-size:12px;color:var(--text);outline:none;"
+              onkeydown="if(event.key==='Enter')searchEnko()">
+            <button onclick="searchEnko()" style="padding:6px 12px;border-radius:5px;font-size:11px;font-weight:700;background:var(--gold);color:var(--bg);border:none;cursor:pointer;flex-shrink:0"><i class="fa fa-search"></i></button>
+          </div>
+          <div class="comm-body-wrap" id="dictEnko" style="overflow-y:auto;flex:1">
+            <div class="comm-hint"><i class="fa fa-exchange-alt"></i> English-Korean Dictionary<br>영어 단어를 한국어와 함께 검색하세요<br><br><span style="font-size:10px;color:var(--text3)">영어 정의 + 한국어 번역</span></div>
+          </div>
         </div>
         <div class="rp-sec" id="sec-dict-korean" style="display:none;flex-direction:column">
+          <div style="padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:6px;align-items:center">
+            <input type="text" id="koreanSearchInput" placeholder="국어사전 검색..."
+              style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:6px 10px;font-size:12px;color:var(--text);outline:none;"
+              onkeydown="if(event.key==='Enter')searchKorean()">
+            <button onclick="searchKorean()" style="padding:6px 12px;border-radius:5px;font-size:11px;font-weight:700;background:var(--gold);color:var(--bg);border:none;cursor:pointer;flex-shrink:0"><i class="fa fa-search"></i></button>
+          </div>
           <iframe id="koreanFrame" src="https://stdict.korean.go.kr/main/main.do" style="flex:1;border:none;width:100%;min-height:0"></iframe>
         </div>
       </div>
@@ -547,6 +570,16 @@
 <script src="js/adv-search-ui-html.js"></script>
 <script src="js/adv-search-panel.js"></script>
 <script src="js/adv-search-ctrl.js"></script>
+
+<!-- 사전 (웹스터/영한/국어) -->
+<script src="js/webster-api.js"></script>
+<script src="js/webster-ui.js"></script>
+<script src="js/webster-search.js"></script>
+<script src="js/enko-api.js"></script>
+<script src="js/enko-ui.js"></script>
+<script src="js/enko-search.js"></script>
+<script src="js/enko-translate.js"></script>
+<script src="js/korean-search.js"></script>
 
 <!-- 노트 시스템 -->
 <script src="js/notes-editor.js"></script>

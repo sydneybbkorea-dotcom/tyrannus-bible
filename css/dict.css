@@ -1,0 +1,78 @@
+/* dict.css -- 사전 공통 UI 스타일 (발음, 카드, 번역, 로딩) */
+
+/* 로딩 스피너 */
+.dict-loading {
+  text-align:center; color:var(--text3); padding:40px 16px; font-size:13px;
+}
+.dict-loading i { margin-right:6px; }
+
+/* 발음 행 */
+.dict-phonetic {
+  display:flex; align-items:center; gap:8px;
+  padding:4px 14px 10px; font-size:13px; color:var(--text2);
+}
+.dict-ipa {
+  font-family:'JetBrains Mono',monospace; font-size:14px;
+  color:var(--text2); font-style:italic;
+}
+.dict-audio-btn {
+  width:28px; height:28px; border-radius:50%;
+  background:var(--gold-dim); border:1px solid rgba(201,151,58,.25);
+  color:var(--gold); font-size:12px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center;
+  transition:all .12s;
+}
+.dict-audio-btn:hover { background:var(--gold); color:var(--bg); }
+
+/* 품사 레이블 */
+.dict-pos {
+  font-size:11px; font-weight:700; color:var(--gold);
+  text-transform:uppercase; letter-spacing:.5px;
+  margin-bottom:8px; padding-bottom:4px;
+  border-bottom:1px solid var(--border);
+}
+
+/* 정의 항목 */
+.dict-def {
+  font-size:13px; color:var(--text); line-height:1.85; margin-bottom:4px;
+}
+.dict-num {
+  font-family:'JetBrains Mono',monospace; font-size:11px;
+  color:var(--gold); font-weight:700; margin-right:4px;
+}
+
+/* 예문 */
+.dict-example {
+  font-size:12px; color:var(--text3); font-style:italic;
+  margin:2px 0 8px 16px; line-height:1.7;
+}
+
+/* 동의어 행 */
+.dict-syn {
+  font-size:11px; color:var(--text3); margin-top:8px;
+  padding-top:6px; border-top:1px solid var(--border);
+}
+.dict-syn i { font-size:9px; margin-right:4px; opacity:.5; }
+
+/* 한국어 번역 카드 */
+.dict-ko-card {
+  background:linear-gradient(135deg,rgba(52,211,153,.10),rgba(40,170,150,.06));
+  border:1px solid rgba(52,211,153,.2); border-radius:10px;
+  padding:12px 16px; margin:8px 14px 12px;
+  display:flex; align-items:center; gap:10px;
+}
+.dict-ko-label {
+  font-size:10px; font-weight:700; color:rgba(52,211,153,.8);
+  letter-spacing:.4px; text-transform:uppercase; flex-shrink:0;
+  background:rgba(52,211,153,.08); padding:2px 8px; border-radius:4px;
+}
+.dict-ko-text {
+  font-size:18px; font-weight:600; color:var(--text);
+  font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif;
+}
+
+/* 라이트 테마 */
+[data-theme="light"] .dict-ko-card {
+  background:linear-gradient(135deg,rgba(16,185,129,.12),rgba(16,185,129,.05));
+  border-color:rgba(16,185,129,.25);
+}
