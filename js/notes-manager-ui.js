@@ -4,11 +4,8 @@ function updateBacklinks(){
   const listEl=document.getElementById('backlinkList');
   const countEl=document.getElementById('backlinkCount');
 
-  // Always show panel
-  panel.style.display='';
-
   if(!S.curNoteId){
-    listEl.innerHTML='<div class="bl-empty" style="padding:12px;text-align:center;color:var(--text3);font-size:11px;">노트를 선택하세요</div>';
+    panel.style.display='none';
     countEl.textContent='';
     return;
   }
@@ -21,10 +18,12 @@ function updateBacklinks(){
   });
 
   if(!linked.length){
-    listEl.innerHTML='<div class="bl-empty" style="padding:12px;text-align:center;color:var(--text3);font-size:11px;">이 노트로 연결된 다른 노트가 없습니다</div>';
+    panel.style.display='none';
     countEl.textContent='(0)';
     return;
   }
+
+  panel.style.display='';
 
   countEl.textContent=`(${linked.length})`;
   listEl.innerHTML='';

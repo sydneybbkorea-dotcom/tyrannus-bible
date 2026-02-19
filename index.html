@@ -285,14 +285,12 @@
               </div>
             </div>
             <div id="noteContent" contenteditable="true" data-ph="제목을 입력하세요..."></div>
-            <div class="backlink-panel" id="backlinkPanel">
+            <div class="backlink-panel" id="backlinkPanel" style="display:none">
               <div class="backlink-head" onclick="toggleBacklinks()">
                 <i class="fa fa-link"></i>&nbsp;백링크&nbsp;<span id="backlinkCount" style="color:var(--gold)"></span>
                 <i class="fa fa-chevron-down" id="blChevron" style="margin-left:auto;transition:transform .2s;font-size:9px"></i>
               </div>
-              <div id="backlinkList">
-                <div class="bl-empty" style="padding:12px;text-align:center;color:var(--text3);font-size:11px;">이 노트로 연결된 다른 노트가 없습니다</div>
-              </div>
+              <div id="backlinkList"></div>
             </div>
             <div class="note-nav-bar" id="noteNavBar" style="display:none">
               <button class="nav-back-btn" id="backBtn" onclick="goBack()" title="이전 노트로 돌아가기" style="display:none">
@@ -306,9 +304,7 @@
               <div class="tag-row" id="tagRow">
                 <input class="tag-inp" id="tagInp" placeholder="태그..." onkeydown="addTag(event)">
               </div>
-              <div style="flex:1;min-width:4px"></div>
-              <select id="noteFolderSel" style="font-size:11px;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:3px 6px;color:var(--text2);outline:none;cursor:pointer;max-width:90px;"></select>
-              <button onclick="saveNote()" title="저장" style="margin-left:5px;padding:4px 12px;border-radius:5px;font-size:11px;font-weight:700;background:var(--gold);color:var(--bg);border:none;cursor:pointer;flex-shrink:0;"><i class="fa fa-save"></i> 저장</button>
+              <select id="noteFolderSel" style="display:none"></select>
             </div>
           </div>
         </div>
