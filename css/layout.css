@@ -9,22 +9,56 @@ body {
 }
 #main { display:flex; flex:1; overflow:hidden }
 
-/* ── LEFT: Book Navigator ── */
+/* ── LEFT: Book Navigator (슬라이드 오버레이) ──
+   왼쪽에서 슬라이드로 열리는 패널. 닫히면 탭만 노출. */
 #bookNav {
-  width:var(--book-sw); flex-shrink:0;
+  position:fixed; left:0; top:var(--topbar-h); bottom:0;
+  width:180px; z-index:300;
   background:var(--bg2); border-right:1px solid var(--border);
   display:flex; flex-direction:column; overflow:hidden;
-  transition:width .2s;
+  transform:translateX(-100%);
+  transition:transform .25s cubic-bezier(.4,0,.2,1);
+  box-shadow:4px 0 20px rgba(0,0,0,.3);
 }
-#bookNav.hide { width:0; border:none; overflow:hidden }
+#bookNav.open { transform:translateX(0); }
+
+/* 슬라이드 탭: 닫혔을 때 왼쪽 가장자리에 노출되는 손잡이 */
+#bookNavTab {
+  position:fixed; left:0; top:50%; z-index:299;
+  transform:translateY(-50%);
+  width:18px; height:56px;
+  background:var(--bg3); border:1px solid var(--border);
+  border-left:none; border-radius:0 6px 6px 0;
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; color:var(--text3); font-size:9px;
+  transition:opacity .25s, background .15s;
+}
+#bookNavTab:hover { background:var(--bg4); color:var(--text); }
+#bookNav.open ~ #bookNavTab { opacity:0; pointer-events:none; }
+
+/* bookNav 헤더: 닫기 버튼 포함 */
 .bnav-head {
-  padding:6px 8px; font-size:10px; font-weight:700; color:var(--text3);
+  padding:8px 10px; font-size:11px; font-weight:700; color:var(--text3);
   text-transform:uppercase; letter-spacing:1px;
   border-bottom:1px solid var(--border);
   display:flex; align-items:center; gap:5px;
   flex-shrink:0; white-space:nowrap;
 }
+.bnav-close {
+  margin-left:auto; cursor:pointer; font-size:14px;
+  color:var(--text3); transition:color .15s; padding:2px;
+}
+.bnav-close:hover { color:var(--text); }
+
 #bookList { overflow-y:auto; flex:1; padding:4px 0 }
+
+/* 오버레이 배경 (클릭하면 닫힘) */
+#bookNavOverlay {
+  position:fixed; inset:0; top:var(--topbar-h);
+  background:rgba(0,0,0,.3); z-index:299;
+  display:none;
+}
+#bookNavOverlay.show { display:block; }
 
 ::-webkit-scrollbar { width:5px; height:5px }
 ::-webkit-scrollbar-track { background:transparent }

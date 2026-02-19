@@ -7,19 +7,19 @@
 
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/fonts.css?v=11">
+<link rel="stylesheet" href="css/fonts.css?v=12">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <!-- App CSS (모듈화) -->
-<link rel="stylesheet" href="css/variables.css?v=11">
-<link rel="stylesheet" href="css/layout.css?v=11">
-<link rel="stylesheet" href="css/topbar.css?v=11">
-<link rel="stylesheet" href="css/bible.css?v=11">
-<link rel="stylesheet" href="css/notes.css?v=11">
-<link rel="stylesheet" href="css/commentary.css?v=11">
-<link rel="stylesheet" href="css/search.css?v=11">
-<link rel="stylesheet" href="css/ui.css?v=11">
-<link rel="stylesheet" href="css/nav-picker.css?v=11">
+<link rel="stylesheet" href="css/variables.css?v=12">
+<link rel="stylesheet" href="css/layout.css?v=12">
+<link rel="stylesheet" href="css/topbar.css?v=12">
+<link rel="stylesheet" href="css/bible.css?v=12">
+<link rel="stylesheet" href="css/notes.css?v=12">
+<link rel="stylesheet" href="css/commentary.css?v=12">
+<link rel="stylesheet" href="css/search.css?v=12">
+<link rel="stylesheet" href="css/ui.css?v=12">
+<link rel="stylesheet" href="css/nav-picker.css?v=12">
 
 <!-- Firebase (ES module — 병렬 로드) -->
 <script type="module" src="js/firebase.js"></script>
@@ -41,7 +41,12 @@
   <!-- 책/장 선택 팝업 -->
   <div id="navPickerPopup" class="nav-picker-popup"></div>
   <div class="tb-sep"></div>
-  <button class="tb-btn on" id="tbBook" onclick="toggleBookNav()"><i class="fa fa-book"></i> 목차</button>
+  <!-- 검색창 (목차 자리에 확대 배치) -->
+  <div class="qs-wrap qs-main">
+    <i class="fa fa-search qs-icon-left"></i>
+    <input type="text" id="qsInput" placeholder="성경 검색..." onkeydown="if(event.key==='Enter')doQS()">
+  </div>
+  <div class="tb-sep"></div>
   <button class="tb-btn on" id="tbNotes" onclick="togglePanel('notes')"><i class="fa fa-pen"></i> 노트</button>
   <button class="tb-btn" id="tbDict" onclick="togglePanel('dictionary')"><i class="fa fa-book"></i> 사전</button>
   <button class="tb-btn" id="tbStrong" onclick="toggleStrongCodes()" title="원어 코드(스트롱 번호) 표시/숨기기"><i class="fa fa-code"></i> 원어</button>
@@ -49,10 +54,6 @@
   <button class="tb-btn" id="tbSearch" onclick="togglePanel('search')"><i class="fa fa-search"></i> 검색설정</button>
   <button class="tb-btn" id="tbReadMode" onclick="toggleReadMode()" title="읽기 모드"><i class="fa fa-book-reader"></i> 읽기</button>
   <div class="tb-right">
-    <div class="qs-wrap">
-      <input type="text" id="qsInput" placeholder="빠른 검색..." onkeydown="if(event.key==='Enter')doQS()">
-      <i class="fa fa-search qs-icon" onclick="doQS()"></i>
-    </div>
     <!-- 테마 전환 버튼 -->
     <div id="themePicker">
       <button onclick="setTheme('dark')" id="themeBtn-dark" title="다크 테마"><i class="fa fa-moon"></i></button>
@@ -78,9 +79,12 @@
 <!-- ══ MAIN ════════════════════════════════════ -->
 <div id="main">
 
-  <!-- LEFT: Book Navigator -->
+  <!-- LEFT: Book Navigator (슬라이드 오버레이) -->
   <div id="bookNav">
-    <div class="bnav-head"><i class="fa fa-book-open" style="font-size:10px"></i> 성경 목록</div>
+    <div class="bnav-head">
+      <i class="fa fa-book-open" style="font-size:10px"></i> 성경 목록
+      <i class="fa fa-times bnav-close" onclick="closeBookNav()" title="닫기"></i>
+    </div>
     <div style="padding:6px 8px;border-bottom:1px solid var(--border);">
       <input type="text" id="bookSearchInput" placeholder="성경 검색..."
         style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:5px 8px;font-size:11px;color:var(--text);outline:none;"
@@ -88,6 +92,10 @@
     </div>
     <div id="bookList"></div>
   </div>
+  <!-- 슬라이드 탭 (닫혔을 때 클릭하여 열기) -->
+  <div id="bookNavTab" onclick="openBookNav()" title="성경 목록"><i class="fa fa-chevron-right"></i></div>
+  <!-- 오버레이 배경 (클릭하면 닫힘) -->
+  <div id="bookNavOverlay" onclick="closeBookNav()"></div>
 
   <!-- CENTER: Bible Text -->
   <div id="biblePane">

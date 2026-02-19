@@ -16,7 +16,6 @@ function togglePanel(name){
   if(S.panelOpen===name&&!rp.classList.contains('rp-hide')){
     rp.classList.add('rp-hide'); S.panelOpen=null;
     document.querySelectorAll('.tb-btn').forEach(b=>b.classList.remove('on'));
-    document.getElementById('tbBook')?.classList.toggle('on',S.bookNavOpen);
     document.body.classList.remove('panel-open');
   } else {
     openPanel(name);

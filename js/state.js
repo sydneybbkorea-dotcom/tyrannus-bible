@@ -18,7 +18,7 @@ Object.assign(S, {
   schFilter:'all',
   panelOpen:'notes',
   _noteSubTab:'notes', _dictSubTab:'dict-strongs',
-  bookNavOpen:true, explorerOpen:false,   // drawer starts closed
+  bookNavOpen:false, explorerOpen:false,   // 슬라이드 패널: 기본 닫힘
   openFolders:new Set(['default']),
   navHistory:[],  // for backlink navigation
 });

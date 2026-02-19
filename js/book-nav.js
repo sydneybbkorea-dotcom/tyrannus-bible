@@ -4,7 +4,7 @@
 function buildBookList(){
   const c=document.getElementById('bookList'); c.innerHTML='';
   const mkGrp=l=>{const d=document.createElement('div');d.className='bl-grp';d.textContent=l;c.appendChild(d)};
-  const mkItem=b=>{const d=document.createElement('div');d.className='bl-item'+(b===S.book?' act':'');d.dataset.b=b;d.innerHTML=`<span>${b}</span><span class="bl-dot"></span>`;d.onclick=()=>{S.book=b;S.ch=1;S.selV=null;renderAll()};return d};
+  const mkItem=b=>{const d=document.createElement('div');d.className='bl-item'+(b===S.book?' act':'');d.dataset.b=b;d.innerHTML=`<span>${b}</span><span class="bl-dot"></span>`;d.onclick=()=>{S.book=b;S.ch=1;S.selV=null;renderAll();closeBookNav()};return d};
   mkGrp('구약'); BOOKS.OT.forEach(b=>c.appendChild(mkItem(b)));
   mkGrp('신약'); BOOKS.NT.forEach(b=>c.appendChild(mkItem(b)));
 }

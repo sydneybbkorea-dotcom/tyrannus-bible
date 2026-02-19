@@ -36,14 +36,19 @@
 .tb-btn.on { background:var(--accent-dim); border-color:var(--accent); color:var(--accent) }
 .tb-btn i { font-size:11px }
 .tb-right { margin-left:auto; display:flex; align-items:center; gap:8px; flex-shrink:0; }
-.qs-wrap { position:relative }
-.qs-wrap input {
+/* ── 메인 검색창 (상단바 목차 자리에 확대 배치) ── */
+.qs-wrap { position:relative; }
+.qs-main { flex:0 1 260px; min-width:140px; }
+.qs-main input {
   background:var(--bg3); border:1px solid var(--border2); color:var(--text);
-  border-radius:var(--radius); padding:4px 28px 4px 9px; font-size:12px;
-  width:170px; outline:none; transition:width .2s;
+  border-radius:var(--radius); padding:6px 10px 6px 30px; font-size:13px;
+  width:100%; outline:none; transition:border-color .2s;
 }
-.qs-wrap input:focus { border-color:var(--gold); width:210px }
-.qs-icon { position:absolute; right:8px; top:50%; transform:translateY(-50%); color:var(--text3); font-size:11px; cursor:pointer }
+.qs-main input:focus { border-color:var(--gold); }
+.qs-icon-left {
+  position:absolute; left:10px; top:50%; transform:translateY(-50%);
+  color:var(--text3); font-size:12px; pointer-events:none;
+}
 
 /* ═══════════════════════════════════════════════
    HIGHLIGHT BAR
