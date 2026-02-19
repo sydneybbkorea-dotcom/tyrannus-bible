@@ -97,7 +97,7 @@
       <button class="rail-icon" data-rail="bible" onclick="toggleRail('bible')" title="성경 목록">
         <i class="fa fa-book-bible"></i><span class="rail-label">성경</span>
       </button>
-      <button class="rail-icon" data-rail="notes" onclick="toggleRail('notes')" title="노트">
+      <button class="rail-icon" data-rail="notes" onclick="toggleNotePanel()" title="노트">
         <i class="fa fa-pen"></i><span class="rail-label">노트</span>
       </button>
       <button class="rail-icon" data-rail="search" onclick="toggleRail('search')" title="검색">
@@ -126,19 +126,6 @@
     <div class="sp-section" id="sp-bible">
       <div class="sp-head"><i class="fa fa-book-bible"></i> 성경 목록</div>
       <div class="sp-body" id="bookList"></div>
-    </div>
-    <!-- 노트 목록 -->
-    <div class="sp-section" id="sp-notes">
-      <div class="sp-head"><i class="fa fa-pen"></i> 노트
-        <div style="margin-left:auto;display:flex;gap:4px">
-          <button onclick="newFolder()" style="font-size:11px;color:var(--text3);cursor:pointer;padding:2px 4px;background:none;border:none" title="새 폴더"><i class="fa fa-folder-plus"></i></button>
-          <button onclick="newNote()" style="font-size:11px;color:var(--text3);cursor:pointer;padding:2px 4px;background:none;border:none" title="새 노트"><i class="fa fa-plus"></i></button>
-        </div>
-      </div>
-      <div class="sp-search-wrap">
-        <input type="text" placeholder="노트 검색..." oninput="_spFilterNotes(this.value)">
-      </div>
-      <div class="sp-body" id="spNoteList"></div>
     </div>
     <!-- 검색 -->
     <div class="sp-section" id="sp-search">
@@ -247,10 +234,11 @@
           <div id="explorerOverlay" onclick="closeExplorer()"></div>
           <div id="noteExplorer">
             <div class="exp-head">
-              <span class="exp-title"><i class="fa fa-folder-open" style="margin-right:4px"></i>파일 탐색기</span>
+              <span class="exp-title">Vault</span>
               <div class="exp-actions">
+                <button class="exp-btn" title="새 노트" onclick="newNote()"><i class="fa fa-file-circle-plus"></i></button>
                 <button class="exp-btn" title="새 폴더" onclick="newFolder()"><i class="fa fa-folder-plus"></i></button>
-                <button class="exp-btn" title="새 노트" onclick="newNote()"><i class="fa fa-plus"></i></button>
+                <button class="exp-btn" title="모두 접기" onclick="_ftCollapseAll()"><i class="fa fa-compress-alt"></i></button>
                 <button class="exp-btn" title="닫기" onclick="closeExplorer()"><i class="fa fa-times"></i></button>
               </div>
             </div>
@@ -579,8 +567,10 @@
 <script src="js/notes-manager-save.js"></script>
 <script src="js/notes-manager-ui.js"></script>
 <script src="js/notes-folders.js"></script>
+<script src="js/notes-folders-render.js"></script>
 <script src="js/notes-folders-ctx.js"></script>
 <script src="js/notes-folders-crud.js"></script>
+<script src="js/notes-folders-new.js"></script>
 <script src="js/notes-links.js"></script>
 <script src="js/notes-links-notelink.js"></script>
 <script src="js/notes-links-embed.js"></script>

@@ -50,24 +50,7 @@
 
 /* Bible scroll top border — connects with active tab */
 
-/* ── 폴더/노트 컨텍스트 메뉴 ── */
-.fn-ctx {
-  position:fixed; z-index:9999; min-width:160px;
-  background:var(--bg2); border:1px solid var(--border2);
-  border-radius:var(--radius); box-shadow:var(--shadow);
-  padding:4px 0; overflow:hidden;
-  backdrop-filter:blur(12px);
-}
-.fn-ctx-item {
-  padding:9px 14px; font-size:12px; color:var(--text);
-  cursor:pointer; display:flex; align-items:center; gap:8px;
-  transition:background .1s;
-}
-.fn-ctx-item:hover { background:var(--bg4) }
-.fn-ctx-item i { width:14px; text-align:center; font-size:11px; color:var(--text3) }
-.fn-ctx-danger { color:var(--red) }
-.fn-ctx-danger i { color:var(--red) }
-.fn-ctx-danger:hover { background:rgba(176,48,48,.12) }
+/* 폴더/노트 컨텍스트 메뉴 → notes.css로 이동됨 */
 
 /* ── Read Mode — 하이라이트/메모만 숨김 ── */
 body.read-mode mark { background:transparent !important; border-bottom:none !important; color:inherit; cursor:text }

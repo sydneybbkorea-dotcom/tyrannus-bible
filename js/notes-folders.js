@@ -1,46 +1,38 @@
-// notes-folders.js — 폴더 트리 렌더링
+// notes-folders.js — 옵시디언 스타일 폴더 트리 (중첩 지원)
 function renderFolderTree(){
-  const cont=document.getElementById('folderTree'); cont.innerHTML='';
-  S.folders.forEach(f=>{
-    const subs=S.notes.filter(n=>n.folderId===f.id);
-    const isOpen=S.openFolders.has(f.id);
-    const isFSel=S.curFolder===f.id&&S.curNoteId===null;
+  const cont=document.getElementById('folderTree'); if(!cont) return;
+  cont.innerHTML='';
+  const roots=S.folders.filter(f=>!f.parentId);
+  roots.forEach(f=>cont.appendChild(_buildFolderNode(f,0)));
+  _updateFolderSel();
+}
 
-    const fDiv=document.createElement('div'); fDiv.className='ftree-folder';
-    const fHead=document.createElement('div');
-    fHead.className='ftree-fhead'+(isFSel?' fsel':'');
-    fHead.innerHTML=`<i class="ftree-arrow fa fa-chevron-right${isOpen?' open':''}"></i><i class="ftree-ficon fa fa-folder${isOpen?'-open':''}"></i><span class="ftree-fname">${f.name}</span><span class="ftree-count">${subs.length}</span>`;
-    fHead.onclick=()=>{
-      if(S.openFolders.has(f.id)) S.openFolders.delete(f.id);
-      else S.openFolders.add(f.id);
-      S.curFolder=f.id; S.curNoteId=null;
-      renderFolderTree();
-    };
-    fHead.addEventListener('contextmenu', e=>{
-      e.preventDefault(); e.stopPropagation();
-      showFolderCtx(e, f.id, f.name, subs.length);
-    });
-    fDiv.appendChild(fHead);
+function _buildFolderNode(f,depth){
+  const children=S.folders.filter(c=>c.parentId===f.id);
+  const notes=S.notes.filter(n=>n.folderId===f.id);
+  const isOpen=S.openFolders.has(f.id);
+  const isSel=S.curFolder===f.id&&!S.curNoteId;
+  const hasKids=children.length>0||notes.length>0;
 
-    const noteList=document.createElement('div');
-    noteList.className='ftree-notes'+(isOpen?' open':'');
-    subs.sort((a,b)=>b.updatedAt-a.updatedAt).forEach(n=>{
-      const ni=document.createElement('div');
-      ni.className='ftree-note'+(S.curNoteId===n.id?' nsel':'');
-      ni.innerHTML=`<i class="fa fa-file-alt"></i>${n.title||'제목 없음'}`;
-      ni.title=n.title||'제목 없음';
-      ni.onclick=e=>{e.stopPropagation();loadNote(n.id,false);closeExplorer();};
-      ni.addEventListener('contextmenu', e=>{
-        e.preventDefault(); e.stopPropagation();
-        showNoteCtx(e, n.id, n.title);
-      });
-      noteList.appendChild(ni);
-    });
-    fDiv.appendChild(noteList);
-    cont.appendChild(fDiv);
+  const wrap=document.createElement('div');
+  wrap.className='ft-node';
+
+  const head=document.createElement('div');
+  head.className='ft-head'+(isSel?' ft-sel':'');
+  head.style.paddingLeft=(8+depth*16)+'px';
+  head.innerHTML=_ftHeadHTML(f,isOpen,hasKids);
+  head.onclick=()=>_ftToggle(f.id);
+  head.addEventListener('contextmenu',e=>{
+    e.preventDefault(); e.stopPropagation();
+    showFolderCtx(e,f.id,f.name,notes.length);
   });
+  wrap.appendChild(head);
 
-  // update folder select
-  const sel=document.getElementById('noteFolderSel');
-  sel.innerHTML=S.folders.map(f=>`<option value="${f.id}"${f.id===S.curFolder?' selected':''}>${f.name}</option>`).join('');
+  if(isOpen){
+    children.forEach(c=>wrap.appendChild(_buildFolderNode(c,depth+1)));
+    notes.sort((a,b)=>b.updatedAt-a.updatedAt).forEach(n=>{
+      wrap.appendChild(_buildNoteNode(n,depth+1));
+    });
+  }
+  return wrap;
 }

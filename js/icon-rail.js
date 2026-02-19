@@ -26,9 +26,21 @@ function closeSidePanel(){
   if(sp) sp.classList.remove('open');
 }
 
+// 노트 아이콘: 사이드 카테고리 없이 오른쪽 패널 직접 토글
+function toggleNotePanel(){
+  const noteBtn = document.querySelector('.rail-icon[data-rail="notes"]');
+  if(S.panelOpen==='notes' && !document.getElementById('rightPanel')?.classList.contains('rp-hide')){
+    togglePanel('notes');
+    if(noteBtn) noteBtn.classList.remove('active');
+  } else {
+    if(_activeRail) closeSidePanel();
+    openPanel('notes'); switchSub('notes');
+    if(noteBtn) noteBtn.classList.add('active');
+  }
+}
+
 function _initSection(name){
   if(name==='bible') buildBookList();
-  else if(name==='notes') renderSideNotes();
   else if(name==='search') _focusSideSearch();
   else if(name==='bookmark') renderBookmarks();
   else if(name==='original'&&typeof renderAdvSearch==='function') renderAdvSearch();

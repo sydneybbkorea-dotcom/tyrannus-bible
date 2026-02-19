@@ -13,6 +13,7 @@ function togglePanel(name){
   if(S.panelOpen===name&&!rp.classList.contains('rp-hide')){
     rp.classList.add('rp-hide'); S.panelOpen=null;
     document.body.classList.remove('panel-open');
+    document.querySelector('.rail-icon[data-rail="notes"]')?.classList.remove('active');
   } else {
     openPanel(name);
   }
