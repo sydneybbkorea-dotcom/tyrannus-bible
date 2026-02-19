@@ -90,9 +90,10 @@ body.read-mode .vindic { display:none }
 .vtxt-en-side b, .vtxt-en-side strong { font-weight:700; color:inherit }
 .vtxt-en-side i, .vtxt-en-side em { font-style:italic; color:inherit }
 
+/* 영어 구절번호: 한국어 구절번호와 동일한 골드색 */
 .vrow-parallel .vtxt-en-side .en-vnum {
   font-family:'JetBrains Mono',monospace; font-size:10px;
-  color:var(--text3); min-width:22px; display:inline-block;
+  color:var(--gold); opacity:.75; min-width:22px; display:inline-block;
   margin-right:4px; vertical-align:top; margin-top:5px;
 }
 /* 좁은 화면 — 아래위 대조 */
@@ -121,13 +122,14 @@ body.read-mode .vindic { display:none }
   .vrow-parallel .vindic { position:absolute; right:4px; top:4px; }
 }
 
-/* 패널 열린 상태 — 상하 대조 (한글 위, 영어 아래) */
-body.panel-open .vrow-parallel { flex-wrap:wrap; gap:0; }
-body.panel-open .vrow-parallel .vtxt-kr { margin-bottom:0; }
+/* 패널 열린 상태 — 강제 상하 대조 (한글 위, 영어 아래)
+   패널이 열리면 본문 영역이 좁아지므로 반드시 상하 배치 */
+body.panel-open .vrow-parallel { flex-wrap:wrap !important; gap:0 !important; }
+body.panel-open .vrow-parallel .vtxt-kr { flex:1; min-width:0; margin-bottom:0; }
 body.panel-open .vrow-parallel .vtxt-en-side {
-  width:100%; padding:0 0 0 28px;
+  width:100% !important; flex:none !important; padding:0 0 0 28px;
   font-size:15.5px; line-height:1.8; color:var(--text2);
-  margin-top:1px; margin-bottom:4px; flex:none;
+  margin-top:1px; margin-bottom:4px;
 }
 body.panel-open .vrow-parallel .vtxt-en-side .en-vnum { display:none; }
 body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; }
@@ -147,7 +149,7 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
 .vrow.vsel { background:var(--accent-sel) !important; outline:1px solid rgba(80,140,232,.25); border-radius:var(--radius) }
 .vnum {
   font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--gold);
-  min-width:22px; margin-top:4px; text-align:right; flex-shrink:0; opacity:.75;
+  min-width:22px; margin-top:4px; margin-right:4px; text-align:right; flex-shrink:0; opacity:.75;
 }
 [contenteditable][data-placeholder]:empty:before {
   content: attr(data-placeholder);
