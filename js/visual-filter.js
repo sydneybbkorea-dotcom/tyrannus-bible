@@ -13,6 +13,7 @@ async function loadRedLetter(){
 function toggleRedLetter(){
   S.showRedLetter = !S.showRedLetter;
   persist(); renderBible(); restoreSel();
+  if(typeof renderViewBar==='function') renderViewBar();
   toast(S.showRedLetter ? '예수님 말씀 표시' : '예수님 말씀 해제');
 }
 

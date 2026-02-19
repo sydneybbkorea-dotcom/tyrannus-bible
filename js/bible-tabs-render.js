@@ -5,6 +5,10 @@ function saveActiveTabState(){
   tab.book = S.book;
   tab.ch = S.ch;
   tab.selV = S.selV;
+  tab.showStrong = !!S.showStrong;
+  tab.showParallel = !!S.showParallel;
+  tab.showRedLetter = !!S.showRedLetter;
+  tab.readMode = document.body.classList.contains('read-mode');
   const bs = document.getElementById('bibleScroll');
   tab.scrollTop = bs ? bs.scrollTop : 0;
 }
@@ -13,6 +17,11 @@ function restoreTabState(tab){
   S.book = tab.book;
   S.ch = tab.ch;
   S.selV = tab.selV;
+  // 탭별 뷰 설정 복원
+  S.showStrong = !!tab.showStrong;
+  S.showParallel = !!tab.showParallel;
+  S.showRedLetter = !!tab.showRedLetter;
+  document.body.classList.toggle('read-mode', !!tab.readMode);
   renderAll();
   setTimeout(()=>{
     const bs = document.getElementById('bibleScroll');
@@ -55,5 +64,6 @@ window.renderAll = function renderAll(){
   document.getElementById('bookSel').value=S.book;
   document.getElementById('chSel').value=S.ch;
   if(typeof updateNavPickerLabel==='function') updateNavPickerLabel();
+  if(typeof renderViewBar==='function') renderViewBar();
   syncCurrentTab();
 }

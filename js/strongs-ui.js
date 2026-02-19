@@ -1,7 +1,6 @@
 // strongs-ui.js — toggle Strong codes and parallel view
 async function toggleStrongCodes(){
   S.showStrong = !S.showStrong;
-  document.getElementById('tbStrong')?.classList.toggle('on', S.showStrong);
   if(S.showStrong){
     var loads=[loadStrongs(), loadVerseStrongs()];
     if(typeof loadEnStrongsForBook==='function') loads.push(loadEnStrongsForBook(S.book));
@@ -11,17 +10,18 @@ async function toggleStrongCodes(){
     await Promise.all(loads);
   }
   renderBible(); restoreSel();
+  if(typeof renderViewBar==='function') renderViewBar();
   toast(S.showStrong ? '원어 코드 표시 ON' : '원어 코드 표시 OFF');
 }
 
 async function toggleParallel(){
   S.showParallel = !S.showParallel;
-  document.getElementById('tbParallel')?.classList.toggle('on', S.showParallel);
   if(S.showParallel){
     var loads=[loadBibleEN()];
     if(S.showStrong&&typeof loadEnStrongsForBook==='function') loads.push(loadEnStrongsForBook(S.book));
     await Promise.all(loads);
   }
   renderBible(); restoreSel();
+  if(typeof renderViewBar==='function') renderViewBar();
   toast(S.showParallel ? '영한 대조 ON' : '영한 대조 OFF');
 }

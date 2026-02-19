@@ -3,10 +3,19 @@ let _tabCounter = 0;
 
 function _genTabId(){ return 'btab_' + (++_tabCounter); }
 
+// 현재 뷰 설정 스냅샷
+function _curViewState(){
+  return { readMode:document.body.classList.contains('read-mode'),
+    showStrong:!!S.showStrong, showParallel:!!S.showParallel,
+    showRedLetter:!!S.showRedLetter };
+}
+
 function initBibleTabs(){
-  // 초기 탭 1개 생성 (현재 S.book/S.ch 기준)
   const id = _genTabId();
-  _bibleTabs = [{ id, book:S.book, ch:S.ch, selV:S.selV, scrollTop:0 }];
+  var vs = _curViewState();
+  _bibleTabs = [{ id, book:S.book, ch:S.ch, selV:S.selV,
+    scrollTop:0, readMode:vs.readMode, showStrong:vs.showStrong,
+    showParallel:vs.showParallel, showRedLetter:vs.showRedLetter }];
   _activeTabId = id;
   renderBibleTabs();
 }
@@ -30,7 +39,10 @@ function openBibleTab(book, ch, selV){
     if(oldest) _bibleTabs.splice(_bibleTabs.indexOf(oldest), 1);
   }
   const id = _genTabId();
-  const newTab = { id, book, ch, selV, scrollTop:0 };
+  var vs = _curViewState();
+  const newTab = { id, book, ch, selV, scrollTop:0,
+    readMode:vs.readMode, showStrong:vs.showStrong,
+    showParallel:vs.showParallel, showRedLetter:vs.showRedLetter };
   const curIdx = _bibleTabs.findIndex(t=>t.id===_activeTabId);
   _bibleTabs.splice(curIdx+1, 0, newTab);
   _activeTabId = id;
@@ -42,7 +54,10 @@ function addBibleTab(){
   if(_bibleTabs.length >= MAX_BIBLE_TABS){ toast(`탭은 최대 ${MAX_BIBLE_TABS}개까지 열 수 있어요`); return; }
   saveActiveTabState();
   const id = _genTabId();
-  const newTab = { id, book:S.book, ch:S.ch, selV:null, scrollTop:0 };
+  var vs = _curViewState();
+  const newTab = { id, book:S.book, ch:S.ch, selV:null, scrollTop:0,
+    readMode:vs.readMode, showStrong:vs.showStrong,
+    showParallel:vs.showParallel, showRedLetter:vs.showRedLetter };
   _bibleTabs.push(newTab);
   _activeTabId = id;
   renderBibleTabs();

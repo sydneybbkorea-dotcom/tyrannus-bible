@@ -110,11 +110,7 @@
         <i class="fa fa-calendar-check"></i><span class="rail-label">읽기</span>
       </button>
     </div>
-    <div class="rail-bottom">
-      <button class="rail-icon" data-rail="settings" onclick="toggleRail('settings')" title="설정">
-        <i class="fa fa-cog"></i><span class="rail-label">설정</span>
-      </button>
-    </div>
+    <div class="rail-bottom"></div>
   </div>
 
   <!-- LEFT: 확장 사이드패널 -->
@@ -141,29 +137,7 @@
         <div style="padding:20px;text-align:center;color:var(--text3);font-size:12px"><i class="fa fa-calendar-check" style="font-size:24px;margin-bottom:8px;display:block;opacity:.4"></i>준비 중입니다</div>
       </div>
     </div>
-    <!-- 설정 -->
-    <div class="sp-section" id="sp-settings">
-      <div class="sp-head"><i class="fa fa-cog"></i> 설정</div>
-      <div class="sp-body" style="padding:12px">
-        <div style="font-size:12px;color:var(--text2);margin-bottom:12px">앱 설정</div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:12px;color:var(--text)">읽기 모드</span>
-          <button class="tb-btn" onclick="toggleReadMode()" style="font-size:11px"><i class="fa fa-book-reader"></i> 토글</button>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:12px;color:var(--text)"><i class="fa fa-cross" style="color:#ef4444;margin-right:4px"></i>예수님 말씀</span>
-          <button class="tb-btn" id="btnRedLetter" onclick="toggleRedLetter()" style="font-size:11px"><i class="fa fa-toggle-off"></i> 끄기</button>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:12px;color:var(--text)">원어 코드</span>
-          <button class="tb-btn" onclick="toggleStrongCodes()" style="font-size:11px"><i class="fa fa-code"></i> 토글</button>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
-          <span style="font-size:12px;color:var(--text)">영한 대조</span>
-          <button class="tb-btn" onclick="toggleParallel()" style="font-size:11px"><i class="fa fa-columns"></i> 토글</button>
-        </div>
-      </div>
-    </div>
+    <!-- 설정: 뷰 토글은 본문 뷰바로 이동됨 -->
   </div>
 
   <!-- 레거시 요소 (숨김) -->
@@ -175,6 +149,20 @@
     <div id="bibleTabBar">
       <div id="bibleTabList"></div>
       <button id="bibleTabAdd" onclick="addBibleTab()" title="새 탭"><i class="fa fa-plus"></i></button>
+    </div>
+    <!-- 뷰 바: 장 네비게이션 + 탭별 토글 설정 -->
+    <div id="bibleViewBar">
+      <div class="vb-nav">
+        <button class="vb-arrow" onclick="prevCh()" title="이전 장"><i class="fa fa-chevron-left"></i></button>
+        <button class="vb-ch-label" id="vbChLabel" onclick="toggleNavPicker()">창세기 1장</button>
+        <button class="vb-arrow" onclick="nextCh()" title="다음 장"><i class="fa fa-chevron-right"></i></button>
+      </div>
+      <div class="vb-toggles">
+        <button class="vb-btn" id="vbRead" onclick="toggleReadMode()" title="읽기 모드"><i class="fa fa-book-reader"></i></button>
+        <button class="vb-btn" id="vbRed" onclick="toggleRedLetter()" title="예수님 말씀"><i class="fa fa-cross"></i></button>
+        <button class="vb-btn" id="vbStrong" onclick="toggleStrongCodes()" title="원어 코드"><i class="fa fa-code"></i></button>
+        <button class="vb-btn" id="vbParallel" onclick="toggleParallel()" title="영한 대조"><i class="fa fa-columns"></i></button>
+      </div>
     </div>
     <div id="bibleScroll">
       <div class="ch-head">
@@ -522,6 +510,7 @@
 <script src="js/nav-picker-actions.js"></script>
 <script src="js/bible-tabs.js"></script>
 <script src="js/bible-tabs-render.js"></script>
+<script src="js/bible-view-bar.js"></script>
 
 <!-- 하이라이트 & 절 선택 -->
 <script src="js/highlight.js"></script>
