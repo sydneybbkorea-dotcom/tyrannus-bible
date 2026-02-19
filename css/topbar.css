@@ -52,8 +52,8 @@
 
 .hldot:hover { transform:scale(1.2) }
 .hldot.on { border-color:var(--text) !important; transform:scale(1.15) }
-.dY { background:#FFD740 } .dO { background:#FFAB40 } .dG { background:#69F0AE }
-.dB { background:#40C4FF } .dP { background:#CE93D8 }
+.dY { background:#FACC15 } .dO { background:#FB923C } .dG { background:#34D399 }
+.dB { background:#60A5FA } .dP { background:#C084FC }
 .dE { background:var(--bg4); border:2px solid var(--border2) !important; color:var(--text3); font-size:9px }
 
 

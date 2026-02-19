@@ -210,11 +210,12 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
   font-family:'KoPubWorld Batang','Noto Serif KR',serif;
   font-weight: 700;
 }
-.vrow.hl-row-y { background:rgba(255,214,0,.22) !important }
-.vrow.hl-row-o { background:rgba(255,140,0,.22) !important }
-.vrow.hl-row-g { background:rgba(0,200,80,.18) !important }
-.vrow.hl-row-b { background:rgba(30,140,255,.20) !important }
-.vrow.hl-row-p { background:rgba(180,80,255,.20) !important }
+/* ── 구절 행 배경 하이라이트 (은은한 배경) ── */
+.vrow.hl-row-y { background:rgba(250,204,21,.12) !important }
+.vrow.hl-row-o { background:rgba(251,146,60,.12) !important }
+.vrow.hl-row-g { background:rgba(52,211,153,.10) !important }
+.vrow.hl-row-b { background:rgba(96,165,250,.12) !important }
+.vrow.hl-row-p { background:rgba(192,132,252,.12) !important }
 .vrow.hl-row-y:hover,.vrow.hl-row-o:hover,.vrow.hl-row-g:hover,.vrow.hl-row-b:hover,.vrow.hl-row-p:hover { filter:brightness(1.15) }
 
 .vindic { display:flex; flex-direction:column; gap:2px; margin-top:7px; flex-shrink:0 }
@@ -222,50 +223,56 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
 .vd-n { background:var(--gold) } .vd-b { background:var(--blue) }
 .vd-c { background:var(--green) } .vd-t { background:var(--purple) }
 
-/* Inline highlights (drag-selection) */
-/* mark 태그 기본 리셋 — 줄 높이 일정하게 고정 */
-.vtxt mark.hl-active { filter: brightness(1.5) saturate(1.3); outline: none !important; }
+/* ── Inline highlights (drag-selection) ─────────────────────────
+   mark 태그: 글꼴 줄높이를 본문과 동일하게 유지하고,
+   padding을 최소화하여 하이라이트 영역이 글자에 딱 맞도록 함.
+   색상: 채도 낮추고 투명도 조절 → 어두운/밝은 테마 모두 세련되게.
+───────────────────────────────────────────────────────────────── */
+.vtxt mark.hl-active { filter: brightness(1.3) saturate(1.1); outline: none !important; }
+
 /* mark: 어떤 폰트 안에 있어도 줄높이 불변 */
 .vtxt mark,
 .vtxt .dg mark,
 .vtxt b mark,
 .vtxt i mark,
 .vtxt span mark {
-  /* 폰트를 명조 기본으로 강제 → 돋움체/명조 혼용 시 높이 차이 제거 */
-  font-family: 'KoPubWorld Batang','Noto Serif KR',serif !important;
-  font-size: 1em !important;
-  font-weight: normal !important;
-  font-style: normal !important;
-  letter-spacing: normal !important;
-  line-height: 2.0 !important;
+  font-size: inherit !important;
+  font-weight: inherit !important;
+  font-style: inherit !important;
+  font-family: inherit !important;
+  letter-spacing: inherit !important;
+  line-height: inherit !important;
   vertical-align: baseline !important;
   display: inline;
-  padding: 0.08em 0.04em;
-  border-radius: 2px;
+  padding: 0.05em 0.08em;
+  border-radius: 3px;
   outline: none !important;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
   cursor: pointer;
   color: inherit;
 }
-/* mark 하이라이트 색상 — 밝은 형광 */
-.vtxt mark.hl-y { background: rgba(255,215,64,.55); }
-.vtxt mark.hl-o { background: rgba(255,171,64,.50); }
-.vtxt mark.hl-g { background: rgba(105,240,174,.42); }
-.vtxt mark.hl-b { background: rgba(64,196,255,.44); }
-.vtxt mark.hl-p { background: rgba(206,147,216,.45); }
-/* vrow 전체 배경 hl */
-.hl-y { background:rgba(255,215,64,.55); border-radius:2px }
-.hl-o { background:rgba(255,171,64,.50); border-radius:2px }
-.hl-g { background:rgba(105,240,174,.42); border-radius:2px }
-.hl-b { background:rgba(64,196,255,.44); border-radius:2px }
-.hl-p { background:rgba(206,147,216,.44); border-radius:2px }
-/* 라이트 테마 하이라이트 */
-[data-theme="light"] .vtxt mark.hl-y { background: rgba(255,215,64,.65); }
-[data-theme="light"] .vtxt mark.hl-o { background: rgba(255,152,0,.55); }
-[data-theme="light"] .vtxt mark.hl-g { background: rgba(76,206,130,.50); }
-[data-theme="light"] .vtxt mark.hl-b { background: rgba(41,182,246,.48); }
-[data-theme="light"] .vtxt mark.hl-p { background: rgba(186,104,200,.48); }
+
+/* ── 다크 테마 하이라이트 (기본) — 부드럽고 세련된 톤 ── */
+.vtxt mark.hl-y { background: rgba(250,204,21,.30); }   /* 골드 옐로우 */
+.vtxt mark.hl-o { background: rgba(251,146,60,.28); }   /* 웜 오렌지 */
+.vtxt mark.hl-g { background: rgba(52,211,153,.25); }   /* 민트 그린 */
+.vtxt mark.hl-b { background: rgba(96,165,250,.28); }   /* 소프트 블루 */
+.vtxt mark.hl-p { background: rgba(192,132,252,.28); }  /* 라벤더 퍼플 */
+
+/* vrow 전체 배경 hl (구절 전체 선택 시) */
+.hl-y { background:rgba(250,204,21,.14); border-radius:2px }
+.hl-o { background:rgba(251,146,60,.14); border-radius:2px }
+.hl-g { background:rgba(52,211,153,.12); border-radius:2px }
+.hl-b { background:rgba(96,165,250,.14); border-radius:2px }
+.hl-p { background:rgba(192,132,252,.14); border-radius:2px }
+
+/* ── 라이트 테마 하이라이트 — 더 선명하지만 과하지 않게 ── */
+[data-theme="light"] .vtxt mark.hl-y { background: rgba(250,204,21,.35); }
+[data-theme="light"] .vtxt mark.hl-o { background: rgba(251,146,60,.30); }
+[data-theme="light"] .vtxt mark.hl-g { background: rgba(16,185,129,.28); }
+[data-theme="light"] .vtxt mark.hl-b { background: rgba(59,130,246,.25); }
+[data-theme="light"] .vtxt mark.hl-p { background: rgba(168,85,247,.25); }
 
 /* HL picker dots */
 .hlc-dot {
