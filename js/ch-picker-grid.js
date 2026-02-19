@@ -1,17 +1,30 @@
-// ch-picker-grid.js — 장 선택 그리드 + 액션 헬퍼
-function _cpChapterGrid(b){
-  var cnt = CHCNT[b]||1;
-  var h = '<div class="cp-ch-grid">';
+// ch-picker-grid.js — 책 목록 / 장 목록 생성 + 선택 액션
+function _cpBookList(arr, label){
+  var h = '<div class="cp-sec">' + label + '</div>';
+  arr.forEach(function(b){
+    var cls = 'cp-bk';
+    if(b===_cpSelBook) cls += ' cp-bk-act';
+    if(b===S.book) cls += ' cp-bk-cur';
+    h += '<div class="'+cls+'" onclick="event.stopPropagation();_cpPickBook(\''+b+'\')">';
+    h += b + '</div>';
+  });
+  return h;
+}
+
+function _cpChList(book){
+  var cnt = CHCNT[book]||1;
+  var h = '';
   for(var i=1;i<=cnt;i++){
-    var act = (b===S.book && i===S.ch) ? ' cp-ch-act' : '';
-    h += '<div class="cp-ch' + act + '" onclick="event.stopPropagation();_cpSelectCh(' + i + ')">' + i + '</div>';
+    var cls = 'cp-ci';
+    if(book===S.book && i===S.ch) cls += ' cp-ci-act';
+    h += '<div class="'+cls+'" onclick="event.stopPropagation();_cpSelectCh('+i+')">';
+    h += i + ' 장</div>';
   }
-  h += '</div>';
   return h;
 }
 
 function _cpPickBook(b){
-  _cpSelBook = (_cpSelBook===b) ? null : b;
+  _cpSelBook = b;
   renderChPicker();
 }
 

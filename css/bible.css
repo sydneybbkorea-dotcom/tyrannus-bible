@@ -38,42 +38,49 @@
 .vb-btn:hover { background:var(--bg3); color:var(--text) }
 .vb-btn.vb-on { color:var(--gold); background:var(--gold-dim) }
 
-/* ── Chapter Picker 팝업 (세로 드롭다운) ── */
+/* ── Chapter Picker 팝업 (2-panel: 왼쪽 책 + 오른쪽 장) ── */
 .ch-picker {
   position:absolute; left:0; right:0; z-index:89;
   background:var(--bg2); border-bottom:1px solid var(--border);
   box-shadow:0 8px 24px rgba(0,0,0,.3);
-  max-height:420px; overflow:hidden;
+  height:360px; overflow:hidden;
 }
-.cp-list { overflow-y:auto; max-height:420px; padding:4px 0 }
-.cp-sec-label {
+.cp-wrap { display:flex; height:100% }
+/* 왼쪽 책 목록 */
+.cp-books {
+  width:140px; flex-shrink:0; border-right:1px solid var(--border);
+  overflow:hidden; display:flex; flex-direction:column;
+}
+.cp-books-inner {
+  flex:1; overflow-y:auto; padding:4px 0;
+  scrollbar-width:thin; scrollbar-color:var(--border2) transparent;
+}
+.cp-books-inner::-webkit-scrollbar { width:6px }
+.cp-books-inner::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px }
+.cp-sec {
   font-size:9px; font-weight:700; color:var(--text3); text-transform:uppercase;
-  padding:8px 14px 4px; letter-spacing:1px;
+  padding:8px 12px 4px; letter-spacing:1px;
 }
-.cp-nt-label { margin-top:2px; border-top:1px solid var(--border); padding-top:8px }
-.cp-book {
-  display:flex; align-items:center; gap:6px;
-  padding:6px 14px; font-size:12px; color:var(--text2); cursor:pointer;
-  transition:all .08s;
+.cp-bk {
+  padding:8px 12px; font-size:13px; color:var(--text2); cursor:pointer;
+  transition:all .08s; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
-.cp-book:hover { background:var(--bg3); color:var(--text) }
-.cp-book.cp-book-cur { color:var(--gold) }
-.cp-book.cp-book-act { background:var(--gold-dim); color:var(--gold); font-weight:600 }
-.cp-arrow { font-size:8px; width:12px; color:var(--text3); flex-shrink:0; transition:transform .12s }
-.cp-book-name { flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
-.cp-book-cnt { font-size:10px; color:var(--text3); flex-shrink:0; font-family:'JetBrains Mono',monospace }
-.cp-ch-grid {
-  display:grid; grid-template-columns:repeat(auto-fill, minmax(34px,1fr)); gap:4px;
-  padding:6px 14px 10px 32px;
+.cp-bk:hover { background:var(--bg3); color:var(--text) }
+.cp-bk.cp-bk-cur { color:var(--gold) }
+.cp-bk.cp-bk-act { background:var(--gold-dim); color:var(--gold); font-weight:600 }
+/* 오른쪽 장 목록 */
+.cp-chs {
+  flex:1; overflow-y:auto; padding:4px 0;
+  scrollbar-width:thin; scrollbar-color:var(--border2) transparent;
 }
-.cp-ch {
-  height:28px; display:flex; align-items:center; justify-content:center;
-  font-size:11px; color:var(--text2); background:var(--bg3);
-  border-radius:4px; cursor:pointer; transition:all .1s;
-  font-family:'JetBrains Mono',monospace;
+.cp-chs::-webkit-scrollbar { width:6px }
+.cp-chs::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px }
+.cp-ci {
+  padding:8px 16px; font-size:14px; color:var(--text2); cursor:pointer;
+  transition:all .08s; white-space:nowrap; text-align:center;
 }
-.cp-ch:hover { background:var(--gold-dim); color:var(--gold) }
-.cp-ch.cp-ch-act { background:var(--gold); color:var(--bg); font-weight:700 }
+.cp-ci:hover { background:var(--bg3); color:var(--text) }
+.cp-ci.cp-ci-act { background:var(--gold-dim); color:var(--gold); font-weight:700 }
 
 /* ── Bible Tab Bar (physical folder tab style) ── */
 #bibleTabBar {

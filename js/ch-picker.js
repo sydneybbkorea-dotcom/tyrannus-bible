@@ -25,3 +25,10 @@ function _cpOutClick(e){
   if(!el||!btn) return;
   if(!el.contains(e.target)&&!btn.contains(e.target)) closeChPicker();
 }
+
+function _cpScrollToActive(el){
+  var ab = el.querySelector('.cp-bk-act');
+  if(ab) ab.scrollIntoView({block:'center',behavior:'auto'});
+  var ac = el.querySelector('.cp-ci-act');
+  if(ac) ac.scrollIntoView({block:'center',behavior:'auto'});
+}
