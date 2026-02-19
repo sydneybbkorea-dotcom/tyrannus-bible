@@ -52,6 +52,19 @@ function toggleNotePanel(){
   }
 }
 
+// 사전 아이콘: 오른쪽 패널 사전 탭 직접 토글
+function toggleDictPanel(){
+  const btn=document.querySelector('.rail-icon[data-rail="dictionary"]');
+  if(S.panelOpen==='dictionary'&&!document.getElementById('rightPanel')?.classList.contains('rp-hide')){
+    togglePanel('dictionary');
+    if(btn) btn.classList.remove('active');
+  }else{
+    if(_activeRail&&!_spPinned) closeSidePanel();
+    openPanel('dictionary'); switchTab('dictionary');
+    if(btn) btn.classList.add('active');
+  }
+}
+
 function _spTogglePin(){
   _spPinned = !_spPinned;
   const btn = document.getElementById('spPinBtn');

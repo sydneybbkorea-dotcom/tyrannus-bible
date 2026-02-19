@@ -14,6 +14,7 @@ function togglePanel(name){
     rp.classList.add('rp-hide'); S.panelOpen=null;
     document.body.classList.remove('panel-open');
     document.querySelector('.rail-icon[data-rail="notes"]')?.classList.remove('active');
+    document.querySelector('.rail-icon[data-rail="dictionary"]')?.classList.remove('active');
   } else {
     openPanel(name);
   }
