@@ -15,8 +15,8 @@
 <link rel="stylesheet" href="css/layout.css?v=15">
 <link rel="stylesheet" href="css/icon-rail.css?v=16">
 <link rel="stylesheet" href="css/side-panel.css?v=15">
-<link rel="stylesheet" href="css/topbar.css?v=16">
-<link rel="stylesheet" href="css/bible.css?v=16">
+<link rel="stylesheet" href="css/topbar.css?v=17">
+<link rel="stylesheet" href="css/bible.css?v=17">
 <link rel="stylesheet" href="css/notes.css?v=15">
 <link rel="stylesheet" href="css/commentary.css?v=15">
 <link rel="stylesheet" href="css/search.css?v=15">
@@ -41,8 +41,8 @@
 <!-- ══ TOPBAR ══════════════════════════════════ -->
 <div id="topbar">
   <!-- 사이드바 토글 버튼 -->
-  <button class="tb-rail-toggle" id="railToggleBtn" onclick="_toggleIconRail()" title="사이드바 열기/닫기">
-    <i class="fa fa-bars"></i>
+  <button class="tb-rail-toggle" id="railToggleBtn" onclick="_toggleIconRail()" ontouchend="_toggleIconRail();event.preventDefault();" title="사이드바 열기/닫기">
+    <i class="fa fa-bars" style="pointer-events:none"></i>
   </button>
   <!-- 중앙 로고 -->
   <span class="logo">Tyrannus</span>
