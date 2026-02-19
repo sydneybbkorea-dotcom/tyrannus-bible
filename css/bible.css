@@ -83,7 +83,6 @@ body.read-mode .vindic { display:none }
   flex:1; min-width:0; padding:3px 6px;
   font-family:'KoPubWorld Batang','Georgia',serif; font-size:16px;
   color:var(--text); line-height:1.85; letter-spacing:0.01em;
-  border-left:1px solid var(--border);
 }
 /* 영어 본문 내부: 색상 클래스 무력화, 검정색만 */
 .vtxt-en-side .dg, .vtxt-en-side span.dg,
