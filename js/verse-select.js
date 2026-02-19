@@ -25,8 +25,15 @@ function _updateStatV(){
 }
 function clearAllSel(){
   document.querySelectorAll('.vrow.vsel').forEach(r=>r.classList.remove('vsel'));
-  if(S.selVSet) S.selVSet.clear(); S.selV=null;
+  if(S.selVSet) S.selVSet.clear(); S.selV=null; _updateStatV();
 }
+document.addEventListener('click',e=>{
+  const bs=document.getElementById('bibleScroll');
+  if(!bs||!bs.contains(e.target)) return;
+  if(!e.target.closest('.vrow')&&!e.target.closest('#ctxMenu')&&!e.target.closest('#hlPicker')){
+    clearAllSel();
+  }
+});
 function addBookmark(){
   if(!S.selV){toast('먼저 구절을 클릭하세요');return}
   const k=`${S.book}_${S.ch}_${S.selV}`;
