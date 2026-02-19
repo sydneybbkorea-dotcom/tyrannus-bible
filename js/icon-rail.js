@@ -76,6 +76,7 @@ function _initSection(name){
   else if(name==='search') _initSearchPanel();
   else if(name==='bookmark') renderBookmarks();
   else if(name==='reading'&&typeof renderReadingPlan==='function') renderReadingPlan();
+  else if(name==='settings'&&typeof renderSettingsPanel==='function') renderSettingsPanel();
 }
 
 function _initSearchPanel(){

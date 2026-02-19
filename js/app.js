@@ -5,6 +5,7 @@
   // 1) 동기 초기화 (데이터 불필요)
   restore();
   initTheme();
+  if(typeof _stpRestoreOnLoad==='function') _stpRestoreOnLoad();
 
   // 테스트 하이라이트 초기화 (v10)
   if(localStorage.getItem('kjb2-hl-cleaned') !== 'v10'){

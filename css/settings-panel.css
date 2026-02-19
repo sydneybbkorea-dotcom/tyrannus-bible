@@ -1,0 +1,59 @@
+/* settings-panel.css — 설정 패널 (다크모드, 글꼴, 자간, 줄간) */
+.stp-wrap { padding:14px 16px; display:flex; flex-direction:column; gap:16px }
+.stp-row { display:flex; flex-direction:column; gap:6px }
+.stp-row-toggle { flex-direction:row; align-items:center; justify-content:space-between }
+.stp-row-head {
+  display:flex; align-items:center; gap:6px;
+  font-size:12px; font-weight:600; color:var(--text2);
+}
+.stp-row-head i { font-size:11px; color:var(--gold); width:14px; text-align:center }
+.stp-label {
+  font-size:12px; font-weight:600; color:var(--text2);
+  display:flex; align-items:center; gap:6px;
+}
+.stp-label i { font-size:11px; color:var(--gold) }
+.stp-val {
+  margin-left:auto; font-size:11px; font-weight:700;
+  color:var(--gold); font-family:'JetBrains Mono',monospace;
+}
+/* 슬라이더 */
+.stp-range {
+  -webkit-appearance:none; appearance:none; width:100%; height:4px;
+  background:var(--bg4); border-radius:2px; outline:none; cursor:pointer;
+}
+.stp-range::-webkit-slider-thumb {
+  -webkit-appearance:none; width:14px; height:14px; border-radius:50%;
+  background:var(--gold); border:2px solid var(--bg2);
+  box-shadow:0 1px 4px rgba(0,0,0,.3); cursor:pointer;
+}
+.stp-range::-moz-range-thumb {
+  width:14px; height:14px; border-radius:50%;
+  background:var(--gold); border:2px solid var(--bg2);
+  box-shadow:0 1px 4px rgba(0,0,0,.3); cursor:pointer;
+}
+/* 다크모드 토글 스위치 */
+.stp-switch {
+  position:relative; width:38px; height:20px; flex-shrink:0;
+}
+.stp-switch input { opacity:0; width:0; height:0 }
+.stp-slider {
+  position:absolute; inset:0; border-radius:10px;
+  background:var(--bg4); transition:all .2s; cursor:pointer;
+}
+.stp-slider::before {
+  content:''; position:absolute; left:2px; top:2px;
+  width:16px; height:16px; border-radius:50%;
+  background:var(--text3); transition:all .2s;
+}
+.stp-switch input:checked + .stp-slider { background:var(--gold-dim) }
+.stp-switch input:checked + .stp-slider::before {
+  transform:translateX(18px); background:var(--gold);
+}
+/* 초기화 버튼 */
+.stp-reset { padding-top:8px; border-top:1px solid var(--border) }
+.stp-reset button {
+  width:100%; padding:7px 0; font-size:11px; font-weight:600;
+  color:var(--text3); background:var(--bg3); border:1px solid var(--border);
+  border-radius:6px; cursor:pointer; transition:all .15s;
+}
+.stp-reset button:hover { color:var(--text); background:var(--bg4) }

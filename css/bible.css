@@ -137,8 +137,8 @@ body.read-mode .vindic { display:none }
 
 /* ── 영어만 표시 ── */
 .vtxt-en-only {
-  font-family:'KoPubWorld Batang','Georgia',serif; font-size:17px;
-  color:var(--text); flex:1; line-height:1.85; letter-spacing:0.01em;
+  font-family:'KoPubWorld Batang','Georgia',serif; font-size:var(--vtxt-size,17px);
+  color:var(--text); flex:1; line-height:var(--vtxt-lh,1.85); letter-spacing:0.01em;
   user-select:text; word-break:keep-all;
 }
 /* ── 영한 대조 ── */
@@ -148,8 +148,8 @@ body.read-mode .vindic { display:none }
 .vrow-parallel .vtxt-kr { flex:1; min-width:0; }
 .vrow-parallel .vtxt-en-side {
   flex:1; min-width:0; padding:3px 6px;
-  font-family:'KoPubWorld Batang','Georgia',serif; font-size:17px;
-  color:var(--text); line-height:1.85; letter-spacing:0.01em;
+  font-family:'KoPubWorld Batang','Georgia',serif; font-size:var(--vtxt-size,17px);
+  color:var(--text); line-height:var(--vtxt-lh,1.85); letter-spacing:0.01em;
 }
 /* 영어 본문 내부: 색상 클래스 무력화, 검정색만 */
 .vtxt-en-side .dg, .vtxt-en-side span.dg,
@@ -223,7 +223,7 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
   color: var(--text3);
   pointer-events: none;
 }
-.vtxt { font-family:'KoPubWorld Batang','Noto Serif KR',serif; font-size:17px; font-weight:500; color:var(--text); flex:1; letter-spacing:0.02em; line-height:1.85; user-select:text; word-break:keep-all }
+.vtxt { font-family:'KoPubWorld Batang','Noto Serif KR',serif; font-size:var(--vtxt-size,17px); font-weight:500; color:var(--text); flex:1; letter-spacing:var(--vtxt-ls,0.02em); line-height:var(--vtxt-lh,1.85); user-select:text; word-break:keep-all }
 /* 사이트 스타일 그대로: 돋움체(font-g) 클래스 */
 /* ── 표준킹제임스성경 번역 원칙에 따른 폰트 표기 ──────────────────
    [일러두기 - 하나님과 마귀를 부각한 표기들]
