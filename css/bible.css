@@ -10,11 +10,12 @@
   border-bottom:none;
   overflow:hidden;
 }
-#bibleTabList { display:flex; align-items:flex-end; flex:1; min-width:0; gap:0; overflow:hidden; }
+#bibleTabList { display:flex; align-items:flex-end; min-width:0; gap:0; overflow-x:auto; overflow-y:hidden; }
+#bibleTabList::-webkit-scrollbar { height:0; display:none; }
 .btab {
   display:flex; align-items:center; gap:5px; padding:7px 8px 8px 12px; font-size:11.5px;
   color:var(--text3); cursor:pointer; white-space:nowrap;
-  transition:all .12s; flex:1 1 0; min-width:40px; max-width:180px;
+  transition:all .12s; flex-shrink:0; min-width:40px; max-width:180px;
   user-select:none; overflow:hidden;
   border-radius:var(--radius) var(--radius) 0 0;
   background:var(--bg3);
@@ -43,8 +44,8 @@
 #bibleTabAdd {
   width:26px; height:26px; display:flex; align-items:center; justify-content:center;
   font-size:10px; color:var(--text3); background:transparent; border:none;
-  cursor:pointer; flex-shrink:0; border-radius:6px 6px 0 0; margin-left:4px;
-  transition:all .1s;
+  cursor:pointer; flex-shrink:0; border-radius:6px 6px 0 0; margin-left:2px;
+  transition:all .1s; align-self:flex-end;
 }
 #bibleTabAdd:hover { background:var(--bg3); color:var(--gold) }
 
