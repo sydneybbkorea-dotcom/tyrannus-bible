@@ -15,8 +15,11 @@
   background:var(--bg3); transition:all .15s; flex-shrink:0;
   -webkit-tap-highlight-color:transparent; touch-action:manipulation;
 }
-.tb-rail-toggle:hover { background:var(--bg3); color:var(--text); }
-.tb-rail-toggle.rail-hidden { color:var(--gold); }
+.tb-rail-toggle:hover { background:var(--hover-bg,rgba(255,255,255,.08)); color:var(--text); }
+/* 아이콘 모양 전환: 열림=구분선 있음, 닫힘=구분선 없음 */
+.rail-ico-closed { display:none }
+.tb-rail-toggle.rail-hidden .rail-ico-open { display:none }
+.tb-rail-toggle.rail-hidden .rail-ico-closed { display:block }
 /* 중앙 로고 (고풍스러운 세리프) */
 .logo {
   font-family:'Playfair Display','Georgia','Times New Roman',serif;
