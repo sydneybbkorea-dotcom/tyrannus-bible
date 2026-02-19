@@ -20,23 +20,30 @@ document.addEventListener('click', e=>{
   showMarkMemo(mark, e.clientX, e.clientY);
 });
 
-// 복사 이벤트: 선택된 구절이 있으면 주소 앞에 붙여서 클립보드에
+// 복사 이벤트: 성경 본문 서식(명조/돋움/볼드/이탤릭)을 HTML로 보존
 document.addEventListener('copy', e=>{
   const sel = window.getSelection();
   if(!sel || sel.isCollapsed) return;
-  // vrow 안에서의 복사인지 확인
   const anchorNode = sel.anchorNode;
   const vrow = anchorNode?.parentElement?.closest('.vrow');
   if(!vrow && !anchorNode?.closest?.('.vrow')) return;
 
-  const ref = S.selV ? `${S.book} ${S.ch}:${S.selV}\n` : '';
+  const ref = S.selV ? `${S.book} ${S.ch}:${S.selV}` : '';
   const selText = sel.toString().trim();
   if(!selText) return;
 
-  e.clipboardData.setData('text/plain', ref + selText);
+  /* HTML 서식 보존: 선택 영역의 HTML을 vtxt 클래스로 감싸서 전달 */
+  const range = sel.getRangeAt(0);
+  const frag = range.cloneContents();
+  const wrap = document.createElement('span');
+  wrap.className = 'vtxt';
+  wrap.style.cssText = "font-family:'KoPubWorld Batang','Noto Serif KR',serif;";
+  wrap.appendChild(frag);
+  const refHtml = ref ? `<b style="font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif;font-size:12px;color:#c9973a;">${ref}</b><br>` : '';
+  e.clipboardData.setData('text/html', refHtml + wrap.outerHTML);
+  e.clipboardData.setData('text/plain', (ref ? ref + '\n' : '') + selText);
   e.preventDefault();
 
-  // 주소 토스트 표시
   if(S.selV) showCopyRef(`${S.book} ${S.ch}:${S.selV}`);
 });
 

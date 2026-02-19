@@ -61,7 +61,7 @@ window.newNote = function newNote(){
     const k=`${S.book}_${S.ch}_${S.selV}`;
     const vt=BIBLE[S.book]?.[S.ch]?.[S.selV-1]||'';
     document.getElementById('noteTitle').value=`${S.book} ${S.ch}:${S.selV} 묵상`;
-    document.getElementById('noteContent').innerHTML=makVLink(k,`${S.book} ${S.ch}:${S.selV}`)+'&#8203; '+vt+'<br><br>';
+    document.getElementById('noteContent').innerHTML=makVLink(k,`${S.book} ${S.ch}:${S.selV}`)+'&#8203; <span class="vtxt" style="font-family:\'KoPubWorld Batang\',\'Noto Serif KR\',serif;line-height:1.85;">'+vt+'</span><br><br>';
   }
   document.getElementById('noteFolderSel').value=S.curFolder;
   updateBreadcrumb();

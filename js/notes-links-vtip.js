@@ -16,7 +16,9 @@ function setupVTip(){
     const p = k.split('_');
     const txt = BIBLE[p[0]]?.[parseInt(p[1])]?.[parseInt(p[2])-1] || '';
     document.getElementById('vtip-ref').textContent = el.dataset.refLabel || k;
-    document.getElementById('vtip-txt').textContent = txt;
+    /* 성경 본문 서식(명조/돋움/볼드/이탤릭)을 보존하여 표시 */
+    const vtipTxt = document.getElementById('vtip-txt');
+    vtipTxt.innerHTML = `<span class="vtxt" style="font-family:'KoPubWorld Batang','Noto Serif KR',serif;font-size:13px;line-height:1.75;">${txt}</span>`;
     const rect = el.getBoundingClientRect();
     const tipW = 280;
     let left = rect.left;

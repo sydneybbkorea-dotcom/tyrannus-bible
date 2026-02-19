@@ -21,17 +21,36 @@ function ctxClearHL(){
 }
 function ctxNote(){ closeCtx(); newNote(); switchTab('notes'); }
 function ctxDict(){ closeCtx(); switchTab('dictionary'); updateDict(); togglePanel('dictionary'); }
+/* 구절 복사: HTML 서식(명조/돋움/볼드/이탤릭) 보존 */
 function ctxCopy(){
   closeCtx();
   if(!S.selV) return;
   const t = BIBLE[S.book]?.[S.ch]?.[S.selV-1] || '';
   const plain = t.replace(/<[^>]+>/g,'');
   const ref = `${S.book} ${S.ch}:${S.selV}`;
-  navigator.clipboard.writeText(ref + '\n' + plain).then(()=>{
-    showCopyRef(ref);
-  });
+  const html = `<b style="font-family:'KoPubWorld Dotum',sans-serif;font-size:12px;color:#c9973a;">${ref}</b><br><span class="vtxt" style="font-family:'KoPubWorld Batang','Noto Serif KR',serif;">${t}</span>`;
+  try {
+    navigator.clipboard.write([new ClipboardItem({
+      'text/html': new Blob([html], {type:'text/html'}),
+      'text/plain': new Blob([ref+'\n'+plain], {type:'text/plain'})
+    })]).then(()=> showCopyRef(ref));
+  } catch(e){ navigator.clipboard.writeText(ref+'\n'+plain).then(()=> showCopyRef(ref)); }
 }
-function ctxCopyRef(){ closeCtx(); if(!S.selV)return; const t=BIBLE[S.book]?.[S.ch]?.[S.selV-1]||''; navigator.clipboard.writeText(`${S.book} ${S.ch}:${S.selV} — ${t}`).then(()=>toast('참조 형식으로 복사됨')); }
+/* 참조 형식 복사: 서식 포함 */
+function ctxCopyRef(){
+  closeCtx();
+  if(!S.selV) return;
+  const t = BIBLE[S.book]?.[S.ch]?.[S.selV-1] || '';
+  const plain = t.replace(/<[^>]+>/g,'');
+  const ref = `${S.book} ${S.ch}:${S.selV}`;
+  const html = `<span style="font-family:'KoPubWorld Dotum',sans-serif;font-size:12px;color:#c9973a;">${ref}</span> — <span class="vtxt" style="font-family:'KoPubWorld Batang','Noto Serif KR',serif;">${plain}</span>`;
+  try {
+    navigator.clipboard.write([new ClipboardItem({
+      'text/html': new Blob([html], {type:'text/html'}),
+      'text/plain': new Blob([ref+' — '+plain], {type:'text/plain'})
+    })]).then(()=> toast('참조 형식으로 복사됨'));
+  } catch(e){ navigator.clipboard.writeText(ref+' — '+plain).then(()=> toast('참조 형식으로 복사됨')); }
+}
 function ctxInsertLink(){
   closeCtx();
   if(!S.selV){toast('먼저 구절을 클릭하세요');return}
