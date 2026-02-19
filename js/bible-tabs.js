@@ -11,7 +11,7 @@ function initBibleTabs(){
   renderBibleTabs();
 }
 
-const MAX_BIBLE_TABS = 7;
+const MAX_BIBLE_TABS = 10;
 
 function openBibleTab(book, ch, selV){
   saveActiveTabState();
