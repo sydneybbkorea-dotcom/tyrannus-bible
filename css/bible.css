@@ -4,11 +4,12 @@
 }
 /* ── Bible Tab Bar (physical folder tab style) ── */
 #bibleTabBar {
-  display:flex; align-items:flex-end; background:var(--bg2); 
+  display:flex; align-items:flex-end; background:var(--bg2);
   flex-shrink:0; min-height:36px; gap:0;
   padding:6px 8px 0;
-  border-bottom:none;
+  border-bottom:1px solid var(--border);
   overflow:hidden;
+  position:relative;
 }
 #bibleTabList { display:flex; align-items:flex-end; min-width:0; gap:0; overflow-x:auto; overflow-y:hidden; }
 #bibleTabList::-webkit-scrollbar { height:0; display:none; }
@@ -120,7 +121,7 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
 /* 라이트 테마 영어 텍스트 가독성 */
 [data-theme="light"] .vtxt-en-side { color:var(--text2) }
 [data-theme="light"] .vtxt-en-below { color:var(--text2) }
-#bibleScroll { flex:1; overflow-y:auto; padding:24px 28px 48px; border-top:1px solid var(--border); }
+#bibleScroll { flex:1; overflow-y:auto; padding:24px 28px 48px; }
 .ch-head { text-align:center; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--border) }
 /* 장 제목: 고딕체 (UI 요소) — 성경 본문과 구분 */
 .ch-head h1 { font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif; font-size:26px; font-weight:700; color:var(--accent2); margin-bottom:6px; letter-spacing:0.02em }
