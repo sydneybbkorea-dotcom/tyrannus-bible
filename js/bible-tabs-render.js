@@ -7,6 +7,8 @@ function saveActiveTabState(){
   tab.selV = S.selV;
   tab.showStrong = !!S.showStrong;
   tab.showParallel = !!S.showParallel;
+  tab.showKorean = S.showKorean!==false;
+  tab.showEnglish = !!S.showEnglish;
   tab.showRedLetter = !!S.showRedLetter;
   tab.readMode = document.body.classList.contains('read-mode');
   const bs = document.getElementById('bibleScroll');
@@ -19,7 +21,9 @@ function restoreTabState(tab){
   S.selV = tab.selV;
   // 탭별 뷰 설정 복원
   S.showStrong = !!tab.showStrong;
-  S.showParallel = !!tab.showParallel;
+  S.showKorean = tab.showKorean!==false;
+  S.showEnglish = !!tab.showEnglish;
+  S.showParallel = S.showKorean && S.showEnglish;
   S.showRedLetter = !!tab.showRedLetter;
   document.body.classList.toggle('read-mode', !!tab.readMode);
   renderAll();

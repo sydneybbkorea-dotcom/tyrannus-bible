@@ -4,10 +4,11 @@ function renderViewBar(){
   var lbl = document.getElementById('vbChLabel');
   if(lbl) lbl.textContent = S.book + ' ' + S.ch + '장';
   // 토글 버튼 on/off 동기화
+  _syncVbBtn('vbKorean', S.showKorean!==false);
+  _syncVbBtn('vbEnglish', !!S.showEnglish);
   _syncVbBtn('vbRead', document.body.classList.contains('read-mode'));
   _syncVbBtn('vbRed', !!S.showRedLetter);
   _syncVbBtn('vbStrong', !!S.showStrong);
-  _syncVbBtn('vbParallel', !!S.showParallel);
 }
 
 function _syncVbBtn(id, on){

@@ -50,13 +50,21 @@ function renderBible(){
     }
 
     const rl = (typeof isRedLetter==='function') && isRedLetter(key) ? ' red-letter' : '';
-    const kjvTxt = S.showParallel ? (KJV[S.book]?.[S.ch]?.[i] || '') : '';
+    const wantEN = !!S.showEnglish;
+    const wantKR = !!S.showKorean;
+    const kjvTxt = wantEN ? (KJV?.[S.book]?.[S.ch]?.[i] || '') : '';
     const kjvDisplay = (S.showStrong && kjvTxt && typeof renderEnStrongsInline==='function') ? renderEnStrongsInline(kjvTxt,S.book,S.ch,vn) : kjvTxt;
-    if(S.showParallel && kjvTxt){
+    const indic = `<span class="vindic">${hasNote?'<span class="vd vd-n" title="노트 있음"></span>':''}${hasBk?'<span class="vd vd-b" title="북마크"></span>':''}${hasComm?'<span class="vd vd-c" title="주석 있음"></span>':''}</span>`;
+    if(wantKR && wantEN && kjvTxt){
+      // 한영 대조
       row.className='vrow vrow-parallel'+(isSel?' vsel':'')+hlCls;
-      row.innerHTML=`<span class="vnum">${vn}</span><span class="vtxt vtxt-kr${rl}" data-key="${key}">${displayTxt}</span><span class="vtxt-en-side"><span class="en-vnum">${vn}</span>${kjvDisplay}</span><span class="vindic">${hasNote?'<span class="vd vd-n" title="노트 있음"></span>':''}${hasBk?'<span class="vd vd-b" title="북마크"></span>':''}${hasComm?'<span class="vd vd-c" title="주석 있음"></span>':''}</span>`;
+      row.innerHTML=`<span class="vnum">${vn}</span><span class="vtxt vtxt-kr${rl}" data-key="${key}">${displayTxt}</span><span class="vtxt-en-side"><span class="en-vnum">${vn}</span>${kjvDisplay}</span>${indic}`;
+    } else if(wantEN && !wantKR && kjvTxt){
+      // 영어만
+      row.innerHTML=`<span class="vnum">${vn}</span><span class="vtxt vtxt-en-only" data-key="${key}">${kjvDisplay}</span>${indic}`;
     } else {
-      row.innerHTML=`<span class="vnum">${vn}</span><span class="vtxt${rl}" data-key="${key}">${displayTxt}</span><span class="vindic">${hasNote?'<span class="vd vd-n" title="노트 있음"></span>':''}${hasBk?'<span class="vd vd-b" title="북마크"></span>':''}${hasComm?'<span class="vd vd-c" title="주석 있음"></span>':''}</span>`;
+      // 한글만 (기본) 또는 영어 데이터 없을 때 한글 폴백
+      row.innerHTML=`<span class="vnum">${vn}</span><span class="vtxt${rl}" data-key="${key}">${displayTxt}</span>${indic}`;
     }
     row.onclick=e=>selVerse(vn,e);
     row.addEventListener('contextmenu', function(e) {

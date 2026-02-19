@@ -86,6 +86,12 @@ body.read-mode mark { background:transparent !important; border-bottom:none !imp
 body.read-mode .str-code { display:none }
 body.read-mode .vindic { display:none }
 
+/* ── 영어만 표시 ── */
+.vtxt-en-only {
+  font-family:'KoPubWorld Batang','Georgia',serif; font-size:17px;
+  color:var(--text); flex:1; line-height:1.85; letter-spacing:0.01em;
+  user-select:text; word-break:keep-all;
+}
 /* ── 영한 대조 ── */
 .vrow-parallel {
   display:flex; gap:0;

@@ -7,6 +7,8 @@ Object.assign(S, {
   hlColor:'Y',
   showStrong:false,
   showParallel:false,
+  showKorean:true,
+  showEnglish:false,
   showRedLetter:false,
   readPlan:null,
   hl:{}, hlMemo:{}, hlRanges:{}, verseMemo:{}, bk:new Set(),
