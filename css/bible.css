@@ -146,7 +146,7 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
   color: var(--text3);
   pointer-events: none;
 }
-.vtxt { font-family:'KoPubWorld Batang','Noto Serif KR',serif; font-size:17px; font-weight:300; color:var(--text); flex:1; letter-spacing:0.02em; line-height:1.85; user-select:text; word-break:keep-all }
+.vtxt { font-family:'KoPubWorld Batang','Noto Serif KR',serif; font-size:17px; font-weight:500; color:var(--text); flex:1; letter-spacing:0.02em; line-height:1.85; user-select:text; word-break:keep-all }
 /* 사이트 스타일 그대로: 돋움체(font-g) 클래스 */
 /* ── 표준킹제임스성경 번역 원칙에 따른 폰트 표기 ──────────────────
    [일러두기 - 하나님과 마귀를 부각한 표기들]
@@ -194,7 +194,6 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
 .vtxt b.dg {
   font-weight: 700;
   letter-spacing: 0.02em;
-  -webkit-text-stroke: 0.4px currentColor;
 }
 
 /* italic: 이탤릭체 (원어에 없는 보완 단어 - 기울임) */
