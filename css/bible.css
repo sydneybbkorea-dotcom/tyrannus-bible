@@ -140,7 +140,7 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
 .ch-head { text-align:center; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--border) }
 /* 장 제목: 고딕체 (UI 요소) — 성경 본문과 구분 */
 .ch-head h1 { font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif; font-size:26px; font-weight:700; color:var(--accent2); margin-bottom:6px; letter-spacing:0.02em }
-.ch-head p { font-size:11px; color:var(--text3); letter-spacing:1.5px; text-transform:uppercase }
+.ch-head p { font-size:14px; color:var(--text3); letter-spacing:1px; font-style:italic; font-family:'Playfair Display',serif; }
 .vrow {
   display:flex; gap:6px; padding:2px 8px; border-radius:var(--radius); margin-bottom:0;
   cursor:pointer; transition:background .12s; position:relative;

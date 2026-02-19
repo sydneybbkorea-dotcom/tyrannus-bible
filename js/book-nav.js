@@ -18,8 +18,8 @@ function renderBookGrid(){
   });
   h+=`</div></div>`;
   if(_bnSelBook){
-    const cnt=CHCNT[_bnSelBook]||1, short=BOOK_SHORT[_bnSelBook]||_bnSelBook;
-    h+=`<div class="bn-chapters"><div class="bn-ch-label"><span>${short}</span> 장 선택</div><div class="bn-ch-grid">`;
+    const cnt=CHCNT[_bnSelBook]||1;
+    h+=`<div class="bn-chapters"><div class="bn-ch-label"><span>${_bnSelBook}</span> 장 선택</div><div class="bn-ch-grid">`;
     for(let i=1;i<=cnt;i++){
       const act=(_bnSelBook===S.book&&i===S.ch);
       h+=`<div class="bn-ch${act?' act':''}" onclick="_bnPickCh(${i})">${i}</div>`;

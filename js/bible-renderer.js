@@ -7,7 +7,7 @@ function renderBible(){
   const cont=document.getElementById('vCont');
 
   if(chTitle) chTitle.textContent=`${S.book} ${S.ch}장`;
-  if(chSub) chSub.textContent='표준킹제임스성경 (SKJB)';
+  if(chSub) chSub.textContent=BOOK_EN[S.book]||S.book;
   if(chNavLbl) chNavLbl.textContent=`${S.ch} / ${CHCNT[S.book]||'?'}장`;
 
   if(!cont) return;
