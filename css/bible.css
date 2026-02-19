@@ -292,6 +292,13 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
   text-decoration:none;
 }
 .str-code:hover { background:var(--gold); color:var(--bg); border-color:var(--gold) }
+/* 영어 텍스트 내 스트롱 코드 — 더 작고 윗첨자 */
+.str-en { font-size:8px; vertical-align:super; margin:0 0 0 1px; padding:0 2px; opacity:.85 }
+/* 단어 연구 페이지네이션 */
+.ws-pag { display:flex; align-items:center; justify-content:center; gap:8px; padding:10px 0 }
+.ws-pg-btn { font-size:11px; padding:4px 12px; border-radius:4px; background:var(--bg3); border:1px solid var(--border); color:var(--text2); cursor:pointer }
+.ws-pg-btn:hover { background:var(--gold-dim); color:var(--gold); border-color:var(--gold) }
+.ws-pg-info { font-size:11px; color:var(--text3) }
 
 /* Strong's search results */
 .strongs-result {

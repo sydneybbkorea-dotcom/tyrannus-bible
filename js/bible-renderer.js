@@ -51,9 +51,10 @@ function renderBible(){
 
     const rl = (typeof isRedLetter==='function') && isRedLetter(key) ? ' red-letter' : '';
     const kjvTxt = S.showParallel ? (KJV[S.book]?.[S.ch]?.[i] || '') : '';
+    const kjvDisplay = (S.showStrong && kjvTxt && typeof renderEnStrongsInline==='function') ? renderEnStrongsInline(kjvTxt,S.book,S.ch,vn) : kjvTxt;
     if(S.showParallel && kjvTxt){
       row.className='vrow vrow-parallel'+(isSel?' vsel':'')+hlCls;
-      row.innerHTML=`<span class="vnum">${vn}</span><span class="vtxt vtxt-kr${rl}" data-key="${key}">${displayTxt}</span><span class="vtxt-en-side"><span class="en-vnum">${vn}</span>${kjvTxt}</span><span class="vindic">${hasNote?'<span class="vd vd-n" title="노트 있음"></span>':''}${hasBk?'<span class="vd vd-b" title="북마크"></span>':''}${hasComm?'<span class="vd vd-c" title="주석 있음"></span>':''}</span>`;
+      row.innerHTML=`<span class="vnum">${vn}</span><span class="vtxt vtxt-kr${rl}" data-key="${key}">${displayTxt}</span><span class="vtxt-en-side"><span class="en-vnum">${vn}</span>${kjvDisplay}</span><span class="vindic">${hasNote?'<span class="vd vd-n" title="노트 있음"></span>':''}${hasBk?'<span class="vd vd-b" title="북마크"></span>':''}${hasComm?'<span class="vd vd-c" title="주석 있음"></span>':''}</span>`;
     } else {
       row.innerHTML=`<span class="vnum">${vn}</span><span class="vtxt${rl}" data-key="${key}">${displayTxt}</span><span class="vindic">${hasNote?'<span class="vd vd-n" title="노트 있음"></span>':''}${hasBk?'<span class="vd vd-b" title="북마크"></span>':''}${hasComm?'<span class="vd vd-c" title="주석 있음"></span>':''}</span>`;
     }
