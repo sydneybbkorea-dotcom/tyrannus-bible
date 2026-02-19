@@ -112,22 +112,22 @@
 ═══════════════════════════════════════════════ */
 #notesLayout { display:flex; flex:1; overflow:hidden; position:relative; flex-direction:column }
 
-/* ── FLOATING FOLDER DRAWER — Obsidian 스타일 (slides from right) ── */
+/* ── FLOATING FOLDER DRAWER — Obsidian 스타일 (slides from left) ── */
 #noteExplorer {
-  position:absolute; top:0; right:0; bottom:0;
+  position:absolute; top:0; left:0; bottom:0;
   width:280px; z-index:50;
-  background:#1e1e2e; border-left:1px solid rgba(255,255,255,.06);
+  background:#1e1e2e; border-right:1px solid rgba(255,255,255,.06);
   display:flex; flex-direction:column; overflow:hidden;
-  transform:translateX(100%);
+  transform:translateX(-100%);
   transition:transform .25s cubic-bezier(.4,0,.2,1), box-shadow .25s;
   box-shadow:none;
 }
 #noteExplorer.exp-open {
   transform:translateX(0);
-  box-shadow:-8px 0 32px rgba(0,0,0,.55);
+  box-shadow:8px 0 32px rgba(0,0,0,.55);
 }
-[data-theme="light"] #noteExplorer { background:#f0f0f4; border-left-color:rgba(0,0,0,.08); }
-[data-theme="light"] #noteExplorer.exp-open { box-shadow:-8px 0 32px rgba(0,0,0,.12); }
+[data-theme="light"] #noteExplorer { background:#f0f0f4; border-right-color:rgba(0,0,0,.08); }
+[data-theme="light"] #noteExplorer.exp-open { box-shadow:8px 0 32px rgba(0,0,0,.12); }
 
 /* Drawer overlay */
 #explorerOverlay {
