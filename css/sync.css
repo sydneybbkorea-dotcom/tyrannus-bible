@@ -1,0 +1,31 @@
+/* sync.css — 동기화 배지, 용량 바, 용량 모달 스타일 */
+.sync-badge {
+  display:flex; align-items:center; gap:4px; font-size:11px;
+  padding:2px 8px; border-radius:10px;
+  background:var(--gold-dim); border:1px solid rgba(201,151,58,.3);
+  color:var(--gold); transition:color .3s, border-color .3s, background .3s;
+  white-space:nowrap;
+}
+.sync-badge i { font-size:10px; }
+.sync-badge.sync-ok { color:var(--green,#34d399); border-color:rgba(52,211,153,.3); background:rgba(52,211,153,.08); }
+.sync-badge.sync-err { color:var(--red,#f87171); border-color:rgba(248,113,113,.3); background:rgba(248,113,113,.08); }
+.sync-badge.sync-off { color:var(--text3); border-color:var(--border); background:var(--bg3); }
+
+/* ── 미니 용량 바 (상단바 인라인) ── */
+.quota-bar { width:60px; height:16px; cursor:pointer; display:flex; align-items:center; gap:4px; position:relative; }
+.quota-track { width:40px; height:5px; background:var(--bg4); border-radius:3px; overflow:hidden; flex-shrink:0; }
+.quota-fill { height:100%; background:var(--green,#34d399); border-radius:3px; transition:width .4s, background .3s; }
+.quota-fill.quota-yellow { background:var(--gold,#facc15); }
+.quota-fill.quota-red { background:var(--red,#f87171); }
+.quota-label { font-size:9px; color:var(--text3); white-space:nowrap; }
+
+/* ── 용량 모달 내부 ── */
+.q-bar-wrap { margin:12px 0; }
+.q-bar-bg { height:10px; background:var(--bg4); border-radius:5px; overflow:hidden; }
+.q-bar-fill { height:100%; border-radius:5px; transition:width .4s; }
+.q-bar-text { text-align:center; font-size:12px; color:var(--text2); margin-top:6px; }
+.q-breakdown { margin:14px 0; display:flex; flex-direction:column; gap:6px; }
+.q-row { display:flex; justify-content:space-between; font-size:12px; color:var(--text2); padding:4px 8px; background:var(--bg3); border-radius:var(--radius); }
+.q-tier { text-align:center; font-size:12px; color:var(--text3); margin-top:8px; }
+
+@media(max-width:600px){ .quota-label{display:none} .sync-badge span{display:none} }

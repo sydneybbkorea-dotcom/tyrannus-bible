@@ -7,19 +7,20 @@
 
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/fonts.css?v=12">
+<link rel="stylesheet" href="css/fonts.css?v=13">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <!-- App CSS (모듈화) -->
-<link rel="stylesheet" href="css/variables.css?v=12">
-<link rel="stylesheet" href="css/layout.css?v=12">
-<link rel="stylesheet" href="css/topbar.css?v=12">
-<link rel="stylesheet" href="css/bible.css?v=12">
-<link rel="stylesheet" href="css/notes.css?v=12">
-<link rel="stylesheet" href="css/commentary.css?v=12">
-<link rel="stylesheet" href="css/search.css?v=12">
-<link rel="stylesheet" href="css/ui.css?v=12">
-<link rel="stylesheet" href="css/nav-picker.css?v=12">
+<link rel="stylesheet" href="css/variables.css?v=13">
+<link rel="stylesheet" href="css/layout.css?v=13">
+<link rel="stylesheet" href="css/topbar.css?v=13">
+<link rel="stylesheet" href="css/bible.css?v=13">
+<link rel="stylesheet" href="css/notes.css?v=13">
+<link rel="stylesheet" href="css/commentary.css?v=13">
+<link rel="stylesheet" href="css/search.css?v=13">
+<link rel="stylesheet" href="css/ui.css?v=13">
+<link rel="stylesheet" href="css/nav-picker.css?v=13">
+<link rel="stylesheet" href="css/sync.css?v=13">
 
 <!-- Firebase (ES module — 병렬 로드) -->
 <script type="module" src="js/firebase.js"></script>
@@ -66,8 +67,12 @@
     </button>
     <!-- 로그인 후 사용자 정보 -->
     <div id="userBar" style="display:none;align-items:center;gap:8px;flex-shrink:0;">
-      <div id="syncBadge" style="display:none;align-items:center;gap:4px;font-size:11px;color:var(--gold);padding:2px 8px;border-radius:10px;background:var(--gold-dim);border:1px solid rgba(201,151,58,.3);">
-        <i class="fa fa-cloud" style="font-size:10px"></i> 클라우드 저장 중
+      <div id="syncBadge" class="sync-badge" style="display:none;">
+        <i class="fa fa-cloud"></i> <span id="syncText">동기화 완료</span>
+      </div>
+      <div id="quotaBar" class="quota-bar" onclick="showQuotaModal()" title="저장 공간" style="display:none;">
+        <div class="quota-track"><div class="quota-fill" id="quotaFill"></div></div>
+        <span id="quotaLabel" class="quota-label">0 / 10 MB</span>
       </div>
       <img id="userAvatar" src="" style="width:28px;height:28px;border-radius:50%;border:2px solid var(--gold);object-fit:cover;">
       <span id="userName" style="font-size:12px;color:var(--text2);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
@@ -352,6 +357,17 @@
 </div>
 
 <!-- ══ MODALS ══════════════════════════════════ -->
+<div class="modal-bg" id="mQuota">
+  <div class="modal-box">
+    <div class="modal-title"><i class="fa fa-database"></i> 저장 공간</div>
+    <div id="quotaDetail"></div>
+    <div class="modal-btns">
+      <button class="mbtn mbtn-cancel" onclick="closeM('mQuota')">닫기</button>
+      <button class="mbtn mbtn-ok" onclick="showUpgradeMsg()"><i class="fa fa-arrow-up"></i> 업그레이드</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-bg" id="mFolder">
   <div class="modal-box">
     <div class="modal-title"><i class="fa fa-folder-plus"></i> 새 폴더 만들기</div>
@@ -401,6 +417,7 @@
 
 <!-- Firebase UI (전역 함수, 모듈보다 먼저) -->
 <script src="js/firebase-ui.js"></script>
+<script src="js/firebase-quota-ui.js"></script>
 
 <!-- 데이터 (작은 파일, 동기 로드) -->
 <script src="data/books.js"></script>
