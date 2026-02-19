@@ -33,7 +33,7 @@
   transition:all .15s; white-space:nowrap; flex-shrink:0;
 }
 .tb-btn:hover { background:var(--bg3); border-color:var(--border); color:var(--text) }
-.tb-btn.on { background:rgba(52,211,153,.08); border-color:rgba(52,211,153,.3); color:#34d399 }
+.tb-btn.on { background:rgba(250,204,21,.08); border-color:rgba(250,204,21,.3); color:#facc15 }
 .tb-btn i { font-size:11px }
 .tb-right { margin-left:auto; display:flex; align-items:center; gap:8px; flex-shrink:0; }
 /* ── 메인 검색창 (상단바 목차 자리에 확대 배치) ── */
@@ -62,17 +62,6 @@
 .dE { background:var(--bg4); border:2px solid var(--border2) !important; color:var(--text3); font-size:9px }
 
 
-.bnav-search input:focus { border-color:var(--gold) }
-.bl-grp { padding:4px 6px 1px; font-size:9px; font-weight:700; color:var(--text3); letter-spacing:.8px }
-.bl-item {
-  font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif;
-  padding:3px 6px 3px 8px; font-size:12px; color:var(--text2); cursor:pointer;
-  transition:background .1s, color .1s; display:flex; align-items:center; justify-content:space-between;
-}
-.bl-item:hover { background:var(--bg3); color:var(--text) }
-.bl-item.act { background:var(--gold-dim); color:var(--gold); font-weight:600 }
-.bl-dot { width:5px; height:5px; border-radius:50%; background:var(--gold); opacity:0 }
-.bl-item.act .bl-dot { opacity:1 }
 
 /* 테마 토글 스위치 */
 .theme-toggle {

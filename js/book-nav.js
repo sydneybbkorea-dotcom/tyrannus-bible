@@ -1,25 +1,30 @@
-// ═══════════════════════════════════════════════════
-// BOOK / CHAPTER UI
-// ═══════════════════════════════════════════════════
-function buildBookList(){
-  const c=document.getElementById('bookList'); c.innerHTML='';
-  const mkGrp=l=>{const d=document.createElement('div');d.className='bl-grp';d.textContent=l;c.appendChild(d)};
-  const mkItem=b=>{const d=document.createElement('div');d.className='bl-item'+(b===S.book?' act':'');d.dataset.b=b;d.innerHTML=`<span>${b}</span><span class="bl-dot"></span>`;d.onclick=()=>{S.book=b;S.ch=1;S.selV=null;renderAll();closeBookNav()};return d};
-  mkGrp('구약'); BOOKS.OT.forEach(b=>c.appendChild(mkItem(b)));
-  mkGrp('신약'); BOOKS.NT.forEach(b=>c.appendChild(mkItem(b)));
-}
-function filterBooks(q){document.querySelectorAll('.bl-item').forEach(el=>el.style.display=q&&!el.dataset.b.includes(q)?'none':'')}
+// book-nav.js — 사이드바 책/장 그리드 렌더링
+var _bnTab='OT', _bnSelBook=null;
 
-function buildSelects(){
-  const bs=document.getElementById('bookSel');
-  bs.innerHTML=[...BOOKS.OT,...BOOKS.NT].map(b=>`<option value="${b}"${b===S.book?' selected':''}>${b}</option>`).join('');
-  buildChSel();
+function buildBookList(){
+  _bnSelBook=S.book; _bnTab=BOOKS.OT.includes(S.book)?'OT':'NT';
+  renderBookGrid();
 }
-function buildChSel(){
-  const s=document.getElementById('chSel'); const n=CHCNT[S.book]||1;
-  s.innerHTML=Array.from({length:n},(_,i)=>`<option value="${i+1}"${i+1===S.ch?' selected':''}>${i+1}장</option>`).join('');
+function renderBookGrid(){
+  const c=document.getElementById('bookList'); if(!c) return;
+  const books=_bnTab==='OT'?BOOKS.OT:BOOKS.NT;
+  let h=`<div class="bn-tabs">`;
+  h+=`<div class="bn-tab${_bnTab==='OT'?' act':''}" onclick="_bnSwitchTab('OT')">구약</div>`;
+  h+=`<div class="bn-tab${_bnTab==='NT'?' act':''}" onclick="_bnSwitchTab('NT')">신약</div></div>`;
+  h+=`<div class="bn-books"><div class="bn-book-grid">`;
+  books.forEach(b=>{
+    const short=BOOK_SHORT[b]||b.slice(0,2), act=(b===_bnSelBook);
+    h+=`<div class="bn-book${act?' act':''}" onclick="_bnPickBook('${b}')" title="${b}">${short}</div>`;
+  });
+  h+=`</div></div>`;
+  if(_bnSelBook){
+    const cnt=CHCNT[_bnSelBook]||1, short=BOOK_SHORT[_bnSelBook]||_bnSelBook;
+    h+=`<div class="bn-chapters"><div class="bn-ch-label"><span>${short}</span> 장 선택</div><div class="bn-ch-grid">`;
+    for(let i=1;i<=cnt;i++){
+      const act=(_bnSelBook===S.book&&i===S.ch);
+      h+=`<div class="bn-ch${act?' act':''}" onclick="_bnPickCh(${i})">${i}</div>`;
+    }
+    h+=`</div></div>`;
+  }
+  c.innerHTML=h;
 }
-function onBookChange(){ S.book=document.getElementById('bookSel').value; S.ch=1; S.selV=null; buildChSel(); renderAll(); }
-function onChChange(){ S.ch=parseInt(document.getElementById('chSel').value); S.selV=null; renderAll(); }
-function prevCh(){ if(S.ch>1){S.ch--;S.selV=null;renderAll();}else toast('첫 번째 장입니다') }
-function nextCh(){ if(S.ch<(CHCNT[S.book]||1)){S.ch++;S.selV=null;renderAll();}else toast('마지막 장입니다') }

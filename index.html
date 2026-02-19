@@ -20,6 +20,7 @@
 <link rel="stylesheet" href="css/search.css?v=13">
 <link rel="stylesheet" href="css/ui.css?v=13">
 <link rel="stylesheet" href="css/nav-picker.css?v=13">
+<link rel="stylesheet" href="css/book-grid.css?v=13">
 <link rel="stylesheet" href="css/sync.css?v=13">
 
 <!-- Firebase (ES module — 병렬 로드) -->
@@ -58,7 +59,7 @@
     <!-- 테마 토글 스위치 -->
     <div id="themeToggle" class="theme-toggle" onclick="toggleTheme()">
       <span class="theme-label" id="themeLabel">DARK</span>
-      <div class="theme-knob" id="themeKnob"><i id="themeIcon" class="fa fa-moon"></i></div>
+      <div class="theme-knob" id="themeKnob"><i id="themeIcon" class="fa fa-sun"></i></div>
     </div>
     <!-- 로그인 버튼 -->
     <button id="loginBtn" onclick="signInWithGoogle()">
@@ -85,23 +86,17 @@
 <!-- ══ MAIN ════════════════════════════════════ -->
 <div id="main">
 
-  <!-- LEFT: Book Navigator (슬라이드 오버레이) -->
+  <!-- LEFT: Book Navigator (고정 사이드바) -->
   <div id="bookNav">
     <div class="bnav-head">
       <i class="fa fa-book-open" style="font-size:10px"></i> 성경 목록
       <i class="fa fa-times bnav-close" onclick="closeBookNav()" title="닫기"></i>
     </div>
-    <div style="padding:6px 8px;border-bottom:1px solid var(--border);">
-      <input type="text" id="bookSearchInput" placeholder="성경 검색..."
-        style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:5px 8px;font-size:11px;color:var(--text);outline:none;"
-        oninput="filterBooks(this.value)">
-    </div>
     <div id="bookList"></div>
   </div>
   <!-- 슬라이드 탭 (닫혔을 때 클릭하여 열기) -->
   <div id="bookNavTab" onclick="openBookNav()" title="성경 목록"><i class="fa fa-chevron-right"></i></div>
-  <!-- 오버레이 배경 (클릭하면 닫힘) -->
-  <div id="bookNavOverlay" onclick="closeBookNav()"></div>
+  <div id="bookNavOverlay"></div>
 
   <!-- CENTER: Bible Text -->
   <div id="biblePane">
@@ -434,6 +429,7 @@
 <script src="js/bible-renderer.js"></script>
 <script src="js/bible-renderer-hl.js"></script>
 <script src="js/book-nav.js"></script>
+<script src="js/book-nav-actions.js"></script>
 <script src="js/nav-picker.js"></script>
 <script src="js/nav-picker-ui.js"></script>
 <script src="js/nav-picker-render.js"></script>
