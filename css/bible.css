@@ -2,33 +2,82 @@
 #biblePane {
   flex:1; display:flex; flex-direction:column; overflow:hidden; background:var(--bg); min-width:0;
 }
-/* ── View Bar: 장 네비게이션 + 탭별 토글 ── */
+/* ── View Bar: Eloquent 스타일 ── */
 #bibleViewBar {
   display:flex; align-items:center; justify-content:space-between;
-  height:36px; flex-shrink:0; padding:0 8px;
-  background:var(--bg); border-bottom:1px solid var(--border);
+  height:34px; flex-shrink:0; padding:0 6px;
+  background:var(--bg2); border-bottom:1px solid var(--border);
+  position:relative; z-index:90;
 }
-.vb-nav { display:flex; align-items:center; gap:2px }
+.vb-left, .vb-right { display:flex; align-items:center; gap:2px }
+.vb-sel {
+  display:flex; align-items:center; gap:4px; padding:3px 10px;
+  font-size:12px; font-weight:600; color:var(--text); white-space:nowrap;
+  background:var(--bg3); border:1px solid var(--border); border-radius:4px;
+  cursor:pointer; transition:all .12s;
+}
+.vb-sel:hover { border-color:var(--text3); background:var(--bg4,var(--bg3)) }
+.vb-caret { font-size:10px; color:var(--text3); margin-left:2px }
 .vb-arrow {
-  width:28px; height:28px; display:flex; align-items:center; justify-content:center;
-  border:none; background:transparent; color:var(--text3); font-size:11px;
-  cursor:pointer; border-radius:4px; transition:all .12s;
+  width:24px; height:24px; display:flex; align-items:center; justify-content:center;
+  border:none; background:transparent; color:var(--text3); font-size:10px;
+  cursor:pointer; border-radius:3px; transition:all .12s;
 }
 .vb-arrow:hover { background:var(--bg3); color:var(--text) }
-.vb-ch-label {
-  font-size:12px; font-weight:600; color:var(--text); padding:4px 10px;
-  background:transparent; border:1px solid var(--border); border-radius:6px;
-  cursor:pointer; transition:all .12s; white-space:nowrap;
+.vb-ch-num {
+  font-size:12px; font-weight:700; color:var(--gold); min-width:18px;
+  text-align:center; font-family:'JetBrains Mono',monospace;
 }
-.vb-ch-label:hover { background:var(--bg3); border-color:var(--text3) }
-.vb-toggles { display:flex; align-items:center; gap:2px }
+.vb-sep { width:1px; height:16px; background:var(--border); margin:0 4px }
+.vb-info { font-size:10px; color:var(--text3); white-space:nowrap }
 .vb-btn {
-  width:28px; height:28px; display:flex; align-items:center; justify-content:center;
-  border:none; background:transparent; color:var(--text3); font-size:12px;
+  width:26px; height:26px; display:flex; align-items:center; justify-content:center;
+  border:none; background:transparent; color:var(--text3); font-size:11px;
   cursor:pointer; border-radius:4px; transition:all .12s;
 }
 .vb-btn:hover { background:var(--bg3); color:var(--text) }
 .vb-btn.vb-on { color:var(--gold); background:var(--gold-dim) }
+
+/* ── Chapter Picker 팝업 ── */
+.ch-picker {
+  position:absolute; left:0; right:0; z-index:89;
+  background:var(--bg2); border-bottom:1px solid var(--border);
+  box-shadow:0 8px 24px rgba(0,0,0,.3);
+  max-height:340px; overflow:hidden;
+}
+.cp-wrap { display:flex; height:100%; max-height:340px }
+.cp-books {
+  width:140px; flex-shrink:0; overflow-y:auto; padding:6px 0;
+  border-right:1px solid var(--border);
+}
+.cp-sec-label {
+  font-size:9px; font-weight:700; color:var(--text3); text-transform:uppercase;
+  padding:6px 12px 3px; letter-spacing:1px;
+}
+.cp-nt-label { margin-top:4px; border-top:1px solid var(--border); padding-top:8px }
+.cp-book {
+  padding:4px 12px; font-size:11px; color:var(--text2); cursor:pointer;
+  transition:all .08s; white-space:nowrap;
+}
+.cp-book:hover { background:var(--bg3); color:var(--text) }
+.cp-book.cp-book-cur { color:var(--gold) }
+.cp-book.cp-book-act { background:var(--gold-dim); color:var(--gold); font-weight:600 }
+.cp-chapters { flex:1; overflow-y:auto; padding:10px 14px }
+.cp-ch-title {
+  font-size:13px; font-weight:700; color:var(--text); margin-bottom:8px;
+  padding-bottom:6px; border-bottom:1px solid var(--border);
+}
+.cp-ch-grid {
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(34px,1fr)); gap:4px;
+}
+.cp-ch {
+  height:30px; display:flex; align-items:center; justify-content:center;
+  font-size:12px; color:var(--text2); background:var(--bg3);
+  border-radius:4px; cursor:pointer; transition:all .1s;
+  font-family:'JetBrains Mono',monospace;
+}
+.cp-ch:hover { background:var(--gold-dim); color:var(--gold) }
+.cp-ch.cp-ch-act { background:var(--gold); color:var(--bg); font-weight:700 }
 
 /* ── Bible Tab Bar (physical folder tab style) ── */
 #bibleTabBar {

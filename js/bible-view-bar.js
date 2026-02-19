@@ -1,9 +1,14 @@
-// bible-view-bar.js — 본문 내 장 네비게이션 + 탭별 뷰 토글 동기화
+// bible-view-bar.js — 뷰바 렌더링 + 장 선택 팝업
 function renderViewBar(){
-  // 장 라벨 업데이트
-  var lbl = document.getElementById('vbChLabel');
-  if(lbl) lbl.textContent = S.book + ' ' + S.ch + '장';
-  // 토글 버튼 on/off 동기화
+  var bl = document.getElementById('vbBookLabel');
+  var cn = document.getElementById('vbChNum');
+  var vc = document.getElementById('vbVerseCount');
+  if(bl) bl.textContent = S.book;
+  if(cn) cn.textContent = S.ch;
+  if(vc){
+    var cnt = BIBLE[S.book]?.[S.ch]?.length || 0;
+    vc.textContent = cnt + '절';
+  }
   _syncVbBtn('vbKorean', S.showKorean!==false);
   _syncVbBtn('vbEnglish', !!S.showEnglish);
   _syncVbBtn('vbRead', document.body.classList.contains('read-mode'));

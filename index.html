@@ -150,25 +150,31 @@
       <div id="bibleTabList"></div>
       <button id="bibleTabAdd" onclick="addBibleTab()" title="새 탭"><i class="fa fa-plus"></i></button>
     </div>
-    <!-- 뷰 바: 장 네비게이션 + 탭별 토글 설정 -->
+    <!-- 뷰 바: Eloquent 스타일 -->
     <div id="bibleViewBar">
-      <div class="vb-nav">
+      <div class="vb-left">
+        <button class="vb-sel" id="vbBookSel" onclick="openChPicker()"><span id="vbBookLabel">창세기</span> <i class="fa fa-caret-down vb-caret"></i></button>
         <button class="vb-arrow" onclick="prevCh()" title="이전 장"><i class="fa fa-chevron-left"></i></button>
-        <button class="vb-ch-label" id="vbChLabel" onclick="toggleNavPicker()">창세기 1장</button>
+        <span class="vb-ch-num" id="vbChNum">1</span>
         <button class="vb-arrow" onclick="nextCh()" title="다음 장"><i class="fa fa-chevron-right"></i></button>
       </div>
-      <div class="vb-toggles">
+      <div class="vb-right">
         <button class="vb-btn vb-on" id="vbKorean" onclick="toggleLang('kr')" title="한글 본문">한</button>
         <button class="vb-btn" id="vbEnglish" onclick="toggleLang('en')" title="영어 본문">영</button>
+        <span class="vb-sep"></span>
         <button class="vb-btn" id="vbRed" onclick="toggleRedLetter()" title="예수님 말씀"><i class="fa fa-cross"></i></button>
         <button class="vb-btn" id="vbStrong" onclick="toggleStrongCodes()" title="원어 코드"><i class="fa fa-code"></i></button>
         <button class="vb-btn" id="vbRead" onclick="toggleReadMode()" title="읽기 모드"><i class="fa fa-book-reader"></i></button>
+        <span class="vb-sep"></span>
+        <span class="vb-info" id="vbVerseCount"></span>
       </div>
     </div>
+    <!-- 장 선택 팝업 -->
+    <div id="chPickerPopup" class="ch-picker" style="display:none"></div>
     <div id="bibleScroll">
       <div class="ch-head">
         <h1 id="chTitle">창세기 1장</h1>
-        <p id="chSub">표준킹제임스성경 (SKJB)</p>
+        <p id="chSub">Genesis</p>
       </div>
       <div id="vCont"></div>
       <div class="ch-nav">
@@ -512,6 +518,8 @@
 <script src="js/bible-tabs.js"></script>
 <script src="js/bible-tabs-render.js"></script>
 <script src="js/bible-view-bar.js"></script>
+<script src="js/ch-picker.js"></script>
+<script src="js/ch-picker-render.js"></script>
 
 <!-- 하이라이트 & 절 선택 -->
 <script src="js/highlight.js"></script>
