@@ -24,6 +24,14 @@
 }
 .rp-tab:hover:not(.act) { color:var(--text2) }
 .rp-tab.act { color:#34d399; border-bottom-color:#34d399; font-weight:700 }
+/* 패널 아이콘 버튼 (폴더 열기, 닫기) */
+.rp-ico-btn {
+  width:34px; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+  background:none; border:none; color:var(--text3); font-size:13px;
+  cursor:pointer; transition:all .12s;
+}
+.rp-ico-btn:hover { color:var(--text); background:var(--bg3) }
+.rp-close-btn { margin-left:auto }
 .rp-body { flex:1; overflow:hidden; display:flex; flex-direction:column }
 .rp-sec { display:none; flex:1; flex-direction:column; overflow:hidden }
 .rp-sec.act { display:flex }
