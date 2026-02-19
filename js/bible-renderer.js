@@ -28,7 +28,7 @@ function renderBible(){
     // hlC가 있어도 mark 방식(드래그)이면 hl-row 클래스 안 붙임
     // S.hl[key]가 'MARK:색상' 형태면 mark 방식, 단순 색상이면 row 방식
     const isMarkHL = hlC && String(hlC).startsWith('MARK:');
-    const hlCls = (hlC && !isMarkHL) ? ` hl-row-${hlC.toLowerCase()}` : '';
+    const hlCls = (hlC && !isMarkHL && !S.showStrong) ? ` hl-row-${hlC.toLowerCase()}` : '';
     const isSel = S.selVSet?.has(vn);
     row.className='vrow'+(isSel?' vsel':'')+hlCls;
     row.dataset.v=vn;
@@ -65,6 +65,6 @@ function renderBible(){
     });
     cont.appendChild(row);
   });
-  // 저장된 하이라이트 범위 복원
-  requestAnimationFrame(()=>restoreHL());
+  // 저장된 하이라이트 범위 복원 (원어 코드 표시 중에는 건너뜀)
+  if(!S.showStrong) requestAnimationFrame(()=>restoreHL());
 }
