@@ -11,17 +11,25 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <!-- App CSS (모듈화) -->
-<link rel="stylesheet" href="css/variables.css?v=13">
-<link rel="stylesheet" href="css/layout.css?v=13">
-<link rel="stylesheet" href="css/topbar.css?v=13">
-<link rel="stylesheet" href="css/bible.css?v=13">
-<link rel="stylesheet" href="css/notes.css?v=13">
-<link rel="stylesheet" href="css/commentary.css?v=13">
-<link rel="stylesheet" href="css/search.css?v=13">
-<link rel="stylesheet" href="css/ui.css?v=13">
-<link rel="stylesheet" href="css/nav-picker.css?v=13">
-<link rel="stylesheet" href="css/book-grid.css?v=13">
-<link rel="stylesheet" href="css/sync.css?v=13">
+<link rel="stylesheet" href="css/variables.css?v=14">
+<link rel="stylesheet" href="css/layout.css?v=14">
+<link rel="stylesheet" href="css/icon-rail.css?v=14">
+<link rel="stylesheet" href="css/side-panel.css?v=14">
+<link rel="stylesheet" href="css/topbar.css?v=14">
+<link rel="stylesheet" href="css/bible.css?v=14">
+<link rel="stylesheet" href="css/notes.css?v=14">
+<link rel="stylesheet" href="css/commentary.css?v=14">
+<link rel="stylesheet" href="css/search.css?v=14">
+<link rel="stylesheet" href="css/ui.css?v=14">
+<link rel="stylesheet" href="css/nav-picker.css?v=14">
+<link rel="stylesheet" href="css/book-grid.css?v=14">
+<link rel="stylesheet" href="css/bookmark.css?v=14">
+<link rel="stylesheet" href="css/word-study.css?v=14">
+<link rel="stylesheet" href="css/xref-inline.css?v=14">
+<link rel="stylesheet" href="css/passage-guide.css?v=14">
+<link rel="stylesheet" href="css/visual-filter.css?v=14">
+<link rel="stylesheet" href="css/reading-plan.css?v=14">
+<link rel="stylesheet" href="css/sync.css?v=14">
 
 <!-- Firebase (ES module — 병렬 로드) -->
 <script type="module" src="js/firebase.js"></script>
@@ -49,11 +57,8 @@
     <input type="text" id="qsInput" placeholder="성경 검색..." onkeydown="if(event.key==='Enter')doQS()">
   </div>
   <div class="tb-sep"></div>
-  <button class="tb-btn" id="tbNotes" onclick="togglePanel('notes')"><i class="fa fa-pen"></i> 노트</button>
-  <button class="tb-btn" id="tbDict" onclick="togglePanel('dictionary')"><i class="fa fa-book"></i> 사전</button>
   <button class="tb-btn" id="tbStrong" onclick="toggleStrongCodes()" title="원어 코드(스트롱 번호) 표시/숨기기"><i class="fa fa-code"></i> 원어</button>
   <button class="tb-btn" id="tbParallel" onclick="toggleParallel()" title="영한 대조 표시"><i class="fa fa-columns"></i> 영한</button>
-  <button class="tb-btn" id="tbSearch" onclick="togglePanel('search')"><i class="fa fa-search"></i> 검색설정</button>
   <button class="tb-btn" id="tbReadMode" onclick="toggleReadMode()" title="읽기 모드"><i class="fa fa-book-reader"></i> 읽기</button>
   <div class="tb-right">
     <!-- 테마 토글 스위치 -->
@@ -86,17 +91,115 @@
 <!-- ══ MAIN ════════════════════════════════════ -->
 <div id="main">
 
-  <!-- LEFT: Book Navigator (고정 사이드바) -->
-  <div id="bookNav">
-    <div class="bnav-head">
-      <i class="fa fa-book-open" style="font-size:10px"></i> 성경 목록
-      <i class="fa fa-times bnav-close" onclick="closeBookNav()" title="닫기"></i>
+  <!-- LEFT: Slack 스타일 아이콘 레일 -->
+  <div id="iconRail">
+    <div class="rail-top">
+      <button class="rail-icon" data-rail="bible" onclick="toggleRail('bible')" title="성경 목록">
+        <i class="fa fa-book-bible"></i><span class="rail-label">성경</span>
+      </button>
+      <button class="rail-icon" data-rail="notes" onclick="toggleRail('notes')" title="노트">
+        <i class="fa fa-pen"></i><span class="rail-label">노트</span>
+      </button>
+      <button class="rail-icon" data-rail="search" onclick="toggleRail('search')" title="검색">
+        <i class="fa fa-search"></i><span class="rail-label">검색</span>
+      </button>
+      <button class="rail-icon" data-rail="bookmark" onclick="toggleRail('bookmark')" title="북마크">
+        <i class="fa fa-bookmark"></i><span class="rail-label">북마크</span>
+      </button>
+      <button class="rail-icon" data-rail="original" onclick="toggleRail('original')" title="원어 검색">
+        <i class="fa fa-language"></i><span class="rail-label">원어</span>
+      </button>
+      <button class="rail-icon" data-rail="reading" onclick="toggleRail('reading')" title="읽기 계획">
+        <i class="fa fa-calendar-check"></i><span class="rail-label">읽기</span>
+      </button>
     </div>
-    <div id="bookList"></div>
+    <div class="rail-bottom">
+      <button class="rail-icon" data-rail="settings" onclick="toggleRail('settings')" title="설정">
+        <i class="fa fa-cog"></i><span class="rail-label">설정</span>
+      </button>
+    </div>
   </div>
-  <!-- 슬라이드 탭 (닫혔을 때 클릭하여 열기) -->
-  <div id="bookNavTab" onclick="openBookNav()" title="성경 목록"><i class="fa fa-chevron-right"></i></div>
-  <div id="bookNavOverlay"></div>
+
+  <!-- LEFT: 확장 사이드패널 -->
+  <div id="sidePanel">
+    <!-- 성경 목록 -->
+    <div class="sp-section" id="sp-bible">
+      <div class="sp-head"><i class="fa fa-book-bible"></i> 성경 목록</div>
+      <div class="sp-body" id="bookList"></div>
+    </div>
+    <!-- 노트 목록 -->
+    <div class="sp-section" id="sp-notes">
+      <div class="sp-head"><i class="fa fa-pen"></i> 노트
+        <div style="margin-left:auto;display:flex;gap:4px">
+          <button onclick="newFolder()" style="font-size:11px;color:var(--text3);cursor:pointer;padding:2px 4px;background:none;border:none" title="새 폴더"><i class="fa fa-folder-plus"></i></button>
+          <button onclick="newNote()" style="font-size:11px;color:var(--text3);cursor:pointer;padding:2px 4px;background:none;border:none" title="새 노트"><i class="fa fa-plus"></i></button>
+        </div>
+      </div>
+      <div class="sp-search-wrap">
+        <input type="text" placeholder="노트 검색..." oninput="_spFilterNotes(this.value)">
+      </div>
+      <div class="sp-body" id="spNoteList"></div>
+    </div>
+    <!-- 검색 -->
+    <div class="sp-section" id="sp-search">
+      <div class="sp-head"><i class="fa fa-search"></i> 검색</div>
+      <div class="sp-search-wrap">
+        <input type="text" id="spSearchInput" placeholder="성경 검색..." onkeydown="if(event.key==='Enter')_spDoSearch()">
+      </div>
+      <div style="padding:6px 10px;display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--border);flex-shrink:0">
+        <label style="font-size:10px;color:var(--text2);display:inline-flex;align-items:center;gap:3px"><input type="checkbox" class="sp-sch-f" data-f="OT" checked style="cursor:pointer"> 구약</label>
+        <label style="font-size:10px;color:var(--text2);display:inline-flex;align-items:center;gap:3px"><input type="checkbox" class="sp-sch-f" data-f="NT" checked style="cursor:pointer"> 신약</label>
+        <label style="font-size:10px;color:var(--text2);display:inline-flex;align-items:center;gap:3px"><input type="checkbox" class="sp-sch-f" data-f="notes" checked style="cursor:pointer"> 노트</label>
+      </div>
+      <div class="sp-body" id="spSearchResults" style="font-size:12px"></div>
+    </div>
+    <!-- 북마크 -->
+    <div class="sp-section" id="sp-bookmark">
+      <div class="sp-head"><i class="fa fa-bookmark"></i> 북마크</div>
+      <div class="sp-body" id="spBookmarkList"></div>
+    </div>
+    <!-- 원어 검색 -->
+    <div class="sp-section" id="sp-original">
+      <div class="sp-head"><i class="fa fa-language"></i> 원어 검색</div>
+      <div class="sp-body" id="spOriginalContent">
+        <div style="padding:20px;text-align:center;color:var(--text3);font-size:12px"><i class="fa fa-language" style="font-size:24px;margin-bottom:8px;display:block;opacity:.4"></i>준비 중입니다</div>
+      </div>
+    </div>
+    <!-- 읽기 계획 -->
+    <div class="sp-section" id="sp-reading">
+      <div class="sp-head"><i class="fa fa-calendar-check"></i> 읽기 계획</div>
+      <div class="sp-body" id="spReadingContent">
+        <div style="padding:20px;text-align:center;color:var(--text3);font-size:12px"><i class="fa fa-calendar-check" style="font-size:24px;margin-bottom:8px;display:block;opacity:.4"></i>준비 중입니다</div>
+      </div>
+    </div>
+    <!-- 설정 -->
+    <div class="sp-section" id="sp-settings">
+      <div class="sp-head"><i class="fa fa-cog"></i> 설정</div>
+      <div class="sp-body" style="padding:12px">
+        <div style="font-size:12px;color:var(--text2);margin-bottom:12px">앱 설정</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:12px;color:var(--text)">읽기 모드</span>
+          <button class="tb-btn" onclick="toggleReadMode()" style="font-size:11px"><i class="fa fa-book-reader"></i> 토글</button>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:12px;color:var(--text)"><i class="fa fa-cross" style="color:#ef4444;margin-right:4px"></i>예수님 말씀</span>
+          <button class="tb-btn" id="btnRedLetter" onclick="toggleRedLetter()" style="font-size:11px"><i class="fa fa-toggle-off"></i> 끄기</button>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:12px;color:var(--text)">원어 코드</span>
+          <button class="tb-btn" onclick="toggleStrongCodes()" style="font-size:11px"><i class="fa fa-code"></i> 토글</button>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:12px;color:var(--text)">영한 대조</span>
+          <button class="tb-btn" onclick="toggleParallel()" style="font-size:11px"><i class="fa fa-columns"></i> 토글</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 레거시 요소 (숨김) -->
+  <div id="bookNav" style="display:none"><div id="bookNavTab"></div></div>
+  <div id="bookNavOverlay" style="display:none"></div>
 
   <!-- CENTER: Bible Text -->
   <div id="biblePane">
@@ -425,6 +528,9 @@
 <script src="js/storage.js"></script>
 <script src="js/ui-utils.js"></script>
 
+<!-- 비주얼 필터 -->
+<script src="js/visual-filter.js"></script>
+
 <!-- 성경 관련 -->
 <script src="js/bible-renderer.js"></script>
 <script src="js/bible-renderer-hl.js"></script>
@@ -460,6 +566,10 @@
 <script src="js/strongs-ui.js"></script>
 <script src="js/strongs-ui-def.js"></script>
 <script src="js/strongs-ui-search.js"></script>
+<script src="js/word-study.js"></script>
+<script src="js/word-study-en.js"></script>
+<script src="js/advanced-search.js"></script>
+<script src="js/advanced-search-render.js"></script>
 
 <!-- 노트 시스템 -->
 <script src="js/notes-editor.js"></script>
@@ -480,6 +590,16 @@
 <script src="js/notes-links-verse.js"></script>
 <script src="js/notes-links-vtip.js"></script>
 
+<!-- 교차참조 & Passage Guide -->
+<script src="js/xref-inline.js"></script>
+<script src="js/passage-guide.js"></script>
+
+<!-- 아이콘 레일 & 사이드패널 -->
+<script src="js/icon-rail.js"></script>
+<script src="js/side-notes.js"></script>
+<script src="js/bookmark-panel.js"></script>
+<script src="js/side-search.js"></script>
+
 <!-- 컨텍스트 메뉴 & 패널 -->
 <script src="js/context-menu.js"></script>
 <script src="js/context-menu-notelink.js"></script>
@@ -497,6 +617,13 @@
 <script src="js/search-exec.js"></script>
 <script src="js/search-quick.js"></script>
 <script src="js/read-mode.js"></script>
+
+<!-- 읽기 계획 -->
+<script src="js/reading-plan-data.js"></script>
+<script src="js/reading-plan-gen.js"></script>
+<script src="js/reading-plan.js"></script>
+<script src="js/reading-plan-ui.js"></script>
+<script src="js/reading-plan-render.js"></script>
 
 <!-- 초기화 (반드시 마지막) -->
 <script src="js/app-paste.js"></script>

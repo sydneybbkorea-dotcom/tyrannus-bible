@@ -1,0 +1,50 @@
+/* word-study.css — 단어 연구 UI */
+.ws-section {
+  margin-top:16px; padding-top:14px;
+  border-top:1px solid var(--border);
+}
+.ws-title {
+  font-size:12px; font-weight:700; color:var(--text);
+  margin-bottom:10px; display:flex; align-items:center; gap:6px;
+}
+.ws-title i { color:var(--gold); font-size:11px; }
+.ws-freq { font-size:12px; color:var(--text2); margin-bottom:8px; }
+.ws-freq-num { font-size:18px; font-weight:700; color:var(--gold); margin-right:2px; }
+.ws-dist { margin-bottom:10px; }
+.ws-bar {
+  height:8px; background:var(--blue); border-radius:4px;
+  overflow:hidden; position:relative;
+}
+.ws-bar-ot {
+  height:100%; background:var(--gold); border-radius:4px 0 0 4px;
+  min-width:2px;
+}
+.ws-dist-labels {
+  display:flex; justify-content:space-between; font-size:10px;
+  color:var(--text3); margin-top:3px;
+}
+.ws-verses { max-height:300px; overflow-y:auto; }
+.ws-verse {
+  display:flex; gap:6px; padding:5px 0; cursor:pointer;
+  border-bottom:1px solid var(--border); transition:background .1s;
+  font-size:11px;
+}
+.ws-verse:hover { background:var(--bg3); }
+.ws-ref {
+  color:var(--gold); font-family:'JetBrains Mono',monospace;
+  font-size:10px; min-width:80px; flex-shrink:0;
+}
+.ws-txt { color:var(--text2); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.ws-more {
+  padding:8px 0; text-align:center; font-size:11px;
+  color:var(--text3); cursor:pointer;
+}
+.ws-more:hover { color:var(--gold); }
+.ws-tabs { display:flex; gap:0; margin-bottom:12px; }
+.ws-tab {
+  flex:1; padding:6px 0; text-align:center; font-size:11px;
+  font-weight:700; color:var(--text3); cursor:pointer;
+  border-bottom:2px solid transparent; transition:all .15s;
+}
+.ws-tab:hover { color:var(--text); }
+.ws-tab.active { color:var(--gold); border-bottom-color:var(--gold); }

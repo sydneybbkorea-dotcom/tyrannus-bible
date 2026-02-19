@@ -1,11 +1,13 @@
-// panel-nav.js — 좌측 성경 목록 사이드바 + 노트 탐색기 토글
+// panel-nav.js — 좌측 성경 목록 오버레이 + 노트 탐색기 토글
 
-/* ── 성경 목록 사이드바 (본문을 밀어내는 고정 패널) ── */
+/* ── 성경 목록 오버레이 슬라이드 ── */
 function openBookNav(){
   document.getElementById('bookNav')?.classList.add('open');
+  document.getElementById('bookNavOverlay')?.classList.add('show');
 }
 function closeBookNav(){
   document.getElementById('bookNav')?.classList.remove('open');
+  document.getElementById('bookNavOverlay')?.classList.remove('show');
 }
 function toggleBookNav(){
   const nav = document.getElementById('bookNav');

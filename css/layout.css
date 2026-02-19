@@ -1,7 +1,7 @@
+/* layout.css — 전체 레이아웃 (Slack 스타일 3-column) */
 *,*::before,*::after { margin:0; padding:0; box-sizing:border-box }
 html, body { height:100%; overflow:hidden }
 body {
-  /* UI 전체는 고딕체, 성경 본문(.vtxt)만 명조체 사용 */
   font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif;
   background:var(--bg); color:var(--text);
   display:flex; flex-direction:column; font-size:14px;
@@ -9,47 +9,10 @@ body {
 }
 #main { display:flex; flex:1; overflow:hidden }
 
-/* ── LEFT: Book Navigator (고정 사이드바, 본문 밀어냄) ── */
-#bookNav {
-  width:0; overflow:hidden; flex-shrink:0;
-  background:var(--bg2); border-right:1px solid var(--border);
-  display:flex; flex-direction:column;
-  transition:width .25s cubic-bezier(.4,0,.2,1);
-}
-#bookNav.open { width:280px; overflow:visible; }
+/* 레거시 bookNav 요소 숨김 (아이콘 레일로 대체) */
+#bookNav, #bookNavTab, #bookNavOverlay { display:none !important; }
 
-/* 슬라이드 탭: 닫혔을 때 왼쪽 가장자리에 노출 */
-#bookNavTab {
-  position:fixed; left:0; top:50%; z-index:299;
-  transform:translateY(-50%);
-  width:18px; height:56px;
-  background:var(--bg3); border:1px solid var(--border);
-  border-left:none; border-radius:0 6px 6px 0;
-  display:flex; align-items:center; justify-content:center;
-  cursor:pointer; color:var(--text3); font-size:9px;
-  transition:opacity .25s, background .15s;
-}
-#bookNavTab:hover { background:var(--bg4); color:var(--text); }
-#bookNav.open ~ #bookNavTab { opacity:0; pointer-events:none; }
-
-/* bookNav 헤더 */
-.bnav-head {
-  padding:8px 10px; font-size:11px; font-weight:700; color:var(--text3);
-  text-transform:uppercase; letter-spacing:1px;
-  border-bottom:1px solid var(--border);
-  display:flex; align-items:center; gap:5px;
-  flex-shrink:0; white-space:nowrap;
-}
-.bnav-close {
-  margin-left:auto; cursor:pointer; font-size:14px;
-  color:var(--text3); transition:color .15s; padding:2px;
-}
-.bnav-close:hover { color:var(--text); }
-
-#bookList { overflow-y:auto; flex:1; padding:0; min-width:280px; }
-
-/* 오버레이 (사이드바 모드에선 미사용) */
-#bookNavOverlay { display:none; }
+#bookList { overflow-y:auto; flex:1; padding:0; min-width:260px; }
 
 ::-webkit-scrollbar { width:5px; height:5px }
 ::-webkit-scrollbar-track { background:transparent }

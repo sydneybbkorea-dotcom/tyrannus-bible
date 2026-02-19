@@ -1,0 +1,24 @@
+/* bookmark.css — 사이드패널 북마크 목록 스타일 */
+.bk-group-head {
+  padding:8px 14px 4px; font-size:10px; font-weight:700;
+  color:var(--gold); text-transform:uppercase; letter-spacing:.5px;
+}
+.bk-item {
+  display:flex; align-items:center; gap:6px; padding:7px 14px;
+  cursor:pointer; transition:background .1s; font-size:12px;
+}
+.bk-item:hover { background:var(--bg3); }
+.bk-ref {
+  font-family:'JetBrains Mono',monospace; font-size:11px;
+  color:var(--gold); min-width:36px; flex-shrink:0;
+}
+.bk-txt {
+  flex:1; color:var(--text2); overflow:hidden;
+  text-overflow:ellipsis; white-space:nowrap; font-size:11px;
+}
+.bk-del {
+  font-size:9px; color:var(--text3); opacity:0;
+  transition:opacity .15s, color .15s; padding:2px;
+}
+.bk-item:hover .bk-del { opacity:1; }
+.bk-del:hover { color:var(--red); }

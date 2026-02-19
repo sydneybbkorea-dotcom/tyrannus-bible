@@ -1,0 +1,30 @@
+/* icon-rail.css — Slack 스타일 아이콘 레일 (왼쪽 네비게이션) */
+#iconRail {
+  width:56px; flex-shrink:0; background:var(--rail-bg);
+  border-right:1px solid var(--border);
+  display:flex; flex-direction:column; justify-content:space-between;
+  padding:10px 0 8px; z-index:100;
+}
+.rail-top, .rail-bottom { display:flex; flex-direction:column; align-items:center; gap:2px; }
+.rail-icon {
+  width:40px; height:40px; border-radius:8px; border:none;
+  display:flex; align-items:center; justify-content:center;
+  color:var(--text3); font-size:16px; cursor:pointer;
+  transition:all .15s; position:relative; background:transparent;
+}
+.rail-icon:hover { background:var(--bg3); color:var(--text); }
+.rail-icon.active {
+  color:var(--gold); background:var(--gold-dim);
+}
+.rail-icon.active::before {
+  content:''; position:absolute; left:0; top:8px; bottom:8px;
+  width:3px; background:var(--gold); border-radius:0 3px 3px 0;
+}
+.rail-icon .rail-label {
+  display:none; font-size:9px; position:absolute;
+  left:56px; white-space:nowrap; background:var(--bg4);
+  color:var(--text); padding:4px 8px; border-radius:4px;
+  box-shadow:var(--shadow); pointer-events:none; z-index:999;
+}
+.rail-icon:hover .rail-label { display:block; }
+[data-theme="light"] #iconRail { background:#d0d3dc; border-right-color:#c0c4d0 }

@@ -1,0 +1,31 @@
+/* passage-guide.css — Passage Guide 요약 카드 */
+.pg-card {
+  padding:12px; margin:8px; border-radius:var(--radius);
+  background:var(--bg3); border:1px solid var(--border);
+}
+.pg-ref {
+  font-size:11px; font-weight:700; color:var(--gold);
+  font-family:'JetBrains Mono',monospace; margin-bottom:6px;
+}
+.pg-txt { font-size:13px; color:var(--text); line-height:1.6; margin-bottom:4px; }
+.pg-en {
+  font-size:12px; color:var(--text2); line-height:1.5;
+  font-style:italic; margin-bottom:8px;
+}
+.pg-stats { display:flex; gap:8px; margin-bottom:8px; }
+.pg-stat {
+  font-size:10px; color:var(--text3); display:flex;
+  align-items:center; gap:3px;
+}
+.pg-stat i { font-size:9px; }
+.pg-refs { border-top:1px solid var(--border); padding-top:6px; }
+.pg-ref-item {
+  display:flex; gap:6px; padding:4px 0; cursor:pointer;
+  font-size:11px; transition:color .1s;
+}
+.pg-ref-item:hover { color:var(--gold); }
+.pg-ref-lbl {
+  color:var(--blue); font-family:'JetBrains Mono',monospace;
+  font-size:10px; min-width:70px; flex-shrink:0;
+}
+.pg-ref-txt { color:var(--text2); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }

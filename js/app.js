@@ -19,8 +19,8 @@
 
   S.explorerOpen = false;
 
-  // 2) 필수 데이터 비동기 로드 (한국어 성경 + 주석)
-  await Promise.all([loadBibleKR(), loadCommentary()]);
+  // 2) 필수 데이터 비동기 로드 (한국어 성경 + 주석 + 레드레터)
+  await Promise.all([loadBibleKR(), loadCommentary(), (typeof loadRedLetter==='function'?loadRedLetter():Promise.resolve())]);
 
   // 3) 데이터 로드 완료 후 UI 렌더링
   setupVTip();

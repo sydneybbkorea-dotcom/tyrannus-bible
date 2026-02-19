@@ -16,6 +16,7 @@ function selVerse(vn, e){
     S.selV=vn;
   }
   _updateStatV(); updateDict();
+  if(typeof showXrefBar==='function'){ S.selV ? showXrefBar(S.selV) : hideXrefBar(); }
 }
 function _updateStatV(){
   const statV=document.getElementById('statV'); if(!statV) return;
@@ -26,6 +27,7 @@ function _updateStatV(){
 function clearAllSel(){
   document.querySelectorAll('.vrow.vsel').forEach(r=>r.classList.remove('vsel'));
   if(S.selVSet) S.selVSet.clear(); S.selV=null; _updateStatV();
+  if(typeof hideXrefBar==='function') hideXrefBar();
 }
 document.addEventListener('click',e=>{
   const bs=document.getElementById('bibleScroll');

@@ -1,0 +1,21 @@
+/* xref-inline.css — 교차참조 인라인 미니 바 */
+.xref-bar {
+  display:flex; align-items:center; gap:4px; flex-wrap:wrap;
+  padding:4px 8px 4px 30px; margin-bottom:2px;
+  background:var(--bg3); border-radius:0 0 var(--radius) var(--radius);
+  animation:xrefSlide .2s ease-out;
+}
+@keyframes xrefSlide { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:none} }
+.xref-label {
+  font-size:10px; color:var(--text3); display:flex;
+  align-items:center; gap:3px; margin-right:2px;
+}
+.xref-label i { font-size:9px; }
+.xref-chip {
+  font-size:10px; color:var(--blue); background:rgba(74,158,240,.08);
+  border:1px solid rgba(74,158,240,.2); border-radius:10px;
+  padding:1px 7px; cursor:pointer; transition:all .15s;
+  white-space:nowrap; font-family:'JetBrains Mono',monospace;
+}
+.xref-chip:hover { background:rgba(74,158,240,.18); border-color:rgba(74,158,240,.4); }
+.xref-more { font-size:9px; color:var(--text3); }

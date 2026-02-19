@@ -19,7 +19,4 @@ function switchTab(name){
   }
 
   S.panelOpen=name;
-  document.getElementById('tbNotes')?.classList.toggle('on',name==='notes');
-  document.getElementById('tbDict')?.classList.toggle('on',name==='dictionary');
-  document.getElementById('tbSearch')?.classList.toggle('on',name==='search');
 }

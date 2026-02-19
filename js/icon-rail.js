@@ -1,0 +1,40 @@
+// icon-rail.js — Slack 스타일 아이콘 레일 클릭 → 확장 패널 토글
+var _activeRail = null;
+
+function toggleRail(name){
+  if(_activeRail === name){ closeSidePanel(); return; }
+  openSidePanel(name);
+}
+
+function openSidePanel(name){
+  _activeRail = name;
+  document.querySelectorAll('.rail-icon').forEach(b=>{
+    b.classList.toggle('active', b.dataset.rail===name);
+  });
+  const sp = document.getElementById('sidePanel');
+  if(sp) sp.classList.add('open');
+  document.querySelectorAll('.sp-section').forEach(s=>s.classList.remove('active'));
+  const sec = document.getElementById('sp-'+name);
+  if(sec) sec.classList.add('active');
+  _initSection(name);
+}
+
+function closeSidePanel(){
+  _activeRail = null;
+  document.querySelectorAll('.rail-icon').forEach(b=>b.classList.remove('active'));
+  const sp = document.getElementById('sidePanel');
+  if(sp) sp.classList.remove('open');
+}
+
+function _initSection(name){
+  if(name==='bible') buildBookList();
+  else if(name==='notes') renderSideNotes();
+  else if(name==='search') _focusSideSearch();
+  else if(name==='bookmark') renderBookmarks();
+  else if(name==='original'&&typeof renderAdvSearch==='function') renderAdvSearch();
+  else if(name==='reading'&&typeof renderReadingPlan==='function') renderReadingPlan();
+}
+
+function _focusSideSearch(){
+  setTimeout(()=>document.getElementById('spSearchInput')?.focus(), 100);
+}

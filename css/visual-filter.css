@@ -1,0 +1,5 @@
+/* visual-filter.css — 예수님 말씀 Red Letter 스타일 */
+.vtxt.red-letter { color: #ef4444; }
+[data-theme="light"] .vtxt.red-letter { color: #dc2626; }
+.vtxt-kr.red-letter { color: #ef4444; }
+[data-theme="light"] .vtxt-kr.red-letter { color: #dc2626; }

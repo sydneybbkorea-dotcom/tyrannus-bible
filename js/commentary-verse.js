@@ -29,12 +29,17 @@ function updateCommentary(){
 
   const hasContent = comm || refs.length || linked.length || memoMap.size || vMemo;
   if(!hasContent){
-    el.innerHTML=`<div class="comm-verse-group"><div class="comm-verse-header"><i class="fa fa-bookmark"></i><span>${S.book} ${S.ch}:${vn}</span></div>
+    const pgEmpty = (typeof buildPassageGuide==='function') ? buildPassageGuide(vn) : '';
+    el.innerHTML=pgEmpty+`<div class="comm-verse-group"><div class="comm-verse-header"><i class="fa fa-bookmark"></i><span>${S.book} ${S.ch}:${vn}</span></div>
       <div class="comm-hint" style="padding:30px 16px"><i class="fa fa-feather-alt" style="font-size:16px;opacity:.4"></i><br>이 구절에 대한<br>주석이나 메모가 없어요</div></div>`;
     return;
   }
 
+  // Passage Guide 카드 삽입
+  const pgCard = (typeof buildPassageGuide==='function') ? buildPassageGuide(vn) : '';
+
   let h = `<div class="comm-verse-group">`;
+  h += pgCard;
   h += `<div class="comm-verse-header"><div style="display:flex;align-items:center;gap:8px"><i class="fa fa-bookmark"></i><span>${S.book} ${S.ch}:${vn}</span></div></div>`;
   h += `<div class="comm-verse-body">`;
 

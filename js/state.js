@@ -7,6 +7,8 @@ Object.assign(S, {
   hlColor:'Y',
   showStrong:false,
   showParallel:false,
+  showRedLetter:false,
+  readPlan:null,
   hl:{}, hlMemo:{}, hlRanges:{}, verseMemo:{}, bk:new Set(),
   notes:[], folders:[
     {id:'default',name:'기본 폴더'},
