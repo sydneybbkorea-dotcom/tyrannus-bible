@@ -49,7 +49,7 @@
     <input type="text" id="qsInput" placeholder="성경 검색..." onkeydown="if(event.key==='Enter')doQS()">
   </div>
   <div class="tb-sep"></div>
-  <button class="tb-btn on" id="tbNotes" onclick="togglePanel('notes')"><i class="fa fa-pen"></i> 노트</button>
+  <button class="tb-btn" id="tbNotes" onclick="togglePanel('notes')"><i class="fa fa-pen"></i> 노트</button>
   <button class="tb-btn" id="tbDict" onclick="togglePanel('dictionary')"><i class="fa fa-book"></i> 사전</button>
   <button class="tb-btn" id="tbStrong" onclick="toggleStrongCodes()" title="원어 코드(스트롱 번호) 표시/숨기기"><i class="fa fa-code"></i> 원어</button>
   <button class="tb-btn" id="tbParallel" onclick="toggleParallel()" title="영한 대조 표시"><i class="fa fa-columns"></i> 영한</button>
@@ -118,8 +118,8 @@
     </div>
   </div>
 
-  <!-- RIGHT: Panel -->
-  <div id="rightPanel">
+  <!-- RIGHT: Panel (초기 비활성) -->
+  <div id="rightPanel" class="rp-hide">
     <div class="rp-tabs" id="rpTabs">
       <div class="rp-subtabs" id="subtabs-notes">
         <div class="rp-tab act" data-sub="notes" onclick="switchSub('notes')"><i class="fa fa-pen"></i> 노트</div>

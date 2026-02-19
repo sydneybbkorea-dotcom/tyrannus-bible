@@ -16,7 +16,7 @@ Object.assign(S, {
   ],
   curFolder:'default', curNoteId:null, curTags:[],
   schFilter:'all',
-  panelOpen:'notes',
+  panelOpen:null,
   _noteSubTab:'notes', _dictSubTab:'dict-strongs',
   bookNavOpen:false, explorerOpen:false,   // 슬라이드 패널: 기본 닫힘
   openFolders:new Set(['default']),
