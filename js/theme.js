@@ -1,14 +1,17 @@
-// theme.js — 다크/라이트 테마 전환
+// theme.js — 다크/라이트 테마 토글 스위치
+function toggleTheme(){
+  const cur = document.documentElement.getAttribute('data-theme') || 'dark';
+  setTheme(cur === 'dark' ? 'light' : 'dark');
+}
 function setTheme(t){
   document.documentElement.setAttribute('data-theme', t);
   localStorage.setItem('kjb2-theme', t);
-  ['dark','light'].forEach(n => {
-    const btn = document.getElementById('themeBtn-'+n);
-    if(!btn) return;
-    const active = (n === t);
-    btn.style.background = active ? 'var(--gold-dim)' : 'transparent';
-    btn.style.color = active ? (n==='dark' ? '#fff' : 'var(--gold)') : 'var(--text3)';
-  });
+  const tog = document.getElementById('themeToggle');
+  const label = document.getElementById('themeLabel');
+  const icon = document.getElementById('themeIcon');
+  if(tog) { tog.className = 'theme-toggle ' + t; }
+  if(label) label.textContent = t === 'dark' ? 'DARK' : 'LIGHT';
+  if(icon) icon.className = t === 'dark' ? 'fa fa-moon' : 'fa-regular fa-sun';
 }
 function initTheme(){
   const saved = localStorage.getItem('kjb2-theme') || 'dark';
