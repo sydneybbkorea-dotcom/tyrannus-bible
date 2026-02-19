@@ -28,11 +28,21 @@ document.addEventListener('copy', e=>{
   const vrow = anchorNode?.parentElement?.closest('.vrow');
   if(!vrow && !anchorNode?.closest?.('.vrow')) return;
 
-  const ref = S.selV ? `${S.book} ${S.ch}:${S.selV}` : '';
   const selText = sel.toString().trim();
   if(!selText) return;
 
-  /* HTML 서식 보존: 선택 영역의 HTML을 vtxt 클래스로 감싸서 전달 */
+  /* 다중 선택 시: 각 구절에 책,장,절 표시 */
+  const arr = _getSelVerses ? _getSelVerses() : (S.selV ? [S.selV] : []);
+  if(arr.length > 1){
+    const {html,plain} = _buildCopyData(arr);
+    e.clipboardData.setData('text/html', html);
+    e.clipboardData.setData('text/plain', plain);
+    e.preventDefault();
+    showCopyRef(`${arr.length}개 구절 복사됨 📋`);
+    return;
+  }
+  /* 단일 선택: 기존 방식(드래그 서식 보존) */
+  const ref = S.selV ? `${S.book} ${S.ch}:${S.selV}` : '';
   const range = sel.getRangeAt(0);
   const frag = range.cloneContents();
   const wrap = document.createElement('span');
@@ -43,7 +53,6 @@ document.addEventListener('copy', e=>{
   e.clipboardData.setData('text/html', refHtml + wrap.outerHTML);
   e.clipboardData.setData('text/plain', (ref ? ref + '\n' : '') + selText);
   e.preventDefault();
-
   if(S.selV) showCopyRef(`${S.book} ${S.ch}:${S.selV}`);
 });
 

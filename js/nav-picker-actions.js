@@ -19,7 +19,7 @@ function _npSelectBook(book){
 function _npSelectCh(ch){
   S.book = _npSelectedBook;
   S.ch = ch;
-  S.selV = null;
+  S.selV = null; S.selVSet.clear();
   closeNavPicker();
   updateNavPickerLabel();
   renderAll();

@@ -3,7 +3,7 @@
 window.S = window.S || {};
 const S = window.S;
 Object.assign(S, {
-  book:'창세기', ch:1, selV:null,
+  book:'창세기', ch:1, selV:null, selVSet:new Set(),
   hlColor:'Y',
   showStrong:false,
   showParallel:false,

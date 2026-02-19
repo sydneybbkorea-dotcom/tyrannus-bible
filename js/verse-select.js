@@ -1,23 +1,32 @@
-function restoreSel(){if(S.selV){const r=document.querySelector(`.vrow[data-v="${S.selV}"]`);if(r)r.classList.add('vsel')}}
-
-// ═══════════════════════════════════════════════════
-// VERSE SELECT & STATUS
-// ═══════════════════════════════════════════════════
-function selVerse(vn, e){
-  S.selV=vn;
-  document.querySelectorAll('.vrow').forEach(r=>r.classList.remove('vsel'));
-  const row=document.querySelector(`.vrow[data-v="${vn}"]`);
-  if(row) row.classList.add('vsel');
-  const statV = document.getElementById('statV');
-  if(statV) {
-    statV.innerHTML=`<i class="fa fa-map-pin" style="color:var(--gold)"></i> ${S.book} ${S.ch}:${vn}`;
-  }
-  updateDict();
+// verse-select.js — 구절 선택/해제 + 다중 선택 + 북마크
+function restoreSel(){
+  (S.selVSet||[]).forEach(v=>{
+    const r=document.querySelector(`.vrow[data-v="${v}"]`); if(r) r.classList.add('vsel');
+  });
 }
-
-// ═══════════════════════════════════════════════════
-// BOOKMARKS
-// ═══════════════════════════════════════════════════
+function selVerse(vn, e){
+  if(!S.selVSet) S.selVSet=new Set();
+  if(S.selVSet.has(vn)){
+    S.selVSet.delete(vn);
+    document.querySelector(`.vrow[data-v="${vn}"]`)?.classList.remove('vsel');
+    S.selV=S.selVSet.size?Math.max(...S.selVSet):null;
+  } else {
+    S.selVSet.add(vn);
+    document.querySelector(`.vrow[data-v="${vn}"]`)?.classList.add('vsel');
+    S.selV=vn;
+  }
+  _updateStatV(); updateDict();
+}
+function _updateStatV(){
+  const statV=document.getElementById('statV'); if(!statV) return;
+  const arr=[...(S.selVSet||[])].sort((a,b)=>a-b);
+  if(!arr.length){ statV.innerHTML=''; return; }
+  statV.innerHTML=`<i class="fa fa-map-pin" style="color:var(--gold)"></i> ${S.book} ${arr.map(v=>S.ch+':'+v).join(', ')}`;
+}
+function clearAllSel(){
+  document.querySelectorAll('.vrow.vsel').forEach(r=>r.classList.remove('vsel'));
+  if(S.selVSet) S.selVSet.clear(); S.selV=null;
+}
 function addBookmark(){
   if(!S.selV){toast('먼저 구절을 클릭하세요');return}
   const k=`${S.book}_${S.ch}_${S.selV}`;
@@ -25,4 +34,3 @@ function addBookmark(){
   else{S.bk.add(k);toast('북마크 추가됨 🔖')}
   persist(); renderBible(); restoreSel();
 }
-

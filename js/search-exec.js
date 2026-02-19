@@ -38,7 +38,7 @@ function doSearch(){
     const hl=r.text.replace(new RegExp(q,'g'),`<em>${q}</em>`);
     d.innerHTML=`<div class="sri-ref">${r.ref}</div><div class="sri-txt">${hl}</div>`;
     if(r.type==='bible') d.onclick=()=>{
-      S.book=r.b;S.ch=r.c;S.selV=r.v;renderAll();
+      S.book=r.b;S.ch=r.c;S.selV=r.v;S.selVSet=new Set([r.v]);renderAll();
       setTimeout(()=>{
         const row=document.querySelector(`.vrow[data-v="${r.v}"]`);
         if(row)row.scrollIntoView({behavior:'smooth',block:'center'})
