@@ -90,7 +90,9 @@
 }
 .theme-toggle.dark .theme-knob { transform:translateX(50px); background:var(--bg4); }
 .theme-toggle.light .theme-knob { transform:translateX(0); background:#fff; border-color:#d0d0d0; }
-.theme-knob i { transition:transform .3s; }
+#themeIcon { display:flex; align-items:center; justify-content:center; line-height:1; }
+#themeIcon i { font-size:11px; }
+#themeIcon svg { display:block; }
 
 /* 로그인 버튼 */
 #loginBtn {
