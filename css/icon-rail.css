@@ -3,9 +3,21 @@
   width:56px; flex-shrink:0; background:var(--rail-bg);
   border-right:1px solid var(--border);
   display:flex; flex-direction:column; justify-content:space-between;
-  padding:10px 0 8px; z-index:100;
+  padding:44px 0 8px; z-index:100;
 }
 .rail-top, .rail-bottom { display:flex; flex-direction:column; align-items:center; gap:2px; }
+/* ── 사이드바 접기/펼치기 토글 버튼 (레일 위 고정) ── */
+.rail-toggle-btn {
+  position:absolute; top:6px; left:8px; z-index:150;
+  width:40px; height:32px; border-radius:6px; border:none;
+  display:flex; align-items:center; justify-content:center;
+  color:var(--text3); cursor:pointer; background:transparent;
+  transition:all .15s; flex-shrink:0;
+  -webkit-tap-highlight-color:transparent; touch-action:manipulation;
+}
+.rail-toggle-btn:hover { background:var(--bg3); color:var(--text); }
+/* 레일 닫힘 시 토글 버튼 왼쪽 끝으로 이동 */
+.rail-toggle-btn.rail-hidden { left:4px; }
 .rail-icon {
   width:40px; height:40px; border-radius:8px; border:none;
   display:flex; align-items:center; justify-content:center;

@@ -59,7 +59,7 @@
   --rail-bg:  #d0d3dc;
 }
 /* 라이트 테마: 영역별 배경 강제 */
-[data-theme="light"] #topbar { background:#dfe2ec; border-bottom-color:#c0c4d0 }
+/* topbar 제거됨 */
 [data-theme="light"] #sidePanel { background:#e4e6f0; border-right-color:#c0c4d0 }
 [data-theme="light"] #biblePane { background:#ffffff }
 [data-theme="light"] #bibleScroll { background:#ffffff }
@@ -76,7 +76,7 @@
 
 :root {
 
-  --topbar-h:   46px;
+  --topbar-h:   0px;
   --hlbar-h:    36px;
   --book-sw:    110px;   /* left book sidebar */
   --note-sw:    220px;   /* note file explorer */

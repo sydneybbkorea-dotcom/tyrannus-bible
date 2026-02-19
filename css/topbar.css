@@ -1,82 +1,13 @@
-/* ═══════════════════════════════════════════════
-   TOPBAR
-═══════════════════════════════════════════════ */
-#topbar {
-  height:var(--topbar-h); flex-shrink:0;
-  background:var(--bg2); border-bottom:1px solid var(--border);
-  display:flex; align-items:center; padding:0 12px; z-index:200;
-  backdrop-filter:blur(8px); position:relative;
-}
-/* 사이드바 토글 버튼 (왼쪽 고정) */
-.tb-rail-toggle {
-  width:36px; height:36px; border-radius:8px; border:none;
-  display:flex; align-items:center; justify-content:center;
-  color:var(--text); font-size:18px; cursor:pointer;
-  background:var(--bg3); transition:all .15s; flex-shrink:0;
-  -webkit-tap-highlight-color:transparent; touch-action:manipulation;
-}
-.tb-rail-toggle:hover { background:var(--hover-bg,rgba(255,255,255,.08)); color:var(--text); }
+/* topbar.css — 하이라이트 닷 + 레일 토글 아이콘 상태 */
+
 /* 아이콘 모양 전환: 열림=구분선 있음, 닫힘=구분선 없음 */
 .rail-ico-closed { display:none }
-.tb-rail-toggle.rail-hidden .rail-ico-open { display:none }
-.tb-rail-toggle.rail-hidden .rail-ico-closed { display:block }
-/* 중앙 로고 (고풍스러운 세리프) */
-.logo {
-  font-family:'Playfair Display','Georgia','Times New Roman',serif;
-  font-size:24px; font-weight:600; color:var(--gold); letter-spacing:1.5px; white-space:nowrap;
-  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
-  text-shadow:0 1px 3px rgba(0,0,0,.15);
-  font-style:italic;
-}
-.nav-sel {
-  background:var(--bg3); border:1px solid var(--border2); color:var(--text);
-  font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif;
-  border-radius:var(--radius); padding:5px 24px 5px 10px; font-size:12px;
-  outline:none; cursor:pointer; appearance:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='5'%3E%3Cpath d='M0 0l4.5 5 4.5-5z' fill='%235a564f'/%3E%3C/svg%3E");
-  background-repeat:no-repeat; background-position:right 8px center;
-  transition:border-color .15s;
-}
-.nav-sel:focus { border-color:var(--gold) }
-#bookSel { width:108px } #chSel { width:60px }
+.rail-hidden .rail-ico-open { display:none }
+.rail-hidden .rail-ico-closed { display:block }
 
-.tb-sep { width:1px; height:22px; background:var(--border); flex-shrink:0 }
-.tb-btn {
-  font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif;
-  display:flex; align-items:center; gap:5px;
-  padding:5px 10px; border-radius:var(--radius); font-size:12px;
-  background:transparent; border:1px solid transparent; color:var(--text2);
-  transition:all .15s; white-space:nowrap; flex-shrink:0;
-}
-.tb-btn:hover { background:var(--bg3); border-color:var(--border); color:var(--text) }
-.tb-btn.on { background:rgba(250,204,21,.08); border-color:rgba(250,204,21,.3); color:#facc15 }
-.tb-btn i { font-size:11px }
-.tb-right { margin-left:auto; display:flex; align-items:center; gap:8px; flex-shrink:0; }
-/* ── 메인 검색창 (상단바 목차 자리에 확대 배치) ── */
-.qs-wrap { position:relative; }
-.qs-main { flex:0 1 260px; min-width:140px; }
-.qs-main input {
-  background:var(--bg3); border:1px solid var(--border2); color:var(--text);
-  border-radius:var(--radius); padding:6px 10px 6px 30px; font-size:13px;
-  width:100%; outline:none; transition:border-color .2s;
-}
-.qs-main input:focus { border-color:var(--gold); }
-.qs-icon-left {
-  position:absolute; left:10px; top:50%; transform:translateY(-50%);
-  color:var(--text3); font-size:12px; pointer-events:none;
-}
-
-/* ═══════════════════════════════════════════════
-   HIGHLIGHT BAR
-═══════════════════════════════════════════════ */
-
-
+/* ═══ HIGHLIGHT DOTS ═══ */
 .hldot:hover { transform:scale(1.2) }
 .hldot.on { border-color:var(--text) !important; transform:scale(1.15) }
 .dY { background:#FACC15 } .dO { background:#FB923C } .dG { background:#34D399 }
 .dB { background:#60A5FA } .dP { background:#C084FC }
 .dE { background:var(--bg4); border:2px solid var(--border2) !important; color:var(--text3); font-size:9px }
-
-
-
-/* 로그인 버튼 (사이드바 rail-icon으로 이동됨, topbar 스타일 제거) */
