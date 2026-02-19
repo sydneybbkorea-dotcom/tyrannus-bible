@@ -12,6 +12,10 @@ function switchSub(sub){
     document.getElementById('sec-commentary')?.classList.toggle('act', sub==='commentary');
     document.getElementById('sec-outline')?.classList.toggle('act', sub==='outline');
     if(sub==='outline' && typeof renderOutline==='function') renderOutline();
+    if(sub==='notes'){
+      if(typeof _noteUpdateTabTitle==='function') _noteUpdateTabTitle();
+      if(typeof _noteInitAutoSave==='function') _noteInitAutoSave();
+    }
   }
 
   if(sub.startsWith('dict-')){

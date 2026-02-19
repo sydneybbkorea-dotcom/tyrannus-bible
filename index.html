@@ -17,7 +17,7 @@
 <link rel="stylesheet" href="css/side-panel.css?v=15">
 <link rel="stylesheet" href="css/topbar.css?v=17">
 <link rel="stylesheet" href="css/bible.css?v=17">
-<link rel="stylesheet" href="css/notes.css?v=15">
+<link rel="stylesheet" href="css/notes.css?v=18">
 <link rel="stylesheet" href="css/commentary.css?v=15">
 <link rel="stylesheet" href="css/search.css?v=15">
 <link rel="stylesheet" href="css/ui.css?v=15">
@@ -226,98 +226,60 @@
             <div id="folderTree"></div>
           </div>
           <div id="noteEditor">
-            <div class="note-title-wrap">
-              <input type="text" id="noteTitle" placeholder="노트 제목...">
-              <button class="folder-icon-btn" id="drawerBtn" title="폴더 탐색기 열기" onclick="toggleExplorer()">
-                <i class="fa fa-folder-open"></i>
-              </button>
-            </div>
             <div class="rte-bar">
               <div class="rte-row">
-                <select class="rte-sel" onchange="cmd('formatBlock',this.value);this.value=''">
-                  <option value="">단락</option>
-                  <option value="h1">H1</option>
-                  <option value="h2">H2</option>
-                  <option value="h3">H3</option>
-                  <option value="p">본문</option>
-                  <option value="blockquote">인용</option>
-                </select>
-                <select class="rte-sel rte-fontsize" title="글꼴 크기" onchange="setFontSize(this.value);this.value=''">
-                  <option value="">크기</option>
-                  <option value="10">10</option><option value="12">12</option><option value="14">14</option>
-                  <option value="16">16</option><option value="18">18</option><option value="20">20</option>
-                  <option value="24">24</option><option value="28">28</option><option value="32">32</option>
-                </select>
-                <div class="rte-sep"></div>
-                <button class="rte-btn" title="굵게 (Ctrl+B)" onmousedown="event.preventDefault()" onclick="cmd('bold')"><b>B</b></button>
-                <button class="rte-btn" title="기울임 (Ctrl+I)" onmousedown="event.preventDefault()" onclick="cmd('italic')"><i>I</i></button>
-                <button class="rte-btn" title="밑줄 (Ctrl+U)" onmousedown="event.preventDefault()" onclick="cmd('underline')"><u>U</u></button>
+                <button class="rte-btn" id="backBtn" onclick="goBack()" title="이전 노트" style="display:none" onmousedown="event.preventDefault()"><i class="fa fa-arrow-left"></i></button>
+                <div class="rte-sep" id="backBtnSep" style="display:none"></div>
+                <button class="rte-btn" title="굵게" onmousedown="event.preventDefault()" onclick="cmd('bold')"><b>B</b></button>
+                <button class="rte-btn" title="기울임" onmousedown="event.preventDefault()" onclick="cmd('italic')"><i>I</i></button>
+                <button class="rte-btn" title="밑줄" onmousedown="event.preventDefault()" onclick="cmd('underline')"><u>U</u></button>
                 <button class="rte-btn" title="취소선" onmousedown="event.preventDefault()" onclick="cmd('strikeThrough')"><s>S</s></button>
                 <div class="rte-sep"></div>
                 <button class="rte-btn" title="텍스트 색상" onclick="openColorPalette(this,'fore')" onmousedown="event.preventDefault()"><i class="fa fa-font" style="color:var(--gold)"></i></button>
-                <button class="rte-btn" title="배경 하이라이트" onclick="openColorPalette(this,'bg')" onmousedown="event.preventDefault()"><i class="fa fa-fill-drip"></i></button>
+                <button class="rte-btn" title="하이라이트" onclick="openColorPalette(this,'bg')" onmousedown="event.preventDefault()"><i class="fa fa-fill-drip"></i></button>
                 <div class="rte-sep"></div>
                 <button class="rte-btn" title="글머리 목록" onmousedown="event.preventDefault()" onclick="cmd('insertUnorderedList')"><i class="fa fa-list-ul"></i></button>
                 <button class="rte-btn" title="번호 목록" onmousedown="event.preventDefault()" onclick="cmd('insertOrderedList')"><i class="fa fa-list-ol"></i></button>
                 <div class="rte-sep"></div>
-                <button class="rte-btn" title="왼쪽 정렬" onmousedown="event.preventDefault()" onclick="cmd('justifyLeft')"><i class="fa fa-align-left"></i></button>
-                <button class="rte-btn" title="가운데 정렬" onmousedown="event.preventDefault()" onclick="cmd('justifyCenter')"><i class="fa fa-align-center"></i></button>
-                <button class="rte-btn" title="오른쪽 정렬" onmousedown="event.preventDefault()" onclick="cmd('justifyRight')"><i class="fa fa-align-right"></i></button>
-                <div class="rte-sep"></div>
-                <button class="rte-btn" title="표 삽입" onclick="insertTable()"><i class="fa fa-table"></i></button>
-                <button class="rte-btn" title="구분선" onmousedown="event.preventDefault()" onclick="cmd('insertHorizontalRule')"><i class="fa fa-minus"></i></button>
-                <div class="rte-sep"></div>
                 <button class="rte-btn" title="실행 취소" onmousedown="event.preventDefault()" onclick="cmd('undo')"><i class="fa fa-undo"></i></button>
                 <button class="rte-btn" title="다시 실행" onmousedown="event.preventDefault()" onclick="cmd('redo')"><i class="fa fa-redo"></i></button>
-                <div class="rte-sep"></div>
-                <button class="rte-btn" title="들여쓰기" onmousedown="event.preventDefault()" onclick="cmd('indent')"><i class="fa fa-indent"></i></button>
-                <button class="rte-btn" title="내어쓰기" onmousedown="event.preventDefault()" onclick="cmd('outdent')"><i class="fa fa-outdent"></i></button>
-              </div>
-              <div class="rte-row rte-row2">
-                <span class="rte-row-label">삽입</span>
-                <div class="rte-sep"></div>
-                <button class="rte-btn rte-insert" onclick="openNoteLink()" title="노트 링크 삽입"><i class="fa fa-link"></i><span class="rte-lbl">노트</span></button>
-                <button class="rte-btn rte-insert" onclick="openVersePick()" title="구절 링크 삽입"><i class="fa fa-book-open"></i><span class="rte-lbl">구절</span></button>
-                <button class="rte-btn rte-insert" onclick="openUrlEmbed(this)" title="외부 링크 삽입"><i class="fa fa-globe"></i><span class="rte-lbl">링크</span></button>
-                <button class="rte-btn rte-insert" onclick="openYoutubeEmbed(this)" title="유튜브 삽입"><i class="fab fa-youtube"></i><span class="rte-lbl">유튜브</span></button>
-                <button class="rte-btn rte-insert" onclick="openFileAttach()" title="파일/이미지 첨부"><i class="fa fa-paperclip"></i><span class="rte-lbl">파일</span></button>
-                <div class="rte-sep"></div>
-                <button class="rte-btn" onmousedown="event.preventDefault()" onclick="insertCallout('info')" title="정보 박스"><i class="fa fa-info-circle" style="color:#4a9eff"></i></button>
-                <button class="rte-btn" onmousedown="event.preventDefault()" onclick="insertCallout('warn')" title="경고 박스"><i class="fa fa-exclamation-triangle" style="color:#f0a500"></i></button>
-                <button class="rte-btn" onmousedown="event.preventDefault()" onclick="insertCallout('pray')" title="아이디어/묵상 박스"><i class="fa fa-lightbulb" style="color:var(--gold)"></i></button>
-                <div class="rte-sep"></div>
-                <button class="rte-btn rte-insert" onmousedown="event.preventDefault()" onclick="insertCheckbox()" title="체크박스 삽입"><i class="fa fa-check-square"></i><span class="rte-lbl">체크</span></button>
-                <button class="rte-btn rte-insert" onmousedown="event.preventDefault()" onclick="insertDateStamp()" title="날짜 삽입"><i class="fa fa-calendar-day"></i><span class="rte-lbl">날짜</span></button>
+                <div style="flex:1"></div>
+                <button class="rte-btn rte-accent" title="삽입" onmousedown="event.preventDefault()" onclick="_noteToggleInsertMenu(this)"><i class="fa fa-plus"></i></button>
+                <button class="rte-btn" id="drawerBtn" title="폴더 탐색기" onmousedown="event.preventDefault()" onclick="toggleExplorer()"><i class="fa fa-folder-open"></i></button>
               </div>
             </div>
-            <div id="noteContent" contenteditable="true"
-              data-ph=""></div>
+            <!-- 삽입 팝업 메뉴 -->
+            <div id="noteInsertPopup" class="note-insert-popup">
+              <div class="nip-item" onclick="_insMenuAction('openNoteLink')"><i class="fa fa-link"></i> 노트 링크</div>
+              <div class="nip-item" onclick="_insMenuAction('openVersePick')"><i class="fa fa-book-open"></i> 구절 링크</div>
+              <div class="nip-item" onclick="_insMenuAction('openUrlEmbed')"><i class="fa fa-globe"></i> 외부 링크</div>
+              <div class="nip-item" onclick="_insMenuAction('openYoutubeEmbed')"><i class="fab fa-youtube"></i> 유튜브</div>
+              <div class="nip-item" onclick="_insMenuAction('openFileAttach')"><i class="fa fa-paperclip"></i> 파일 첨부</div>
+              <div class="nip-div"></div>
+              <div class="nip-item" onclick="_insMenuCallout('info')"><i class="fa fa-info-circle" style="color:#4a9eff"></i> 정보 박스</div>
+              <div class="nip-item" onclick="_insMenuCallout('warn')"><i class="fa fa-exclamation-triangle" style="color:#f0a500"></i> 경고 박스</div>
+              <div class="nip-item" onclick="_insMenuCallout('pray')"><i class="fa fa-lightbulb" style="color:var(--gold)"></i> 묵상 박스</div>
+              <div class="nip-div"></div>
+              <div class="nip-item" onclick="_insMenuAction('insertTable')"><i class="fa fa-table"></i> 표 삽입</div>
+              <div class="nip-item" onclick="_insMenuAction('insertCheckbox')"><i class="fa fa-check-square"></i> 체크박스</div>
+              <div class="nip-item" onclick="_insMenuAction('insertDateStamp')"><i class="fa fa-calendar-day"></i> 날짜 삽입</div>
+            </div>
+            <div id="noteContent" contenteditable="true" data-ph="제목을 입력하세요..."></div>
             <div class="backlink-panel" id="backlinkPanel">
               <div class="backlink-head" onclick="toggleBacklinks()">
                 <i class="fa fa-link"></i>&nbsp;백링크&nbsp;<span id="backlinkCount" style="color:var(--gold)"></span>
                 <i class="fa fa-chevron-down" id="blChevron" style="margin-left:auto;transition:transform .2s;font-size:9px"></i>
               </div>
               <div id="backlinkList">
-                <div class="bl-empty" style="padding:12px;text-align:center;color:var(--text3);font-size:11px;">
-                  이 노트로 연결된 다른 노트가 없습니다
-                </div>
+                <div class="bl-empty" style="padding:12px;text-align:center;color:var(--text3);font-size:11px;">이 노트로 연결된 다른 노트가 없습니다</div>
               </div>
-            </div>
-            <div class="note-nav-bar" id="noteNavBar" style="display:none">
-              <button class="nav-back-btn" id="backBtn" onclick="goBack()" title="이전 노트로 돌아가기" style="display:none">
-                <i class="fa fa-arrow-left"></i>
-              </button>
-              <div class="nav-path" id="navPath"></div>
-              <div id="nedBreadcrumb" class="ned-breadcrumb"></div>
             </div>
             <div class="note-footer">
               <span class="nfooter-label">🏷</span>
               <div class="tag-row" id="tagRow">
                 <input class="tag-inp" id="tagInp" placeholder="태그..." onkeydown="addTag(event)">
               </div>
-              <div style="flex:1;min-width:4px"></div>
-              <select id="noteFolderSel" style="font-size:11px;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:3px 6px;color:var(--text2);outline:none;cursor:pointer;max-width:90px;"></select>
-              <button onclick="saveNote()" title="저장" style="margin-left:5px;padding:4px 12px;border-radius:5px;font-size:11px;font-weight:700;background:var(--gold);color:var(--bg);border:none;cursor:pointer;flex-shrink:0;"><i class="fa fa-save"></i> 저장</button>
+              <select id="noteFolderSel" style="display:none"></select>
             </div>
           </div>
         </div>
@@ -585,6 +547,8 @@
 <script src="js/korean-search.js"></script>
 
 <!-- 노트 시스템 -->
+<script src="js/notes-autosave.js"></script>
+<script src="js/notes-insert-menu.js"></script>
 <script src="js/notes-editor.js"></script>
 <script src="js/notes-editor-insert.js"></script>
 <script src="js/notes-editor-inline.js"></script>

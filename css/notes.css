@@ -238,13 +238,8 @@
 .back-btn:hover { color:var(--gold); border-color:var(--gold); background:var(--gold-dim) }
 .back-btn i { font-size:10px }
 
-/* ── Note Navigation Bar ── */
-.note-nav-bar {
-  display:flex; align-items:center; gap:6px;
-  padding:5px 10px; border-top:1px solid var(--border);
-  background:var(--bg2); flex-shrink:0; min-height:32px;
-  overflow:hidden;
-}
+/* ── Note Navigation Bar (hidden — back btn in toolbar) ── */
+.note-nav-bar { display:none }
 .nav-back-btn {
   display:flex; align-items:center; justify-content:center;
   width:24px; height:24px; border-radius:4px;
@@ -332,36 +327,49 @@
   padding:4px 7px; font-size:13px; line-height:1;
 }
 .ned-act:hover { background:var(--gold-dim); border-color:var(--gold); color:var(--gold) }
-.ned-save { background:var(--gold); color:var(--bg); border-color:var(--gold); font-weight:700 }
-.ned-save:hover { background:var(--gold2); color:var(--bg) }
 
-/* Title input */
-.note-title-wrap {
-  padding:0; flex-shrink:0;
-  display:flex; align-items:stretch; /* 높이 전체 채움 */
-  border-bottom:1px solid var(--border);
+/* Inline H1 title (Obsidian style) */
+#noteContent>h1:first-child {
+  font-size:26px; color:var(--gold2);
+  font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif;
+  font-weight:700; margin:0 0 6px; padding-bottom:8px;
+  border-bottom:1px solid var(--border); line-height:1.4;
 }
-#noteTitle {
-  flex:1; background:transparent; border:none; color:var(--text);
-  font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif; font-size:20px; font-weight:700; outline:none;
-  padding:10px 16px;
-  letter-spacing:-.01em; min-width:0;
+#noteContent>h1:first-child:empty::before {
+  content:'제목을 입력하세요'; color:var(--text3);
+  pointer-events:none; font-style:italic; font-weight:400;
 }
-#noteTitle::placeholder { color:var(--text3) }
-/* Folder icon button — flush right, separated by border */
-.folder-icon-btn {
-  width:44px; flex-shrink:0;
-  display:flex; align-items:center; justify-content:center;
-  color:var(--text3); transition:all .14s;
-  background:transparent; border:none;
-  border-left:1px solid var(--border);
-  font-size:16px; cursor:pointer;
-  border-radius:0;
-}
-.folder-icon-btn:hover { background:var(--bg3); color:var(--gold) }
-.folder-icon-btn.drawer-on { color:var(--gold); background:var(--gold-dim) }
 
-/* Rich text toolbar */
+/* + insert accent button */
+.rte-accent {
+  color:var(--gold) !important; font-weight:700; font-size:14px !important;
+}
+.rte-accent:hover { background:var(--gold-dim) !important }
+
+/* Insert popup menu */
+.note-insert-popup {
+  position:fixed; z-index:200; min-width:180px;
+  background:var(--bg2); border:1px solid var(--border);
+  border-radius:8px; padding:4px 0;
+  box-shadow:0 8px 28px rgba(0,0,0,.45);
+  display:none;
+}
+.note-insert-popup.show { display:block }
+[data-theme="light"] .note-insert-popup {
+  background:#fff; box-shadow:0 8px 28px rgba(0,0,0,.12);
+}
+.nip-item {
+  display:flex; align-items:center; gap:8px;
+  padding:7px 14px; font-size:12px; color:var(--text2);
+  cursor:pointer; transition:background .08s;
+}
+.nip-item:hover { background:var(--bg3); color:var(--text) }
+.nip-item i { width:16px; text-align:center; font-size:12px; color:var(--text3) }
+.nip-div {
+  height:1px; background:var(--border); margin:3px 8px;
+}
+
+/* Rich text toolbar — 1-row compact */
 .rte-bar {
   display:flex; flex-direction:column; gap:0;
   background:var(--bg3); border-bottom:1px solid var(--border);
@@ -372,23 +380,7 @@
   padding:3px 8px; overflow-x:auto; scrollbar-width:none;
 }
 .rte-row::-webkit-scrollbar { display:none }
-.rte-row2 {
-  border-top:1px solid var(--border);
-  padding:2px 8px; gap:2px;
-}
-.rte-row-label {
-  font-size:9px; color:var(--text3); font-weight:700;
-  letter-spacing:.6px; white-space:nowrap; flex-shrink:0;
-}
-.rte-insert {
-  display:flex; flex-direction:column; align-items:center;
-  width:auto !important; height:auto !important;
-  padding:2px 5px; gap:1px; border-radius:4px;
-}
-.rte-lbl {
-  font-size:9px; color:var(--text3); line-height:1;
-}
-.rte-insert:hover .rte-lbl { color:var(--text) }
+.rte-spacer { flex:1 }
 .rte-btn {
   width:24px; height:24px; border-radius:3px; font-size:11px;
   display:flex; align-items:center; justify-content:center;
@@ -467,22 +459,16 @@
   padding:2px 8px; font-size:11px; width:65px; outline:none; color:var(--text);
 }
 .tag-inp:focus { border-color:var(--gold) }
-.folder-sel-lbl { font-size:10px; color:var(--text3) }
-#noteFolderSel {
-  background:var(--bg3); border:1px solid var(--border); color:var(--text2);
-  border-radius:4px; padding:2px 6px; font-size:11px; outline:none; cursor:pointer;
-}
+/* Hidden folder select (used internally) */
+#noteFolderSel { display:none }
 
 /* Backlink panel */
 .backlink-panel {
-  border-top:1px solid var(--border); 
-  border-bottom:1px solid var(--border);
+  border-top:1px solid var(--border);
   flex-shrink:0;
-  background:var(--bg2); 
-  max-height:200px; 
+  background:var(--bg2);
+  max-height:180px;
   overflow-y:auto;
-  margin-top:8px;
-  margin-bottom:8px;
 }
 .backlink-head {
   padding:8px 12px; 

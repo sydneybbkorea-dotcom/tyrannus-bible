@@ -32,15 +32,18 @@ function renameFolder(folderId){
 
 window.newNote=function newNote(){
   S.curNoteId=null; S.curTags=[]; S.navHistory=[];
-  document.getElementById('noteTitle').value='';
-  document.getElementById('noteContent').innerHTML='';
-  updateBacklinks();
+  const el=document.getElementById('noteContent');
+  if(!el) return;
   if(S.selV){
     const k=`${S.book}_${S.ch}_${S.selV}`;
     const vt=BIBLE[S.book]?.[S.ch]?.[S.selV-1]||'';
-    document.getElementById('noteTitle').value=`${S.book} ${S.ch}:${S.selV} 묵상`;
-    document.getElementById('noteContent').innerHTML=makVLink(k,`${S.book} ${S.ch}:${S.selV}`)+'&#8203; <span class="vtxt" style="font-family:\'KoPubWorld Batang\',\'Noto Serif KR\',serif;line-height:1.85;">'+vt+'</span><br><br>';
+    const title=`${S.book} ${S.ch}:${S.selV} 묵상`;
+    el.innerHTML='<h1>'+title+'</h1>'+makVLink(k,`${S.book} ${S.ch}:${S.selV}`)+'&#8203; <span class="vtxt" style="font-family:\'KoPubWorld Batang\',\'Noto Serif KR\',serif;line-height:1.85;">'+vt+'</span><br><br>';
+  }else{
+    el.innerHTML='<h1></h1><br>';
+    setTimeout(()=>{const h=el.querySelector('h1');if(h){const r=document.createRange();r.setStart(h,0);r.collapse(true);const s=window.getSelection();s.removeAllRanges();s.addRange(r);}},50);
   }
-  document.getElementById('noteFolderSel').value=S.curFolder;
-  updateBreadcrumb(); renderTagChips(); closeExplorer();
+  updateBacklinks(); updateBreadcrumb(); renderTagChips(); closeExplorer();
+  if(typeof _noteUpdateTabTitle==='function') _noteUpdateTabTitle();
+  if(typeof _noteInitAutoSave==='function') _noteInitAutoSave();
 }

@@ -1,25 +1,25 @@
-// notes-manager-save.js — saveNote function
-function saveNote(){
-  const title=document.getElementById('noteTitle').value.trim();
-  const content=document.getElementById('noteContent').innerHTML;
-  const fId=document.getElementById('noteFolderSel').value;
-  if(!title&&!content.replace(/<[^>]+>/g,'').trim()){toast('내용을 입력해주세요');return}
+// notes-manager-save.js — saveNote function (H1에서 제목 추출, 자동저장 지원)
+function saveNote(silent){
+  var h1=document.querySelector('#noteContent h1:first-child');
+  var title=(h1?h1.textContent:'').trim();
+  var content=document.getElementById('noteContent').innerHTML;
+  var fId=S.curFolder||'default';
+  if(!title&&!content.replace(/<[^>]+>/g,'').trim()){if(!silent)toast('내용을 입력해주세요');return}
 
-  // collect verse refs from vlinks inside content
-  const tmp=document.createElement('div'); tmp.innerHTML=content;
-  // vRefs: 노트 내 구절 링크만 (자동 연결 제거 - 우클릭 수동 연결로만)
-  const vRefs=[...new Set([...tmp.querySelectorAll('.vlink')].map(el=>el.dataset.ref).filter(Boolean))];
+  var tmp=document.createElement('div'); tmp.innerHTML=content;
+  var vRefs=[...new Set([...tmp.querySelectorAll('.vlink')].map(function(el){return el.dataset.ref}).filter(Boolean))];
 
-  const note={
+  var note={
     id:S.curNoteId||'n_'+Date.now(),
-    title:title||'제목 없음', content, tags:[...S.curTags],
+    title:title||'제목 없음', content:content, tags:[...S.curTags],
     folderId:fId, vRefs:[...new Set(vRefs)],
     updatedAt:Date.now(),
-    createdAt:S.curNoteId?(S.notes.find(n=>n.id===S.curNoteId)?.createdAt||Date.now()):Date.now()
+    createdAt:S.curNoteId?(S.notes.find(function(n){return n.id===S.curNoteId})?.createdAt||Date.now()):Date.now()
   };
-  const idx=S.notes.findIndex(n=>n.id===note.id);
+  var idx=S.notes.findIndex(function(n){return n.id===note.id});
   if(idx>=0) S.notes[idx]=note; else S.notes.push(note);
   S.curNoteId=note.id; S.curFolder=fId;
   persist(); renderBible(); renderFolderTree(); updateBreadcrumb(); updateBacklinks();
-  toast('저장됨 ✓');
+  if(!silent) toast('저장됨 ✓');
+  if(typeof _noteUpdateTabTitle==='function') _noteUpdateTabTitle();
 }
