@@ -103,36 +103,31 @@ body.read-mode .vindic { display:none }
 }
 .vtxt-en-below .dg, .vtxt-en-below b.dg { color:inherit !important }
 
-/* ── 상하 대조 공통 스타일 (좁은 화면 + 패널 열림) ──
-   영어 본문을 한국어 본문과 같은 왼쪽 위치에서 시작.
-   .vnum(22px) + gap(6px) = 28px → 동일 들여쓰기 */
-.vrow-parallel--stacked { flex-direction:column; gap:0; }
-.vrow-parallel--stacked .vtxt-en-side {
-  padding:0; margin-left:28px;
-  font-size:15.5px; line-height:1.8; color:var(--text2);
-  margin-top:1px; margin-bottom:4px;
-}
-.vrow-parallel--stacked .vtxt-en-side .en-vnum { display:none; }
-.vrow-parallel--stacked .vindic { position:absolute; right:4px; top:4px; }
+/* ── 상하 대조 공통 스타일 ──────────────────────────────────
+   flex-wrap으로 .vnum+.vtxt-kr은 한 줄, .vtxt-en-side는 다음 줄.
+   .vnum은 구절번호(22px), .vtxt-kr이 나머지 채움,
+   .vtxt-en-side는 width:100%로 줄바꿈하여 아래 배치.
+──────────────────────────────────────────────────────────── */
 
-/* 넓은 화면(900px+): 패널 닫혀있으면 좌우 대조 */
+/* 좁은 화면(900px 미만) */
 @media (max-width:899px) {
-  .vrow-parallel { flex-direction:column; gap:0; }
+  .vrow-parallel { flex-wrap:wrap; gap:0; }
   .vrow-parallel .vtxt-en-side {
-    padding:0; margin-left:28px;
+    width:100%; padding:0 0 0 28px;
     font-size:15.5px; line-height:1.8; color:var(--text2);
-    margin-top:1px; margin-bottom:4px;
+    margin-top:1px; margin-bottom:4px; flex:none;
   }
   .vrow-parallel .vtxt-en-side .en-vnum { display:none; }
   .vrow-parallel .vindic { position:absolute; right:4px; top:4px; }
 }
+
 /* 패널 열린 상태 — 상하 대조 (한글 위, 영어 아래) */
-body.panel-open .vrow-parallel { flex-direction:column; gap:0; }
+body.panel-open .vrow-parallel { flex-wrap:wrap; gap:0; }
 body.panel-open .vrow-parallel .vtxt-kr { margin-bottom:0; }
 body.panel-open .vrow-parallel .vtxt-en-side {
-  padding:0; margin-left:28px;
+  width:100%; padding:0 0 0 28px;
   font-size:15.5px; line-height:1.8; color:var(--text2);
-  margin-top:1px; margin-bottom:4px;
+  margin-top:1px; margin-bottom:4px; flex:none;
 }
 body.panel-open .vrow-parallel .vtxt-en-side .en-vnum { display:none; }
 body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; }
