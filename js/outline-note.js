@@ -1,4 +1,4 @@
-// outline-note.js — 개별 노트의 아웃라인 항목 렌더링 + 헤딩 점프
+// outline-note.js — 개별 노트의 아웃라인 항목 렌더링 + 헤딩 추출
 function _renderOutlineNote(note){
   const isActive = note.id === S.curNoteId;
   const date = note.updatedAt ? new Date(note.updatedAt).toLocaleDateString('ko') : '';
@@ -45,34 +45,4 @@ function extractHeadings(content){
     if(text) result.push({ level: parseInt(h.tagName[1]), text });
   });
   return result;
-}
-
-function jumpToNoteHeading(noteId, headingText){
-  if(typeof loadNote==='function') loadNote(noteId, true);
-  if(typeof switchSub==='function') switchSub('notes');
-  setTimeout(()=>{
-    const nc = document.getElementById('noteContent');
-    if(!nc) return;
-    for(const h of nc.querySelectorAll('h1,h2,h3')){
-      if(h.textContent.trim() === headingText){
-        h.scrollIntoView({behavior:'smooth', block:'start'});
-        h.style.background='var(--gold-dim)';
-        setTimeout(()=>h.style.background='', 1500);
-        break;
-      }
-    }
-  }, 150);
-}
-
-function toggleOlPara(headEl){
-  const body=headEl.nextElementSibling;
-  const arrow=headEl.querySelector('.ol-arrow');
-  if(body) body.classList.toggle('open');
-  if(arrow) arrow.classList.toggle('open');
-}
-
-function toggleOutlineExpand(){
-  _outlineExpanded=!_outlineExpanded;
-  document.querySelectorAll('.ol-para-body').forEach(b=>b.classList.toggle('open',_outlineExpanded));
-  document.querySelectorAll('.ol-arrow').forEach(a=>a.classList.toggle('open',_outlineExpanded));
 }

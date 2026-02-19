@@ -1,4 +1,4 @@
-// panel-tabs.js — 패널 내부 탭(노트/사전/검색) 및 서브탭 전환
+// panel-tabs.js — 패널 내부 메인 탭(노트/사전/검색) 전환
 function switchTab(name){
   document.querySelectorAll('.rp-subtabs').forEach(s=>s.style.display='none');
   document.querySelectorAll('.rp-body > .rp-sec').forEach(s=>s.classList.remove('act'));
@@ -22,29 +22,4 @@ function switchTab(name){
   document.getElementById('tbNotes')?.classList.toggle('on',name==='notes');
   document.getElementById('tbDict')?.classList.toggle('on',name==='dictionary');
   document.getElementById('tbSearch')?.classList.toggle('on',name==='search');
-}
-
-function switchSub(sub){
-  const visibleGroup = document.querySelector('.rp-subtabs[style*="flex"]');
-  if(visibleGroup){
-    visibleGroup.querySelectorAll('.rp-tab').forEach(t=>t.classList.remove('act'));
-    visibleGroup.querySelector(`[data-sub="${sub}"]`)?.classList.add('act');
-  }
-
-  if(sub==='notes'||sub==='commentary'||sub==='outline'){
-    S._noteSubTab = sub;
-    document.getElementById('sec-notes')?.classList.toggle('act', sub==='notes');
-    document.getElementById('sec-commentary')?.classList.toggle('act', sub==='commentary');
-    document.getElementById('sec-outline')?.classList.toggle('act', sub==='outline');
-    if(sub==='outline' && typeof renderOutline==='function') renderOutline();
-  }
-
-  if(sub.startsWith('dict-')){
-    S._dictSubTab = sub;
-    document.getElementById('sec-dictionary')?.classList.add('act');
-    ['dict-strongs','dict-webster','dict-enko','dict-korean'].forEach(id=>{
-      const el=document.getElementById('sec-'+id);
-      if(el){ el.style.display=(id===sub)?'flex':'none'; el.classList.toggle('act',id===sub); }
-    });
-  }
 }

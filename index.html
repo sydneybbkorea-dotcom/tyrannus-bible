@@ -392,6 +392,9 @@
      SCRIPTS (모듈화된 JS)
 ═══════════════════════════════════════════════ -->
 
+<!-- Firebase UI (전역 함수, 모듈보다 먼저) -->
+<script src="js/firebase-ui.js"></script>
+
 <!-- 데이터 (작은 파일, 동기 로드) -->
 <script src="data/books.js"></script>
 
@@ -404,38 +407,76 @@
 
 <!-- 성경 관련 -->
 <script src="js/bible-renderer.js"></script>
+<script src="js/bible-renderer-hl.js"></script>
 <script src="js/book-nav.js"></script>
 <script src="js/nav-picker.js"></script>
 <script src="js/nav-picker-ui.js"></script>
 <script src="js/nav-picker-render.js"></script>
+<script src="js/nav-picker-actions.js"></script>
 <script src="js/bible-tabs.js"></script>
+<script src="js/bible-tabs-render.js"></script>
 
 <!-- 하이라이트 & 절 선택 -->
 <script src="js/highlight.js"></script>
+<script src="js/highlight-picker.js"></script>
+<script src="js/highlight-apply.js"></script>
 <script src="js/highlight-memo.js"></script>
+<script src="js/highlight-memo-data.js"></script>
+<script src="js/highlight-memo-verse.js"></script>
+<script src="js/highlight-memo-parse.js"></script>
+<script src="js/highlight-memo-notelink.js"></script>
+<script src="js/highlight-memo-search.js"></script>
+<script src="js/highlight-memo-filter.js"></script>
+<script src="js/highlight-memo-tags.js"></script>
+<script src="js/highlight-memo-save.js"></script>
 <script src="js/verse-select.js"></script>
 
 <!-- 주석 & 사전 -->
+<script src="js/commentary-verse.js"></script>
+<script src="js/commentary-chapter.js"></script>
 <script src="js/commentary.js"></script>
 <script src="js/strongs-ui.js"></script>
+<script src="js/strongs-ui-def.js"></script>
+<script src="js/strongs-ui-search.js"></script>
 
 <!-- 노트 시스템 -->
 <script src="js/notes-editor.js"></script>
+<script src="js/notes-editor-insert.js"></script>
+<script src="js/notes-editor-inline.js"></script>
 <script src="js/notes-manager.js"></script>
+<script src="js/notes-manager-save.js"></script>
+<script src="js/notes-manager-ui.js"></script>
 <script src="js/notes-folders.js"></script>
+<script src="js/notes-folders-ctx.js"></script>
+<script src="js/notes-folders-crud.js"></script>
 <script src="js/notes-links.js"></script>
+<script src="js/notes-links-notelink.js"></script>
+<script src="js/notes-links-embed.js"></script>
+<script src="js/notes-links-url.js"></script>
+<script src="js/notes-links-youtube.js"></script>
+<script src="js/notes-links-file.js"></script>
+<script src="js/notes-links-verse.js"></script>
+<script src="js/notes-links-vtip.js"></script>
 
 <!-- 컨텍스트 메뉴 & 패널 -->
 <script src="js/context-menu.js"></script>
+<script src="js/context-menu-notelink.js"></script>
+<script src="js/context-menu-versememo.js"></script>
+<script src="js/context-menu-actions.js"></script>
 <script src="js/panels.js"></script>
 <script src="js/panel-tabs.js"></script>
+<script src="js/panel-tabs-sub.js"></script>
 <script src="js/panel-nav.js"></script>
 <script src="js/outline.js"></script>
 <script src="js/outline-note.js"></script>
+<script src="js/outline-note-ui.js"></script>
 <script src="js/search.js"></script>
+<script src="js/search-exec.js"></script>
+<script src="js/search-quick.js"></script>
 <script src="js/read-mode.js"></script>
 
 <!-- 초기화 (반드시 마지막) -->
+<script src="js/app-paste.js"></script>
 <script src="js/app.js"></script>
 
 </body>

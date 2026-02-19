@@ -1,3 +1,4 @@
+// firebase.js — Firebase core: auth, Firestore sync, login/logout
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
@@ -24,12 +25,12 @@ let _unsubscribe = null;
 onAuthStateChanged(auth, async user => {
   if(user){
     _uid = user.uid;
-    showUserBar(user);
+    window.showUserBar(user);
     await loadFromFirestore();
     startRealtimeSync();
   } else {
     _uid = null;
-    hideUserBar();
+    window.hideUserBar();
     if(_unsubscribe){ _unsubscribe(); _unsubscribe = null; }
     // 로그아웃 시 로컬 데이터로 복원
     window._firebaseReady = false;
@@ -102,25 +103,3 @@ window.signInWithGoogle = async () => {
 window.signOutUser = async () => {
   await signOut(auth);
 };
-
-// ── 로그인 UI 제어
-function showUserBar(user){
-  const bar = document.getElementById('userBar');
-  const avatar = document.getElementById('userAvatar');
-  const name   = document.getElementById('userName');
-  if(bar)    bar.style.display = 'flex';
-  if(avatar) avatar.src = user.photoURL || '';
-  if(name)   name.textContent = user.displayName || user.email;
-  const loginBtn = document.getElementById('loginBtn');
-  if(loginBtn) loginBtn.style.display = 'none';
-  const syncBadge = document.getElementById('syncBadge');
-  if(syncBadge) syncBadge.style.display = 'flex';
-}
-function hideUserBar(){
-  const bar = document.getElementById('userBar');
-  if(bar) bar.style.display = 'none';
-  const loginBtn = document.getElementById('loginBtn');
-  if(loginBtn) loginBtn.style.display = 'flex';
-  const syncBadge = document.getElementById('syncBadge');
-  if(syncBadge) syncBadge.style.display = 'none';
-}
