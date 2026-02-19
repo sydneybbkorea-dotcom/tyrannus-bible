@@ -238,8 +238,13 @@
 .back-btn:hover { color:var(--gold); border-color:var(--gold); background:var(--gold-dim) }
 .back-btn i { font-size:10px }
 
-/* ── Note Navigation Bar (hidden — back btn in toolbar) ── */
-.note-nav-bar { display:none }
+/* ── Note Navigation Bar ── */
+.note-nav-bar {
+  display:flex; align-items:center; gap:6px;
+  padding:5px 10px; border-top:1px solid var(--border);
+  background:var(--bg2); flex-shrink:0; min-height:32px;
+  overflow:hidden;
+}
 .nav-back-btn {
   display:flex; align-items:center; justify-content:center;
   width:24px; height:24px; border-radius:4px;
@@ -340,36 +345,7 @@
   pointer-events:none; font-style:italic; font-weight:400;
 }
 
-/* + insert accent button */
-.rte-accent {
-  color:var(--gold) !important; font-weight:700; font-size:14px !important;
-}
-.rte-accent:hover { background:var(--gold-dim) !important }
-
-/* Insert popup menu */
-.note-insert-popup {
-  position:fixed; z-index:200; min-width:180px;
-  background:var(--bg2); border:1px solid var(--border);
-  border-radius:8px; padding:4px 0;
-  box-shadow:0 8px 28px rgba(0,0,0,.45);
-  display:none;
-}
-.note-insert-popup.show { display:block }
-[data-theme="light"] .note-insert-popup {
-  background:#fff; box-shadow:0 8px 28px rgba(0,0,0,.12);
-}
-.nip-item {
-  display:flex; align-items:center; gap:8px;
-  padding:7px 14px; font-size:12px; color:var(--text2);
-  cursor:pointer; transition:background .08s;
-}
-.nip-item:hover { background:var(--bg3); color:var(--text) }
-.nip-item i { width:16px; text-align:center; font-size:12px; color:var(--text3) }
-.nip-div {
-  height:1px; background:var(--border); margin:3px 8px;
-}
-
-/* Rich text toolbar — 1-row compact */
+/* Rich text toolbar */
 .rte-bar {
   display:flex; flex-direction:column; gap:0;
   background:var(--bg3); border-bottom:1px solid var(--border);
@@ -380,7 +356,23 @@
   padding:3px 8px; overflow-x:auto; scrollbar-width:none;
 }
 .rte-row::-webkit-scrollbar { display:none }
-.rte-spacer { flex:1 }
+.rte-row2 {
+  border-top:1px solid var(--border);
+  padding:2px 8px; gap:2px;
+}
+.rte-row-label {
+  font-size:9px; color:var(--text3); font-weight:700;
+  letter-spacing:.6px; white-space:nowrap; flex-shrink:0;
+}
+.rte-insert {
+  display:flex; flex-direction:column; align-items:center;
+  width:auto !important; height:auto !important;
+  padding:2px 5px; gap:1px; border-radius:4px;
+}
+.rte-lbl {
+  font-size:9px; color:var(--text3); line-height:1;
+}
+.rte-insert:hover .rte-lbl { color:var(--text) }
 .rte-btn {
   width:24px; height:24px; border-radius:3px; font-size:11px;
   display:flex; align-items:center; justify-content:center;
@@ -459,16 +451,22 @@
   padding:2px 8px; font-size:11px; width:65px; outline:none; color:var(--text);
 }
 .tag-inp:focus { border-color:var(--gold) }
-/* Hidden folder select (used internally) */
-#noteFolderSel { display:none }
+.folder-sel-lbl { font-size:10px; color:var(--text3) }
+#noteFolderSel {
+  background:var(--bg3); border:1px solid var(--border); color:var(--text2);
+  border-radius:4px; padding:2px 6px; font-size:11px; outline:none; cursor:pointer;
+}
 
 /* Backlink panel */
 .backlink-panel {
   border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
   flex-shrink:0;
   background:var(--bg2);
-  max-height:180px;
+  max-height:200px;
   overflow-y:auto;
+  margin-top:8px;
+  margin-bottom:8px;
 }
 .backlink-head {
   padding:8px 12px; 
