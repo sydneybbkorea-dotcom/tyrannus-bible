@@ -10,7 +10,7 @@ function saveActiveTabState(){
   tab.showKorean = S.showKorean!==false;
   tab.showEnglish = !!S.showEnglish;
   tab.showRedLetter = !!S.showRedLetter;
-  tab.readMode = document.body.classList.contains('read-mode');
+  tab.hideHL = document.body.classList.contains('hide-hl');
   const bs = document.getElementById('bibleScroll');
   tab.scrollTop = bs ? bs.scrollTop : 0;
 }
@@ -25,7 +25,7 @@ function restoreTabState(tab){
   S.showEnglish = !!tab.showEnglish;
   S.showParallel = S.showKorean && S.showEnglish;
   S.showRedLetter = !!tab.showRedLetter;
-  document.body.classList.toggle('read-mode', !!tab.readMode);
+  document.body.classList.toggle('hide-hl', !!tab.hideHL);
   renderAll();
   setTimeout(()=>{
     const bs = document.getElementById('bibleScroll');

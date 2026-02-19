@@ -7,7 +7,7 @@ const _isTouchDevice = ('ontouchstart' in window) || navigator.maxTouchPoints > 
 
 /* ── 선택 감지 (mouse + touch) ── */
 function _onSelectionEnd(e){
-  if(document.body.classList.contains('read-mode')) return;
+  if(document.body.classList.contains('hide-hl')) return;
   const bp = document.getElementById('bibleScroll');
   if(!bp || !bp.contains(e.target)) return;
 

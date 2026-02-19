@@ -13,7 +13,7 @@ function applyHLtoText(txt, color){
 // ask which color and wrap the selected range.
 // 하이라이트 mark 클릭 → 메모 팝업
 document.addEventListener('click', e=>{
-  if(document.body.classList.contains('read-mode')) return;
+  if(document.body.classList.contains('hide-hl')) return;
   const mark = e.target.closest('.vtxt mark');
   if(!mark) return;
   e.stopPropagation();

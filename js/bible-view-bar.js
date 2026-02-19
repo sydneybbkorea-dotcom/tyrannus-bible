@@ -11,7 +11,7 @@ function renderViewBar(){
   }
   _syncVbBtn('vbKorean', S.showKorean!==false);
   _syncVbBtn('vbEnglish', !!S.showEnglish);
-  _syncVbBtn('vbRead', document.body.classList.contains('read-mode'));
+  _syncVbBtn('vbHL', !document.body.classList.contains('hide-hl'));
   _syncVbBtn('vbRed', !!S.showRedLetter);
   _syncVbBtn('vbStrong', !!S.showStrong);
 }

@@ -130,10 +130,9 @@
 
 /* 폴더/노트 컨텍스트 메뉴 → notes.css로 이동됨 */
 
-/* ── Read Mode — 하이라이트/메모만 숨김 ── */
-body.read-mode mark { background:transparent !important; border-bottom:none !important; color:inherit; cursor:text }
-body.read-mode .str-code { display:none }
-body.read-mode .vindic { display:none }
+/* ── Hide Highlight — 형광펜만 숨김 ── */
+body.hide-hl mark { background:transparent !important; border-bottom:none !important; color:inherit; cursor:text }
+body.hide-hl .vrow[class*="hl-row-"] { background:transparent !important }
 
 /* ── 영어만 표시 ── */
 .vtxt-en-only {

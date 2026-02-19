@@ -5,7 +5,7 @@ function _genTabId(){ return 'btab_' + (++_tabCounter); }
 
 // 현재 뷰 설정 스냅샷
 function _curViewState(){
-  return { readMode:document.body.classList.contains('read-mode'),
+  return { hideHL:document.body.classList.contains('hide-hl'),
     showStrong:!!S.showStrong, showKorean:S.showKorean!==false,
     showEnglish:!!S.showEnglish, showParallel:!!S.showParallel,
     showRedLetter:!!S.showRedLetter };
@@ -43,7 +43,7 @@ function openBibleTab(book, ch, selV){
   const id = _genTabId();
   var vs = _curViewState();
   const newTab = { id, book, ch, selV, scrollTop:0,
-    readMode:vs.readMode, showStrong:vs.showStrong,
+    hideHL:vs.hideHL, showStrong:vs.showStrong,
     showKorean:vs.showKorean, showEnglish:vs.showEnglish,
     showParallel:vs.showParallel, showRedLetter:vs.showRedLetter };
   const curIdx = _bibleTabs.findIndex(t=>t.id===_activeTabId);
@@ -59,7 +59,7 @@ function addBibleTab(){
   const id = _genTabId();
   var vs = _curViewState();
   const newTab = { id, book:S.book, ch:S.ch, selV:null, scrollTop:0,
-    readMode:vs.readMode, showStrong:vs.showStrong,
+    hideHL:vs.hideHL, showStrong:vs.showStrong,
     showKorean:vs.showKorean, showEnglish:vs.showEnglish,
     showParallel:vs.showParallel, showRedLetter:vs.showRedLetter };
   _bibleTabs.push(newTab);

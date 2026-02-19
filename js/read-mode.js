@@ -1,14 +1,9 @@
-function toggleReadMode(){
-  const isRead = document.body.classList.toggle('read-mode');
+// read-mode.js — 형광펜 표시/숨김 토글
+function toggleHighlight(){
+  var hidden = document.body.classList.toggle('hide-hl');
   if(typeof renderViewBar==='function') renderViewBar();
-  toast(isRead ? '읽기 모드' : '쓰기 모드');
+  toast(hidden ? '형광펜 숨김' : '형광펜 표시');
 }
-// ESC키로 읽기 모드 탈출
-document.addEventListener('keydown', e=>{
-  if(e.key==='Escape' && document.body.classList.contains('read-mode')){
-    toggleReadMode();
-  }
-});
 
 // ═══════════════════════════════════════════════════
 // BIBLE TAB SYSTEM
