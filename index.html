@@ -107,9 +107,6 @@
       <button class="rail-icon" data-rail="bookmark" onclick="toggleRail('bookmark')" title="북마크">
         <i class="fa fa-bookmark"></i><span class="rail-label">북마크</span>
       </button>
-      <button class="rail-icon" data-rail="original" onclick="toggleRail('original')" title="원어 검색">
-        <i class="fa fa-language"></i><span class="rail-label">원어</span>
-      </button>
       <button class="rail-icon" data-rail="reading" onclick="toggleRail('reading')" title="읽기 계획">
         <i class="fa fa-calendar-check"></i><span class="rail-label">읽기</span>
       </button>
@@ -128,30 +125,15 @@
       <div class="sp-head"><i class="fa fa-book-bible"></i> 성경 목록</div>
       <div class="sp-body" id="bookList"></div>
     </div>
-    <!-- 검색 -->
+    <!-- 검색 (통합: 기본 + 고급) -->
     <div class="sp-section" id="sp-search">
       <div class="sp-head"><i class="fa fa-search"></i> 검색</div>
-      <div class="sp-search-wrap">
-        <input type="text" id="spSearchInput" placeholder="성경 검색..." onkeydown="if(event.key==='Enter')_spDoSearch()">
-      </div>
-      <div style="padding:6px 10px;display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--border);flex-shrink:0">
-        <label style="font-size:10px;color:var(--text2);display:inline-flex;align-items:center;gap:3px"><input type="checkbox" class="sp-sch-f" data-f="OT" checked style="cursor:pointer"> 구약</label>
-        <label style="font-size:10px;color:var(--text2);display:inline-flex;align-items:center;gap:3px"><input type="checkbox" class="sp-sch-f" data-f="NT" checked style="cursor:pointer"> 신약</label>
-        <label style="font-size:10px;color:var(--text2);display:inline-flex;align-items:center;gap:3px"><input type="checkbox" class="sp-sch-f" data-f="notes" checked style="cursor:pointer"> 노트</label>
-      </div>
-      <div class="sp-body" id="spSearchResults" style="font-size:12px"></div>
+      <div class="sp-body" id="spSearchBody" style="display:flex;flex-direction:column;overflow:hidden"></div>
     </div>
     <!-- 북마크 -->
     <div class="sp-section" id="sp-bookmark">
       <div class="sp-head"><i class="fa fa-bookmark"></i> 북마크</div>
       <div class="sp-body" id="spBookmarkList"></div>
-    </div>
-    <!-- 고급 검색 (KJPBS) -->
-    <div class="sp-section" id="sp-original">
-      <div class="sp-head"><i class="fa fa-language"></i> 고급 검색</div>
-      <div class="sp-body" id="spOriginalContent">
-        <div style="padding:20px;text-align:center;color:var(--text3);font-size:12px"><i class="fa fa-language" style="font-size:24px;margin-bottom:8px;display:block;opacity:.4"></i>준비 중입니다</div>
-      </div>
     </div>
     <!-- 읽기 계획 -->
     <div class="sp-section" id="sp-reading">
@@ -569,6 +551,7 @@
 <script src="js/adv-search-nav.js"></script>
 <script src="js/adv-search-ui.js"></script>
 <script src="js/adv-search-ui-html.js"></script>
+<script src="js/adv-search-panel.js"></script>
 <script src="js/adv-search-ctrl.js"></script>
 
 <!-- 노트 시스템 -->

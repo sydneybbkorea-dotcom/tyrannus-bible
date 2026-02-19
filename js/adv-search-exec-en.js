@@ -10,8 +10,9 @@ async function _advSearchEN(q){
     Object.entries(chs).forEach(([ch,vs])=>{
       vs.forEach((t,i)=>{
         if(!t) return;
-        const m=_advMatchVerse(t,parsed);
-        if(m) r.push({book:b,ch:+ch,v:i+1,text:t,
+        const clean=(t||'').replace(/<[^>]+>/g,'');
+        const m=_advMatchVerse(clean,parsed);
+        if(m) r.push({book:b,ch:+ch,v:i+1,text:clean,
           positions:m.positions,occCount:m.count});
       });
     });

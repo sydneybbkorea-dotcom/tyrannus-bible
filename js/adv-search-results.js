@@ -27,18 +27,29 @@ function _advLoadMore(){
 
 function _advHighlight(text,positions){
   if(!positions||!positions.length) return _advSafe(text);
-  const s=_advSafe(text);
   const sorted=[...positions].sort((a,b)=>a.s-b.s);
+  const merged=_advMergePos(sorted);
   let r='',last=0;
-  sorted.forEach(p=>{
-    if(p.s>last) r+=s.slice(last,p.s);
-    r+='<mark class="adv-hl">'+s.slice(p.s,p.e)+'</mark>';
+  merged.forEach(p=>{
+    if(p.s>last) r+=_advSafe(text.slice(last,p.s));
+    r+='<mark class="adv-hl">'+_advSafe(text.slice(p.s,p.e))+'</mark>';
     last=p.e;
   });
-  if(last<s.length) r+=s.slice(last);
+  if(last<text.length) r+=_advSafe(text.slice(last));
   return r;
 }
 
+function _advMergePos(sorted){
+  if(!sorted.length) return [];
+  const m=[{...sorted[0]}];
+  for(let i=1;i<sorted.length;i++){
+    const last=m[m.length-1];
+    if(sorted[i].s<=last.e) last.e=Math.max(last.e,sorted[i].e);
+    else m.push({...sorted[i]});
+  }
+  return m;
+}
+
 function _advSafe(s){
-  return (s||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }

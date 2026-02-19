@@ -24,6 +24,9 @@ function _advClearResults(){
 
 function _advHelp(){
   const tips=[
+    '한글 → 한글 성경 검색',
+    'English → KJV 영어 검색',
+    'H1234/G5678 → 스트롱 원어 검색',
     '* : 0개 이상 문자 (예: 사랑*)',
     '? : 1개 문자 (예: 하?님)',
     '| : OR (예: 믿음 | 신앙)',
