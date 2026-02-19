@@ -4,13 +4,25 @@
 #topbar {
   height:var(--topbar-h); flex-shrink:0;
   background:var(--bg2); border-bottom:1px solid var(--border);
-  display:flex; align-items:center; padding:0 12px; gap:8px; z-index:200;
-  backdrop-filter:blur(8px);
+  display:flex; align-items:center; padding:0 12px; z-index:200;
+  backdrop-filter:blur(8px); position:relative;
 }
+/* 사이드바 토글 버튼 (왼쪽 고정) */
+.tb-rail-toggle {
+  width:36px; height:36px; border-radius:8px; border:none;
+  display:flex; align-items:center; justify-content:center;
+  color:var(--text3); font-size:16px; cursor:pointer;
+  background:transparent; transition:all .15s; flex-shrink:0;
+}
+.tb-rail-toggle:hover { background:var(--bg3); color:var(--text); }
+.tb-rail-toggle.rail-hidden { color:var(--gold); }
+/* 중앙 로고 (고풍스러운 세리프) */
 .logo {
-  font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif;
-  font-size:18px; font-weight:700; color:var(--accent2); letter-spacing:.3px; white-space:nowrap;
-  padding-right:10px; border-right:1px solid var(--border); margin-right:4px;
+  font-family:'Playfair Display','Georgia','Times New Roman',serif;
+  font-size:24px; font-weight:600; color:var(--gold); letter-spacing:1.5px; white-space:nowrap;
+  position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+  text-shadow:0 1px 3px rgba(0,0,0,.15);
+  font-style:italic;
 }
 .nav-sel {
   background:var(--bg3); border:1px solid var(--border2); color:var(--text);

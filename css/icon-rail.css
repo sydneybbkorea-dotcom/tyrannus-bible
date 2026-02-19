@@ -27,4 +27,7 @@
   box-shadow:var(--shadow); pointer-events:none; z-index:999;
 }
 .rail-icon:hover .rail-label { display:block; }
+/* 접힘 상태 (topbar 토글로 숨김) */
+#iconRail { transition:width .25s cubic-bezier(.4,0,.2,1), padding .25s; overflow:hidden; }
+#iconRail.rail-collapsed { width:0 !important; padding:0; border-right:none; }
 [data-theme="light"] #iconRail { background:#d0d3dc; border-right-color:#c0c4d0 }

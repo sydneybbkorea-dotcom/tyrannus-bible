@@ -1,6 +1,16 @@
 // icon-rail.js — Slack 스타일 아이콘 레일 클릭 → 확장 패널 토글
 var _activeRail = null;
 var _spPinned = false;
+var _railHidden = false;
+
+function _toggleIconRail(){
+  _railHidden = !_railHidden;
+  const rail = document.getElementById('iconRail');
+  const btn = document.getElementById('railToggleBtn');
+  if(rail) rail.classList.toggle('rail-collapsed', _railHidden);
+  if(btn) btn.classList.toggle('rail-hidden', _railHidden);
+  if(_railHidden && _activeRail && !_spPinned) closeSidePanel();
+}
 
 function toggleRail(name){
   if(_activeRail === name && !_spPinned){ closeSidePanel(); return; }
