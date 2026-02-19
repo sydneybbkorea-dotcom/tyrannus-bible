@@ -11,7 +11,7 @@ function setTheme(t){
   const icon = document.getElementById('themeIcon');
   if(tog) { tog.className = 'theme-toggle ' + t; }
   if(label) label.textContent = t === 'dark' ? 'DARK' : 'LIGHT';
-  if(icon) icon.className = t === 'dark' ? 'fa fa-sun' : 'fa fa-moon';
+  if(icon) icon.className = t === 'dark' ? 'fa-regular fa-sun' : 'fa fa-moon';
 }
 function initTheme(){
   const saved = localStorage.getItem('kjb2-theme') || 'dark';
