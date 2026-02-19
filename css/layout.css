@@ -1,7 +1,7 @@
 *,*::before,*::after { margin:0; padding:0; box-sizing:border-box }
 html, body { height:100%; overflow:hidden }
 body {
-  font-family:'KoPub Batang',serif;
+  font-family:'KoPubWorld Batang','Noto Serif KR',serif;
   background:var(--bg); color:var(--text);
   display:flex; flex-direction:column; font-size:14px;
   -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;

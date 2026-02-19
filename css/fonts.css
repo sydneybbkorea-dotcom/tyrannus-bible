@@ -1,0 +1,11 @@
+/* fonts.css — KoPubWorld 자체 호스팅 @font-face */
+
+/* 바탕 (Batang — 명조/세리프, 본문) */
+@font-face { font-family:'KoPubWorld Batang'; src:url('../fonts/KoPubWorld-Batang-Pro-Light.otf') format('opentype'); font-weight:300; font-display:swap; }
+@font-face { font-family:'KoPubWorld Batang'; src:url('../fonts/KoPubWorld-Batang-Pro-Medium.otf') format('opentype'); font-weight:500; font-display:swap; }
+@font-face { font-family:'KoPubWorld Batang'; src:url('../fonts/KoPubWorld-Batang-Pro-Bold.otf') format('opentype'); font-weight:700; font-display:swap; }
+
+/* 돋움 (Dotum — 고딕/산세리프, 하나님·사탄 표기) */
+@font-face { font-family:'KoPubWorld Dotum'; src:url('../fonts/KoPubWorld-Dotum-Pro-Light.otf') format('opentype'); font-weight:300; font-display:swap; }
+@font-face { font-family:'KoPubWorld Dotum'; src:url('../fonts/KoPubWorld-Dotum-Pro-Medium.otf') format('opentype'); font-weight:500; font-display:swap; }
+@font-face { font-family:'KoPubWorld Dotum'; src:url('../fonts/KoPubWorld-Dotum-Pro-Bold.otf') format('opentype'); font-weight:700; font-display:swap; }

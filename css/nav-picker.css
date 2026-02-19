@@ -6,7 +6,7 @@
   padding:5px 10px; border-radius:var(--radius);
   background:var(--bg3); border:1px solid var(--border2);
   color:var(--text); font-size:13px; font-weight:500;
-  font-family:'KoPub Dotum',sans-serif;
+  font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif;
   cursor:pointer; transition:all .15s; white-space:nowrap;
 }
 .nav-picker-btn:hover {

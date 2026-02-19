@@ -81,7 +81,7 @@ body.read-mode .vindic { display:none }
 .vrow-parallel .vtxt-kr { flex:1; min-width:0; }
 .vrow-parallel .vtxt-en-side {
   flex:1; min-width:0; padding:3px 6px;
-  font-family:'KoPub Batang','Georgia',serif; font-size:16px;
+  font-family:'KoPubWorld Batang','Georgia',serif; font-size:16px;
   color:var(--text); line-height:1.85; letter-spacing:0.01em;
   border-left:1px solid var(--border);
 }
@@ -98,7 +98,7 @@ body.read-mode .vindic { display:none }
 }
 /* 좁은 화면 — 아래위 대조 */
 .vtxt-en-below {
-  font-family:'KoPub Batang','Georgia',serif; font-size:15.5px;
+  font-family:'KoPubWorld Batang','Georgia',serif; font-size:15.5px;
   color:var(--text); line-height:1.9; margin-top:5px;
   letter-spacing:0.01em; padding-left:0;
 }
@@ -146,7 +146,7 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
   color: var(--text3);
   pointer-events: none;
 }
-.vtxt { font-family:'KoPub Batang',serif; font-size:17px; font-weight:400; color:var(--text); flex:1; letter-spacing:0.02em; line-height:1.85; user-select:text; word-break:keep-all }
+.vtxt { font-family:'KoPubWorld Batang','Noto Serif KR',serif; font-size:17px; font-weight:500; color:var(--text); flex:1; letter-spacing:0.02em; line-height:1.85; user-select:text; word-break:keep-all }
 /* 사이트 스타일 그대로: 돋움체(font-g) 클래스 */
 /* ── 표준킹제임스성경 번역 원칙에 따른 폰트 표기 ──────────────────
    [일러두기 - 하나님과 마귀를 부각한 표기들]
@@ -174,7 +174,7 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
 
 /* 돋움체 공통 기반 */
 .vtxt .dg {
-  font-family:'KoPub Dotum','Apple SD Gothic Neo','Malgun Gothic',sans-serif;
+  font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif;
   font-style: normal;
 }
 
@@ -186,7 +186,7 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
 
 /* 3) 돋움체 + 보통 (the Devil, the Rock 등 - 정관사+대문자 명사) */
 .vtxt b.dg.semi {
-  font-weight: 400;
+  font-weight: 500;
 }
 
 /* 4) 돋움체 + 진하기 (SUPER CAPS: LORD, GOD, BRANCH 등) */
@@ -197,7 +197,7 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
 
 /* italic: 이탤릭체 (원어에 없는 보완 단어 - 기울임) */
 .vtxt i {
-  font-family:'KoPub Batang',serif;
+  font-family:'KoPubWorld Batang','Noto Serif KR',serif;
   font-style: italic;
   font-weight: 400;
   font-size: 1em;
@@ -206,7 +206,7 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
 
 /* 1) 기본체(바탕) + 진하기 (the devil, the rock 등 - 정관사+소문자 명사) */
 .vtxt b:not(.dg) {
-  font-family:'KoPub Batang',serif;
+  font-family:'KoPubWorld Batang','Noto Serif KR',serif;
   font-weight: 700;
 }
 .vrow.hl-row-y { background:rgba(255,214,0,.22) !important }
@@ -231,7 +231,7 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
 .vtxt i mark,
 .vtxt span mark {
   /* 폰트를 명조 기본으로 강제 → 돋움체/명조 혼용 시 높이 차이 제거 */
-  font-family: 'KoPub Batang', serif !important;
+  font-family: 'KoPubWorld Batang','Noto Serif KR',serif !important;
   font-size: 1em !important;
   font-weight: normal !important;
   font-style: normal !important;
