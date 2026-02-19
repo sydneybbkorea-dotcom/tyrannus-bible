@@ -58,27 +58,7 @@
   </button>
   <div id="navPickerPopup" class="nav-picker-popup"></div>
   <input type="hidden" id="qsInput">
-  <div class="tb-right">
-    <!-- 로그인 버튼 -->
-    <button id="loginBtn" onclick="signInWithGoogle()">
-      <i class="fa fa-sign-in-alt"></i> 로그인
-    </button>
-    <!-- 로그인 후 사용자 정보 -->
-    <div id="userBar" style="display:none;align-items:center;gap:8px;flex-shrink:0;">
-      <div id="syncQuotaWrap" class="sync-quota-wrap" style="display:none;">
-        <div id="syncBadge" class="sync-badge">
-          <i class="fa fa-cloud"></i> <span id="syncText">동기화 완료</span>
-        </div>
-        <div id="quotaBar" class="quota-bar-inline" onclick="showQuotaModal()" title="저장 공간">
-          <div class="quota-track"><div class="quota-fill" id="quotaFill"></div></div>
-          <span id="quotaLabel" class="quota-label">0 / 10 MB</span>
-        </div>
-      </div>
-      <img id="userAvatar" src="" style="width:28px;height:28px;border-radius:50%;border:2px solid var(--gold);object-fit:cover;">
-      <span id="userName" style="font-size:12px;color:var(--text2);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;"></span>
-      <button onclick="signOutUser()" style="font-size:11px;color:var(--text3);background:none;border:1px solid var(--border);border-radius:4px;padding:2px 8px;cursor:pointer;">로그아웃</button>
-    </div>
-  </div>
+  <div class="tb-right"></div>
 </div>
 
 <!-- ══ MAIN ════════════════════════════════════ -->
@@ -107,6 +87,25 @@
       </button>
     </div>
     <div class="rail-bottom">
+      <!-- 사용자 영역 -->
+      <div id="railUser">
+        <button id="loginBtn" class="rail-icon" onclick="signInWithGoogle()" title="로그인">
+          <i class="fa fa-sign-in-alt"></i>
+        </button>
+        <div id="userBar" class="rail-user-info" style="display:none">
+          <img id="userAvatar" class="rail-avatar" src="">
+          <div id="syncQuotaWrap" class="rail-sync" style="display:none">
+            <div id="syncBadge" class="sync-badge">
+              <i class="fa fa-cloud"></i> <span id="syncText">동기화 완료</span>
+            </div>
+            <div id="quotaBar" class="quota-bar-inline" onclick="showQuotaModal()" title="저장 공간">
+              <div class="quota-track"><div class="quota-fill" id="quotaFill"></div></div>
+              <span id="quotaLabel" class="quota-label">0 / 10 MB</span>
+            </div>
+          </div>
+          <button class="rail-logout" onclick="signOutUser()" title="로그아웃"><i class="fa fa-sign-out-alt"></i></button>
+        </div>
+      </div>
       <button class="rail-icon" data-rail="settings" onclick="toggleRail('settings')" title="설정">
         <i class="fa fa-cog"></i><span class="rail-label">설정</span>
       </button>
