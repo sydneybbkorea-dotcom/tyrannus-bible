@@ -292,7 +292,7 @@
 }
 #noteTitle {
   flex:1; background:transparent; border:none; color:var(--text);
-  font-family:'Noto Serif KR',serif; font-size:20px; font-weight:700; outline:none;
+  font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif; font-size:20px; font-weight:700; outline:none;
   padding:10px 16px;
   letter-spacing:-.01em; min-width:0;
 }
@@ -356,14 +356,14 @@
 /* Note content editor */
 #noteContent {
   flex:1; overflow-y:auto; padding:14px 20px 20px;
-  outline:none; font-family:'Noto Serif KR',serif; font-size:15px;
+  outline:none; font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif; font-size:15px;
   color:var(--text); line-height:2; caret-color:var(--gold2);
   background:var(--bg);
 }
 #noteContent:empty::before {
   content:attr(data-ph); color:var(--text3); pointer-events:none; font-style:italic;
 }
-#noteContent h1 { font-size:24px; color:var(--gold2); font-family:'Playfair Display',serif; margin:12px 0 4px; border-bottom:1px solid var(--border); padding-bottom:6px }
+#noteContent h1 { font-size:24px; color:var(--gold2); font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif; font-weight:700; margin:12px 0 4px; border-bottom:1px solid var(--border); padding-bottom:6px }
 #noteContent h2 { font-size:19px; color:var(--text); margin:10px 0 3px }
 #noteContent h3 { font-size:16px; color:var(--text2); margin:8px 0 2px }
 #noteContent ul, #noteContent ol { padding-left:22px; margin:4px 0 }

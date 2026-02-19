@@ -8,8 +8,8 @@
   backdrop-filter:blur(8px);
 }
 .logo {
-  font-family:'Playfair Display',serif; font-style:italic;
-  font-size:18px; color:var(--accent2); letter-spacing:.3px; white-space:nowrap;
+  font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif;
+  font-size:18px; font-weight:700; color:var(--accent2); letter-spacing:.3px; white-space:nowrap;
   padding-right:10px; border-right:1px solid var(--border); margin-right:4px;
 }
 .nav-sel {

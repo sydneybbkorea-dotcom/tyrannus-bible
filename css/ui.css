@@ -69,7 +69,7 @@
   position:fixed; background:var(--bg3); border:1px solid var(--border2);
   border-radius:7px; padding:10px 12px; max-width:270px;
   box-shadow:var(--shadow); z-index:8000; display:none;
-  font-family:'Noto Serif KR',serif; font-size:13px; color:var(--text2);
+  font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif; font-size:13px; color:var(--text2);
   line-height:1.75; pointer-events:none;
 }
 #vtip-ref { font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--gold); margin-bottom:5px }

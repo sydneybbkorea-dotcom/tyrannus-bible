@@ -48,7 +48,7 @@ function showCopyRef(refStr){
     el.style.cssText = `position:fixed;top:60px;left:50%;transform:translateX(-50%);
       background:var(--bg3);border:1px solid var(--gold);border-radius:8px;
       padding:6px 16px;font-size:13px;color:var(--gold);font-weight:600;
-      font-family:'KoPub Batang',serif;z-index:9990;
+      font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif;z-index:9990;
       box-shadow:var(--shadow);pointer-events:none;
       transition:opacity .3s;`;
     document.body.appendChild(el);
