@@ -1,8 +1,10 @@
 // icon-rail.js — Slack 스타일 아이콘 레일 클릭 → 확장 패널 토글
 var _activeRail = null;
+var _spPinned = false;
 
 function toggleRail(name){
-  if(_activeRail === name){ closeSidePanel(); return; }
+  if(_activeRail === name && !_spPinned){ closeSidePanel(); return; }
+  if(_activeRail === name && _spPinned) return;
   openSidePanel(name);
 }
 
@@ -20,6 +22,7 @@ function openSidePanel(name){
 }
 
 function closeSidePanel(){
+  if(_spPinned && _activeRail==='bible') return;
   _activeRail = null;
   document.querySelectorAll('.rail-icon').forEach(b=>b.classList.remove('active'));
   const sp = document.getElementById('sidePanel');
@@ -33,10 +36,16 @@ function toggleNotePanel(){
     togglePanel('notes');
     if(noteBtn) noteBtn.classList.remove('active');
   } else {
-    if(_activeRail) closeSidePanel();
+    if(_activeRail && !_spPinned) closeSidePanel();
     openPanel('notes'); switchSub('notes');
     if(noteBtn) noteBtn.classList.add('active');
   }
+}
+
+function _spTogglePin(){
+  _spPinned = !_spPinned;
+  const btn = document.getElementById('spPinBtn');
+  if(btn) btn.classList.toggle('pinned', _spPinned);
 }
 
 function _initSection(name){

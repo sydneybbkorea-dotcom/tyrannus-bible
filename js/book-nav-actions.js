@@ -7,7 +7,7 @@ function _bnPickBook(b){
 }
 function _bnPickCh(ch){
   S.book=_bnSelBook; S.ch=ch; S.selV=null;S.selVSet.clear();
-  if(typeof closeSidePanel==='function') closeSidePanel();
+  if(!_spPinned && typeof closeSidePanel==='function') closeSidePanel();
   updateNavPickerLabel(); renderAll(); renderBookGrid();
 }
 function filterBooks(q){
