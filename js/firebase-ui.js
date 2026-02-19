@@ -6,10 +6,8 @@ function showUserBar(user){
   if(name) name.textContent=user.displayName||user.email;
   const loginBtn=document.getElementById('loginBtn');
   if(loginBtn) loginBtn.style.display='none';
-  const badge=document.getElementById('syncBadge');
-  if(badge) badge.style.display='flex';
-  const qbar=document.getElementById('quotaBar');
-  if(qbar) qbar.style.display='flex';
+  const wrap=document.getElementById('syncQuotaWrap');
+  if(wrap) wrap.style.display='flex';
 }
 function hideUserBar(){
   const bar=document.getElementById('userBar');

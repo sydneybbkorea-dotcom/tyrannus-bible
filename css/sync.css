@@ -1,4 +1,10 @@
-/* sync.css — 동기화 배지, 용량 바, 용량 모달 스타일 */
+/* sync.css — 동기화 배지 + 용량 바 (세로 스택) + 용량 모달 스타일 */
+
+/* ── 래퍼: 배지와 용량 바를 세로로 묶음 ── */
+.sync-quota-wrap {
+  display:flex; flex-direction:column; align-items:center; gap:2px; flex-shrink:0;
+}
+
 .sync-badge {
   display:flex; align-items:center; gap:4px; font-size:11px;
   padding:2px 8px; border-radius:10px;
@@ -11,13 +17,15 @@
 .sync-badge.sync-err { color:var(--red,#f87171); border-color:rgba(248,113,113,.3); background:rgba(248,113,113,.08); }
 .sync-badge.sync-off { color:var(--text3); border-color:var(--border); background:var(--bg3); }
 
-/* ── 미니 용량 바 (상단바 인라인) ── */
-.quota-bar { width:60px; height:16px; cursor:pointer; display:flex; align-items:center; gap:4px; position:relative; }
-.quota-track { width:40px; height:5px; background:var(--bg4); border-radius:3px; overflow:hidden; flex-shrink:0; }
-.quota-fill { height:100%; background:var(--green,#34d399); border-radius:3px; transition:width .4s, background .3s; }
+/* ── 용량 바: 배지 바로 아래에 표시 ── */
+.quota-bar-inline {
+  display:flex; align-items:center; gap:3px; cursor:pointer;
+}
+.quota-track { width:36px; height:4px; background:var(--bg4); border-radius:2px; overflow:hidden; flex-shrink:0; }
+.quota-fill { height:100%; background:var(--green,#34d399); border-radius:2px; transition:width .4s, background .3s; }
 .quota-fill.quota-yellow { background:var(--gold,#facc15); }
 .quota-fill.quota-red { background:var(--red,#f87171); }
-.quota-label { font-size:9px; color:var(--text3); white-space:nowrap; }
+.quota-label { font-size:8px; color:var(--text3); white-space:nowrap; }
 
 /* ── 용량 모달 내부 ── */
 .q-bar-wrap { margin:12px 0; }
