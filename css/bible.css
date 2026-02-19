@@ -38,49 +38,27 @@
 .vb-btn:hover { background:var(--bg3); color:var(--text) }
 .vb-btn.vb-on { color:var(--gold); background:var(--gold-dim) }
 
-/* ── Chapter Picker 팝업 (2-panel: 왼쪽 책 + 오른쪽 장) ── */
-.ch-picker {
-  position:absolute; left:0; right:0; z-index:89;
-  background:var(--bg2); border-bottom:1px solid var(--border);
-  box-shadow:0 8px 24px rgba(0,0,0,.3);
-  height:360px; overflow:hidden;
-}
-.cp-wrap { display:flex; height:100% }
-/* 왼쪽 책 목록 */
-.cp-books {
-  width:140px; flex-shrink:0; border-right:1px solid var(--border);
-  overflow:hidden; display:flex; flex-direction:column;
-}
-.cp-books-inner {
-  flex:1; overflow-y:auto; padding:4px 0;
+/* ── 책/장 드롭다운 (각각 독립, 심플 리스트) ── */
+.cp-drop {
+  position:absolute; left:0; z-index:89; width:160px;
+  max-height:360px; overflow-y:auto;
+  background:var(--bg2); border:1px solid var(--border);
+  border-top:none; box-shadow:0 8px 24px rgba(0,0,0,.3);
   scrollbar-width:thin; scrollbar-color:var(--border2) transparent;
 }
-.cp-books-inner::-webkit-scrollbar { width:6px }
-.cp-books-inner::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px }
-.cp-sec {
-  font-size:9px; font-weight:700; color:var(--text3); text-transform:uppercase;
-  padding:8px 12px 4px; letter-spacing:1px;
+.cp-drop::-webkit-scrollbar { width:6px }
+.cp-drop::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px }
+.cp-drop-ch { width:100px }
+.cp-item {
+  padding:8px 14px; font-size:13px; color:var(--text2); cursor:pointer;
+  transition:background .08s; white-space:nowrap;
+  overflow:hidden; text-overflow:ellipsis;
 }
-.cp-bk {
-  padding:8px 12px; font-size:13px; color:var(--text2); cursor:pointer;
-  transition:all .08s; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-}
-.cp-bk:hover { background:var(--bg3); color:var(--text) }
-.cp-bk.cp-bk-cur { color:var(--gold) }
-.cp-bk.cp-bk-act { background:var(--gold-dim); color:var(--gold); font-weight:600 }
-/* 오른쪽 장 목록 */
-.cp-chs {
-  flex:1; overflow-y:auto; padding:4px 0;
-  scrollbar-width:thin; scrollbar-color:var(--border2) transparent;
-}
-.cp-chs::-webkit-scrollbar { width:6px }
-.cp-chs::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px }
-.cp-ci {
-  padding:8px 16px; font-size:14px; color:var(--text2); cursor:pointer;
-  transition:all .08s; white-space:nowrap; text-align:center;
-}
-.cp-ci:hover { background:var(--bg3); color:var(--text) }
-.cp-ci.cp-ci-act { background:var(--gold-dim); color:var(--gold); font-weight:700 }
+.cp-item:hover { background:var(--bg3); color:var(--text) }
+.cp-item.cp-item-act { color:var(--gold); font-weight:600; background:var(--gold-dim) }
+.cp-div { height:1px; background:var(--border); margin:4px 0 }
+/* 장 버튼 스타일 */
+.vb-ch-sel { font-family:'JetBrains Mono',monospace; font-size:12px }
 
 /* ── Bible Tab Bar (physical folder tab style) ── */
 #bibleTabBar {

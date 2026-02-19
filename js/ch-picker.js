@@ -1,34 +1,32 @@
-// ch-picker.js — 전체 성경 장 선택 팝업
-var _cpOpen = false;
-var _cpSelBook = null;
+// ch-picker.js — 책/장 독립 드롭다운 제어
+var _bookDropOpen = false;
+var _chDropOpen = false;
 
-function openChPicker(){
-  if(_cpOpen){ closeChPicker(); return; }
-  _cpOpen = true;
-  _cpSelBook = S.book;
-  renderChPicker();
-  var el = document.getElementById('chPickerPopup');
+function openBookDrop(){
+  if(_bookDropOpen){ closeAllDrops(); return; }
+  closeAllDrops();
+  _bookDropOpen = true;
+  renderBookDrop();
+  var el = document.getElementById('bookDropdown');
   if(el) el.style.display = '';
-  setTimeout(()=> document.addEventListener('click', _cpOutClick), 10);
+  setTimeout(function(){ document.addEventListener('click', _dropOutClick); },10);
 }
 
-function closeChPicker(){
-  _cpOpen = false;
-  var el = document.getElementById('chPickerPopup');
-  if(el) el.style.display = 'none';
-  document.removeEventListener('click', _cpOutClick);
+function openChDrop(){
+  if(_chDropOpen){ closeAllDrops(); return; }
+  closeAllDrops();
+  _chDropOpen = true;
+  renderChDrop();
+  var el = document.getElementById('chDropdown');
+  if(el) el.style.display = '';
+  setTimeout(function(){ document.addEventListener('click', _dropOutClick); },10);
 }
 
-function _cpOutClick(e){
-  var el = document.getElementById('chPickerPopup');
-  var btn = document.getElementById('vbBookSel');
-  if(!el||!btn) return;
-  if(!el.contains(e.target)&&!btn.contains(e.target)) closeChPicker();
-}
-
-function _cpScrollToActive(el){
-  var ab = el.querySelector('.cp-bk-act');
-  if(ab) ab.scrollIntoView({block:'center',behavior:'auto'});
-  var ac = el.querySelector('.cp-ci-act');
-  if(ac) ac.scrollIntoView({block:'center',behavior:'auto'});
+function closeAllDrops(){
+  _bookDropOpen = false; _chDropOpen = false;
+  var b = document.getElementById('bookDropdown');
+  var c = document.getElementById('chDropdown');
+  if(b) b.style.display = 'none';
+  if(c) c.style.display = 'none';
+  document.removeEventListener('click', _dropOutClick);
 }

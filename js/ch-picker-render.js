@@ -1,16 +1,18 @@
-// ch-picker-render.js — 2-panel 장 선택기 렌더링 (왼쪽 책 + 오른쪽 장)
-function renderChPicker(){
-  var el = document.getElementById('chPickerPopup');
+// ch-picker-render.js — 책 드롭다운 렌더링
+function renderBookDrop(){
+  var el = document.getElementById('bookDropdown');
   if(!el) return;
-  var h = '<div class="cp-wrap">';
-  h += '<div class="cp-books"><div class="cp-books-inner">';
-  h += _cpBookList(BOOKS.OT, '구약');
-  h += _cpBookList(BOOKS.NT, '신약');
-  h += '</div></div>';
-  h += '<div class="cp-chs" id="cpChList">';
-  h += _cpSelBook ? _cpChList(_cpSelBook) : '';
-  h += '</div>';
-  h += '</div>';
+  var h = '';
+  BOOKS.OT.forEach(function(b){ h += _cpBkItem(b); });
+  h += '<div class="cp-div"></div>';
+  BOOKS.NT.forEach(function(b){ h += _cpBkItem(b); });
   el.innerHTML = h;
-  _cpScrollToActive(el);
+  var act = el.querySelector('.cp-item-act');
+  if(act) act.scrollIntoView({block:'center',behavior:'auto'});
+}
+
+function _cpBkItem(b){
+  var cls = 'cp-item';
+  if(b === S.book) cls += ' cp-item-act';
+  return '<div class="' + cls + '" onclick="_pickBook(\'' + b + '\')">' + b + '</div>';
 }

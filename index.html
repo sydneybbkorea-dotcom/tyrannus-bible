@@ -148,12 +148,12 @@
       <div id="bibleTabList"></div>
       <button id="bibleTabAdd" onclick="addBibleTab()" title="새 탭"><i class="fa fa-plus"></i></button>
     </div>
-    <!-- 뷰 바: Eloquent 스타일 -->
+    <!-- 뷰 바 -->
     <div id="bibleViewBar">
       <div class="vb-left">
-        <button class="vb-sel" id="vbBookSel" onclick="openChPicker()"><span id="vbBookLabel">창세기</span> <i class="fa fa-caret-down vb-caret"></i></button>
+        <button class="vb-sel" id="vbBookSel" onclick="openBookDrop()"><span id="vbBookLabel">창세기</span> <i class="fa fa-caret-down vb-caret"></i></button>
+        <button class="vb-sel vb-ch-sel" id="vbChSel" onclick="openChDrop()"><span id="vbChNum">1</span>장 <i class="fa fa-caret-down vb-caret"></i></button>
         <button class="vb-arrow" onclick="prevCh()" title="이전 장"><i class="fa fa-chevron-left"></i></button>
-        <span class="vb-ch-num" id="vbChNum">1</span>
         <button class="vb-arrow" onclick="nextCh()" title="다음 장"><i class="fa fa-chevron-right"></i></button>
       </div>
       <div class="vb-right">
@@ -167,8 +167,10 @@
         <span class="vb-info" id="vbVerseCount"></span>
       </div>
     </div>
-    <!-- 장 선택 팝업 -->
-    <div id="chPickerPopup" class="ch-picker" style="display:none"></div>
+    <!-- 책 드롭다운 -->
+    <div id="bookDropdown" class="cp-drop" style="display:none"></div>
+    <!-- 장 드롭다운 -->
+    <div id="chDropdown" class="cp-drop cp-drop-ch" style="display:none"></div>
     <div id="bibleScroll">
       <div class="ch-head">
         <h1 id="chTitle">창세기 1장</h1>
