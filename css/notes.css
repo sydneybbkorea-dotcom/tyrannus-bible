@@ -23,7 +23,7 @@
   padding:0 4px;
 }
 .rp-tab:hover:not(.act) { color:var(--text2) }
-.rp-tab.act { color:var(--gold); border-bottom-color:var(--gold); font-weight:700 }
+.rp-tab.act { color:#34d399; border-bottom-color:#34d399; font-weight:700 }
 .rp-body { flex:1; overflow:hidden; display:flex; flex-direction:column }
 .rp-sec { display:none; flex:1; flex-direction:column; overflow:hidden }
 .rp-sec.act { display:flex }
@@ -374,26 +374,28 @@
 #noteContent th { background:var(--bg3); color:var(--gold2); font-weight:600 }
 #noteContent hr { border:none; border-top:1px solid var(--border); margin:14px 0 }
 
-/* Verse link chip */
+/* Verse link chip — sync badge 스타일 (초록 pill) */
 .vlink {
   display:inline-flex; align-items:center; gap:3px;
-  background:var(--gold-dim); color:var(--gold2);
-  border:1px solid rgba(201,151,58,.3); border-radius:4px;
-  padding:1px 6px; font-size:12px; font-family:'JetBrains Mono',monospace;
+  background:rgba(52,211,153,.08); color:#34d399;
+  border:1px solid rgba(52,211,153,.25); border-radius:10px;
+  padding:1px 8px; font-size:11px; font-family:'JetBrains Mono',monospace;
   cursor:pointer; text-decoration:none; margin:0 2px;
-  transition:background .12s;
+  transition:all .15s;
 }
-.vlink:hover { background:var(--gold-sel); text-decoration:none }
-.vlink i { font-size:9px }
+.vlink:hover { background:rgba(52,211,153,.18); border-color:rgba(52,211,153,.4); text-decoration:none }
+.vlink i { font-size:9px; opacity:.7 }
 
-/* Note internal link */
+/* Note internal link — 블루 pill */
 .nlink {
   display:inline-flex; align-items:center; gap:3px;
-  color:var(--gold); border-bottom:1px dashed rgba(201,151,58,.5);
-  cursor:pointer; font-size:14px; transition:border-color .12s;
+  background:rgba(96,165,250,.08); color:#60a5fa;
+  border:1px solid rgba(96,165,250,.25); border-radius:10px;
+  padding:1px 8px; font-size:13px; cursor:pointer;
+  transition:all .15s; text-decoration:none;
 }
-.nlink:hover { border-bottom-color:var(--gold2); text-decoration:none }
-.nlink i { font-size:10px }
+.nlink:hover { background:rgba(96,165,250,.18); border-color:rgba(96,165,250,.4) }
+.nlink i { font-size:9px; opacity:.7 }
 
 /* Note footer (tags) */
 .note-footer {
