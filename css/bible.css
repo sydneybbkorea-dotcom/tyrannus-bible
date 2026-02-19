@@ -15,7 +15,7 @@
 .btab {
   display:flex; align-items:center; gap:5px; padding:7px 8px 8px 12px; font-size:11.5px;
   color:var(--text3); cursor:pointer; white-space:nowrap;
-  transition:all .12s; flex:1 1 0; min-width:40px; max-width:180px;
+  transition:all .12s; flex:1 1 0; min-width:60px; max-width:270px;
   user-select:none; overflow:hidden;
   border-radius:var(--radius) var(--radius) 0 0;
   background:var(--bg3);
