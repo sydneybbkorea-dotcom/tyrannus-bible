@@ -58,13 +58,13 @@ function renderBible(){
     if(wantKR && wantEN && kjvTxt){
       // 한영 대조
       row.className='vrow vrow-parallel'+(isSel?' vsel':'')+hlCls;
-      row.innerHTML=`<span class="vnum">${vn}</span><span class="vtxt vtxt-kr${rl}" data-key="${key}">${displayTxt}</span><span class="vtxt-en-side"><span class="en-vnum">${vn}</span>${kjvDisplay}</span>${indic}`;
+      row.innerHTML=`<span class="vtxt vtxt-kr${rl}" data-key="${key}"><span class="vnum">${vn}</span>${displayTxt}</span><span class="vtxt-en-side"><span class="en-vnum">${vn}</span>${kjvDisplay}</span>${indic}`;
     } else if(wantEN && !wantKR && kjvTxt){
       // 영어만
-      row.innerHTML=`<span class="vnum">${vn}</span><span class="vtxt vtxt-en-only" data-key="${key}">${kjvDisplay}</span>${indic}`;
+      row.innerHTML=`<span class="vtxt vtxt-en-only" data-key="${key}"><span class="vnum">${vn}</span>${kjvDisplay}</span>${indic}`;
     } else {
       // 한글만 (기본) 또는 영어 데이터 없을 때 한글 폴백
-      row.innerHTML=`<span class="vnum">${vn}</span><span class="vtxt${rl}" data-key="${key}">${displayTxt}</span>${indic}`;
+      row.innerHTML=`<span class="vtxt${rl}" data-key="${key}"><span class="vnum">${vn}</span>${displayTxt}</span>${indic}`;
     }
     row.onclick=e=>selVerse(vn,e);
     row.addEventListener('contextmenu', function(e) {

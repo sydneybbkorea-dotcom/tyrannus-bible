@@ -160,11 +160,8 @@ body.hide-hl .vrow[class*="hl-row-"] { background:transparent !important }
 }
 .vtxt-en-below .dg, .vtxt-en-below b.dg { color:inherit !important }
 
-/* ── 상하 대조 공통 스타일 ──────────────────────────────────
-   flex-wrap으로 .vnum+.vtxt-kr은 한 줄, .vtxt-en-side는 다음 줄.
-   .vnum은 구절번호(22px), .vtxt-kr이 나머지 채움,
-   .vtxt-en-side는 width:100%로 줄바꿈하여 아래 배치.
-──────────────────────────────────────────────────────────── */
+/* ── 상하 대조: .vnum이 .vtxt 안에 inline이므로
+   flex-wrap으로 .vtxt-kr은 한 줄, .vtxt-en-side는 다음 줄 ── */
 
 /* 좁은 화면(900px 미만) */
 @media (max-width:899px) {
@@ -178,8 +175,7 @@ body.hide-hl .vrow[class*="hl-row-"] { background:transparent !important }
   .vrow-parallel .vindic { position:absolute; right:4px; top:4px; }
 }
 
-/* 패널 열린 상태 — 강제 상하 대조 (한글 위, 영어 아래)
-   패널이 열리면 본문 영역이 좁아지므로 반드시 상하 배치 */
+/* 패널 열린 상태 — 강제 상하 대조 */
 body.panel-open .vrow-parallel { flex-wrap:wrap !important; gap:0 !important; }
 body.panel-open .vrow-parallel .vtxt-kr { flex:1; min-width:0; margin-bottom:0; }
 body.panel-open .vrow-parallel .vtxt-en-side {
@@ -198,15 +194,16 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
 .ch-head h1 { font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif; font-size:26px; font-weight:700; color:var(--accent2); margin-bottom:6px; letter-spacing:0.02em }
 .ch-head p { font-size:14px; color:var(--text3); letter-spacing:1px; font-style:italic; font-family:'Playfair Display',serif; }
 .vrow {
-  display:flex; gap:0; padding:2px 8px 2px 40px; border-radius:var(--radius); margin-bottom:0;
+  display:flex; gap:0; padding:2px 8px; border-radius:var(--radius); margin-bottom:0;
   cursor:pointer; transition:background .12s; position:relative;
 }
 .vrow:hover { background:var(--bg3) }
 .vrow.vsel { background:var(--accent-sel) !important; outline:1px solid rgba(80,140,232,.25); border-radius:var(--radius) }
+/* 구절 번호: 본문 텍스트 안에 inline 배치 */
 .vnum {
-  position:absolute; left:8px; top:6px;
   font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--gold);
-  width:28px; text-align:right; opacity:.75;
+  opacity:.75; display:inline-block; min-width:22px; text-align:right;
+  margin-right:6px; vertical-align:top; padding-top:5px;
 }
 [contenteditable][data-placeholder]:empty:before {
   content: attr(data-placeholder);

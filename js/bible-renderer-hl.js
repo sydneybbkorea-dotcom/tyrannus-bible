@@ -28,9 +28,15 @@ function restoreHL(){
 
 function applyRangeToEl(el, start, end, cls, gid){
   // 1단계: 텍스트 노드 목록과 각 노드의 시작 오프셋을 미리 수집
+  // .vnum 내부 텍스트는 건너뜀 (구절번호는 하이라이트 대상 아님)
   const nodes = [];
   let offset = 0;
-  const tw = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+  const tw = document.createTreeWalker(el, NodeFilter.SHOW_TEXT, {
+    acceptNode: function(node) {
+      if(node.parentNode && node.parentNode.classList && node.parentNode.classList.contains('vnum')) return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
   let n = tw.nextNode();
   while(n){
     nodes.push({node: n, from: offset});
@@ -65,13 +71,16 @@ function applyRangeToEl(el, start, end, cls, gid){
 // ─────────────────────────────────────────────────────
 
 // el 내부에서 targetNode의 targetOffset까지 textContent 오프셋 계산
+// .vnum 내부는 건너뜀
 function getTextOffset(el, targetNode, targetOffset){
   let total = 0;
   function walk(node){
     if(node === targetNode){
       total += targetOffset;
-      return true; // 완료
+      return true;
     }
+    // .vnum 내부는 건너뜀
+    if(node.classList && node.classList.contains('vnum')) return false;
     if(node.nodeType === Node.TEXT_NODE){
       total += node.length;
     } else {
