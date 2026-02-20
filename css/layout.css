@@ -7,7 +7,7 @@ body {
   display:flex; flex-direction:column; font-size:14px;
   -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
 }
-#main { display:flex; flex:1; overflow:hidden; position:relative }
+#main { display:flex; flex:1; overflow:hidden }
 
 /* 레거시 bookNav 요소 숨김 (아이콘 레일로 대체) */
 #bookNav, #bookNavTab, #bookNavOverlay { display:none !important; }

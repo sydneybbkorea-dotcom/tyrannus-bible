@@ -1,13 +1,14 @@
 /* ── CENTER: Bible Text ── */
 #biblePane {
-  flex:1; display:flex; flex-direction:column; overflow:hidden; background:var(--bg); min-width:0;
+  flex:1; display:flex; flex-direction:column; background:var(--bg); min-width:0;
+  position:relative; /* 드롭다운 기준점 */
 }
 /* ── View Bar: Eloquent 스타일 ── */
 #bibleViewBar {
   display:flex; align-items:center; justify-content:space-between;
   height:34px; flex-shrink:0; padding:0 6px;
   background:var(--bg2); border-bottom:1px solid var(--border);
-  position:relative; z-index:90;
+  position:relative; z-index:90; overflow:visible;
 }
 .vb-left, .vb-right { display:flex; align-items:center; gap:2px }
 .vb-sel {
@@ -40,10 +41,11 @@
 
 /* ── 책/장 드롭다운 (각각 독립, 심플 리스트) ── */
 .cp-drop {
-  position:absolute; left:0; z-index:89; width:160px;
-  max-height:360px; overflow-y:auto;
+  position:absolute; top:100%; left:0; z-index:200; width:160px;
+  max-height:320px; overflow-y:auto;
   background:var(--bg2); border:1px solid var(--border);
   border-top:none; box-shadow:0 8px 24px rgba(0,0,0,.3);
+  border-radius:0 0 6px 6px;
   scrollbar-width:thin; scrollbar-color:var(--border2) transparent;
 }
 .cp-drop::-webkit-scrollbar { width:6px }

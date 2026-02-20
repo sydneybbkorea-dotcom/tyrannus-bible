@@ -8,7 +8,11 @@ function openBookDrop(){
   _bookDropOpen = true;
   renderBookDrop();
   var el = document.getElementById('bookDropdown');
-  if(el) el.style.display = '';
+  var btn = document.getElementById('vbBookSel');
+  if(el && btn){
+    el.style.left = btn.offsetLeft + 'px';
+    el.style.display = '';
+  }
   setTimeout(function(){ document.addEventListener('click', _dropOutClick); },10);
 }
 
@@ -18,7 +22,11 @@ function openChDrop(){
   _chDropOpen = true;
   renderChDrop();
   var el = document.getElementById('chDropdown');
-  if(el) el.style.display = '';
+  var btn = document.getElementById('vbChSel');
+  if(el && btn){
+    el.style.left = btn.offsetLeft + 'px';
+    el.style.display = '';
+  }
   setTimeout(function(){ document.addEventListener('click', _dropOutClick); },10);
 }
 

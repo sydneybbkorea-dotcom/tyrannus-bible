@@ -53,15 +53,13 @@
 <!-- ══ MAIN ════════════════════════════════════ -->
 <div id="main">
 
-  <!-- 사이드바 토글 (레일 밖, 항상 접근 가능) -->
-  <button class="rail-toggle-btn" id="railToggleBtn" onclick="_toggleIconRail()" ontouchend="_toggleIconRail();event.preventDefault();" title="사이드바 열기/닫기">
-    <svg class="rail-ico rail-ico-open" width="18" height="18" viewBox="0 0 20 20" fill="none" style="pointer-events:none"><rect x="1.5" y="1.5" width="17" height="17" rx="3" stroke="currentColor" stroke-width="1.6"/><rect x="1.5" y="1.5" width="6" height="17" rx="3" fill="currentColor" opacity=".4"/><line x1="9.5" y1="4" x2="9.5" y2="16" stroke="currentColor" stroke-width="1.2" opacity=".35"/></svg>
-    <svg class="rail-ico rail-ico-closed" width="18" height="18" viewBox="0 0 20 20" fill="none" style="pointer-events:none"><rect x="1.5" y="1.5" width="17" height="17" rx="3" stroke="currentColor" stroke-width="1.6"/><rect x="1.5" y="1.5" width="6" height="17" rx="3" fill="currentColor" opacity=".4"/></svg>
-  </button>
-
   <!-- LEFT: Slack 스타일 아이콘 레일 -->
   <div id="iconRail">
     <div class="rail-top">
+      <button class="rail-toggle-btn" id="railToggleBtn" onclick="_toggleIconRail()" ontouchend="_toggleIconRail();event.preventDefault();" title="사이드바 열기/닫기">
+        <svg class="rail-ico rail-ico-open" width="18" height="18" viewBox="0 0 20 20" fill="none" style="pointer-events:none"><rect x="1.5" y="1.5" width="17" height="17" rx="3" stroke="currentColor" stroke-width="1.6"/><rect x="1.5" y="1.5" width="6" height="17" rx="3" fill="currentColor" opacity=".4"/><line x1="9.5" y1="4" x2="9.5" y2="16" stroke="currentColor" stroke-width="1.2" opacity=".35"/></svg>
+        <svg class="rail-ico rail-ico-closed" width="18" height="18" viewBox="0 0 20 20" fill="none" style="pointer-events:none"><rect x="1.5" y="1.5" width="17" height="17" rx="3" stroke="currentColor" stroke-width="1.6"/><rect x="1.5" y="1.5" width="6" height="17" rx="3" fill="currentColor" opacity=".4"/></svg>
+      </button>
       <button class="rail-icon" data-rail="bible" onclick="toggleRail('bible')" title="성경 목록">
         <i class="fa fa-book-bible"></i><span class="rail-label">성경</span>
       </button>
@@ -157,11 +155,11 @@
         <span class="vb-sep"></span>
         <span class="vb-info" id="vbVerseCount"></span>
       </div>
+      <!-- 책 드롭다운 (뷰바 내부, 아래로 확장) -->
+      <div id="bookDropdown" class="cp-drop" style="display:none"></div>
+      <!-- 장 드롭다운 -->
+      <div id="chDropdown" class="cp-drop cp-drop-ch" style="display:none"></div>
     </div>
-    <!-- 책 드롭다운 -->
-    <div id="bookDropdown" class="cp-drop" style="display:none"></div>
-    <!-- 장 드롭다운 -->
-    <div id="chDropdown" class="cp-drop cp-drop-ch" style="display:none"></div>
     <div id="bibleScroll">
       <div class="ch-head">
         <h1 id="chTitle">창세기 1장</h1>
