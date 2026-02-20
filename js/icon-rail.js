@@ -73,13 +73,7 @@ function _spTogglePin(){
 
 function _initSection(name){
   if(name==='bible') buildBookList();
-  else if(name==='search') _initSearchPanel();
   else if(name==='bookmark') renderBookmarks();
   else if(name==='reading'&&typeof renderReadingPlan==='function') renderReadingPlan();
   else if(name==='settings'&&typeof renderSettingsPanel==='function') renderSettingsPanel();
-}
-
-function _initSearchPanel(){
-  if(typeof renderUnifiedSearch==='function') renderUnifiedSearch();
-  setTimeout(()=>document.getElementById('uniSearchInput')?.focus(),100);
 }

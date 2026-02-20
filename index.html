@@ -106,9 +106,6 @@
           <button class="rail-icon" data-rail="notes" onclick="toggleNotePanel()" title="노트">
             <i class="fa fa-pen"></i><span class="rail-label">노트</span>
           </button>
-          <button class="rail-icon" data-rail="search" onclick="toggleRail('search')" title="검색">
-            <i class="fa fa-search"></i><span class="rail-label">검색</span>
-          </button>
           <button class="rail-icon" data-rail="dictionary" onclick="toggleDictPanel()" title="사전">
             <i class="fas fa-spell-check"></i><span class="rail-label">사전</span>
           </button>
@@ -139,10 +136,6 @@
         <div class="sp-section" id="sp-bible">
           <div class="sp-head"><i class="fa fa-book-bible"></i> 성경 목록<button class="sp-pin-btn" id="spPinBtn" onclick="_spTogglePin()" title="고정"><i class="fa fa-thumbtack"></i></button></div>
           <div class="sp-body" id="bookList"></div>
-        </div>
-        <div class="sp-section" id="sp-search">
-          <div class="sp-head"><i class="fa fa-search"></i> 검색</div>
-          <div class="sp-body" id="spSearchBody" style="display:flex;flex-direction:column;overflow:hidden"></div>
         </div>
         <div class="sp-section" id="sp-bookmark">
           <div class="sp-head"><i class="fa fa-bookmark"></i> 북마크</div>
@@ -374,13 +367,16 @@
         </div>
       </div>
 
-      <!-- SEARCH TAB -->
+      <!-- SEARCH TAB (통합 검색: 기본 + 고급) -->
       <div class="rp-sec" id="sec-search">
         <div class="search-wrap">
+          <!-- 검색 입력 -->
           <div class="sch-row">
-            <input type="text" id="schInput" placeholder="단어 또는 구절 검색..." onkeydown="if(event.key==='Enter')doSearch()">
-            <button onclick="doSearch()">검색</button>
+            <input type="text" id="schInput" placeholder="검색어 입력... (한글/영어/H1234)" onkeydown="if(event.key==='Enter')uniSearch()">
+            <button onclick="uniSearch()"><i class="fa fa-search"></i></button>
+            <button class="sch-help-btn" onclick="uniHelp()" title="검색 도움말"><i class="fa fa-question-circle"></i></button>
           </div>
+          <!-- 필터 칩 -->
           <div class="sch-filters">
             <button class="sf-chip on" data-f="all" onclick="sfToggle(this)">전체</button>
             <button class="sf-chip on" data-f="OT" onclick="sfToggle(this)">구약</button>
@@ -392,6 +388,24 @@
             <button class="sf-chip on" data-f="commentary" onclick="sfToggle(this)">주석</button>
             <button class="sf-chip on" data-f="files" onclick="sfToggle(this)">파일</button>
           </div>
+          <!-- 고급 옵션 토글 행 -->
+          <div class="sch-adv-row">
+            <button class="sch-adv-toggle" id="schAdvToggle" onclick="schToggleAdv()"><i class="fa fa-sliders-h"></i> 고급</button>
+            <span class="sch-sep"></span>
+            <button class="sch-vm-btn on" data-vm="list" onclick="schSetView('list')" title="목록"><i class="fa fa-list"></i></button>
+            <button class="sch-vm-btn" data-vm="ref" onclick="schSetView('ref')" title="참조"><i class="fa fa-th"></i></button>
+            <button class="sch-vm-btn" data-vm="tree" onclick="schSetView('tree')" title="트리"><i class="fa fa-sitemap"></i></button>
+          </div>
+          <!-- 고급 옵션 패널 (접힘) -->
+          <div class="sch-adv-panel" id="schAdvPanel" style="display:none">
+            <button class="sch-opt-btn" id="schCaseBtn" onclick="schToggleCase()" title="대소문자 구분 (영어)">Aa</button>
+            <span class="sch-sep"></span>
+            <button class="sch-scope-btn on" data-scope="verse" onclick="schSetScope('verse')">절</button>
+            <button class="sch-scope-btn" data-scope="chapter" onclick="schSetScope('chapter')">장</button>
+            <button class="sch-scope-btn" data-scope="book" onclick="schSetScope('book')">권</button>
+          </div>
+          <!-- 통계 + 결과 수 -->
+          <div id="schStatsArea"></div>
           <div class="sch-count" id="schCount"></div>
           <div id="schList"></div>
         </div>
@@ -616,9 +630,16 @@
 <script src="js/outline-note.js"></script>
 <script src="js/outline-note-ui.js"></script>
 <script src="js/search.js"></script>
+<script src="js/search-detect.js"></script>
+<script src="js/search-kr.js"></script>
+<script src="js/search-en.js"></script>
+<script src="js/search-extra.js"></script>
 <script src="js/search-exec.js"></script>
 <script src="js/search-render.js"></script>
+<script src="js/search-views.js"></script>
 <script src="js/search-item.js"></script>
+<script src="js/search-stats.js"></script>
+<script src="js/search-ctrl.js"></script>
 <script src="js/search-quick.js"></script>
 <script src="js/vb-search.js"></script>
 <script src="js/search-filter-init.js"></script>

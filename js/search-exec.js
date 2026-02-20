@@ -1,44 +1,26 @@
-// search-exec.js — Full search (Bible, notes, commentary, files)
-function doSearch(){
-  const q=document.getElementById('schInput').value.trim();
+// search-exec.js — 통합 검색 실행 (기본+고급: 언어 감지, 와일드카드)
+var _schViewMode='list', _schCaseSensitive=false, _schScope='verse';
+var _schLastResults=null, _schLastQ='', _schPage=0, _schPageSize=200;
+
+async function uniSearch(){
+  const q=(document.getElementById('schInput')?.value||'').trim();
   if(!q) return;
-  const results=[];
-  const bookSel=(document.getElementById('sfBookSel')?.value)||'';
-
-  // Bible search (OT/NT, optional book filter)
-  if(searchFilters.OT || searchFilters.NT){
-    Object.entries(BIBLE).forEach(([b,chs])=>{
-      if(!searchFilters.OT && BOOKS.OT.includes(b)) return;
-      if(!searchFilters.NT && BOOKS.NT.includes(b)) return;
-      if(bookSel && b!==bookSel) return;
-      Object.entries(chs).forEach(([c,vs])=>vs.forEach((t,i)=>{
-        if(t.includes(q)) results.push({
-          type:'bible', ref:`${b} ${c}:${i+1}`,
-          text:t, b, c:+c, v:i+1
-        });
-      }));
-    });
-  }
-
-  // Notes search
-  if(searchFilters.notes && Array.isArray(S.notes)){
-    S.notes.forEach(n=>{
-      if(!n) return;
-      const p=(n.title||'')+' '+(n.content||'').replace(/<[^>]+>/g,' ');
-      if(p.includes(q)) results.push({
-        type:'note', ref:`📝 ${n.title||'무제'}`,
-        text:p.slice(0,120), nid:n.id
-      });
-    });
-  }
-
-  // Commentary search
-  if(searchFilters.commentary){
-    // TODO: commentary data 사용 가능 시 구현
-  }
-
-  // Files search (노트 첨부파일)
-  _searchFiles(q, results);
-
-  _renderResults(q, results);
+  _schLastQ=q; _schPage=0;
+  const list=document.getElementById('schList');
+  if(list) list.innerHTML='<div class="adv-loading"><i class="fa fa-spinner fa-spin"></i></div>';
+  const mode=_schDetectMode(q);
+  let results=[];
+  try{
+    if(mode==='original') results=await _schSearchOrig(q);
+    else if(mode==='english') results=await _schSearchEN(q);
+    else results=_schSearchKR(q);
+  }catch(e){ console.error('uniSearch error',e); }
+  // 노트/주석/파일도 검색
+  _schSearchExtra(q, results);
+  _schLastResults=results;
+  _schRenderStats(results);
+  _schRenderAll(results, q);
 }
+
+// 하위호환: 기존 doSearch 호출 시에도 동작
+function doSearch(){ uniSearch(); }
