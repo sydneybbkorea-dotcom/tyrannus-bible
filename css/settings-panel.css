@@ -72,3 +72,13 @@
 .stp-sync-login {
   font-size:11px; color:var(--text3); padding:6px 0;
 }
+/* 로그아웃 버튼 */
+.stp-logout { padding-top:12px; border-top:1px solid var(--border); margin-top:4px }
+.stp-logout-btn {
+  width:100%; padding:8px 0; font-size:11px; font-weight:600;
+  color:#ef4444; background:var(--bg3); border:1px solid rgba(239,68,68,.25);
+  border-radius:6px; cursor:pointer; transition:all .15s;
+  display:flex; align-items:center; justify-content:center; gap:6px;
+}
+.stp-logout-btn:hover { background:rgba(239,68,68,.1); border-color:#ef4444 }
+.stp-logout-btn i { font-size:12px }

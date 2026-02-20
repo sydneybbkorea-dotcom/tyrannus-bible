@@ -24,6 +24,14 @@ function renderSettingsPanel(){
   h += '<div class="stp-reset"><button onclick="_stpReset()">기본값 복원</button></div>';
   // 클라우드 동기화 섹션
   h += _stpSyncSection();
+  // 로그아웃 버튼 (로그인 상태일 때만 표시)
+  h += '<div class="stp-logout" id="stpLogoutWrap" style="display:none">';
+  h += '<button class="stp-logout-btn" onclick="signOutUser()">';
+  h += '<i class="fa fa-sign-out-alt"></i> 로그아웃</button></div>';
   h += '</div>';
   el.innerHTML = h;
+  // 로그인 상태면 로그아웃 버튼 표시
+  var ub=document.getElementById('userBar');
+  var lw=document.getElementById('stpLogoutWrap');
+  if(lw&&ub&&ub.style.display!=='none') lw.style.display='';
 }

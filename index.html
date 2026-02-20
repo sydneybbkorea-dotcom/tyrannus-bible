@@ -124,18 +124,17 @@
           </button>
         </div>
         <div class="rail-bottom">
+          <button class="rail-icon" data-rail="bugreport" onclick="toggleRail('bugreport')" title="버그 리포트">
+            <i class="fa fa-bug"></i><span class="rail-label">버그</span>
+          </button>
           <div id="railUser">
             <button id="loginBtn" class="rail-icon" onclick="signInWithGoogle()" title="로그인">
               <i class="fa fa-sign-in-alt"></i>
             </button>
             <div id="userBar" class="rail-user-info" style="display:none">
-              <img id="userAvatar" class="rail-avatar" src="">
-              <button class="rail-logout" onclick="signOutUser()" title="로그아웃"><i class="fa fa-sign-out-alt"></i></button>
+              <img id="userAvatar" class="rail-avatar" src="" title="프로필">
             </div>
           </div>
-          <button class="rail-icon" data-rail="bugreport" onclick="toggleRail('bugreport')" title="버그 리포트">
-            <i class="fa fa-bug"></i><span class="rail-label">버그</span>
-          </button>
           <button class="rail-icon" data-rail="settings" onclick="toggleRail('settings')" title="설정">
             <i class="fa fa-cog"></i><span class="rail-label">설정</span>
           </button>
