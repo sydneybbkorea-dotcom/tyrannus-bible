@@ -14,6 +14,9 @@ function showUserBar(user){
   if(wrap) wrap.style.display='flex';
   var loginMsg=document.getElementById('stpSyncLogin');
   if(loginMsg) loginMsg.style.display='none';
+  // 로그아웃 버튼 표시
+  var lw=document.getElementById('stpLogoutWrap');
+  if(lw) lw.style.display='';
 }
 function hideUserBar(){
   var bar=document.getElementById('userBar');
@@ -25,6 +28,9 @@ function hideUserBar(){
   if(wrap) wrap.style.display='none';
   var loginMsg=document.getElementById('stpSyncLogin');
   if(loginMsg) loginMsg.style.display='';
+  // 로그아웃 버튼 숨김
+  var lw=document.getElementById('stpLogoutWrap');
+  if(lw) lw.style.display='none';
 }
 function updateSyncBadge(status){
   var badge=document.getElementById('syncBadge');
