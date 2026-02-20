@@ -3,6 +3,8 @@
   flex:1; display:flex; flex-direction:column; background:var(--bg); min-width:0;
   position:relative; /* 드롭다운 기준점 */
 }
+/* 본문 영역: 아이콘레일 + 사이드패널 + 스크롤 (탭바/뷰바 아래) */
+#bibleBody { display:flex; flex:1; min-height:0; }
 /* ── View Bar: Eloquent 스타일 ── */
 #bibleViewBar {
   display:flex; align-items:center;

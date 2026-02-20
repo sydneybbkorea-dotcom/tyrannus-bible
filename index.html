@@ -53,76 +53,6 @@
 <!-- ══ MAIN ════════════════════════════════════ -->
 <div id="main">
 
-  <!-- LEFT: Slack 스타일 아이콘 레일 -->
-  <div id="iconRail">
-    <div class="rail-top">
-      <button class="rail-icon" data-rail="bible" onclick="toggleRail('bible')" title="성경 목록">
-        <i class="fa fa-book-bible"></i><span class="rail-label">성경</span>
-      </button>
-      <button class="rail-icon" data-rail="notes" onclick="toggleNotePanel()" title="노트">
-        <i class="fa fa-pen"></i><span class="rail-label">노트</span>
-      </button>
-      <button class="rail-icon" data-rail="search" onclick="toggleRail('search')" title="검색">
-        <i class="fa fa-search"></i><span class="rail-label">검색</span>
-      </button>
-      <button class="rail-icon" data-rail="dictionary" onclick="toggleDictPanel()" title="사전">
-        <i class="fas fa-spell-check"></i><span class="rail-label">사전</span>
-      </button>
-      <button class="rail-icon" data-rail="bookmark" onclick="toggleRail('bookmark')" title="북마크">
-        <i class="fa fa-bookmark"></i><span class="rail-label">북마크</span>
-      </button>
-      <button class="rail-icon" data-rail="reading" onclick="toggleRail('reading')" title="읽기 계획">
-        <i class="fa fa-calendar-check"></i><span class="rail-label">읽기</span>
-      </button>
-    </div>
-    <div class="rail-bottom">
-      <!-- 사용자 영역 (아바타 + 로그아웃만) -->
-      <div id="railUser">
-        <button id="loginBtn" class="rail-icon" onclick="signInWithGoogle()" title="로그인">
-          <i class="fa fa-sign-in-alt"></i>
-        </button>
-        <div id="userBar" class="rail-user-info" style="display:none">
-          <img id="userAvatar" class="rail-avatar" src="">
-          <button class="rail-logout" onclick="signOutUser()" title="로그아웃"><i class="fa fa-sign-out-alt"></i></button>
-        </div>
-      </div>
-      <button class="rail-icon" data-rail="settings" onclick="toggleRail('settings')" title="설정">
-        <i class="fa fa-cog"></i><span class="rail-label">설정</span>
-      </button>
-    </div>
-  </div>
-
-  <!-- LEFT: 확장 사이드패널 -->
-  <div id="sidePanel">
-    <!-- 성경 목록 -->
-    <div class="sp-section" id="sp-bible">
-      <div class="sp-head"><i class="fa fa-book-bible"></i> 성경 목록<button class="sp-pin-btn" id="spPinBtn" onclick="_spTogglePin()" title="고정"><i class="fa fa-thumbtack"></i></button></div>
-      <div class="sp-body" id="bookList"></div>
-    </div>
-    <!-- 검색 (통합: 기본 + 고급) -->
-    <div class="sp-section" id="sp-search">
-      <div class="sp-head"><i class="fa fa-search"></i> 검색</div>
-      <div class="sp-body" id="spSearchBody" style="display:flex;flex-direction:column;overflow:hidden"></div>
-    </div>
-    <!-- 북마크 -->
-    <div class="sp-section" id="sp-bookmark">
-      <div class="sp-head"><i class="fa fa-bookmark"></i> 북마크</div>
-      <div class="sp-body" id="spBookmarkList"></div>
-    </div>
-    <!-- 읽기 계획 -->
-    <div class="sp-section" id="sp-reading">
-      <div class="sp-head"><i class="fa fa-calendar-check"></i> 읽기 계획</div>
-      <div class="sp-body" id="spReadingContent">
-        <div style="padding:20px;text-align:center;color:var(--text3);font-size:12px"><i class="fa fa-calendar-check" style="font-size:24px;margin-bottom:8px;display:block;opacity:.4"></i>준비 중입니다</div>
-      </div>
-    </div>
-    <!-- 설정 패널 -->
-    <div class="sp-section" id="sp-settings">
-      <div class="sp-head"><i class="fa fa-cog"></i> 설정</div>
-      <div class="sp-body" id="spSettingsBody"></div>
-    </div>
-  </div>
-
   <!-- 레거시 요소 (숨김) -->
   <div id="bookNav" style="display:none"><div id="bookNavTab"></div></div>
   <div id="bookNavOverlay" style="display:none"></div>
@@ -161,7 +91,72 @@
       <!-- 장 드롭다운 -->
       <div id="chDropdown" class="cp-drop cp-drop-ch" style="display:none"></div>
     </div>
-    <div id="bibleScroll">
+    <!-- 3행: 아이콘레일 + 사이드패널 + 본문 (레일만 슬라이드) -->
+    <div id="bibleBody">
+      <!-- 아이콘 레일 (슬라이드 영역) -->
+      <div id="iconRail">
+        <div class="rail-top">
+          <button class="rail-icon" data-rail="bible" onclick="toggleRail('bible')" title="성경 목록">
+            <i class="fa fa-book-bible"></i><span class="rail-label">성경</span>
+          </button>
+          <button class="rail-icon" data-rail="notes" onclick="toggleNotePanel()" title="노트">
+            <i class="fa fa-pen"></i><span class="rail-label">노트</span>
+          </button>
+          <button class="rail-icon" data-rail="search" onclick="toggleRail('search')" title="검색">
+            <i class="fa fa-search"></i><span class="rail-label">검색</span>
+          </button>
+          <button class="rail-icon" data-rail="dictionary" onclick="toggleDictPanel()" title="사전">
+            <i class="fas fa-spell-check"></i><span class="rail-label">사전</span>
+          </button>
+          <button class="rail-icon" data-rail="bookmark" onclick="toggleRail('bookmark')" title="북마크">
+            <i class="fa fa-bookmark"></i><span class="rail-label">북마크</span>
+          </button>
+          <button class="rail-icon" data-rail="reading" onclick="toggleRail('reading')" title="읽기 계획">
+            <i class="fa fa-calendar-check"></i><span class="rail-label">읽기</span>
+          </button>
+        </div>
+        <div class="rail-bottom">
+          <div id="railUser">
+            <button id="loginBtn" class="rail-icon" onclick="signInWithGoogle()" title="로그인">
+              <i class="fa fa-sign-in-alt"></i>
+            </button>
+            <div id="userBar" class="rail-user-info" style="display:none">
+              <img id="userAvatar" class="rail-avatar" src="">
+              <button class="rail-logout" onclick="signOutUser()" title="로그아웃"><i class="fa fa-sign-out-alt"></i></button>
+            </div>
+          </div>
+          <button class="rail-icon" data-rail="settings" onclick="toggleRail('settings')" title="설정">
+            <i class="fa fa-cog"></i><span class="rail-label">설정</span>
+          </button>
+        </div>
+      </div>
+      <!-- 확장 사이드패널 -->
+      <div id="sidePanel">
+        <div class="sp-section" id="sp-bible">
+          <div class="sp-head"><i class="fa fa-book-bible"></i> 성경 목록<button class="sp-pin-btn" id="spPinBtn" onclick="_spTogglePin()" title="고정"><i class="fa fa-thumbtack"></i></button></div>
+          <div class="sp-body" id="bookList"></div>
+        </div>
+        <div class="sp-section" id="sp-search">
+          <div class="sp-head"><i class="fa fa-search"></i> 검색</div>
+          <div class="sp-body" id="spSearchBody" style="display:flex;flex-direction:column;overflow:hidden"></div>
+        </div>
+        <div class="sp-section" id="sp-bookmark">
+          <div class="sp-head"><i class="fa fa-bookmark"></i> 북마크</div>
+          <div class="sp-body" id="spBookmarkList"></div>
+        </div>
+        <div class="sp-section" id="sp-reading">
+          <div class="sp-head"><i class="fa fa-calendar-check"></i> 읽기 계획</div>
+          <div class="sp-body" id="spReadingContent">
+            <div style="padding:20px;text-align:center;color:var(--text3);font-size:12px"><i class="fa fa-calendar-check" style="font-size:24px;margin-bottom:8px;display:block;opacity:.4"></i>준비 중입니다</div>
+          </div>
+        </div>
+        <div class="sp-section" id="sp-settings">
+          <div class="sp-head"><i class="fa fa-cog"></i> 설정</div>
+          <div class="sp-body" id="spSettingsBody"></div>
+        </div>
+      </div>
+      <!-- 성경 본문 스크롤 -->
+      <div id="bibleScroll">
       <div class="ch-head">
         <h1 id="chTitle">창세기 1장</h1>
         <p id="chSub">Genesis</p>
@@ -172,8 +167,9 @@
         <span style="font-size:11px;color:var(--text3)" id="chNavLbl"></span>
         <button class="chnav" onclick="nextCh()">다음 장 <i class="fa fa-chevron-right"></i></button>
       </div>
-    </div>
-  </div>
+    </div><!-- /bibleScroll -->
+    </div><!-- /bibleBody -->
+  </div><!-- /biblePane -->
 
   <!-- RIGHT: Panel (초기 비활성) -->
   <div id="rightPanel" class="rp-hide">
