@@ -42,6 +42,7 @@
 }
 .vb-btn:hover { background:var(--bg3); color:var(--text) }
 .vb-btn.vb-on { color:var(--gold); background:var(--gold-dim) }
+.vb-svg { display:block }
 
 /* ── 뷰바 검색 입력창 ── */
 .vb-search {
