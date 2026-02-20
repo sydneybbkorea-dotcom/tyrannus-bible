@@ -115,6 +115,12 @@
           <button class="rail-icon" data-rail="reading" onclick="toggleRail('reading')" title="읽기 계획">
             <i class="fa fa-calendar-check"></i><span class="rail-label">읽기</span>
           </button>
+          <button class="rail-icon" data-rail="library" onclick="toggleRail('library')" title="도서관">
+            <i class="fa fa-book-open-reader"></i><span class="rail-label">도서관</span>
+          </button>
+          <button class="rail-icon" data-rail="qna" onclick="toggleRail('qna')" title="Q&A">
+            <i class="fa fa-comments"></i><span class="rail-label">Q&A</span>
+          </button>
         </div>
         <div class="rail-bottom">
           <div id="railUser">
@@ -145,6 +151,18 @@
           <div class="sp-head"><i class="fa fa-calendar-check"></i> 읽기 계획</div>
           <div class="sp-body" id="spReadingContent">
             <div style="padding:20px;text-align:center;color:var(--text3);font-size:12px"><i class="fa fa-calendar-check" style="font-size:24px;margin-bottom:8px;display:block;opacity:.4"></i>준비 중입니다</div>
+          </div>
+        </div>
+        <div class="sp-section" id="sp-library">
+          <div class="sp-head"><i class="fa fa-book-open-reader"></i> 도서관</div>
+          <div class="sp-body" id="spLibraryBody">
+            <div style="padding:20px;text-align:center;color:var(--text3);font-size:12px"><i class="fa fa-book-open-reader" style="font-size:24px;margin-bottom:8px;display:block;opacity:.4"></i>준비 중입니다</div>
+          </div>
+        </div>
+        <div class="sp-section" id="sp-qna">
+          <div class="sp-head"><i class="fa fa-comments"></i> Q&A</div>
+          <div class="sp-body" id="spQnaBody">
+            <div style="padding:20px;text-align:center;color:var(--text3);font-size:12px"><i class="fa fa-comments" style="font-size:24px;margin-bottom:8px;display:block;opacity:.4"></i>준비 중입니다</div>
           </div>
         </div>
         <div class="sp-section" id="sp-settings">
