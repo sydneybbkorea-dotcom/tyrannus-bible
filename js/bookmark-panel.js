@@ -2,7 +2,7 @@
 function renderBookmarks(){
   const c=document.getElementById('spBookmarkList'); if(!c) return;
   if(!S.bk||!S.bk.size){
-    c.innerHTML='<div style="padding:20px;text-align:center;color:var(--text3);font-size:12px"><i class="fa fa-bookmark" style="font-size:20px;margin-bottom:8px;display:block;opacity:.4"></i>'+t('bk.empty')+'</div>';
+    c.innerHTML='<div style="padding:20px;text-align:center;color:var(--text3);font-size:12px"><i class="fa fa-bookmark" style="font-size:20px;margin-bottom:8px;display:block;opacity:.4"></i>북마크가 없습니다</div>';
     return;
   }
   const arr=[...S.bk].map(k=>{

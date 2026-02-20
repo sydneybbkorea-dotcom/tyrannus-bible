@@ -25,5 +25,5 @@ function _websterMeaning(m){
   return h+'</div>';
 }
 function _websterEmpty(){
-  return '<div class="comm-hint"><i class="fa fa-spell-check"></i>'+t('web.no.result')+'<br><span style="font-size:11px;color:var(--text3)">'+t('web.try.other')+'</span></div>';
+  return '<div class="comm-hint"><i class="fa fa-spell-check"></i>검색 결과가 없습니다<br><span style="font-size:11px;color:var(--text3)">다른 단어를 입력하세요</span></div>';
 }

@@ -2,7 +2,7 @@
 function toggleHighlight(){
   var hidden = document.body.classList.toggle('hide-hl');
   if(typeof renderViewBar==='function') renderViewBar();
-  toast(hidden ? t('hl.hide') : t('hl.show'));
+  toast(hidden ? '형광펜 숨김' : '형광펜 표시');
 }
 
 // ═══════════════════════════════════════════════════

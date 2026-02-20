@@ -14,7 +14,7 @@ function toggleRedLetter(){
   S.showRedLetter = !S.showRedLetter;
   persist(); renderBible(); restoreSel();
   if(typeof renderViewBar==='function') renderViewBar();
-  toast(S.showRedLetter ? t('red.on') : t('red.off'));
+  toast(S.showRedLetter ? '예수님 말씀 표시' : '예수님 말씀 해제');
 }
 
 function isRedLetter(key){

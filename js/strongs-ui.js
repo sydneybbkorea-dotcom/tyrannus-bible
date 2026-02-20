@@ -6,12 +6,12 @@ async function toggleStrongCodes(){
     if(typeof loadEnStrongsForBook==='function') loads.push(loadEnStrongsForBook(S.book));
     if(typeof loadStrongsDictForBook==='function') loads.push(loadStrongsDictForBook(S.book));
     if(S.showEnglish) loads.push(loadBibleEN());
-    toast(t('str.loading'));
+    toast('원어 코드 데이터 로딩 중...');
     await Promise.all(loads);
   }
   renderBible(); restoreSel();
   if(typeof renderViewBar==='function') renderViewBar();
-  toast(S.showStrong ? t('str.on') : t('str.off'));
+  toast(S.showStrong ? '원어 코드 표시 ON' : '원어 코드 표시 OFF');
 }
 
 // 한글/영어 개별 토글

@@ -36,10 +36,10 @@ function updateSyncBadge(status){
   var badge=document.getElementById('syncBadge');
   var txt=document.getElementById('syncText');
   if(!badge) return;
-  var m={syncing:{icon:'fa-sync fa-spin',text:t('sync.ing'),cls:''},
-    synced:{icon:'fa-cloud',text:t('sync.done'),cls:'sync-ok'},
-    error:{icon:'fa-exclamation-triangle',text:t('sync.err'),cls:'sync-err'},
-    offline:{icon:'fa-cloud-slash',text:t('sync.off'),cls:'sync-off'}};
+  var m={syncing:{icon:'fa-sync fa-spin',text:'동기화 중...',cls:''},
+    synced:{icon:'fa-cloud',text:'동기화 완료',cls:'sync-ok'},
+    error:{icon:'fa-exclamation-triangle',text:'오류',cls:'sync-err'},
+    offline:{icon:'fa-cloud-slash',text:'오프라인',cls:'sync-off'}};
   var c=m[status]||m.synced;
   badge.className='sync-badge'+(c.cls?' '+c.cls:'');
   badge.querySelector('i').className='fa '+c.icon;

@@ -3,8 +3,8 @@ async function bugSubmit(){
   const title=(document.getElementById('bugTitle')?.value||'').trim();
   const desc=(document.getElementById('bugDesc')?.value||'').trim();
   const status=document.getElementById('bugStatus');
-  if(!title){ _bugMsg(status,t('bug.need.title'),'warn'); return; }
-  _bugMsg(status,'<i class="fa fa-spinner fa-spin"></i> '+t('bug.sending'),'info');
+  if(!title){ _bugMsg(status,'제목을 입력해주세요','warn'); return; }
+  _bugMsg(status,'<i class="fa fa-spinner fa-spin"></i> 제출 중...','info');
 
   // 이미지 → base64 → GitHub에 업로드 후 URL 수집
   let imgMd='';
@@ -25,13 +25,13 @@ async function bugSubmit(){
   try{
     const res=await _bugCreateIssue(title,body);
     if(res&&res.html_url){
-      _bugMsg(status,t('bug.done'),'ok');
+      _bugMsg(status,'✅ 제출 완료!','ok');
       _bugSaveLocal(title,desc,res.html_url);
       document.getElementById('bugTitle').value='';
       document.getElementById('bugDesc').value='';
       _bugFiles=[]; _bugRenderPreviews(); _bugLoadHistory();
-    } else { _bugMsg(status,t('bug.fail'),'warn'); }
-  }catch(e){ _bugMsg(status,t('bug.fail2')+e.message,'warn'); }
+    } else { _bugMsg(status,'제출 실패: 다시 시도해주세요','warn'); }
+  }catch(e){ _bugMsg(status,'제출 실패: '+e.message,'warn'); }
 }
 
 function _bugMsg(el,html,cls){

@@ -30,15 +30,15 @@ function schSetScope(scope){
 }
 
 function uniHelp(){
-  const tips=[t('sch.help.kr'),t('sch.help.en'),
-    t('sch.help.strongs'),t('sch.help.wild'),
-    t('sch.help.single'),t('sch.help.or'),
-    t('sch.help.phrase'),
-    t('sch.help.exclude'),
-    t('sch.help.and')];
+  const tips=['한글 → 한글 성경 검색','English → KJV 영어 검색',
+    'H1234/G5678 → 스트롱 원어 검색','* : 0개 이상 문자 (예: 사랑*)',
+    '? : 1개 문자 (예: 하?님)','| : OR (예: 믿음 | 신앙)',
+    '"..." : 정확한 구문 (예: "성령의 열매")',
+    '-단어 : 제외 (예: 주 -"주의 천사")',
+    '공백 : AND (예: 하나님 사랑)'];
   const list=document.getElementById('schList');
   if(!list) return;
-  let h='<div class="adv-help"><div class="adv-help-title"><i class="fa fa-info-circle"></i> '+t('sch.help.title')+'</div>';
+  let h='<div class="adv-help"><div class="adv-help-title"><i class="fa fa-info-circle"></i> 검색 도움말</div>';
   tips.forEach(t=>{ h+='<div class="adv-help-item">'+t+'</div>'; });
   list.innerHTML=h+'</div>';
 }

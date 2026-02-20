@@ -26,10 +26,10 @@ function showQuotaModal(){
   if(det) det.innerHTML=`
     <div class="q-bar-wrap"><div class="q-bar-bg"><div class="q-bar-fill" style="width:${pct}%;background:${color}"></div></div>
     <div class="q-bar-text">${fmtMB(sz)} / ${fmtMB(q.limit)} (${pct.toFixed(1)}%)</div></div>
-    <div class="q-breakdown"><div class="q-row"><span>${t('q.notes')}</span><span>${fmtMB(nSz)}</span></div>
-    <div class="q-row"><span>${t('q.hl')}</span><span>${fmtMB(hSz)}</span></div>
-    <div class="q-row"><span>${t('q.memo')}</span><span>${fmtMB(mSz)}</span></div></div>
-    <div class="q-tier">${t('plan.current')} <b>${q.tier==='free'?t('plan.free'):t('plan.premium')}</b></div>`;
+    <div class="q-breakdown"><div class="q-row"><span>📝 노트</span><span>${fmtMB(nSz)}</span></div>
+    <div class="q-row"><span>🖍️ 형광펜/메모</span><span>${fmtMB(hSz)}</span></div>
+    <div class="q-row"><span>📋 구절 메모</span><span>${fmtMB(mSz)}</span></div></div>
+    <div class="q-tier">현재 플랜: <b>${q.tier==='free'?'무료':'프리미엄'}</b></div>`;
   openM('mQuota');
 }
-function showUpgradeMsg(){ toast(t('upgrade.msg')); }
+function showUpgradeMsg(){ toast('업그레이드 기능은 준비 중입니다. 곧 제공될 예정이에요!'); }

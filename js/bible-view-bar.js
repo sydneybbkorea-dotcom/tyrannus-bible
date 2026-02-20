@@ -7,7 +7,7 @@ function renderViewBar(){
   if(cn) cn.textContent = S.ch;
   if(vc){
     var cnt = BIBLE[S.book]?.[S.ch]?.length || 0;
-    vc.textContent = cnt + t('v.unit');
+    vc.textContent = cnt + '절';
   }
   _syncVbBtn('vbKorean', S.showKorean!==false);
   _syncVbBtn('vbEnglish', !!S.showEnglish);

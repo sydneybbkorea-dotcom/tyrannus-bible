@@ -37,9 +37,9 @@ document.addEventListener('click',e=>{
   }
 });
 function addBookmark(){
-  if(!S.selV){toast(t('ctx.click.first'));return}
+  if(!S.selV){toast('먼저 구절을 클릭하세요');return}
   const k=`${S.book}_${S.ch}_${S.selV}`;
-  if(S.bk.has(k)){S.bk.delete(k);toast(t('bk.removed'))}
-  else{S.bk.add(k);toast(t('bk.added'))}
+  if(S.bk.has(k)){S.bk.delete(k);toast('북마크 해제됨')}
+  else{S.bk.add(k);toast('북마크 추가됨 🔖')}
   persist(); renderBible(); restoreSel();
 }

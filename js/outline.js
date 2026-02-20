@@ -6,7 +6,7 @@ function renderOutline(){
   if(!el) return;
 
   if(!S.notes || !S.notes.length){
-    el.innerHTML='<div class="comm-hint"><i class="fa fa-sitemap"></i>'+t('outline.empty')+'</div>';
+    el.innerHTML='<div class="comm-hint"><i class="fa fa-sitemap"></i>저장된 노트가 없습니다</div>';
     return;
   }
 
