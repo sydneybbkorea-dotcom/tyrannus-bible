@@ -76,6 +76,10 @@
         <button class="vb-arrow" onclick="prevCh()" title="이전 장"><i class="fa fa-chevron-left"></i></button>
         <button class="vb-arrow" onclick="nextCh()" title="다음 장"><i class="fa fa-chevron-right"></i></button>
       </div>
+      <div class="vb-search">
+        <i class="fa fa-search vb-sch-icon"></i>
+        <input type="text" id="vbSchInput" placeholder="검색..." onkeydown="vbSchKey(event)">
+      </div>
       <div class="vb-right">
         <button class="vb-btn vb-on" id="vbKorean" onclick="toggleLang('kr')" title="한글 본문">한</button>
         <button class="vb-btn" id="vbEnglish" onclick="toggleLang('en')" title="영어 본문">영</button>
@@ -189,7 +193,8 @@
         <button class="rp-ico-btn rp-close-btn" onclick="togglePanel('dictionary')" title="패널 닫기"><i class="fa fa-times"></i></button>
       </div>
       <div class="rp-subtabs" id="subtabs-search" style="display:none">
-        <div class="rp-tab act" data-sub="search" onclick="switchSub('search')"><i class="fa fa-search"></i> 검색설정</div>
+        <div class="rp-tab act" data-sub="search" onclick="switchSub('search')"><i class="fa fa-search"></i> 검색결과</div>
+        <button class="rp-ico-btn rp-close-btn" onclick="togglePanel('search')" title="패널 닫기"><i class="fa fa-times"></i></button>
       </div>
     </div>
     <div class="rp-body">
@@ -619,6 +624,7 @@
 <script src="js/search.js"></script>
 <script src="js/search-exec.js"></script>
 <script src="js/search-quick.js"></script>
+<script src="js/vb-search.js"></script>
 <script src="js/read-mode.js"></script>
 
 <!-- 읽기 계획 -->

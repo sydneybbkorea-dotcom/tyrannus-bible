@@ -43,6 +43,26 @@
 .vb-btn:hover { background:var(--bg3); color:var(--text) }
 .vb-btn.vb-on { color:var(--gold); background:var(--gold-dim) }
 
+/* ── 뷰바 검색 입력창 ── */
+.vb-search {
+  flex:1; display:flex; align-items:center; gap:4px;
+  margin:0 8px; min-width:60px; max-width:320px;
+  background:var(--bg3); border:1px solid var(--border);
+  border-radius:4px; padding:0 8px; height:24px;
+  transition:border-color .15s;
+}
+.vb-search:focus-within { border-color:var(--gold) }
+.vb-sch-icon { font-size:10px; color:var(--text3); flex-shrink:0 }
+.vb-search input {
+  flex:1; background:none; border:none; outline:none;
+  font-size:11px; color:var(--text); padding:0;
+  min-width:0;
+}
+.vb-search input::placeholder { color:var(--text3); font-size:11px }
+@media(max-width:600px){
+  .vb-search { max-width:120px; margin:0 4px }
+}
+
 /* ── 책/장 드롭다운 (각각 독립, 심플 리스트) ── */
 .cp-drop {
   position:absolute; top:100%; left:0; z-index:200; width:160px;
