@@ -382,21 +382,15 @@
             <button onclick="doSearch()">검색</button>
           </div>
           <div class="sch-filters">
-            <label style="font-size:10px;color:var(--text3);margin-right:8px;display:inline-flex;align-items:center;gap:4px;">
-              <input type="checkbox" id="filter-all" onchange="toggleAllFilters(this)" style="cursor:pointer"> 전체
-            </label>
-            <label style="font-size:10px;color:var(--text2);margin-right:8px;display:inline-flex;align-items:center;gap:4px;">
-              <input type="checkbox" class="search-filter" data-f="OT" onchange="updateSearchFilters()" style="cursor:pointer" checked> 구약
-            </label>
-            <label style="font-size:10px;color:var(--text2);margin-right:8px;display:inline-flex;align-items:center;gap:4px;">
-              <input type="checkbox" class="search-filter" data-f="NT" onchange="updateSearchFilters()" style="cursor:pointer" checked> 신약
-            </label>
-            <label style="font-size:10px;color:var(--text2);margin-right:8px;display:inline-flex;align-items:center;gap:4px;">
-              <input type="checkbox" class="search-filter" data-f="notes" onchange="updateSearchFilters()" style="cursor:pointer" checked> 노트
-            </label>
-            <label style="font-size:10px;color:var(--text2);margin-right:8px;display:inline-flex;align-items:center;gap:4px;">
-              <input type="checkbox" class="search-filter" data-f="commentary" onchange="updateSearchFilters()" style="cursor:pointer" checked> 주석
-            </label>
+            <button class="sf-chip on" data-f="all" onclick="sfToggle(this)">전체</button>
+            <button class="sf-chip on" data-f="OT" onclick="sfToggle(this)">구약</button>
+            <button class="sf-chip on" data-f="NT" onclick="sfToggle(this)">신약</button>
+            <select class="sf-book-sel" id="sfBookSel" onchange="sfBookChange()">
+              <option value="">책 선택...</option>
+            </select>
+            <button class="sf-chip on" data-f="notes" onclick="sfToggle(this)">노트</button>
+            <button class="sf-chip on" data-f="commentary" onclick="sfToggle(this)">주석</button>
+            <button class="sf-chip on" data-f="files" onclick="sfToggle(this)">파일</button>
           </div>
           <div class="sch-count" id="schCount"></div>
           <div id="schList"></div>
@@ -623,8 +617,11 @@
 <script src="js/outline-note-ui.js"></script>
 <script src="js/search.js"></script>
 <script src="js/search-exec.js"></script>
+<script src="js/search-render.js"></script>
+<script src="js/search-item.js"></script>
 <script src="js/search-quick.js"></script>
 <script src="js/vb-search.js"></script>
+<script src="js/search-filter-init.js"></script>
 <script src="js/read-mode.js"></script>
 
 <!-- 읽기 계획 -->
