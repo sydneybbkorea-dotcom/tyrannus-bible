@@ -30,6 +30,7 @@
 <link rel="stylesheet" href="css/visual-filter.css?v=15">
 <link rel="stylesheet" href="css/reading-plan.css?v=15">
 <link rel="stylesheet" href="css/adv-search.css?v=15">
+<link rel="stylesheet" href="css/bug-report.css">
 <link rel="stylesheet" href="css/dict.css?v=17">
 <link rel="stylesheet" href="css/sync.css?v=15">
 <link rel="stylesheet" href="css/settings-panel.css?v=15">
@@ -132,6 +133,9 @@
               <button class="rail-logout" onclick="signOutUser()" title="로그아웃"><i class="fa fa-sign-out-alt"></i></button>
             </div>
           </div>
+          <button class="rail-icon" data-rail="bugreport" onclick="toggleRail('bugreport')" title="버그 리포트">
+            <i class="fa fa-bug"></i><span class="rail-label">버그</span>
+          </button>
           <button class="rail-icon" data-rail="settings" onclick="toggleRail('settings')" title="설정">
             <i class="fa fa-cog"></i><span class="rail-label">설정</span>
           </button>
@@ -164,6 +168,10 @@
           <div class="sp-body" id="spQnaBody">
             <div style="padding:20px;text-align:center;color:var(--text3);font-size:12px"><i class="fa fa-comments" style="font-size:24px;margin-bottom:8px;display:block;opacity:.4"></i>준비 중입니다</div>
           </div>
+        </div>
+        <div class="sp-section" id="sp-bugreport">
+          <div class="sp-head"><i class="fa fa-bug"></i> 버그 리포트</div>
+          <div class="sp-body" id="spBugBody" style="display:flex;flex-direction:column;overflow:hidden"></div>
         </div>
         <div class="sp-section" id="sp-settings">
           <div class="sp-head"><i class="fa fa-cog"></i> 설정</div>
@@ -661,6 +669,11 @@
 <script src="js/search-quick.js"></script>
 <script src="js/vb-search.js"></script>
 <script src="js/search-filter-init.js"></script>
+<script src="js/bug-report-ui.js"></script>
+<script src="js/bug-report-file.js"></script>
+<script src="js/bug-report-submit.js"></script>
+<script src="js/bug-report-api.js"></script>
+<script src="js/bug-report-history.js"></script>
 <script src="js/read-mode.js"></script>
 
 <!-- 읽기 계획 -->

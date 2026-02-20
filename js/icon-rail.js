@@ -75,5 +75,6 @@ function _initSection(name){
   if(name==='bible') buildBookList();
   else if(name==='bookmark') renderBookmarks();
   else if(name==='reading'&&typeof renderReadingPlan==='function') renderReadingPlan();
+  else if(name==='bugreport'&&typeof renderBugReport==='function') renderBugReport();
   else if(name==='settings'&&typeof renderSettingsPanel==='function') renderSettingsPanel();
 }
