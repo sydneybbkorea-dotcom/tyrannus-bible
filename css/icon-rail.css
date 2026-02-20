@@ -8,12 +8,12 @@
   overflow:hidden;
 }
 .rail-top, .rail-bottom { display:flex; flex-direction:column; align-items:center; gap:2px; }
-/* ── 사이드바 접기/펼치기 토글 버튼 ── */
+/* ── 사이드바 토글 버튼 (탭바 안, 항상 표시) ── */
 .rail-toggle-btn {
-  width:40px; height:32px; border-radius:6px; border:none;
+  width:32px; height:28px; border-radius:5px; border:none;
   display:flex; align-items:center; justify-content:center;
   color:var(--text3); cursor:pointer; background:transparent;
-  transition:all .15s; flex-shrink:0; margin-bottom:4px;
+  transition:all .15s; flex-shrink:0; margin-right:4px; align-self:center;
   -webkit-tap-highlight-color:transparent; touch-action:manipulation;
 }
 .rail-toggle-btn:hover { background:var(--bg3); color:var(--text); }
@@ -38,7 +38,7 @@
   box-shadow:var(--shadow); pointer-events:none; z-index:999;
 }
 .rail-icon:hover .rail-label { display:block; }
-/* 접힘 상태 — 토글 버튼 크기로 축소 */
+/* 접힘 상태 */
 #iconRail.rail-collapsed { width:0; padding:0; border-right:none; }
 [data-theme="light"] #iconRail { background:#d0d3dc; border-right-color:#c0c4d0 }
 
