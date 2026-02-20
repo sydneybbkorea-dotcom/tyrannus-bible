@@ -8,15 +8,7 @@
   overflow:hidden;
 }
 .rail-top, .rail-bottom { display:flex; flex-direction:column; align-items:center; gap:2px; }
-/* ── 사이드바 토글 버튼 (탭바 안, 항상 표시) ── */
-.rail-toggle-btn {
-  width:32px; height:28px; border-radius:5px; border:none;
-  display:flex; align-items:center; justify-content:center;
-  color:var(--text3); cursor:pointer; background:transparent;
-  transition:all .15s; flex-shrink:0; margin-right:4px; align-self:center;
-  -webkit-tap-highlight-color:transparent; touch-action:manipulation;
-}
-.rail-toggle-btn:hover { background:var(--bg3); color:var(--text); }
+/* 사이드바 토글 → .tb-pin (bible.css)로 이동됨 */
 .rail-icon {
   width:40px; height:40px; border-radius:8px; border:none;
   display:flex; align-items:center; justify-content:center;
