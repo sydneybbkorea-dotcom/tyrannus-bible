@@ -30,7 +30,7 @@ function updateBacklinks(){
   linked.forEach(n=>{
     const f=S.folders.find(x=>x.id===n.folderId);
     const d=document.createElement('div'); d.className='bl-entry';
-    d.innerHTML=`<i class="fa fa-file-alt"></i><span>${n.title||'제목 없음'}</span><span class="bl-entry-folder">${f?.name||''}</span>`;
+    d.innerHTML=`<i class="fa fa-file-alt"></i><span>${n.title||t('note.untitled')}</span><span class="bl-entry-folder">${f?.name||''}</span>`;
     d.onclick=()=>loadNote(n.id, true);
     listEl.appendChild(d);
   });
@@ -54,7 +54,7 @@ function updateBreadcrumb(){
   const backBtn=document.getElementById('backBtn');
 
   if(!S.curNoteId){
-    el.innerHTML=`<span style="color:var(--text3);font-style:italic">노트를 선택하거나 새로 만드세요</span>`;
+    el.innerHTML=`<span style="color:var(--text3);font-style:italic">${t('note.select')}</span>`;
     navBar.style.display='none';
     return;
   }
@@ -62,7 +62,7 @@ function updateBreadcrumb(){
   // breadcrumb (현재 폴더 > 노트 이름)
   const n=S.notes.find(x=>x.id===S.curNoteId);
   const f=S.folders.find(x=>x.id===(n?.folderId));
-  el.innerHTML=`<span class="bc-folder"><i class="fa fa-folder" style="font-size:9px"></i> ${f?.name||'기본 폴더'}</span><span class="bc-sep"><i class="fa fa-chevron-right" style="font-size:9px"></i></span><span class="bc-note">${n?.title||'제목 없음'}</span>`;
+  el.innerHTML=`<span class="bc-folder"><i class="fa fa-folder" style="font-size:9px"></i> ${f?.name||t('note.default')}</span><span class="bc-sep"><i class="fa fa-chevron-right" style="font-size:9px"></i></span><span class="bc-note">${n?.title||t('note.untitled')}</span>`;
 
   // 네비게이션 경로 바 (히스토리 있을 때만 표시)
   if(S.navHistory.length > 0){
@@ -83,13 +83,13 @@ function updateBreadcrumb(){
 
     showHist.forEach((noteId, i) => {
       const hn = S.notes.find(x=>x.id===noteId);
-      const title = hn?.title || '제목 없음';
+      const title = hn?.title || t('note.untitled');
       pathHTML += `<span class="np-item" onclick="jumpToHistory(${hist.length - showHist.length + i})" title="${title}">${title}</span>`;
       pathHTML += `<span class="np-sep"><i class="fa fa-chevron-right"></i></span>`;
     });
 
     // 현재 노트
-    pathHTML += `<span class="np-current" title="${n?.title||'제목 없음'}">${n?.title||'제목 없음'}</span>`;
+    pathHTML += `<span class="np-current" title="${n?.title||t('note.untitled')}">${n?.title||t('note.untitled')}</span>`;
     pathEl.innerHTML = pathHTML;
 
     // 스크롤을 오른쪽 끝으로

@@ -34,17 +34,17 @@ function openColorPalette(btnEl, mode){
     pop.id = 'colorPalettePop';
     pop.style.cssText = 'display:none;position:fixed;z-index:10200;background:var(--bg3);border:1px solid var(--border2);border-radius:10px;padding:10px;box-shadow:var(--shadow);width:196px;';
     pop.innerHTML = `
-      <div id="cpTitle" style="font-size:10px;color:var(--text3);font-weight:700;margin-bottom:6px;letter-spacing:.5px;">색상 선택</div>
+      <div id="cpTitle" style="font-size:10px;color:var(--text3);font-weight:700;margin-bottom:6px;letter-spacing:.5px;">${t('color.title')}</div>
       <div id="cpGrid" style="display:grid;grid-template-columns:repeat(8,20px);gap:3px;margin-bottom:8px;">
         ${COLORS.map(c=>`<div onclick="applyColor('${c}')" title="${c}"
           style="width:20px;height:20px;border-radius:3px;background:${c};cursor:pointer;border:1px solid rgba(128,128,128,.2);transition:transform .1s;"
           onmouseenter="this.style.transform='scale(1.25)'" onmouseleave="this.style.transform='scale(1)'"></div>`).join('')}
       </div>
       <div style="display:flex;gap:6px;align-items:center;">
-        <input id="cpCustom" type="text" placeholder="#hex 또는 rgb(...)"
+        <input id="cpCustom" type="text" placeholder="${t('color.ph')}"
           style="flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:5px;padding:4px 7px;font-size:11px;color:var(--text);outline:none;">
         <div id="cpPreview" style="width:22px;height:22px;border-radius:4px;border:1px solid var(--border);background:#fff;flex-shrink:0;"></div>
-        <button onmousedown="event.preventDefault();applyColorCustom()" style="padding:3px 8px;border-radius:5px;border:none;background:var(--gold);color:var(--bg);font-size:11px;font-weight:700;cursor:pointer;">적용</button>
+        <button onmousedown="event.preventDefault();applyColorCustom()" style="padding:3px 8px;border-radius:5px;border:none;background:var(--gold);color:var(--bg);font-size:11px;font-weight:700;cursor:pointer;">${t('color.apply')}</button>
       </div>`;
     document.body.appendChild(pop);
     document.getElementById('cpCustom').addEventListener('input', function(){
@@ -52,7 +52,7 @@ function openColorPalette(btnEl, mode){
     });
   }
   pop._mode = mode;
-  document.getElementById('cpTitle').textContent = mode==='fore' ? '🖊 텍스트 색상' : '🎨 배경 하이라이트';
+  document.getElementById('cpTitle').textContent = mode==='fore' ? t('color.text') : t('color.bg');
   showPopover('colorPalettePop', btnEl);
 }
 

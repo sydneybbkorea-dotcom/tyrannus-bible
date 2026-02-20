@@ -9,13 +9,13 @@ function renderEnkoDef(data,translation){
     h+=_enkoPhonetic(w);
     if(w.meanings) w.meanings.forEach(m=>{ h+=_enkoMeaning(m); });
   }else if(translation){
-    h+='<div class="comm-ref-lbl"><i class="fa fa-language"></i> 번역</div>';
+    h+='<div class="comm-ref-lbl"><i class="fa fa-language"></i> '+t('enko.trans')+'</div>';
     h+=_enkoKoCard(translation);
   }
   return h;
 }
 function _enkoKoCard(t){
-  return `<div class="dict-ko-card"><span class="dict-ko-label">한국어</span><span class="dict-ko-text">${t}</span></div>`;
+  return `<div class="dict-ko-card"><span class="dict-ko-label">${window.t('enko.korean')}</span><span class="dict-ko-text">${t}</span></div>`;
 }
 function _enkoPhonetic(w){
   const ph=w.phonetics?.find(p=>p.text)||{};
@@ -33,5 +33,5 @@ function _enkoMeaning(m){
   return h+'</div>';
 }
 function _enkoEmpty(){
-  return '<div class="comm-hint"><i class="fa fa-exchange-alt"></i>검색 결과가 없습니다</div>';
+  return '<div class="comm-hint"><i class="fa fa-exchange-alt"></i>'+t('enko.no.result')+'</div>';
 }

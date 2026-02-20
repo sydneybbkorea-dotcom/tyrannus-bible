@@ -2,7 +2,7 @@
 function renderSideNotes(){
   const c = document.getElementById('spNoteList'); if(!c) return;
   if(!S.notes||!S.notes.length){
-    c.innerHTML='<div style="padding:20px;text-align:center;color:var(--text3);font-size:12px"><i class="fa fa-pen" style="font-size:20px;margin-bottom:8px;display:block;opacity:.4"></i>노트가 없습니다</div>';
+    c.innerHTML='<div style="padding:20px;text-align:center;color:var(--text3);font-size:12px"><i class="fa fa-pen" style="font-size:20px;margin-bottom:8px;display:block;opacity:.4"></i>'+t('note.empty')+'</div>';
     return;
   }
   const sorted=[...S.notes].sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
@@ -11,7 +11,7 @@ function renderSideNotes(){
     const act=S.curNoteId===n.id?' active':'';
     h+=`<div class="sp-note-item${act}" onclick="_spOpenNote('${n.id}')">`;
     h+=`<i class="fa fa-file-alt"></i>`;
-    h+=`<span class="sp-note-title">${n.title||'제목 없음'}</span>`;
+    h+=`<span class="sp-note-title">${n.title||t('note.untitled')}</span>`;
     h+=`<span class="sp-note-date">${d}</span></div>`;
   });
   c.innerHTML=h;
@@ -28,9 +28,9 @@ function _spFilterNotes(q){
   if(!q){ renderSideNotes(); return; }
   const c=document.getElementById('spNoteList'); if(!c) return;
   const f=S.notes.filter(n=>(n.title||'').includes(q)||(n.content||'').includes(q));
-  if(!f.length){ c.innerHTML='<div style="padding:16px;text-align:center;color:var(--text3);font-size:11px">결과 없음</div>'; return; }
+  if(!f.length){ c.innerHTML='<div style="padding:16px;text-align:center;color:var(--text3);font-size:11px">'+t('outline.no')+'</div>'; return; }
   let h=''; f.forEach(n=>{
-    h+=`<div class="sp-note-item" onclick="_spOpenNote('${n.id}')"><i class="fa fa-file-alt"></i><span class="sp-note-title">${n.title||'제목 없음'}</span></div>`;
+    h+=`<div class="sp-note-item" onclick="_spOpenNote('${n.id}')"><i class="fa fa-file-alt"></i><span class="sp-note-title">${n.title||t('note.untitled')}</span></div>`;
   });
   c.innerHTML=h;
 }

@@ -29,10 +29,10 @@ async function showWordStudy(code){
   });
   _wsPage=0;
   var total=otC+ntC, otPct=Math.round(otC/total*100);
-  var h='<div class="ws-section"><div class="ws-title"><i class="fa fa-chart-bar"></i> 단어 연구</div>';
-  h+='<div class="ws-freq"><span class="ws-freq-num">'+total+'</span>회 출현</div>';
+  var h='<div class="ws-section"><div class="ws-title"><i class="fa fa-chart-bar"></i> '+t('ws.title')+'</div>';
+  h+='<div class="ws-freq"><span class="ws-freq-num">'+total+'</span>'+t('ws.occ')+'</div>';
   h+='<div class="ws-dist"><div class="ws-bar"><div class="ws-bar-ot" style="width:'+otPct+'%"></div></div>';
-  h+='<div class="ws-dist-labels"><span>구약 '+otC+'</span><span>신약 '+ntC+'</span></div></div>';
+  h+='<div class="ws-dist-labels"><span>'+t('ot')+' '+otC+'</span><span>'+t('nt')+' '+ntC+'</span></div></div>';
   h+='<div class="ws-verses" id="wsVerseList"></div>';
   h+='<div class="ws-pag" id="wsPag"></div></div>';
   setTimeout(function(){renderWSPage(0)},50);

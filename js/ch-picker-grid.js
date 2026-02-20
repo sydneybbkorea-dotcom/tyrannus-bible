@@ -7,7 +7,7 @@ function renderChDrop(){
   for(var i=1;i<=cnt;i++){
     var cls = 'cp-item';
     if(i===S.ch) cls += ' cp-item-act';
-    h += '<div class="'+cls+'" onclick="_pickCh('+i+')">'+i+' 장</div>';
+    h += '<div class="'+cls+'" onclick="_pickCh('+i+')">'+i+' '+t('ch.suffix')+'</div>';
   }
   el.innerHTML = h;
   var act = el.querySelector('.cp-item-act');

@@ -2,6 +2,15 @@
 .stp-wrap { padding:14px 16px; display:flex; flex-direction:column; gap:16px }
 .stp-row { display:flex; flex-direction:column; gap:6px }
 .stp-row-toggle { flex-direction:row; align-items:center; justify-content:space-between }
+/* 언어 선택 버튼 */
+.stp-lang-btns { display:flex; gap:4px }
+.stp-lang-btn {
+  padding:4px 10px; font-size:11px; font-weight:600; border-radius:12px;
+  border:1px solid var(--border); background:var(--bg3); color:var(--text3);
+  cursor:pointer; transition:all .15s;
+}
+.stp-lang-btn.on { background:var(--gold); color:var(--bg); border-color:var(--gold) }
+.stp-lang-btn:hover:not(.on) { color:var(--text); background:var(--bg4) }
 .stp-row-head {
   display:flex; align-items:center; gap:6px;
   font-size:12px; font-weight:600; color:var(--text2);

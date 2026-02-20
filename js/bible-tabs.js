@@ -54,7 +54,7 @@ function openBibleTab(book, ch, selV){
 }
 
 function addBibleTab(){
-  if(_bibleTabs.length >= MAX_BIBLE_TABS){ toast(`탭은 최대 ${MAX_BIBLE_TABS}개까지 열 수 있어요`); return; }
+  if(_bibleTabs.length >= MAX_BIBLE_TABS){ toast(t('tab.max')); return; }
   saveActiveTabState();
   const id = _genTabId();
   var vs = _curViewState();

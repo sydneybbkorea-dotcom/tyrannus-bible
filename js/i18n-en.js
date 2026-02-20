@@ -1,0 +1,25 @@
+// i18n-en.js — English dictionary: common UI, navigation, settings
+Object.assign(window._LANGS.en, {
+  'lang':'English', 'lang.label':'Language',
+  'dark.mode':'Dark Mode', 'font.size':'Font Size',
+  'letter.sp':'Letter Spacing', 'line.h':'Line Height',
+  'reset':'Reset Defaults', 'logout':'Log Out',
+  'cloud':'Cloud', 'sync.done':'Synced',
+  'sync.ing':'Syncing...', 'sync.err':'Error', 'sync.off':'Offline',
+  'storage':'Storage', 'storage.default':'0 / 10 MB',
+  'add.storage':'Add Storage', 'login.sync':'Log in to start syncing',
+  'upgrade.msg':'Upgrade is coming soon!',
+  'plan.free':'Free', 'plan.premium':'Premium', 'plan.current':'Current plan:',
+  'q.notes':'📝 Notes', 'q.hl':'🖍️ Highlights/Memos', 'q.memo':'📋 Verse Memos',
+  'ot':'OT', 'nt':'NT', 'ch.suffix':'', 'v.unit':'v.',
+  'prev.ch':'Previous Chapter', 'next.ch':'Next Chapter',
+  'nav.bible':'Bible', 'nav.notes':'Notes', 'nav.dict':'Dict',
+  'nav.bookmark':'Bookmarks', 'nav.reading':'Reading', 'nav.library':'Library',
+  'nav.bug':'Bug', 'nav.settings':'Settings', 'nav.login':'Log In',
+  'nav.profile':'Profile', 'nav.qna':'Q&A',
+  'rail.bible':'Bible List', 'rail.reading':'Reading Plan',
+  'rail.bug':'Bug Report', 'tab.new':'New Tab',
+  'sidebar.toggle':'Toggle Sidebar', 'panel.close':'Close Panel',
+  'panel.pin':'Pin', 'preparing':'Coming Soon',
+  'search.ph':'Search...', 'tab.max':'Maximum of 10 tabs allowed'
+});

@@ -12,9 +12,9 @@ function buildPassageGuide(vn){
   if(krTxt) h+=`<div class="pg-txt">${krTxt}</div>`;
   if(enTxt) h+=`<div class="pg-en">${enTxt}</div>`;
   h+=`<div class="pg-stats">`;
-  if(refs.length) h+=`<span class="pg-stat"><i class="fa fa-link"></i> ${refs.length} 참조</span>`;
-  if(linked.length) h+=`<span class="pg-stat"><i class="fa fa-pen"></i> ${linked.length} 노트</span>`;
-  if(hasHL) h+=`<span class="pg-stat"><i class="fa fa-highlighter"></i> 하이라이트</span>`;
+  if(refs.length) h+=`<span class="pg-stat"><i class="fa fa-link"></i> ${refs.length} ${t('pg.xref')}</span>`;
+  if(linked.length) h+=`<span class="pg-stat"><i class="fa fa-pen"></i> ${linked.length} ${t('pg.notes')}</span>`;
+  if(hasHL) h+=`<span class="pg-stat"><i class="fa fa-highlighter"></i> ${t('pg.hl')}</span>`;
   h+=`</div>`;
   if(refs.length){
     h+=`<div class="pg-refs">`;

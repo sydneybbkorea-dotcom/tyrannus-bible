@@ -62,7 +62,7 @@
   <div id="biblePane">
     <!-- 1행: 사이드바 토글 + 탭 -->
     <div id="bibleTabBar">
-      <button class="tb-pin" id="railToggleBtn" onclick="_toggleIconRail()" ontouchend="_toggleIconRail();event.preventDefault();" title="사이드바 열기/닫기">
+      <button class="tb-pin" id="railToggleBtn" onclick="_toggleIconRail()" ontouchend="_toggleIconRail();event.preventDefault();" title="사이드바 열기/닫기" data-i18n-title="sidebar.toggle">
         <svg class="rail-ico rail-ico-open" width="18" height="18" viewBox="0 0 20 20" fill="none" style="pointer-events:none"><rect x="1.5" y="1.5" width="17" height="17" rx="3" stroke="currentColor" stroke-width="1.6"/><rect x="1.5" y="1.5" width="6" height="17" rx="3" fill="currentColor" opacity=".4"/><line x1="9.5" y1="4" x2="9.5" y2="16" stroke="currentColor" stroke-width="1.2" opacity=".35"/></svg>
         <svg class="rail-ico rail-ico-closed" width="18" height="18" viewBox="0 0 20 20" fill="none" style="pointer-events:none"><rect x="1.5" y="1.5" width="17" height="17" rx="3" stroke="currentColor" stroke-width="1.6"/><rect x="1.5" y="1.5" width="6" height="17" rx="3" fill="currentColor" opacity=".4"/></svg>
       </button>
@@ -70,24 +70,24 @@
     </div>
     <!-- 2행: 새탭 + 책/장 선택 + 뷰 옵션 -->
     <div id="bibleViewBar">
-      <button class="tb-pin" id="bibleTabAdd" onclick="addBibleTab()" title="새 탭"><i class="fa fa-plus"></i></button>
+      <button class="tb-pin" id="bibleTabAdd" onclick="addBibleTab()" title="새 탭" data-i18n-title="tab.new"><i class="fa fa-plus"></i></button>
       <div class="vb-left">
         <button class="vb-sel" id="vbBookSel" onclick="openBookDrop()"><span id="vbBookLabel">창세기</span> <i class="fa fa-caret-down vb-caret"></i></button>
         <button class="vb-sel vb-ch-sel" id="vbChSel" onclick="openChDrop()"><span id="vbChNum">1</span>장 <i class="fa fa-caret-down vb-caret"></i></button>
-        <button class="vb-arrow" onclick="prevCh()" title="이전 장"><i class="fa fa-chevron-left"></i></button>
-        <button class="vb-arrow" onclick="nextCh()" title="다음 장"><i class="fa fa-chevron-right"></i></button>
+        <button class="vb-arrow" onclick="prevCh()" title="이전 장" data-i18n-title="prev.ch"><i class="fa fa-chevron-left"></i></button>
+        <button class="vb-arrow" onclick="nextCh()" title="다음 장" data-i18n-title="next.ch"><i class="fa fa-chevron-right"></i></button>
       </div>
       <div class="vb-search">
         <i class="fa fa-search vb-sch-icon"></i>
-        <input type="text" id="vbSchInput" placeholder="검색..." onkeydown="vbSchKey(event)">
+        <input type="text" id="vbSchInput" placeholder="검색..." onkeydown="vbSchKey(event)" data-i18n-ph="search.ph">
       </div>
       <div class="vb-right">
-        <button class="vb-btn vb-on" id="vbKorean" onclick="toggleLang('kr')" title="한글 본문">한</button>
-        <button class="vb-btn" id="vbEnglish" onclick="toggleLang('en')" title="영어 본문">영</button>
+        <button class="vb-btn vb-on" id="vbKorean" onclick="toggleLang('kr')" title="한글 본문" data-i18n-title="vb.kr">한</button>
+        <button class="vb-btn" id="vbEnglish" onclick="toggleLang('en')" title="영어 본문" data-i18n-title="vb.en">영</button>
         <span class="vb-sep"></span>
-        <button class="vb-btn" id="vbRed" onclick="toggleRedLetter()" title="예수님 말씀"><i class="fa fa-cross"></i></button>
-        <button class="vb-btn" id="vbStrong" onclick="toggleStrongCodes()" title="원어 코드"><i class="fa fa-code"></i></button>
-        <button class="vb-btn vb-on" id="vbHL" onclick="toggleHighlight()" title="형광펜 표시"><i class="fa fa-highlighter"></i></button>
+        <button class="vb-btn" id="vbRed" onclick="toggleRedLetter()" title="예수님 말씀" data-i18n-title="vb.red"><i class="fa fa-cross"></i></button>
+        <button class="vb-btn" id="vbStrong" onclick="toggleStrongCodes()" title="원어 코드" data-i18n-title="vb.strongs"><i class="fa fa-code"></i></button>
+        <button class="vb-btn vb-on" id="vbHL" onclick="toggleHighlight()" title="형광펜 표시" data-i18n-title="vb.hl"><i class="fa fa-highlighter"></i></button>
         <span class="vb-sep"></span>
         <span class="vb-info" id="vbVerseCount"></span>
       </div>
@@ -101,79 +101,79 @@
       <!-- 아이콘 레일 (슬라이드 영역) -->
       <div id="iconRail">
         <div class="rail-top">
-          <button class="rail-icon" data-rail="bible" onclick="toggleRail('bible')" title="성경 목록">
-            <i class="fa fa-book-bible"></i><span class="rail-label">성경</span>
+          <button class="rail-icon" data-rail="bible" onclick="toggleRail('bible')" title="성경 목록" data-i18n-title="rail.bible">
+            <i class="fa fa-book-bible"></i><span class="rail-label" data-i18n="nav.bible">성경</span>
           </button>
-          <button class="rail-icon" data-rail="notes" onclick="toggleNotePanel()" title="노트">
-            <i class="fa fa-pen"></i><span class="rail-label">노트</span>
+          <button class="rail-icon" data-rail="notes" onclick="toggleNotePanel()" title="노트" data-i18n-title="nav.notes">
+            <i class="fa fa-pen"></i><span class="rail-label" data-i18n="nav.notes">노트</span>
           </button>
-          <button class="rail-icon" data-rail="dictionary" onclick="toggleDictPanel()" title="사전">
-            <i class="fas fa-spell-check"></i><span class="rail-label">사전</span>
+          <button class="rail-icon" data-rail="dictionary" onclick="toggleDictPanel()" title="사전" data-i18n-title="nav.dict">
+            <i class="fas fa-spell-check"></i><span class="rail-label" data-i18n="nav.dict">사전</span>
           </button>
-          <button class="rail-icon" data-rail="bookmark" onclick="toggleRail('bookmark')" title="북마크">
-            <i class="fa fa-bookmark"></i><span class="rail-label">북마크</span>
+          <button class="rail-icon" data-rail="bookmark" onclick="toggleRail('bookmark')" title="북마크" data-i18n-title="nav.bookmark">
+            <i class="fa fa-bookmark"></i><span class="rail-label" data-i18n="nav.bookmark">북마크</span>
           </button>
-          <button class="rail-icon" data-rail="reading" onclick="toggleRail('reading')" title="읽기 계획">
-            <i class="fa fa-calendar-check"></i><span class="rail-label">읽기</span>
+          <button class="rail-icon" data-rail="reading" onclick="toggleRail('reading')" title="읽기 계획" data-i18n-title="rail.reading">
+            <i class="fa fa-calendar-check"></i><span class="rail-label" data-i18n="nav.reading">읽기</span>
           </button>
-          <button class="rail-icon" data-rail="library" onclick="toggleRail('library')" title="도서관">
-            <i class="fa fa-book-open-reader"></i><span class="rail-label">도서관</span>
+          <button class="rail-icon" data-rail="library" onclick="toggleRail('library')" title="도서관" data-i18n-title="nav.library">
+            <i class="fa fa-book-open-reader"></i><span class="rail-label" data-i18n="nav.library">도서관</span>
           </button>
           <button class="rail-icon" data-rail="qna" onclick="toggleRail('qna')" title="Q&A">
-            <i class="fa fa-comments"></i><span class="rail-label">Q&A</span>
+            <i class="fa fa-comments"></i><span class="rail-label" data-i18n="nav.qna">Q&A</span>
           </button>
         </div>
         <div class="rail-bottom">
-          <button class="rail-icon" data-rail="bugreport" onclick="toggleRail('bugreport')" title="버그 리포트">
-            <i class="fa fa-bug"></i><span class="rail-label">버그</span>
+          <button class="rail-icon" data-rail="bugreport" onclick="toggleRail('bugreport')" title="버그 리포트" data-i18n-title="rail.bug">
+            <i class="fa fa-bug"></i><span class="rail-label" data-i18n="nav.bug">버그</span>
           </button>
           <div id="railUser">
-            <button id="loginBtn" class="rail-icon" onclick="signInWithGoogle()" title="로그인">
+            <button id="loginBtn" class="rail-icon" onclick="signInWithGoogle()" title="로그인" data-i18n-title="nav.login">
               <i class="fa fa-sign-in-alt"></i>
             </button>
             <div id="userBar" class="rail-user-info" style="display:none">
-              <img id="userAvatar" class="rail-avatar" src="" title="프로필">
+              <img id="userAvatar" class="rail-avatar" src="" title="프로필" data-i18n-title="nav.profile">
             </div>
           </div>
-          <button class="rail-icon" data-rail="settings" onclick="toggleRail('settings')" title="설정">
-            <i class="fa fa-cog"></i><span class="rail-label">설정</span>
+          <button class="rail-icon" data-rail="settings" onclick="toggleRail('settings')" title="설정" data-i18n-title="nav.settings">
+            <i class="fa fa-cog"></i><span class="rail-label" data-i18n="nav.settings">설정</span>
           </button>
         </div>
       </div>
       <!-- 확장 사이드패널 -->
       <div id="sidePanel">
         <div class="sp-section" id="sp-bible">
-          <div class="sp-head"><i class="fa fa-book-bible"></i> 성경 목록<button class="sp-pin-btn" id="spPinBtn" onclick="_spTogglePin()" title="고정"><i class="fa fa-thumbtack"></i></button></div>
+          <div class="sp-head"><i class="fa fa-book-bible"></i> <span data-i18n="rail.bible">성경 목록</span><button class="sp-pin-btn" id="spPinBtn" onclick="_spTogglePin()" title="고정" data-i18n-title="panel.pin"><i class="fa fa-thumbtack"></i></button></div>
           <div class="sp-body" id="bookList"></div>
         </div>
         <div class="sp-section" id="sp-bookmark">
-          <div class="sp-head"><i class="fa fa-bookmark"></i> 북마크</div>
+          <div class="sp-head"><i class="fa fa-bookmark"></i> <span data-i18n="nav.bookmark">북마크</span></div>
           <div class="sp-body" id="spBookmarkList"></div>
         </div>
         <div class="sp-section" id="sp-reading">
-          <div class="sp-head"><i class="fa fa-calendar-check"></i> 읽기 계획</div>
+          <div class="sp-head"><i class="fa fa-calendar-check"></i> <span data-i18n="rail.reading">읽기 계획</span></div>
           <div class="sp-body" id="spReadingContent">
-            <div style="padding:20px;text-align:center;color:var(--text3);font-size:12px"><i class="fa fa-calendar-check" style="font-size:24px;margin-bottom:8px;display:block;opacity:.4"></i>준비 중입니다</div>
+            <div style="padding:20px;text-align:center;color:var(--text3);font-size:12px"><i class="fa fa-calendar-check" style="font-size:24px;margin-bottom:8px;display:block;opacity:.4"></i><span data-i18n="preparing">준비 중입니다</span></div>
           </div>
         </div>
         <div class="sp-section" id="sp-library">
-          <div class="sp-head"><i class="fa fa-book-open-reader"></i> 도서관</div>
+          <div class="sp-head"><i class="fa fa-book-open-reader"></i> <span data-i18n="nav.library">도서관</span></div>
           <div class="sp-body" id="spLibraryBody">
-            <div style="padding:20px;text-align:center;color:var(--text3);font-size:12px"><i class="fa fa-book-open-reader" style="font-size:24px;margin-bottom:8px;display:block;opacity:.4"></i>준비 중입니다</div>
+            <div style="padding:20px;text-align:center;color:var(--text3);font-size:12px"><i class="fa fa-book-open-reader" style="font-size:24px;margin-bottom:8px;display:block;opacity:.4"></i><span data-i18n="preparing">준비 중입니다</span></div>
           </div>
         </div>
         <div class="sp-section" id="sp-qna">
-          <div class="sp-head"><i class="fa fa-comments"></i> Q&A</div>
+          <div class="sp-head"><i class="fa fa-comments"></i> <span data-i18n="nav.qna">Q&A</span></div>
           <div class="sp-body" id="spQnaBody">
-            <div style="padding:20px;text-align:center;color:var(--text3);font-size:12px"><i class="fa fa-comments" style="font-size:24px;margin-bottom:8px;display:block;opacity:.4"></i>준비 중입니다</div>
+            <div style="padding:20px;text-align:center;color:var(--text3);font-size:12px"><i class="fa fa-comments" style="font-size:24px;margin-bottom:8px;display:block;opacity:.4"></i><span data-i18n="preparing">준비 중입니다</span></div>
           </div>
         </div>
         <div class="sp-section" id="sp-bugreport">
-          <div class="sp-head"><i class="fa fa-bug"></i> 버그 리포트</div>
+          <div class="sp-head"><i class="fa fa-bug"></i> <span data-i18n="rail.bug">버그 리포트</span></div>
           <div class="sp-body" id="spBugBody" style="display:flex;flex-direction:column;overflow:hidden"></div>
         </div>
         <div class="sp-section" id="sp-settings">
-          <div class="sp-head"><i class="fa fa-cog"></i> 설정</div>
+          <div class="sp-head"><i class="fa fa-cog"></i> <span data-i18n="nav.settings">설정</span></div>
           <div class="sp-body" id="spSettingsBody"></div>
         </div>
       </div>
@@ -185,9 +185,9 @@
       </div>
       <div id="vCont"></div>
       <div class="ch-nav">
-        <button class="chnav" onclick="prevCh()"><i class="fa fa-chevron-left"></i> 이전 장</button>
+        <button class="chnav" onclick="prevCh()"><i class="fa fa-chevron-left"></i> <span data-i18n="prev.ch">이전 장</span></button>
         <span style="font-size:11px;color:var(--text3)" id="chNavLbl"></span>
-        <button class="chnav" onclick="nextCh()">다음 장 <i class="fa fa-chevron-right"></i></button>
+        <button class="chnav" onclick="nextCh()"><span data-i18n="next.ch">다음 장</span> <i class="fa fa-chevron-right"></i></button>
       </div>
     </div><!-- /bibleScroll -->
     </div><!-- /bibleBody -->
@@ -198,21 +198,21 @@
     <div class="rp-tabs" id="rpTabs">
       <div class="rp-subtabs" id="subtabs-notes">
         <button class="rp-ico-btn" onclick="toggleExplorer()" title="노트 목록"><i class="fa fa-folder-open"></i></button>
-        <div class="rp-tab act" data-sub="notes" onclick="switchSub('notes')"><i class="fa fa-pen"></i> 노트</div>
-        <div class="rp-tab" data-sub="commentary" onclick="switchSub('commentary')"><i class="fa fa-scroll"></i> 주석</div>
-        <div class="rp-tab" data-sub="outline" onclick="switchSub('outline')"><i class="fa fa-sitemap"></i> 아웃라인</div>
-        <button class="rp-ico-btn rp-close-btn" onclick="togglePanel('notes')" title="패널 닫기"><i class="fa fa-times"></i></button>
+        <div class="rp-tab act" data-sub="notes" onclick="switchSub('notes')"><i class="fa fa-pen"></i> <span data-i18n="tab.notes">노트</span></div>
+        <div class="rp-tab" data-sub="commentary" onclick="switchSub('commentary')"><i class="fa fa-scroll"></i> <span data-i18n="tab.comm">주석</span></div>
+        <div class="rp-tab" data-sub="outline" onclick="switchSub('outline')"><i class="fa fa-sitemap"></i> <span data-i18n="tab.outline">아웃라인</span></div>
+        <button class="rp-ico-btn rp-close-btn" onclick="togglePanel('notes')" title="패널 닫기" data-i18n-title="panel.close"><i class="fa fa-times"></i></button>
       </div>
       <div class="rp-subtabs" id="subtabs-dict" style="display:none">
-        <div class="rp-tab act" data-sub="dict-strongs" onclick="switchSub('dict-strongs')"><i class="fa fa-language"></i> 스트롱</div>
-        <div class="rp-tab" data-sub="dict-webster" onclick="switchSub('dict-webster')"><i class="fa fa-spell-check"></i> 웹스터</div>
-        <div class="rp-tab" data-sub="dict-enko" onclick="switchSub('dict-enko')"><i class="fa fa-exchange-alt"></i> 영한</div>
-        <div class="rp-tab" data-sub="dict-korean" onclick="switchSub('dict-korean')"><i class="fa fa-font"></i> 표준국어</div>
-        <button class="rp-ico-btn rp-close-btn" onclick="togglePanel('dictionary')" title="패널 닫기"><i class="fa fa-times"></i></button>
+        <div class="rp-tab act" data-sub="dict-strongs" onclick="switchSub('dict-strongs')"><i class="fa fa-language"></i> <span data-i18n="dict.strongs">스트롱</span></div>
+        <div class="rp-tab" data-sub="dict-webster" onclick="switchSub('dict-webster')"><i class="fa fa-spell-check"></i> <span data-i18n="dict.webster">웹스터</span></div>
+        <div class="rp-tab" data-sub="dict-enko" onclick="switchSub('dict-enko')"><i class="fa fa-exchange-alt"></i> <span data-i18n="dict.enko">영한</span></div>
+        <div class="rp-tab" data-sub="dict-korean" onclick="switchSub('dict-korean')"><i class="fa fa-font"></i> <span data-i18n="dict.korean">표준국어</span></div>
+        <button class="rp-ico-btn rp-close-btn" onclick="togglePanel('dictionary')" title="패널 닫기" data-i18n-title="panel.close"><i class="fa fa-times"></i></button>
       </div>
       <div class="rp-subtabs" id="subtabs-search" style="display:none">
-        <div class="rp-tab act" data-sub="search" onclick="switchSub('search')"><i class="fa fa-search"></i> 검색결과</div>
-        <button class="rp-ico-btn rp-close-btn" onclick="togglePanel('search')" title="패널 닫기"><i class="fa fa-times"></i></button>
+        <div class="rp-tab act" data-sub="search" onclick="switchSub('search')"><i class="fa fa-search"></i> <span data-i18n="tab.search">검색결과</span></div>
+        <button class="rp-ico-btn rp-close-btn" onclick="togglePanel('search')" title="패널 닫기" data-i18n-title="panel.close"><i class="fa fa-times"></i></button>
       </div>
     </div>
     <div class="rp-body">
@@ -225,10 +225,10 @@
             <div class="exp-head">
               <span class="exp-title">Vault</span>
               <div class="exp-actions">
-                <button class="exp-btn" title="새 노트" onclick="newNote()"><i class="fa fa-file-circle-plus"></i></button>
-                <button class="exp-btn" title="새 폴더" onclick="newFolder()"><i class="fa fa-folder-plus"></i></button>
-                <button class="exp-btn" title="모두 접기" onclick="_ftCollapseAll()"><i class="fa fa-compress-alt"></i></button>
-                <button class="exp-btn" title="닫기" onclick="closeExplorer()"><i class="fa fa-times"></i></button>
+                <button class="exp-btn" title="새 노트" data-i18n-title="note.new" onclick="newNote()"><i class="fa fa-file-circle-plus"></i></button>
+                <button class="exp-btn" title="새 폴더" data-i18n-title="note.new.folder" onclick="newFolder()"><i class="fa fa-folder-plus"></i></button>
+                <button class="exp-btn" title="모두 접기" data-i18n-title="note.collapse" onclick="_ftCollapseAll()"><i class="fa fa-compress-alt"></i></button>
+                <button class="exp-btn" title="닫기" data-i18n-title="note.close" onclick="closeExplorer()"><i class="fa fa-times"></i></button>
               </div>
             </div>
             <div id="folderTree"></div>
@@ -237,62 +237,62 @@
             <div class="rte-bar">
               <div class="rte-row">
                 <select class="rte-sel" onchange="cmd('formatBlock',this.value);this.value=''">
-                  <option value="">단락</option>
+                  <option value="" data-i18n="rte.paragraph">단락</option>
                   <option value="h1">H1</option>
                   <option value="h2">H2</option>
                   <option value="h3">H3</option>
-                  <option value="p">본문</option>
-                  <option value="blockquote">인용</option>
+                  <option value="p" data-i18n="rte.body">본문</option>
+                  <option value="blockquote" data-i18n="rte.quote">인용</option>
                 </select>
-                <select class="rte-sel rte-fontsize" title="글꼴 크기" onchange="setFontSize(this.value);this.value=''">
-                  <option value="">크기</option>
+                <select class="rte-sel rte-fontsize" title="글꼴 크기" data-i18n-title="rte.fontsize" onchange="setFontSize(this.value);this.value=''">
+                  <option value="" data-i18n="rte.size">크기</option>
                   <option value="10">10</option><option value="12">12</option><option value="14">14</option>
                   <option value="16">16</option><option value="18">18</option><option value="20">20</option>
                   <option value="24">24</option><option value="28">28</option><option value="32">32</option>
                 </select>
                 <div class="rte-sep"></div>
-                <button class="rte-btn" title="굵게 (Ctrl+B)" onmousedown="event.preventDefault()" onclick="cmd('bold')"><b>B</b></button>
-                <button class="rte-btn" title="기울임 (Ctrl+I)" onmousedown="event.preventDefault()" onclick="cmd('italic')"><i>I</i></button>
-                <button class="rte-btn" title="밑줄 (Ctrl+U)" onmousedown="event.preventDefault()" onclick="cmd('underline')"><u>U</u></button>
-                <button class="rte-btn" title="취소선" onmousedown="event.preventDefault()" onclick="cmd('strikeThrough')"><s>S</s></button>
+                <button class="rte-btn" title="굵게 (Ctrl+B)" data-i18n-title="rte.bold" onmousedown="event.preventDefault()" onclick="cmd('bold')"><b>B</b></button>
+                <button class="rte-btn" title="기울임 (Ctrl+I)" data-i18n-title="rte.italic" onmousedown="event.preventDefault()" onclick="cmd('italic')"><i>I</i></button>
+                <button class="rte-btn" title="밑줄 (Ctrl+U)" data-i18n-title="rte.underline" onmousedown="event.preventDefault()" onclick="cmd('underline')"><u>U</u></button>
+                <button class="rte-btn" title="취소선" data-i18n-title="rte.strike" onmousedown="event.preventDefault()" onclick="cmd('strikeThrough')"><s>S</s></button>
                 <div class="rte-sep"></div>
-                <button class="rte-btn" title="텍스트 색상" onclick="openColorPalette(this,'fore')" onmousedown="event.preventDefault()"><i class="fa fa-font" style="color:var(--gold)"></i></button>
-                <button class="rte-btn" title="배경 하이라이트" onclick="openColorPalette(this,'bg')" onmousedown="event.preventDefault()"><i class="fa fa-fill-drip"></i></button>
+                <button class="rte-btn" title="텍스트 색상" data-i18n-title="rte.textcolor" onclick="openColorPalette(this,'fore')" onmousedown="event.preventDefault()"><i class="fa fa-font" style="color:var(--gold)"></i></button>
+                <button class="rte-btn" title="배경 하이라이트" data-i18n-title="rte.highlight" onclick="openColorPalette(this,'bg')" onmousedown="event.preventDefault()"><i class="fa fa-fill-drip"></i></button>
                 <div class="rte-sep"></div>
-                <button class="rte-btn" title="글머리 목록" onmousedown="event.preventDefault()" onclick="cmd('insertUnorderedList')"><i class="fa fa-list-ul"></i></button>
-                <button class="rte-btn" title="번호 목록" onmousedown="event.preventDefault()" onclick="cmd('insertOrderedList')"><i class="fa fa-list-ol"></i></button>
+                <button class="rte-btn" title="글머리 목록" data-i18n-title="rte.ul" onmousedown="event.preventDefault()" onclick="cmd('insertUnorderedList')"><i class="fa fa-list-ul"></i></button>
+                <button class="rte-btn" title="번호 목록" data-i18n-title="rte.ol" onmousedown="event.preventDefault()" onclick="cmd('insertOrderedList')"><i class="fa fa-list-ol"></i></button>
                 <div class="rte-sep"></div>
-                <button class="rte-btn" title="왼쪽 정렬" onmousedown="event.preventDefault()" onclick="cmd('justifyLeft')"><i class="fa fa-align-left"></i></button>
-                <button class="rte-btn" title="가운데 정렬" onmousedown="event.preventDefault()" onclick="cmd('justifyCenter')"><i class="fa fa-align-center"></i></button>
-                <button class="rte-btn" title="오른쪽 정렬" onmousedown="event.preventDefault()" onclick="cmd('justifyRight')"><i class="fa fa-align-right"></i></button>
+                <button class="rte-btn" title="왼쪽 정렬" data-i18n-title="rte.left" onmousedown="event.preventDefault()" onclick="cmd('justifyLeft')"><i class="fa fa-align-left"></i></button>
+                <button class="rte-btn" title="가운데 정렬" data-i18n-title="rte.center" onmousedown="event.preventDefault()" onclick="cmd('justifyCenter')"><i class="fa fa-align-center"></i></button>
+                <button class="rte-btn" title="오른쪽 정렬" data-i18n-title="rte.right" onmousedown="event.preventDefault()" onclick="cmd('justifyRight')"><i class="fa fa-align-right"></i></button>
                 <div class="rte-sep"></div>
-                <button class="rte-btn" title="표 삽입" onclick="insertTable()"><i class="fa fa-table"></i></button>
-                <button class="rte-btn" title="구분선" onmousedown="event.preventDefault()" onclick="cmd('insertHorizontalRule')"><i class="fa fa-minus"></i></button>
+                <button class="rte-btn" title="표 삽입" data-i18n-title="rte.table" onclick="insertTable()"><i class="fa fa-table"></i></button>
+                <button class="rte-btn" title="구분선" data-i18n-title="rte.hr" onmousedown="event.preventDefault()" onclick="cmd('insertHorizontalRule')"><i class="fa fa-minus"></i></button>
                 <div class="rte-sep"></div>
-                <button class="rte-btn" title="실행 취소" onmousedown="event.preventDefault()" onclick="cmd('undo')"><i class="fa fa-undo"></i></button>
-                <button class="rte-btn" title="다시 실행" onmousedown="event.preventDefault()" onclick="cmd('redo')"><i class="fa fa-redo"></i></button>
+                <button class="rte-btn" title="실행 취소" data-i18n-title="rte.undo" onmousedown="event.preventDefault()" onclick="cmd('undo')"><i class="fa fa-undo"></i></button>
+                <button class="rte-btn" title="다시 실행" data-i18n-title="rte.redo" onmousedown="event.preventDefault()" onclick="cmd('redo')"><i class="fa fa-redo"></i></button>
                 <div class="rte-sep"></div>
-                <button class="rte-btn" title="들여쓰기" onmousedown="event.preventDefault()" onclick="cmd('indent')"><i class="fa fa-indent"></i></button>
-                <button class="rte-btn" title="내어쓰기" onmousedown="event.preventDefault()" onclick="cmd('outdent')"><i class="fa fa-outdent"></i></button>
+                <button class="rte-btn" title="들여쓰기" data-i18n-title="rte.indent" onmousedown="event.preventDefault()" onclick="cmd('indent')"><i class="fa fa-indent"></i></button>
+                <button class="rte-btn" title="내어쓰기" data-i18n-title="rte.outdent" onmousedown="event.preventDefault()" onclick="cmd('outdent')"><i class="fa fa-outdent"></i></button>
               </div>
               <div class="rte-row rte-row2">
-                <span class="rte-row-label">삽입</span>
+                <span class="rte-row-label" data-i18n="rte.insert">삽입</span>
                 <div class="rte-sep"></div>
-                <button class="rte-btn rte-insert" onclick="openNoteLink()" title="노트 링크 삽입"><i class="fa fa-link"></i><span class="rte-lbl">노트</span></button>
-                <button class="rte-btn rte-insert" onclick="openVersePick()" title="구절 링크 삽입"><i class="fa fa-book-open"></i><span class="rte-lbl">구절</span></button>
-                <button class="rte-btn rte-insert" onclick="openUrlEmbed(this)" title="외부 링크 삽입"><i class="fa fa-globe"></i><span class="rte-lbl">링크</span></button>
-                <button class="rte-btn rte-insert" onclick="openYoutubeEmbed(this)" title="유튜브 삽입"><i class="fab fa-youtube"></i><span class="rte-lbl">유튜브</span></button>
-                <button class="rte-btn rte-insert" onclick="openFileAttach()" title="파일/이미지 첨부"><i class="fa fa-paperclip"></i><span class="rte-lbl">파일</span></button>
+                <button class="rte-btn rte-insert" onclick="openNoteLink()" title="노트 링크 삽입" data-i18n-title="rte.note.link"><i class="fa fa-link"></i><span class="rte-lbl" data-i18n="rte.note">노트</span></button>
+                <button class="rte-btn rte-insert" onclick="openVersePick()" title="구절 링크 삽입" data-i18n-title="rte.verse.link"><i class="fa fa-book-open"></i><span class="rte-lbl" data-i18n="rte.verse">구절</span></button>
+                <button class="rte-btn rte-insert" onclick="openUrlEmbed(this)" title="외부 링크 삽입" data-i18n-title="rte.ext.link"><i class="fa fa-globe"></i><span class="rte-lbl" data-i18n="rte.link">링크</span></button>
+                <button class="rte-btn rte-insert" onclick="openYoutubeEmbed(this)" title="유튜브 삽입" data-i18n-title="rte.youtube"><i class="fab fa-youtube"></i><span class="rte-lbl" data-i18n="rte.yt">유튜브</span></button>
+                <button class="rte-btn rte-insert" onclick="openFileAttach()" title="파일/이미지 첨부" data-i18n-title="rte.file"><i class="fa fa-paperclip"></i><span class="rte-lbl" data-i18n="rte.file.short">파일</span></button>
                 <div class="rte-sep"></div>
-                <button class="rte-btn" onmousedown="event.preventDefault()" onclick="insertCallout('info')" title="정보 박스"><i class="fa fa-info-circle" style="color:#4a9eff"></i></button>
-                <button class="rte-btn" onmousedown="event.preventDefault()" onclick="insertCallout('warn')" title="경고 박스"><i class="fa fa-exclamation-triangle" style="color:#f0a500"></i></button>
-                <button class="rte-btn" onmousedown="event.preventDefault()" onclick="insertCallout('pray')" title="아이디어/묵상 박스"><i class="fa fa-lightbulb" style="color:var(--gold)"></i></button>
+                <button class="rte-btn" onmousedown="event.preventDefault()" onclick="insertCallout('info')" title="정보 박스" data-i18n-title="rte.info"><i class="fa fa-info-circle" style="color:#4a9eff"></i></button>
+                <button class="rte-btn" onmousedown="event.preventDefault()" onclick="insertCallout('warn')" title="경고 박스" data-i18n-title="rte.warn"><i class="fa fa-exclamation-triangle" style="color:#f0a500"></i></button>
+                <button class="rte-btn" onmousedown="event.preventDefault()" onclick="insertCallout('pray')" title="아이디어/묵상 박스" data-i18n-title="rte.idea"><i class="fa fa-lightbulb" style="color:var(--gold)"></i></button>
                 <div class="rte-sep"></div>
-                <button class="rte-btn rte-insert" onmousedown="event.preventDefault()" onclick="insertCheckbox()" title="체크박스 삽입"><i class="fa fa-check-square"></i><span class="rte-lbl">체크</span></button>
-                <button class="rte-btn rte-insert" onmousedown="event.preventDefault()" onclick="insertDateStamp()" title="날짜 삽입"><i class="fa fa-calendar-day"></i><span class="rte-lbl">날짜</span></button>
+                <button class="rte-btn rte-insert" onmousedown="event.preventDefault()" onclick="insertCheckbox()" title="체크박스 삽입" data-i18n-title="rte.check"><i class="fa fa-check-square"></i><span class="rte-lbl" data-i18n="rte.check.short">체크</span></button>
+                <button class="rte-btn rte-insert" onmousedown="event.preventDefault()" onclick="insertDateStamp()" title="날짜 삽입" data-i18n-title="rte.date"><i class="fa fa-calendar-day"></i><span class="rte-lbl" data-i18n="rte.date.short">날짜</span></button>
               </div>
             </div>
-            <div id="noteContent" contenteditable="true" data-ph="제목을 입력하세요..."></div>
+            <div id="noteContent" contenteditable="true" data-ph="제목을 입력하세요..." data-i18n-ph="rte.title.ph">
             <div class="backlink-panel" id="backlinkPanel" style="display:none">
               <div class="backlink-head" onclick="toggleBacklinks()">
                 <i class="fa fa-link"></i>&nbsp;백링크&nbsp;<span id="backlinkCount" style="color:var(--gold)"></span>
@@ -301,7 +301,7 @@
               <div id="backlinkList"></div>
             </div>
             <div class="note-nav-bar" id="noteNavBar" style="display:none">
-              <button class="nav-back-btn" id="backBtn" onclick="goBack()" title="이전 노트로 돌아가기" style="display:none">
+              <button class="nav-back-btn" id="backBtn" onclick="goBack()" title="이전 노트로 돌아가기" data-i18n-title="rte.back" style="display:none">
                 <i class="fa fa-arrow-left"></i>
               </button>
               <div class="nav-path" id="navPath"></div>
@@ -310,7 +310,7 @@
             <div class="note-footer">
               <span class="nfooter-label">🏷</span>
               <div class="tag-row" id="tagRow">
-                <input class="tag-inp" id="tagInp" placeholder="태그..." onkeydown="addTag(event)">
+                <input class="tag-inp" id="tagInp" placeholder="태그..." data-i18n-ph="rte.tag.ph" onkeydown="addTag(event)">
               </div>
               <select id="noteFolderSel" style="display:none"></select>
             </div>
@@ -322,10 +322,10 @@
       <div class="rp-sec" id="sec-commentary">
         <div class="comm-mode-bar">
           <button class="comm-mode-btn comm-mode-active" id="commModeVerse" onclick="setCommMode('verse')">
-            <i class="fa fa-crosshairs"></i> 구절별
+            <i class="fa fa-crosshairs"></i> <span data-i18n="comm.verse">구절별</span>
           </button>
           <button class="comm-mode-btn" id="commModeChapter" onclick="setCommMode('chapter')">
-            <i class="fa fa-list"></i> 장별
+            <i class="fa fa-list"></i> <span data-i18n="comm.chapter">장별</span>
           </button>
         </div>
         <div class="comm-body-wrap" id="commentaryContent">
@@ -350,7 +350,7 @@
       <div class="rp-sec" id="sec-dictionary">
         <div class="rp-sec act" id="sec-dict-strongs" style="display:flex">
           <div style="padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:6px;align-items:center">
-            <input type="text" id="strongsSearchInput" placeholder="스트롱 번호 (H1, G3056) 또는 원어 검색..."
+            <input type="text" id="strongsSearchInput" placeholder="스트롱 번호 (H1, G3056) 또는 원어 검색..." data-i18n-ph="dict.strongs.ph"
               style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:6px 10px;font-size:12px;color:var(--text);outline:none;"
               onkeydown="if(event.key==='Enter')searchStrongs()">
             <button onclick="searchStrongs()" style="padding:6px 12px;border-radius:5px;font-size:11px;font-weight:700;background:var(--gold);color:var(--bg);border:none;cursor:pointer;flex-shrink:0"><i class="fa fa-search"></i></button>
@@ -372,7 +372,7 @@
         </div>
         <div class="rp-sec" id="sec-dict-enko" style="display:none;flex-direction:column">
           <div style="padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:6px;align-items:center">
-            <input type="text" id="enkoSearchInput" placeholder="영한 검색 (e.g., salvation, mercy)..."
+            <input type="text" id="enkoSearchInput" placeholder="영한 검색 (e.g., salvation, mercy)..." data-i18n-ph="dict.enko.ph"
               style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:6px 10px;font-size:12px;color:var(--text);outline:none;"
               onkeydown="if(event.key==='Enter')searchEnko()">
             <button onclick="searchEnko()" style="padding:6px 12px;border-radius:5px;font-size:11px;font-weight:700;background:var(--gold);color:var(--bg);border:none;cursor:pointer;flex-shrink:0"><i class="fa fa-search"></i></button>
@@ -383,7 +383,7 @@
         </div>
         <div class="rp-sec" id="sec-dict-korean" style="display:none;flex-direction:column">
           <div style="padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:6px;align-items:center">
-            <input type="text" id="koreanSearchInput" placeholder="국어사전 검색..."
+            <input type="text" id="koreanSearchInput" placeholder="국어사전 검색..." data-i18n-ph="dict.kr.ph"
               style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:6px 10px;font-size:12px;color:var(--text);outline:none;"
               onkeydown="if(event.key==='Enter')searchKorean()">
             <button onclick="searchKorean()" style="padding:6px 12px;border-radius:5px;font-size:11px;font-weight:700;background:var(--gold);color:var(--bg);border:none;cursor:pointer;flex-shrink:0"><i class="fa fa-search"></i></button>
@@ -397,37 +397,37 @@
         <div class="search-wrap">
           <!-- 검색 입력 -->
           <div class="sch-row">
-            <input type="text" id="schInput" placeholder="검색어 입력... (한글/영어/H1234)" onkeydown="if(event.key==='Enter')uniSearch()">
+            <input type="text" id="schInput" placeholder="검색어 입력... (한글/영어/H1234)" data-i18n-ph="sch.ph" onkeydown="if(event.key==='Enter')uniSearch()">
             <button onclick="uniSearch()"><i class="fa fa-search"></i></button>
-            <button class="sch-help-btn" onclick="uniHelp()" title="검색 도움말"><i class="fa fa-question-circle"></i></button>
+            <button class="sch-help-btn" onclick="uniHelp()" title="검색 도움말" data-i18n-title="sch.search.help"><i class="fa fa-question-circle"></i></button>
           </div>
           <!-- 필터 칩 -->
           <div class="sch-filters">
-            <button class="sf-chip on" data-f="all" onclick="sfToggle(this)">전체</button>
-            <button class="sf-chip on" data-f="OT" onclick="sfToggle(this)">구약</button>
-            <button class="sf-chip on" data-f="NT" onclick="sfToggle(this)">신약</button>
+            <button class="sf-chip on" data-f="all" onclick="sfToggle(this)" data-i18n="sch.filter.all">전체</button>
+            <button class="sf-chip on" data-f="OT" onclick="sfToggle(this)" data-i18n="ot">구약</button>
+            <button class="sf-chip on" data-f="NT" onclick="sfToggle(this)" data-i18n="nt">신약</button>
             <select class="sf-book-sel" id="sfBookSel" onchange="sfBookChange()">
-              <option value="">책 선택...</option>
+              <option value="" data-i18n="sch.filter.book">책 선택...</option>
             </select>
-            <button class="sf-chip on" data-f="notes" onclick="sfToggle(this)">노트</button>
-            <button class="sf-chip on" data-f="commentary" onclick="sfToggle(this)">주석</button>
-            <button class="sf-chip on" data-f="files" onclick="sfToggle(this)">파일</button>
+            <button class="sf-chip on" data-f="notes" onclick="sfToggle(this)" data-i18n="sch.filter.notes">노트</button>
+            <button class="sf-chip on" data-f="commentary" onclick="sfToggle(this)" data-i18n="sch.filter.comm">주석</button>
+            <button class="sf-chip on" data-f="files" onclick="sfToggle(this)" data-i18n="sch.filter.file">파일</button>
           </div>
           <!-- 고급 옵션 토글 행 -->
           <div class="sch-adv-row">
-            <button class="sch-adv-toggle" id="schAdvToggle" onclick="schToggleAdv()"><i class="fa fa-sliders-h"></i> 고급</button>
+            <button class="sch-adv-toggle" id="schAdvToggle" onclick="schToggleAdv()"><i class="fa fa-sliders-h"></i> <span data-i18n="sch.advanced">고급</span></button>
             <span class="sch-sep"></span>
-            <button class="sch-vm-btn on" data-vm="list" onclick="schSetView('list')" title="목록"><i class="fa fa-list"></i></button>
-            <button class="sch-vm-btn" data-vm="ref" onclick="schSetView('ref')" title="참조"><i class="fa fa-th"></i></button>
-            <button class="sch-vm-btn" data-vm="tree" onclick="schSetView('tree')" title="트리"><i class="fa fa-sitemap"></i></button>
+            <button class="sch-vm-btn on" data-vm="list" onclick="schSetView('list')" title="목록" data-i18n-title="sch.list"><i class="fa fa-list"></i></button>
+            <button class="sch-vm-btn" data-vm="ref" onclick="schSetView('ref')" title="참조" data-i18n-title="sch.ref"><i class="fa fa-th"></i></button>
+            <button class="sch-vm-btn" data-vm="tree" onclick="schSetView('tree')" title="트리" data-i18n-title="sch.tree"><i class="fa fa-sitemap"></i></button>
           </div>
           <!-- 고급 옵션 패널 (접힘) -->
           <div class="sch-adv-panel" id="schAdvPanel" style="display:none">
-            <button class="sch-opt-btn" id="schCaseBtn" onclick="schToggleCase()" title="대소문자 구분 (영어)">Aa</button>
+            <button class="sch-opt-btn" id="schCaseBtn" onclick="schToggleCase()" title="대소문자 구분 (영어)" data-i18n-title="sch.case">Aa</button>
             <span class="sch-sep"></span>
-            <button class="sch-scope-btn on" data-scope="verse" onclick="schSetScope('verse')">절</button>
-            <button class="sch-scope-btn" data-scope="chapter" onclick="schSetScope('chapter')">장</button>
-            <button class="sch-scope-btn" data-scope="book" onclick="schSetScope('book')">권</button>
+            <button class="sch-scope-btn on" data-scope="verse" onclick="schSetScope('verse')" data-i18n="sch.scope.v">절</button>
+            <button class="sch-scope-btn" data-scope="chapter" onclick="schSetScope('chapter')" data-i18n="sch.scope.ch">장</button>
+            <button class="sch-scope-btn" data-scope="book" onclick="schSetScope('book')" data-i18n="sch.scope.bk">권</button>
           </div>
           <!-- 통계 + 결과 수 -->
           <div id="schStatsArea"></div>
@@ -442,66 +442,66 @@
 
 <!-- ══ CONTEXT MENU ════════════════════════════ -->
 <div id="ctxMenu">
-  <div class="citem" onclick="ctxHL()"><i class="fa fa-highlighter"></i> 형광펜 적용 (드래그 선택 후)</div>
-  <div class="citem" onclick="ctxClearHL()" id="ctxClearHLItem" style="display:none"><i class="fa fa-eraser"></i> 형광펜 지우기</div>
-  <div class="citem" onclick="ctxVerseMemo()"><i class="fa fa-comment-dots"></i> 주석 작성</div>
-  <div class="citem" onclick="ctxNote()"><i class="fa fa-pen"></i> 새 노트 작성</div>
-  <div class="citem" onclick="ctxLinkNote()"><i class="fa fa-link"></i> 노트 연결</div>
-  <div class="citem" onclick="ctxDict()"><i class="fa fa-book"></i> 사전 보기</div>
+  <div class="citem" onclick="ctxHL()"><i class="fa fa-highlighter"></i> <span data-i18n="ctx.hl">형광펜 적용 (드래그 선택 후)</span></div>
+  <div class="citem" onclick="ctxClearHL()" id="ctxClearHLItem" style="display:none"><i class="fa fa-eraser"></i> <span data-i18n="ctx.hl.remove">형광펜 지우기</span></div>
+  <div class="citem" onclick="ctxVerseMemo()"><i class="fa fa-comment-dots"></i> <span data-i18n="ctx.comm">주석 작성</span></div>
+  <div class="citem" onclick="ctxNote()"><i class="fa fa-pen"></i> <span data-i18n="ctx.new.note">새 노트 작성</span></div>
+  <div class="citem" onclick="ctxLinkNote()"><i class="fa fa-link"></i> <span data-i18n="ctx.link.note">노트 연결</span></div>
+  <div class="citem" onclick="ctxDict()"><i class="fa fa-book"></i> <span data-i18n="ctx.dict">사전 보기</span></div>
   <div class="cdiv"></div>
-  <div class="citem" onclick="addBookmark()"><i class="fa fa-bookmark"></i> 북마크 추가/제거</div>
-  <div class="citem" onclick="ctxCopy()"><i class="fa fa-copy"></i> 구절 복사</div>
-  <div class="citem" onclick="ctxCopyRef()"><i class="fa fa-quote-right"></i> 참조 형식 복사</div>
+  <div class="citem" onclick="addBookmark()"><i class="fa fa-bookmark"></i> <span data-i18n="ctx.bk">북마크 추가/제거</span></div>
+  <div class="citem" onclick="ctxCopy()"><i class="fa fa-copy"></i> <span data-i18n="ctx.copy">구절 복사</span></div>
+  <div class="citem" onclick="ctxCopyRef()"><i class="fa fa-quote-right"></i> <span data-i18n="ctx.copy.ref">참조 형식 복사</span></div>
   <div class="cdiv"></div>
-  <div class="citem" onclick="ctxInsertLink()"><i class="fa fa-link"></i> 노트에 구절 링크 삽입</div>
+  <div class="citem" onclick="ctxInsertLink()"><i class="fa fa-link"></i> <span data-i18n="ctx.insert.link">노트에 구절 링크 삽입</span></div>
 </div>
 
 <!-- ══ MODALS ══════════════════════════════════ -->
 <div class="modal-bg" id="mQuota">
   <div class="modal-box">
-    <div class="modal-title"><i class="fa fa-database"></i> 저장 공간</div>
+    <div class="modal-title"><i class="fa fa-database"></i> <span data-i18n="modal.storage">저장 공간</span></div>
     <div id="quotaDetail"></div>
     <div class="modal-btns">
-      <button class="mbtn mbtn-cancel" onclick="closeM('mQuota')">닫기</button>
-      <button class="mbtn mbtn-ok" onclick="showUpgradeMsg()"><i class="fa fa-arrow-up"></i> 업그레이드</button>
+      <button class="mbtn mbtn-cancel" onclick="closeM('mQuota')" data-i18n="modal.close">닫기</button>
+      <button class="mbtn mbtn-ok" onclick="showUpgradeMsg()"><i class="fa fa-arrow-up"></i> <span data-i18n="modal.upgrade">업그레이드</span></button>
     </div>
   </div>
 </div>
 
 <div class="modal-bg" id="mFolder">
   <div class="modal-box">
-    <div class="modal-title"><i class="fa fa-folder-plus"></i> 새 폴더 만들기</div>
-    <input type="text" class="modal-inp" id="mFolderName" placeholder="폴더 이름 (예: 로마서 연구, 매일 묵상...)">
+    <div class="modal-title"><i class="fa fa-folder-plus"></i> <span data-i18n="modal.new.folder">새 폴더 만들기</span></div>
+    <input type="text" class="modal-inp" id="mFolderName" placeholder="폴더 이름 (예: 로마서 연구, 매일 묵상...)" data-i18n-ph="modal.folder.ph">
     <div class="modal-btns">
-      <button class="mbtn mbtn-cancel" onclick="closeM('mFolder')">취소</button>
-      <button class="mbtn mbtn-ok" onclick="createFolder()">만들기</button>
+      <button class="mbtn mbtn-cancel" onclick="closeM('mFolder')" data-i18n="modal.cancel">취소</button>
+      <button class="mbtn mbtn-ok" onclick="createFolder()" data-i18n="modal.create">만들기</button>
     </div>
   </div>
 </div>
 
 <div class="modal-bg" id="mVerse">
   <div class="modal-box">
-    <div class="modal-title"><i class="fa fa-bible"></i> 성경 구절 링크 삽입</div>
+    <div class="modal-title"><i class="fa fa-bible"></i> <span data-i18n="modal.verse.link">성경 구절 링크 삽입</span></div>
     <div style="display:flex;gap:6px;margin-bottom:10px">
       <select id="vlB" class="modal-inp" style="flex:1;margin:0" onchange="vlChBuild()"></select>
       <select id="vlC" class="modal-inp" style="width:80px;margin:0" onchange="vlPrev()"></select>
-      <input type="number" id="vlV" class="modal-inp" style="width:68px;margin:0" placeholder="절" min="1" max="200" oninput="vlPrev()">
+      <input type="number" id="vlV" class="modal-inp" style="width:68px;margin:0" placeholder="절" data-i18n-ph="modal.verse.ph" min="1" max="200" oninput="vlPrev()">
     </div>
     <div style="font-size:12px;color:var(--text3);margin-bottom:12px">미리보기: <span id="vlPrev" style="color:var(--gold);font-family:'JetBrains Mono',monospace"></span></div>
     <div class="modal-btns">
-      <button class="mbtn mbtn-cancel" onclick="closeM('mVerse')">취소</button>
-      <button class="mbtn mbtn-ok" onclick="confirmVL()">삽입</button>
+      <button class="mbtn mbtn-cancel" onclick="closeM('mVerse')" data-i18n="modal.cancel">취소</button>
+      <button class="mbtn mbtn-ok" onclick="confirmVL()" data-i18n="modal.insert">삽입</button>
     </div>
   </div>
 </div>
 
 <div class="modal-bg" id="mNoteLink">
   <div class="modal-box">
-    <div class="modal-title"><i class="fa fa-link"></i> 노트 링크 삽입</div>
-    <input type="text" class="modal-inp" id="nlSearch" placeholder="노트 제목 검색..." oninput="filterNoteLinks(this.value)">
+    <div class="modal-title"><i class="fa fa-link"></i> <span data-i18n="modal.note.link">노트 링크 삽입</span></div>
+    <input type="text" class="modal-inp" id="nlSearch" placeholder="노트 제목 검색..." data-i18n-ph="modal.note.ph" oninput="filterNoteLinks(this.value)">
     <div id="notePicker"></div>
     <div class="modal-btns">
-      <button class="mbtn mbtn-cancel" onclick="closeM('mNoteLink')">취소</button>
+      <button class="mbtn mbtn-cancel" onclick="closeM('mNoteLink')" data-i18n="modal.cancel">취소</button>
     </div>
   </div>
 </div>
@@ -521,6 +521,13 @@
 
 <!-- 데이터 (작은 파일, 동기 로드) -->
 <script src="data/books.js"></script>
+
+<!-- i18n (UI 렌더 전에 로드) -->
+<script src="js/i18n.js"></script>
+<script src="js/i18n-ko.js"></script>
+<script src="js/i18n-ko-ext.js"></script>
+<script src="js/i18n-en.js"></script>
+<script src="js/i18n-en-ext.js"></script>
 
 <!-- 코어 모듈 (의존성 없음, 먼저 로드) -->
 <script src="js/data-loader.js"></script>

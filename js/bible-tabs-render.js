@@ -42,7 +42,7 @@ function renderBibleTabs(){
   if(!list) return;
   list.innerHTML = _bibleTabs.map(t=>{
     const isActive = t.id === _activeTabId;
-    const label = `${t.book} ${t.ch}장`;
+    const label = bookName(t.book)+' '+t.ch+(window._lang==='en'?'':window.t('ch.suffix'));
     const canClose = _bibleTabs.length > 1;
     return `<div class="btab${isActive?' btab-active':''}" onclick="switchBibleTab('${t.id}')" title="${label}">
       <span class="btab-title">${label}</span>
@@ -70,4 +70,5 @@ window.renderAll = function renderAll(){
   if(typeof updateNavPickerLabel==='function') updateNavPickerLabel();
   if(typeof renderViewBar==='function') renderViewBar();
   syncCurrentTab();
+  if(typeof applyI18n==='function') applyI18n();
 }

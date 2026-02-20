@@ -38,7 +38,7 @@ document.addEventListener('copy', e=>{
     e.clipboardData.setData('text/html', html);
     e.clipboardData.setData('text/plain', plain);
     e.preventDefault();
-    showCopyRef(`${arr.length}개 구절 복사됨 📋`);
+    showCopyRef(`${arr.length}${t('ctx.verses')} ${t('copied')}`);
     return;
   }
   /* 단일 선택: 기존 방식(드래그 서식 보존) */
@@ -69,7 +69,7 @@ function showCopyRef(refStr){
       transition:opacity .3s;`;
     document.body.appendChild(el);
   }
-  el.textContent = refStr + ' 복사됨 📋';
+  el.textContent = refStr + ' ' + t('copied');
   el.style.opacity = '1';
   clearTimeout(el._t);
   el._t = setTimeout(()=>{ el.style.opacity='0'; }, 2000);
