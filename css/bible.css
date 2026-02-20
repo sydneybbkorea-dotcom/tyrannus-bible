@@ -149,6 +149,7 @@ body.hide-hl .vrow[class*="hl-row-"] { background:transparent !important }
   font-family:'KoPubWorld Batang','Georgia',serif; font-size:var(--vtxt-size,17px);
   color:var(--text); flex:1; line-height:var(--vtxt-lh,1.85); letter-spacing:0.01em;
   user-select:text; word-break:keep-all;
+  padding-left:28px;
 }
 /* ── 영한 대조 ── */
 .vrow-parallel {
@@ -156,7 +157,7 @@ body.hide-hl .vrow[class*="hl-row-"] { background:transparent !important }
 }
 .vrow-parallel .vtxt-kr { flex:1; min-width:0; }
 .vrow-parallel .vtxt-en-side {
-  flex:1; min-width:0; padding:3px 6px;
+  flex:1; min-width:0; padding:3px 6px 3px 34px;
   font-family:'KoPubWorld Batang','Georgia',serif; font-size:var(--vtxt-size,17px);
   color:var(--text); line-height:var(--vtxt-lh,1.85); letter-spacing:0.01em;
 }
@@ -170,7 +171,7 @@ body.hide-hl .vrow[class*="hl-row-"] { background:transparent !important }
 .vrow-parallel .vtxt-en-side .en-vnum {
   font-family:'JetBrains Mono',monospace; font-size:10px;
   color:var(--gold); opacity:.75; min-width:22px; display:inline-block;
-  margin-right:4px; vertical-align:top; margin-top:5px;
+  margin-left:-28px; margin-right:6px; vertical-align:top; margin-top:5px;
 }
 /* 좁은 화면 — 아래위 대조 */
 .vtxt-en-below {
@@ -219,18 +220,24 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
 }
 .vrow:hover { background:var(--bg3) }
 .vrow.vsel { background:var(--accent-sel) !important; outline:1px solid rgba(80,140,232,.25); border-radius:var(--radius) }
-/* 구절 번호: 본문 텍스트 안에 inline 배치 */
+/* 구절 번호: 본문 텍스트 안에 inline, hanging indent용 음수 마진 */
 .vnum {
   font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--gold);
   opacity:.75; display:inline-block; min-width:22px; text-align:right;
-  margin-right:6px; vertical-align:top; padding-top:5px;
+  margin-left:-28px; margin-right:6px; vertical-align:top; padding-top:5px;
 }
 [contenteditable][data-placeholder]:empty:before {
   content: attr(data-placeholder);
   color: var(--text3);
   pointer-events: none;
 }
-.vtxt { font-family:'KoPubWorld Batang','Noto Serif KR',serif; font-size:var(--vtxt-size,17px); font-weight:500; color:var(--text); flex:1; letter-spacing:var(--vtxt-ls,0.02em); line-height:var(--vtxt-lh,1.85); user-select:text; word-break:keep-all }
+.vtxt {
+  font-family:'KoPubWorld Batang','Noto Serif KR',serif;
+  font-size:var(--vtxt-size,17px); font-weight:500; color:var(--text);
+  flex:1; letter-spacing:var(--vtxt-ls,0.02em); line-height:var(--vtxt-lh,1.85);
+  user-select:text; word-break:keep-all;
+  padding-left:28px;
+}
 /* 사이트 스타일 그대로: 돋움체(font-g) 클래스 */
 /* ── 표준킹제임스성경 번역 원칙에 따른 폰트 표기 ──────────────────
    [일러두기 - 하나님과 마귀를 부각한 표기들]
