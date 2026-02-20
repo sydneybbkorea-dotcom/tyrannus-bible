@@ -57,3 +57,18 @@
   border-radius:6px; cursor:pointer; transition:all .15s;
 }
 .stp-reset button:hover { color:var(--text); background:var(--bg4) }
+/* 클라우드 동기화 섹션 */
+.stp-sync { padding-top:12px; border-top:1px solid var(--border) }
+.stp-sync-head {
+  font-size:12px; font-weight:600; color:var(--text2);
+  display:flex; align-items:center; gap:6px; margin-bottom:10px;
+}
+.stp-sync-head i { font-size:11px; color:var(--gold) }
+.stp-sync-body {
+  display:flex; flex-direction:column; gap:8px;
+}
+.stp-sync-body .sync-badge { font-size:11px }
+.stp-sync-body .quota-bar-inline { cursor:pointer }
+.stp-sync-login {
+  font-size:11px; color:var(--text3); padding:6px 0;
+}

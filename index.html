@@ -82,22 +82,13 @@
       </button>
     </div>
     <div class="rail-bottom">
-      <!-- 사용자 영역 -->
+      <!-- 사용자 영역 (아바타 + 로그아웃만) -->
       <div id="railUser">
         <button id="loginBtn" class="rail-icon" onclick="signInWithGoogle()" title="로그인">
           <i class="fa fa-sign-in-alt"></i>
         </button>
         <div id="userBar" class="rail-user-info" style="display:none">
           <img id="userAvatar" class="rail-avatar" src="">
-          <div id="syncQuotaWrap" class="rail-sync" style="display:none">
-            <div id="syncBadge" class="sync-badge">
-              <i class="fa fa-cloud"></i> <span id="syncText">동기화 완료</span>
-            </div>
-            <div id="quotaBar" class="quota-bar-inline" onclick="showQuotaModal()" title="저장 공간">
-              <div class="quota-track"><div class="quota-fill" id="quotaFill"></div></div>
-              <span id="quotaLabel" class="quota-label">0 / 10 MB</span>
-            </div>
-          </div>
           <button class="rail-logout" onclick="signOutUser()" title="로그아웃"><i class="fa fa-sign-out-alt"></i></button>
         </div>
       </div>
@@ -615,6 +606,7 @@
 <script src="js/settings-panel.js"></script>
 <script src="js/settings-panel-ctrl.js"></script>
 <script src="js/settings-panel-apply.js"></script>
+<script src="js/settings-panel-sync.js"></script>
 
 <!-- 컨텍스트 메뉴 & 패널 -->
 <script src="js/context-menu.js"></script>

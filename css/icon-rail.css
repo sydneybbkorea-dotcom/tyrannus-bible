@@ -53,15 +53,7 @@
 .rail-user-info {
   display:flex; flex-direction:column; align-items:center; gap:4px;
 }
-.rail-sync {
-  display:flex; flex-direction:column; align-items:center; gap:2px;
-}
-.rail-sync .sync-badge { font-size:9px; padding:1px 4px; gap:2px }
-.rail-sync .sync-badge i { font-size:8px }
-.rail-sync .sync-badge span { display:none }
-.rail-sync .quota-bar-inline { gap:2px }
-.rail-sync .quota-track { width:30px; height:3px }
-.rail-sync .quota-label { font-size:7px }
+/* 동기화/쿼타 → 설정 패널로 이동됨 */
 .rail-logout {
   width:32px; height:20px; border-radius:4px; border:none;
   background:transparent; color:var(--text3); font-size:11px;

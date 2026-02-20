@@ -1,4 +1,4 @@
-// settings-panel.js — 설정 패널 렌더링 (다크모드, 글꼴크기, 자간, 줄간)
+// settings-panel.js — 설정 패널 렌더링 (다크모드, 글꼴, 자간, 줄간, 동기화)
 function renderSettingsPanel(){
   var el = document.getElementById('spSettingsBody');
   if(!el) return;
@@ -22,6 +22,8 @@ function renderSettingsPanel(){
        v.lineH, 1.2, 3.0, 0.05, '');
   // 초기화 버튼
   h += '<div class="stp-reset"><button onclick="_stpReset()">기본값 복원</button></div>';
+  // 클라우드 동기화 섹션
+  h += _stpSyncSection();
   h += '</div>';
   el.innerHTML = h;
 }

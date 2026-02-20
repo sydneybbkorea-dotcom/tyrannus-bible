@@ -9,14 +9,22 @@ function showUserBar(user){
     avatar.title=user.displayName||user.email||'';
   }
   if(loginBtn) loginBtn.style.display='none';
+  // 설정 패널 내 동기화 섹션 표시
   var wrap=document.getElementById('syncQuotaWrap');
   if(wrap) wrap.style.display='flex';
+  var loginMsg=document.getElementById('stpSyncLogin');
+  if(loginMsg) loginMsg.style.display='none';
 }
 function hideUserBar(){
   var bar=document.getElementById('userBar');
   if(bar) bar.style.display='none';
   var loginBtn=document.getElementById('loginBtn');
   if(loginBtn) loginBtn.style.display='flex';
+  // 설정 패널: 동기화 숨기고 안내 표시
+  var wrap=document.getElementById('syncQuotaWrap');
+  if(wrap) wrap.style.display='none';
+  var loginMsg=document.getElementById('stpSyncLogin');
+  if(loginMsg) loginMsg.style.display='';
 }
 function updateSyncBadge(status){
   var badge=document.getElementById('syncBadge');
