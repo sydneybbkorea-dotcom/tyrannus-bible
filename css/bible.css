@@ -12,7 +12,7 @@
   background:var(--bg2); border-bottom:1px solid var(--border);
   position:relative; z-index:90; overflow:visible;
 }
-#bibleViewBar .vb-left { padding-left:6px }
+#bibleViewBar .vb-left { padding-left:10px }
 #bibleViewBar .vb-right { margin-left:auto; padding-right:6px }
 .vb-left, .vb-right { display:flex; align-items:center; gap:2px }
 .vb-sel {
@@ -132,9 +132,16 @@
 }
 .btab:hover .btab-close, .btab.btab-active .btab-close { opacity:.5 }
 .btab-close:hover { background:var(--bg4); color:var(--text); opacity:1 !important }
-/* #bibleTabAdd → .tb-pin 클래스로 통합됨 */
-#bibleTabAdd { font-size:11px }
-#bibleTabAdd:hover { color:var(--gold) }
+/* 새 탭 추가 버튼 (탭 목록 오른쪽 인라인) */
+.tab-add-btn {
+  width:30px; height:26px; flex-shrink:0; align-self:flex-end;
+  display:flex; align-items:center; justify-content:center;
+  background:none; border:1px solid var(--border); border-bottom:none;
+  border-radius:var(--radius) var(--radius) 0 0;
+  color:var(--text3); font-size:11px; cursor:pointer;
+  transition:all .12s; margin:6px 4px 0 0;
+}
+.tab-add-btn:hover { background:var(--bg3); color:var(--gold) }
 
 /* Bible scroll top border — connects with active tab */
 
