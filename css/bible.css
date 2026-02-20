@@ -198,14 +198,15 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
 .ch-head h1 { font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif; font-size:26px; font-weight:700; color:var(--accent2); margin-bottom:6px; letter-spacing:0.02em }
 .ch-head p { font-size:14px; color:var(--text3); letter-spacing:1px; font-style:italic; font-family:'Playfair Display',serif; }
 .vrow {
-  display:flex; gap:2px; padding:2px 8px 2px 8px; border-radius:var(--radius); margin-bottom:0;
+  display:flex; gap:0; padding:2px 8px 2px 40px; border-radius:var(--radius); margin-bottom:0;
   cursor:pointer; transition:background .12s; position:relative;
 }
 .vrow:hover { background:var(--bg3) }
 .vrow.vsel { background:var(--accent-sel) !important; outline:1px solid rgba(80,140,232,.25); border-radius:var(--radius) }
 .vnum {
+  position:absolute; left:8px; top:6px;
   font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--gold);
-  min-width:22px; margin-top:4px; margin-right:4px; text-align:right; flex-shrink:0; opacity:.75;
+  width:28px; text-align:right; opacity:.75;
 }
 [contenteditable][data-placeholder]:empty:before {
   content: attr(data-placeholder);
