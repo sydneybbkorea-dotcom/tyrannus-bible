@@ -3,8 +3,14 @@
    HSL-based dynamic color system (Obsidian Light & Bright inspired)
 ═══════════════════════════════════════════════ */
 
+/* ── Default Accent (첫 방문 기본값: #bd8a00) ── */
+:root {
+  --accent-h: 44;
+  --accent-s: 100%;
+  --accent-l: 37%;
+}
 /* ── Accent Color Palettes ── */
-:root, :root[data-accent="blue"] {
+:root[data-accent="blue"] {
   --accent-h: 214;
   --accent-s: 92%;
   --accent-l: 45%;
@@ -45,8 +51,10 @@
   --accent-l: 65%;
 }
 
+/* ── Default Base (첫 방문 기본값: #04050b) ── */
+:root { --base-h: 231; --base-s: 47%; --base-l: 3%; }
 /* ── Base Color Palettes (배경 H/S/L) ── */
-:root, :root[data-base="blue"]    { --base-h: 214; --base-s: 35%; --base-l: 5%; }
+:root[data-base="blue"]           { --base-h: 214; --base-s: 35%; --base-l: 5%; }
 :root[data-base="red"]            { --base-h: 355; --base-s: 35%; --base-l: 5%; }
 :root[data-base="orange"]         { --base-h: 30;  --base-s: 35%; --base-l: 5%; }
 :root[data-base="yellow"]         { --base-h: 46;  --base-s: 35%; --base-l: 5%; }

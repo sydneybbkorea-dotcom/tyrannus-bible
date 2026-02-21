@@ -35,15 +35,14 @@ var ThemeSwitcher = (function(){
   function clamp(v,lo,hi){ return Math.max(lo, Math.min(hi, v)); }
 
   function getTheme(){ return localStorage.getItem(THEME_KEY) || 'dark'; }
-  function getAccent(){ return localStorage.getItem(ACCENT_KEY) || 'blue'; }
+  function getAccent(){ return localStorage.getItem(ACCENT_KEY) || 'custom'; }
   function getBase(){
     var stored = localStorage.getItem(BASE_KEY);
     if(stored) return stored;
-    var accent = getAccent();
-    return (BASES.indexOf(accent) !== -1) ? accent : 'blue';
+    return 'custom';
   }
-  function getCustomAccent(){ return localStorage.getItem(CUSTOM_ACCENT_KEY) || '#086DDD'; }
-  function getCustomBase(){ return localStorage.getItem(CUSTOM_BASE_KEY) || '#086DDD'; }
+  function getCustomAccent(){ return localStorage.getItem(CUSTOM_ACCENT_KEY) || '#bd8a00'; }
+  function getCustomBase(){ return localStorage.getItem(CUSTOM_BASE_KEY) || '#04050b'; }
 
   // 커스텀 배경 bg-* 인라인 적용/해제
   function _applyCustomBg(){
