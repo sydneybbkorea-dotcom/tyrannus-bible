@@ -118,6 +118,7 @@
 .pdf-annot-underline {
   border-bottom: 2px solid var(--accent-color, #086DDD);
 }
+/* Legacy .pdf-annot-text kept for backward compat */
 .pdf-annot-text {
   background: rgba(255, 255, 150, 0.9);
   border: 1px solid rgba(200, 200, 100, 0.6);
@@ -128,6 +129,100 @@
   max-width: 200px;
   word-wrap: break-word;
   box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+}
+
+/* ── Text annotation: small icon pin ── */
+.pdf-annot-text-pin {
+  position: absolute;
+  z-index: 4;
+  pointer-events: auto;
+}
+
+.pdf-memo-icon {
+  width: 20px; height: 20px;
+  border-radius: 5px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,.25);
+  transition: transform .15s, box-shadow .15s;
+  opacity: .85;
+}
+.pdf-memo-icon:hover {
+  transform: scale(1.15);
+  opacity: 1;
+  box-shadow: 0 2px 8px rgba(0,0,0,.35);
+}
+.pdf-memo-icon i {
+  font-size: 10px;
+  color: rgba(0,0,0,.6);
+}
+
+/* ── Expanded memo bubble ── */
+.pdf-memo-bubble {
+  display: none;
+  position: absolute;
+  top: 24px; left: 0;
+  min-width: 160px; max-width: 220px;
+  background: var(--bg2, #1a1c24);
+  border: 1px solid var(--border, #2a2c34);
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.3);
+  z-index: 14;
+  overflow: hidden;
+}
+.pdf-memo-bubble.open { display: block; }
+
+.pdf-memo-bubble-text {
+  padding: 8px 10px;
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--text, #e8e8e8);
+  word-break: break-word;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.pdf-memo-bubble-actions {
+  display: flex;
+  gap: 2px;
+  padding: 4px 6px;
+  border-top: 1px solid var(--border, #2a2c34);
+  justify-content: flex-end;
+}
+.pdf-memo-bubble-btn {
+  width: 24px; height: 24px;
+  border: none; background: none;
+  color: var(--text3, #666);
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px;
+  transition: all .12s;
+}
+.pdf-memo-bubble-btn:hover {
+  background: var(--bg3, #22242e);
+  color: var(--accent-color, var(--gold));
+}
+.pdf-memo-bubble-del:hover {
+  color: #ef4444;
+}
+
+/* ── "노트에 추가" button in memo popup footer ── */
+.pdf-memo-btn-note {
+  margin-left: auto;
+  width: 28px; height: 28px;
+  border: 1px solid var(--border, #2a2c34);
+  background: var(--bg3, #22242e);
+  color: var(--text3, #666);
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px;
+  transition: all .15s;
+}
+.pdf-memo-btn-note:hover {
+  color: var(--accent-color, var(--gold));
+  border-color: var(--accent-color, var(--gold));
 }
 
 /* Freehand drawing path */
@@ -365,7 +460,6 @@
   border-color: var(--text, #e8e8e8);
 }
 .pdf-memo-btn-save {
-  margin-left: auto;
   padding: 5px 14px;
   border-radius: 6px;
   font-size: 11px;

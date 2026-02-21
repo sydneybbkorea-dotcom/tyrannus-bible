@@ -73,6 +73,55 @@ var PDFAnnotations = (function(){
       var el = _createAnnotElement(annot, viewport);
       if(el) layerEl.appendChild(el);
     });
+
+    // 바깥 클릭 시 열린 버블 닫기 (1회 등록)
+    if(!layerEl._bubbleListener){
+      layerEl._bubbleListener = true;
+      layerEl.addEventListener('click', function(){
+        document.querySelectorAll('.pdf-memo-bubble.open').forEach(function(b){ b.classList.remove('open'); });
+      });
+    }
+  }
+
+  function _escHtml(s){
+    var d = document.createElement('div');
+    d.textContent = s || '';
+    return d.innerHTML;
+  }
+
+  function _insertMemoToNote(annot){
+    var pdfId = annot.pdfId;
+    var pageNum = annot.pageNum;
+    var annotId = annot.id;
+    var text = annot.text || '';
+
+    // 노트 에디터에 citation 블록 삽입
+    var uri = TyrannusURI.pdf(pdfId, pageNum);
+    var citationHTML = '<div class="pdf-cite" data-uri="' + TyrannusURI.pdfAnnot(pdfId, annotId) + '" contenteditable="false" '
+      + 'onclick="NavigationRouter.navigateTo(\'' + uri + '\')">'
+      + '<i class="fa fa-file-pdf"></i>'
+      + '<span class="pdf-cite-text">' + _escHtml(text) + '</span>'
+      + '<span class="pdf-cite-ref">p.' + pageNum + '</span>'
+      + '</div>&#8203;';
+
+    var nc = document.getElementById('noteContent');
+    if(nc){
+      nc.focus();
+      document.execCommand('insertHTML', false, citationHTML);
+
+      // LinkRegistry 등록
+      if(typeof LinkRegistry !== 'undefined' && LinkRegistry.isReady() && S.curNoteId){
+        LinkRegistry.addLink(
+          TyrannusURI.note(S.curNoteId),
+          TyrannusURI.pdfAnnot(pdfId, annotId),
+          'annotation',
+          { label: text.slice(0, 50), page: pageNum }
+        );
+      }
+      if(typeof toast === 'function') toast('메모가 노트에 추가됨 ✓');
+    } else {
+      if(typeof toast === 'function') toast('노트를 먼저 열어주세요');
+    }
   }
 
   function _createAnnotElement(annot, viewport){
@@ -117,10 +166,58 @@ var PDFAnnotations = (function(){
         break;
 
       case 'text':
+        // 컨테이너 (아이콘 위치용)
         el = document.createElement('div');
-        el.className = 'pdf-annot pdf-annot-text';
-        _positionRect(el, annot.rect, viewport);
-        el.textContent = annot.text || '';
+        el.className = 'pdf-annot pdf-annot-text-pin';
+        var scale = viewport.scale || 1;
+        el.style.left = (annot.rect.x * scale) + 'px';
+        el.style.top  = (annot.rect.y * scale) + 'px';
+
+        // 아이콘
+        var icon = document.createElement('div');
+        icon.className = 'pdf-memo-icon';
+        icon.style.background = annot.color || '#FACC15';
+        icon.innerHTML = '<i class="fa fa-sticky-note"></i>';
+        el.appendChild(icon);
+
+        // 확장 팝업 (숨김 상태)
+        var bubble = document.createElement('div');
+        bubble.className = 'pdf-memo-bubble';
+        bubble.innerHTML = '<div class="pdf-memo-bubble-text">' + _escHtml(annot.text) + '</div>'
+          + '<div class="pdf-memo-bubble-actions">'
+          + '<button class="pdf-memo-bubble-btn" data-action="note" title="노트에 추가"><i class="fa fa-pen"></i></button>'
+          + '<button class="pdf-memo-bubble-btn pdf-memo-bubble-del" data-action="del" title="삭제"><i class="fa fa-trash-can"></i></button>'
+          + '</div>';
+        el.appendChild(bubble);
+
+        // 아이콘 클릭 → 토글
+        (function(iconEl, bubbleEl){
+          iconEl.addEventListener('click', function(e){
+            e.stopPropagation();
+            var wasOpen = bubbleEl.classList.contains('open');
+            // 다른 열린 버블 닫기
+            document.querySelectorAll('.pdf-memo-bubble.open').forEach(function(b){ b.classList.remove('open'); });
+            if(!wasOpen) bubbleEl.classList.add('open');
+          });
+        })(icon, bubble);
+
+        // 노트에 추가 버튼
+        (function(annotRef, bubbleEl){
+          bubbleEl.querySelector('[data-action="note"]').addEventListener('click', function(e){
+            e.stopPropagation();
+            _insertMemoToNote(annotRef);
+          });
+        })(annot, bubble);
+
+        // 삭제 버튼
+        (function(annotRef, elRef){
+          bubble.querySelector('[data-action="del"]').addEventListener('click', function(e){
+            e.stopPropagation();
+            PDFAnnotations.remove(annotRef.id, annotRef.pdfId, annotRef.pageNum);
+            var layer = elRef.closest('.pdf-annot-layer');
+            if(layer) PDFAnnotations.renderPage(annotRef.pageNum, layer, viewport);
+          });
+        })(annot, el);
         break;
 
       case 'area-link':
@@ -186,6 +283,7 @@ var PDFAnnotations = (function(){
     remove: remove,
     getPage: getPage,
     renderPage: renderPage,
-    createAnnot: createAnnot
+    createAnnot: createAnnot,
+    _insertMemoToNote: _insertMemoToNote
   };
 })();

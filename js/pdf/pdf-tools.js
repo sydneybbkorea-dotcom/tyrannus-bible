@@ -293,6 +293,31 @@ var PDFTools = (function(){
       footer.appendChild(dot);
     });
 
+    var noteBtn = document.createElement('button');
+    noteBtn.className = 'pdf-memo-btn-note';
+    noteBtn.innerHTML = '<i class="fa fa-pen"></i>';
+    noteBtn.title = '저장 + 노트에 추가';
+    noteBtn.onclick = function(){
+      var text = textarea.value.trim();
+      if(text){
+        var annot = PDFAnnotations.createAnnot('text', pdfId, pageNum, {
+          rect: { x: pt.x, y: pt.y, width: 200 / scale, height: 80 / scale },
+          text: text,
+          color: selectedColor
+        });
+        PDFAnnotations.save(annot);
+        _undoStack.push(annot.id);
+        _redoStack = [];
+        PDFAnnotations.renderPage(pageNum, layer, _getViewport());
+        // 노트에 추가
+        if(typeof PDFAnnotations._insertMemoToNote === 'function'){
+          PDFAnnotations._insertMemoToNote(annot);
+        }
+      }
+      _closeMemo();
+    };
+    footer.appendChild(noteBtn);
+
     var saveBtn = document.createElement('button');
     saveBtn.className = 'pdf-memo-btn-save';
     saveBtn.innerHTML = '<i class="fa fa-check"></i> 저장';
