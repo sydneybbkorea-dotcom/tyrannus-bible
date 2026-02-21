@@ -1,4 +1,4 @@
-// notes-links-file.js — 파일/이미지 첨부
+// notes-links-file.js — 파일/이미지 첨부 (PDF → IDB Blob 저장 지원)
 function openFileAttach(){
   saveRange();
   let inp = document.getElementById('fileAttachInput');
@@ -21,6 +21,29 @@ function handleFileAttach(e){
   files.forEach(file=>{
     const isImg = file.type.startsWith('image/');
     const isPdf = file.type==='application/pdf';
+
+    // PDF files: save as Blob to IDB and open in viewer
+    if(isPdf && typeof StorageAdapter !== 'undefined' && StorageAdapter.isReady()){
+      StorageAdapter.saveFile(file, { name: file.name, type: 'application/pdf' }).then(function(pdfId){
+        if(pdfId && typeof PDFViewer !== 'undefined'){
+          PDFViewer.openFromFile(file);
+        }
+        // Insert PDF reference in note
+        var h = `<div class="note-file-item pdf-file-ref" contenteditable="false" data-pdf-id="${pdfId}" onclick="PDFViewer.open('${pdfId}')">
+          <i class="fa fa-file-pdf" style="font-size:20px;color:var(--red);flex-shrink:0;"></i>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:13px;color:var(--text);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${file.name}</div>
+            <div style="font-size:11px;color:var(--text3);">${(file.size/1024).toFixed(1)} KB · PDF</div>
+          </div>
+          <span style="font-size:11px;color:var(--accent-color,var(--gold));flex-shrink:0;cursor:pointer;">
+            <i class="fa fa-external-link-alt"></i> 열기
+          </span>
+        </div>&#8203;`;
+        document.execCommand('insertHTML', false, h);
+      });
+      return;
+    }
+
     const reader = new FileReader();
     reader.onload = ev=>{
       let h = '';

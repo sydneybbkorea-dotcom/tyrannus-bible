@@ -1,84 +1,119 @@
 /* ═══════════════════════════════════════════════
-   VARIABLES — 테마 색상은 여기서만 수정하면 전체 적용
+   VARIABLES — Legacy variable mapping (backward compatibility)
+   New theme system: see css/theme-system.css
 ═══════════════════════════════════════════════ */
-/* ── 다크 테마 — Deep Navy ── */
+
+/* ── Map legacy vars to new theme-system vars ── */
 :root, :root[data-theme="dark"] {
-  --bg:       #0b0d15;       /* 본문: 가장 짙은 네이비 */
-  --bg2:      #141825;       /* 탑바/사이드바: 한 단계 밝음 */
-  --bg3:      #1c2235;       /* 카드/호버: 밝은 네이비 */
-  --bg4:      #252d44;       /* 강조/활성 배경 */
-  --bg5:      #303a55;       /* 비활성 요소 */
-  --border:   #1e2540;       /* 경계선: 뚜렷 */
-  --border2:  #2a3458;       /* 강조 경계선 */
-  --accent:   #e8a030;       /* 골드 악센트 */
-  --accent2:  #f0b848;       /* 밝은 골드 */
-  --accent-dim: rgba(232,160,48,0.12);
-  --accent-sel: rgba(80,140,232,0.20);
-  --text:     #eef0f6;       /* 선명한 화이트 */
-  --text2:    #8890a8;       /* 중간 블루그레이 */
-  --text3:    #4e5670;       /* 어두운 블루그레이 */
+  --bg:       var(--bg-primary);
+  --bg2:      var(--bg-secondary);
+  --bg3:      var(--bg-tertiary);
+  --bg4:      var(--bg-tertiary);
+  --bg5:      var(--bg-tertiary);
+  --border:   var(--border-color);
+  --border2:  var(--border-color);
+  --accent:   var(--accent-color);
+  --accent2:  var(--accent-hover);
+  --accent-dim: var(--accent-dim);
+  --accent-sel: var(--accent-sel);
+  --text:     var(--text-primary);
+  --text2:    var(--text-secondary);
+  --text3:    var(--text-muted);
   --red:      #f05050;
   --blue:     #4a9ef0;
   --green:    #30c870;
   --purple:   #a06cf0;
-  --shadow:   0 8px 40px rgba(0,0,0,.65);
-  --radius:   8px;
-  --gold:     var(--accent);
-  --gold2:    var(--accent2);
+  --shadow:   var(--shadow-lg);
+  --radius:   var(--radius-md);
+  --gold:     var(--accent-color);
+  --gold2:    var(--accent-hover);
   --gold-dim: var(--accent-dim);
   --gold-sel: var(--accent-sel);
-  --rail-bg:  #080a10;
+  --rail-bg:  var(--rail-bg-color);
 }
 
-/* ── 라이트 테마 — Crisp White ── */
 :root[data-theme="light"] {
-  --bg:       #ffffff;       /* 본문: 순백 */
-  --bg2:      #e6e8f0;       /* 사이드바/탑바/패널 */
-  --bg3:      #d8dae4;       /* 호버/카드 */
-  --bg4:      #cacdd8;       /* 활성 배경 */
-  --bg5:      #babdc8;       /* 비활성 */
-  --border:   #c0c4d0;       /* 경계선 */
-  --border2:  #a8aeba;       /* 강조 경계선 */
-  --accent:   #b86e10;       /* 진한 앰버 */
-  --accent2:  #d08020;       /* 밝은 앰버 */
-  --accent-dim: rgba(184,110,16,0.08);
-  --accent-sel: rgba(56,100,180,0.12);  /* 선택: 쿨 블루톤 */
-  --text:     #141414;       /* 진한 블랙 */
-  --text2:    #4a4e5c;       /* 중간 다크그레이 */
-  --text3:    #7c8090;       /* 연한 그레이 */
   --red:      #e03e3e;
   --blue:     #2f80ed;
   --green:    #0f7b3f;
   --purple:   #7b40c0;
-  --shadow:   0 2px 16px rgba(0,0,0,.10);
-  --radius:   8px;
-  --gold:     var(--accent);
-  --gold2:    var(--accent2);
-  --gold-dim: var(--accent-dim);
-  --gold-sel: var(--accent-sel);
-  --rail-bg:  #d0d3dc;
 }
-/* 라이트 테마: 영역별 배경 강제 */
-/* topbar 제거됨 */
-[data-theme="light"] #sidePanel { background:#e4e6f0; border-right-color:#c0c4d0 }
-[data-theme="light"] #biblePane { background:#ffffff }
-[data-theme="light"] #bibleScroll { background:#ffffff }
-[data-theme="light"] #bibleTabBar { background:#e4e6f0 }
-[data-theme="light"] #rightPanel { background:#e8eaf2; border-left-color:#c0c4d0 }
-[data-theme="light"] .rp-tabs { background:#dfe2ec }
-[data-theme="light"] .btab { background:#d8dae4; border-color:#c0c4d0 }
-[data-theme="light"] .btab.btab-active { background:#ffffff }
-[data-theme="light"] .ch-head h1 { color:#905a10 }
-[data-theme="light"] .vnum { color:#b86e10 }
-[data-theme="light"] .vrow:hover { background:#f0f1f6 }
-[data-theme="light"] .vrow.vsel { background:rgba(56,100,180,0.10) !important; outline:1px solid rgba(56,100,180,.25) }
 
+:root[data-theme="sepia"] {
+  --red:      #c04030;
+  --blue:     #3870b0;
+  --green:    #287048;
+  --purple:   #7040a0;
+}
+
+/* Theme-specific overrides for component backgrounds */
+[data-theme="light"] #sidePanel { background: var(--bg-secondary); border-right-color: var(--border-color) }
+[data-theme="light"] #biblePane { background: var(--bg-surface) }
+[data-theme="light"] #bibleScroll { background: var(--bg-surface) }
+[data-theme="light"] #bibleTabBar { background: var(--bg-secondary) }
+[data-theme="light"] #rightPanel { background: var(--bg-secondary); border-left-color: var(--border-color) }
+[data-theme="light"] .rp-tabs { background: var(--bg-tertiary) }
+[data-theme="light"] .btab { background: var(--bg-tertiary); border-color: var(--border-color) }
+[data-theme="light"] .btab.btab-active { background: var(--bg-surface) }
+[data-theme="light"] .ch-head h1 { color: var(--accent-color) }
+[data-theme="light"] .vnum { color: var(--accent-color) }
+[data-theme="light"] .vrow:hover { background: var(--bg-tertiary) }
+[data-theme="light"] .vrow.vsel { background: var(--accent-sel) !important; outline: 1px solid hsla(var(--accent-h), 60%, 45%, 0.30) }
+
+/* Sepia overrides */
+[data-theme="sepia"] #sidePanel { background: var(--bg-secondary); border-right-color: var(--border-color) }
+[data-theme="sepia"] #biblePane { background: var(--bg-surface) }
+[data-theme="sepia"] #bibleScroll { background: var(--bg-surface) }
+[data-theme="sepia"] #bibleTabBar { background: var(--bg-secondary) }
+[data-theme="sepia"] #rightPanel { background: var(--bg-secondary); border-left-color: var(--border-color) }
+[data-theme="sepia"] .rp-tabs { background: var(--bg-tertiary) }
+[data-theme="sepia"] .btab { background: var(--bg-tertiary); border-color: var(--border-color) }
+[data-theme="sepia"] .btab.btab-active { background: var(--bg-surface) }
+[data-theme="sepia"] .ch-head h1 { color: var(--accent-color) }
+[data-theme="sepia"] .vnum { color: var(--accent-color) }
+[data-theme="sepia"] .vrow:hover { background: var(--bg-secondary) }
+[data-theme="sepia"] .vrow.vsel { background: var(--accent-sel) !important; outline: 1px solid hsla(var(--accent-h), 50%, 50%, 0.25) }
 
 :root {
-
   --topbar-h:   0px;
   --hlbar-h:    36px;
   --book-sw:    110px;   /* left book sidebar */
   --note-sw:    220px;   /* note file explorer */
   --note-sw-collapsed: 0px;
+}
+
+/* ═══════════════════════════════════════════════
+   CONTENT TEXT — Neutral colors for reading areas
+   Bible text, notes, commentary: NOT tinted by accent
+═══════════════════════════════════════════════ */
+
+/* Bible verse text */
+.vtxt,
+.vtxt-en-only,
+.vtxt-en-side,
+.vtxt-en-below {
+  color: var(--content-text);
+}
+
+/* Note editor content */
+#noteContent {
+  color: var(--content-text);
+}
+
+/* Commentary content */
+.comm-sec-inner,
+.comm-sec-content,
+.comm-txt,
+.comm-hl-body,
+.comm-vmemo-body,
+.comm-ch-body,
+.comm-hl-quote {
+  color: var(--content-text);
+}
+
+/* Secondary content text (English sub-text, commentary footnotes) */
+.comm-sec-ref-note .comm-sec-inner,
+.comm-ch-vtxt,
+.ol-vtxt {
+  color: var(--content-text-sub);
 }

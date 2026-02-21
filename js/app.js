@@ -6,6 +6,7 @@
   restore();
   initTheme();
   if(typeof _stpRestoreOnLoad==='function') _stpRestoreOnLoad();
+  if(typeof InputManager !== 'undefined') InputManager.init();
 
   // 테스트 하이라이트 초기화 (v10)
   if(localStorage.getItem('kjb2-hl-cleaned') !== 'v10'){
@@ -20,14 +21,39 @@
 
   S.explorerOpen = false;
 
-  // 2) 필수 데이터 비동기 로드 (한국어 성경 + 주석 + 레드레터)
-  await Promise.all([loadBibleKR(), loadCommentary(), (typeof loadRedLetter==='function'?loadRedLetter():Promise.resolve())]);
+  // 2) 필수 데이터 비동기 로드 (한국어 성경 + 주석 + 레드레터 + i18n)
+  var loaders = [loadBibleKR(), loadCommentary(), (typeof loadRedLetter==='function'?loadRedLetter():Promise.resolve())];
+  if(typeof I18N !== 'undefined') loaders.push(I18N.init());
+  await Promise.all(loaders);
 
-  // 3) 데이터 로드 완료 후 UI 렌더링
+  // 3) Initialize IndexedDB + StorageAdapter + LinkRegistry (non-blocking)
+  if(typeof IDBStore !== 'undefined'){
+    try {
+      await IDBStore.open();
+      if(typeof StorageAdapter !== 'undefined') await StorageAdapter.init();
+      if(typeof LinkRegistry !== 'undefined'){
+        await LinkRegistry.init();
+        // Bulk migrate on first run if links are empty
+        if(LinkRegistry.getLinkCount() === 0 && S.notes && S.notes.length > 0){
+          await LinkRegistry.bulkMigrate(S.notes);
+        }
+      }
+    } catch(e){
+      console.warn('[App] IDB/LinkRegistry init failed:', e);
+    }
+  }
+
+  // 3.5) Restore PDF library data
+  if(typeof PDFLibrary !== 'undefined') PDFLibrary.restorePdf();
+
+  // 4) 데이터 로드 완료 후 UI 렌더링
   setupVTip();
   initBibleTabs();
   renderAll();
   updateBreadcrumb();
+
+  // i18n 적용 (데이터 로드 후 DOM 업데이트)
+  if(typeof I18N !== 'undefined') I18N.applyI18N();
 
   // noteContent: contenteditable=false 블록 삭제 핸들러
   const nc = document.getElementById('noteContent');
@@ -54,4 +80,11 @@
   document.addEventListener('keydown', e=>{
     if(e.key==='Escape'){ closeCtx(); closeExplorer(); hideHLPicker(); }
   });
+
+  // Service Worker 등록 (오프라인 지원)
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('/sw.js').catch(function(e){
+      console.warn('[SW] Registration failed:', e);
+    });
+  }
 })();

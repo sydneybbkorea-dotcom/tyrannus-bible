@@ -5,6 +5,7 @@ function openPanel(name){
   rp.classList.remove('rp-hide'); S.panelOpen=name;
   switchTab(name);
   document.body.classList.add('panel-open');
+  if(typeof EventBus !== 'undefined') EventBus.emit('panel:opened', { name: name });
 }
 
 function togglePanel(name){
@@ -15,6 +16,8 @@ function togglePanel(name){
     document.body.classList.remove('panel-open');
     document.querySelector('.rail-icon[data-rail="notes"]')?.classList.remove('active');
     document.querySelector('.rail-icon[data-rail="dictionary"]')?.classList.remove('active');
+    // Don't touch PDF rail icon — it's managed by PDFPanel independently
+    if(typeof EventBus !== 'undefined') EventBus.emit('panel:closed', { name: name });
   } else {
     openPanel(name);
   }

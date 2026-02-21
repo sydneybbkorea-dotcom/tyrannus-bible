@@ -25,4 +25,9 @@ Object.assign(S, {
   bookNavOpen:false, explorerOpen:false,   // 슬라이드 패널: 기본 닫힘
   openFolders:new Set(['default']),
   navHistory:[],  // for backlink navigation
+  // PDF library state
+  pdfFolders: [{id:'pdf-default', name:'기본 폴더'}],
+  pdfFiles: [],
+  curPdfFolder: 'pdf-default',
+  openPdfFolders: new Set(['pdf-default']),
 });

@@ -20,7 +20,7 @@ function renderBible(){
   vs.forEach((txt,i)=>{
     const vn=i+1; const key=`${S.book}_${S.ch}_${vn}`;
     const hlC=S.hl[key];
-    const hasNote=S.notes.some(n=>n.vRefs&&n.vRefs.includes(key));
+    const hasNote=(typeof LinkRegistry!=='undefined'&&LinkRegistry.isReady()) ? LinkRegistry.hasIncoming(TyrannusURI.fromLegacyVerseKey(key)) : S.notes.some(n=>n.vRefs&&n.vRefs.includes(key));
     const hasBk=S.bk.has(key);
     const hasComm=!!(COMMENTARY[S.book]?.[S.ch]?.[vn]);
 

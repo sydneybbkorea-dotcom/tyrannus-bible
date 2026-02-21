@@ -1,0 +1,155 @@
+/* ═══════════════════════════════════════════════
+   RESPONSIVE — 3-stage breakpoints + input-adaptive sizing
+═══════════════════════════════════════════════ */
+
+/* ── Input Mode Adaptive Sizing ── */
+[data-input="mouse"] .btn,
+[data-input="mouse"] .rail-icon,
+[data-input="mouse"] .rte-btn,
+[data-input="mouse"] .citem {
+  min-height: 32px;
+  padding: 4px 12px;
+}
+
+[data-input="touch"] .btn,
+[data-input="touch"] .rail-icon,
+[data-input="touch"] .rte-btn,
+[data-input="touch"] .citem {
+  min-height: 44px;
+  padding: 8px 16px;
+}
+
+[data-input="pen"] .btn,
+[data-input="pen"] .rail-icon,
+[data-input="pen"] .rte-btn,
+[data-input="pen"] .citem {
+  min-height: 44px;
+  padding: 8px 16px;
+}
+
+/* Stylus pen: precision cursor on annotation layers */
+[data-input="pen"] .pdf-annot-layer { cursor: crosshair; }
+
+/* Remove hover effects on touch devices */
+@media (hover: none) {
+  .tooltip-on-hover { display: none; }
+  .btn:hover,
+  .rail-icon:hover,
+  .rte-btn:hover,
+  .vrow:hover {
+    background: inherit;
+  }
+}
+
+/* ── Desktop (1024px+) ── */
+@media (min-width: 1024px) {
+  #iconRail { width: 56px; }
+  #sidePanel.open { width: 280px; }
+  #rightPanel:not(.rp-hide) { width: 380px; max-width: 500px; }
+  .rte-row { flex-wrap: nowrap; }
+  /* PDF 3-pane: bible + pdf(420) + notes(380) */
+  #pdfPanel:not(.pdf-panel-hide) { width: 420px; }
+  body.pdf-open #rightPanel:not(.rp-hide) { width: 380px; }
+}
+
+/* ── Tablet (600px - 1023px) ── */
+@media (min-width: 600px) and (max-width: 1023px) {
+  #iconRail { width: 48px; }
+  #iconRail .rail-label { display: none; }
+  #sidePanel.open { width: 240px; }
+  #rightPanel:not(.rp-hide) { width: 320px; }
+  .rte-row { flex-wrap: wrap; }
+  .rte-row2 { display: none; }
+  body.panel-open #sidePanel { display: none; }
+
+  .vb-search { min-width: 120px; }
+  .vb-right .vb-sep:nth-of-type(2) ~ .vb-btn { display: none; }
+
+  /* PDF panel tablet size */
+  #pdfPanel:not(.pdf-panel-hide) { width: 320px; }
+  body.pdf-open #rightPanel:not(.rp-hide) { width: 300px; }
+}
+
+/* ── Mobile (~599px) ── */
+@media (max-width: 599px) {
+  #iconRail {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    width: 100%; height: 52px;
+    flex-direction: row;
+    z-index: 900;
+    border-top: 1px solid var(--border);
+    overflow-x: auto;
+  }
+  #iconRail .rail-top,
+  #iconRail .rail-bottom {
+    flex-direction: row;
+    gap: 0;
+  }
+  #iconRail .rail-label { display: none; }
+  #iconRail .rail-icon { padding: 8px 12px; }
+  #iconRail #railUser { display: none; }
+
+  #sidePanel {
+    position: fixed;
+    top: 0; left: 0; bottom: 52px;
+    width: 85vw; max-width: 320px;
+    z-index: 800;
+    transform: translateX(-100%);
+    transition: transform var(--anim-normal, 250ms ease);
+  }
+  #sidePanel.open {
+    transform: translateX(0);
+  }
+
+  #biblePane {
+    padding-bottom: 52px;
+  }
+
+  #bibleViewBar {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .vb-search { width: 100%; order: 10; }
+  .vb-right { width: 100%; order: 11; justify-content: center; }
+
+  #rightPanel {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 52px;
+    width: 100%;
+    z-index: 700;
+    border-left: none;
+  }
+
+  /* Larger touch targets */
+  .citem { min-height: 44px; padding: 10px 16px; font-size: 14px; }
+  .modal-box { width: 95vw; max-width: 360px; }
+  .rte-btn { min-width: 36px; min-height: 36px; }
+  .btab { padding: 6px 10px; font-size: 11px; }
+
+  /* Hide non-essential UI */
+  .vb-info { display: none; }
+  #bibleTabAdd { display: none; }
+  .sp-pin-btn { display: none; }
+
+  /* Chapter navigation */
+  .ch-nav { padding: 16px 12px 24px; }
+  .chnav { padding: 10px 16px; font-size: 13px; }
+
+  /* PDF panel: fullscreen on mobile */
+  #pdfPanel:not(.pdf-panel-hide) {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 52px;
+    width: 100%;
+    z-index: 750;
+    border-left: none;
+  }
+}
+
+/* ── Print styles ── */
+@media print {
+  #iconRail, #sidePanel, #rightPanel, #bibleViewBar, #bibleTabBar,
+  #ctxMenu, .modal-bg, #toast { display: none !important; }
+  #biblePane { margin: 0; padding: 20px; }
+  .vrow { break-inside: avoid; }
+}

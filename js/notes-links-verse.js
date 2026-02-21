@@ -28,6 +28,20 @@ function confirmVL(){
     _savedRange=null;
   }
   insertInlineHTML(makVLink(key,ref));
+
+  // Register verse link in LinkRegistry
+  if(typeof LinkRegistry !== 'undefined' && LinkRegistry.isReady() && S.curNoteId){
+    var targetUri = TyrannusURI.fromLegacyVerseKey(key);
+    if(targetUri){
+      LinkRegistry.addLink(
+        TyrannusURI.note(S.curNoteId),
+        targetUri,
+        'reference',
+        { label: ref }
+      );
+    }
+  }
+
   closeM('mVerse');
   toast(`${ref} 링크가 삽입됐어요 📖`);
 }

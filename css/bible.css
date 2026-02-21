@@ -1,6 +1,6 @@
 /* ── CENTER: Bible Text ── */
 #biblePane {
-  flex:1; display:flex; flex-direction:column; background:var(--bg); min-width:0;
+  flex:1; display:flex; flex-direction:column; background:var(--bg-surface); min-width:0;
   position:relative; /* 드롭다운 기준점 */
 }
 /* 본문 영역: 아이콘레일 + 사이드패널 + 스크롤 (탭바/뷰바 아래) */
@@ -426,12 +426,12 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
 /* Memo verse link — 초록 pill (sync badge 스타일) */
 .memo-vlink {
   display:inline-flex; align-items:center; gap:3px;
-  color:#34d399; font-size:11px; cursor:pointer;
-  background:rgba(52,211,153,.08); border:1px solid rgba(52,211,153,.25);
+  color:var(--accent-color); font-size:11px; cursor:pointer;
+  background:var(--accent-dim); border:1px solid hsla(var(--accent-h), var(--accent-s), var(--accent-l), 0.25);
   border-radius:10px; padding:1px 7px; margin:0 1px; text-decoration:none;
   transition:all .15s; white-space:nowrap;
 }
-.memo-vlink:hover { background:rgba(52,211,153,.18); border-color:rgba(52,211,153,.4) }
+.memo-vlink:hover { background:hsla(var(--accent-h), var(--accent-s), var(--accent-l), 0.18); border-color:hsla(var(--accent-h), var(--accent-s), var(--accent-l), 0.4) }
 /* Memo note link — 블루 pill */
 .memo-nlink {
   display:inline-flex; align-items:center; gap:3px;

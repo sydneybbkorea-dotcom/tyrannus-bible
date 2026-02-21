@@ -32,7 +32,7 @@
 .rail-icon:hover .rail-label { display:block; }
 /* 접힘 상태 */
 #iconRail.rail-collapsed { width:0; padding:0; border-right:none; }
-[data-theme="light"] #iconRail { background:#d0d3dc; border-right-color:#c0c4d0 }
+[data-theme="light"] #iconRail { background:var(--rail-bg-color); border-right-color:var(--border-color) }
 
 /* ── 사이드바 하단 사용자 영역 ── */
 #railUser { display:flex; flex-direction:column; align-items:center; gap:4px; margin-bottom:4px }

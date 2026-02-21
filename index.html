@@ -11,35 +11,43 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <!-- App CSS (모듈화) -->
-<link rel="stylesheet" href="css/variables.css?v=15">
+<link rel="stylesheet" href="css/theme-system.css?v=9">
+<link rel="stylesheet" href="css/variables.css?v=20">
 <link rel="stylesheet" href="css/layout.css?v=15">
 <link rel="stylesheet" href="css/icon-rail.css?v=16">
 <link rel="stylesheet" href="css/side-panel.css?v=15">
 <link rel="stylesheet" href="css/topbar.css?v=17">
-<link rel="stylesheet" href="css/bible.css?v=19">
-<link rel="stylesheet" href="css/notes.css?v=18">
-<link rel="stylesheet" href="css/commentary.css?v=15">
+<link rel="stylesheet" href="css/bible.css?v=21">
+<link rel="stylesheet" href="css/notes.css?v=19">
+<link rel="stylesheet" href="css/commentary.css?v=17">
 <link rel="stylesheet" href="css/search.css?v=15">
 <link rel="stylesheet" href="css/ui.css?v=15">
-<link rel="stylesheet" href="css/nav-picker.css?v=15">
-<link rel="stylesheet" href="css/book-grid.css?v=15">
+<link rel="stylesheet" href="css/nav-picker.css?v=16">
+<link rel="stylesheet" href="css/book-grid.css?v=16">
 <link rel="stylesheet" href="css/bookmark.css?v=15">
 <link rel="stylesheet" href="css/word-study.css?v=15">
 <link rel="stylesheet" href="css/xref-inline.css?v=15">
-<link rel="stylesheet" href="css/passage-guide.css?v=15">
+<link rel="stylesheet" href="css/passage-guide.css?v=16">
 <link rel="stylesheet" href="css/visual-filter.css?v=15">
 <link rel="stylesheet" href="css/reading-plan.css?v=15">
 <link rel="stylesheet" href="css/adv-search.css?v=15">
 <link rel="stylesheet" href="css/bug-report.css">
 <link rel="stylesheet" href="css/dict.css?v=17">
 <link rel="stylesheet" href="css/sync.css?v=15">
-<link rel="stylesheet" href="css/settings-panel.css?v=15">
+<link rel="stylesheet" href="css/settings-panel.css?v=20">
+<link rel="stylesheet" href="css/responsive.css?v=1">
+<link rel="stylesheet" href="css/pdf-panel.css?v=2">
+<link rel="stylesheet" href="css/pdf-viewer.css?v=1">
+<link rel="stylesheet" href="css/knowledge-graph.css?v=1">
+
+<!-- PDF.js (UMD — sets window.pdfjsLib) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
 <!-- Firebase (ES module — 병렬 로드) -->
 <script type="module" src="js/firebase.js"></script>
 </head>
 
-<body>
+<body data-input="mouse">
 
 <!-- 숨겨진 호환용 요소들 -->
 <select id="bookSel" style="display:none" onchange="onBookChange()"></select>
@@ -102,30 +110,36 @@
       <div id="iconRail">
         <div class="rail-top">
           <button class="rail-icon" data-rail="bible" onclick="toggleRail('bible')" title="성경 목록">
-            <i class="fa fa-book-bible"></i><span class="rail-label">성경</span>
+            <i class="fa fa-book-bible"></i><span class="rail-label" data-i18n="nav.bible">성경</span>
           </button>
           <button class="rail-icon" data-rail="notes" onclick="toggleNotePanel()" title="노트">
-            <i class="fa fa-pen"></i><span class="rail-label">노트</span>
+            <i class="fa fa-pen"></i><span class="rail-label" data-i18n="nav.notes">노트</span>
           </button>
           <button class="rail-icon" data-rail="dictionary" onclick="toggleDictPanel()" title="사전">
-            <i class="fas fa-spell-check"></i><span class="rail-label">사전</span>
+            <i class="fas fa-spell-check"></i><span class="rail-label" data-i18n="nav.dict">사전</span>
           </button>
           <button class="rail-icon" data-rail="bookmark" onclick="toggleRail('bookmark')" title="북마크">
-            <i class="fa fa-bookmark"></i><span class="rail-label">북마크</span>
+            <i class="fa fa-bookmark"></i><span class="rail-label" data-i18n="nav.bookmark">북마크</span>
           </button>
           <button class="rail-icon" data-rail="reading" onclick="toggleRail('reading')" title="읽기 계획">
-            <i class="fa fa-calendar-check"></i><span class="rail-label">읽기</span>
+            <i class="fa fa-calendar-check"></i><span class="rail-label" data-i18n="nav.reading">읽기</span>
           </button>
           <button class="rail-icon" data-rail="library" onclick="toggleRail('library')" title="도서관">
-            <i class="fa fa-book-open-reader"></i><span class="rail-label">도서관</span>
+            <i class="fa fa-book-open-reader"></i><span class="rail-label" data-i18n="nav.library">도서관</span>
+          </button>
+          <button class="rail-icon" data-rail="pdf" onclick="togglePdfPanel()" title="PDF 편집">
+            <i class="fa fa-file-pdf"></i><span class="rail-label">PDF</span>
           </button>
           <button class="rail-icon" data-rail="qna" onclick="toggleRail('qna')" title="Q&A">
-            <i class="fa fa-comments"></i><span class="rail-label">Q&A</span>
+            <i class="fa fa-comments"></i><span class="rail-label" data-i18n="nav.qna">Q&A</span>
+          </button>
+          <button class="rail-icon" onclick="toggleKnowledgeGraph()" title="지식 그래프">
+            <i class="fa fa-project-diagram"></i><span class="rail-label" data-i18n="graph.title">그래프</span>
           </button>
         </div>
         <div class="rail-bottom">
           <button class="rail-icon" data-rail="bugreport" onclick="toggleRail('bugreport')" title="버그 리포트">
-            <i class="fa fa-bug"></i><span class="rail-label">버그</span>
+            <i class="fa fa-bug"></i><span class="rail-label" data-i18n="nav.bugreport">버그</span>
           </button>
           <div id="railUser">
             <button id="loginBtn" class="rail-icon" onclick="signInWithGoogle()" title="로그인">
@@ -136,44 +150,44 @@
             </div>
           </div>
           <button class="rail-icon" data-rail="settings" onclick="toggleRail('settings')" title="설정">
-            <i class="fa fa-cog"></i><span class="rail-label">설정</span>
+            <i class="fa fa-cog"></i><span class="rail-label" data-i18n="nav.settings">설정</span>
           </button>
         </div>
       </div>
       <!-- 확장 사이드패널 -->
       <div id="sidePanel">
         <div class="sp-section" id="sp-bible">
-          <div class="sp-head"><i class="fa fa-book-bible"></i> 성경 목록<button class="sp-pin-btn" id="spPinBtn" onclick="_spTogglePin()" title="고정"><i class="fa fa-thumbtack"></i></button></div>
+          <div class="sp-head"><i class="fa fa-book-bible"></i> <span data-i18n="bible.bibleList">성경 목록</span><button class="sp-pin-btn" id="spPinBtn" onclick="_spTogglePin()" title="고정"><i class="fa fa-thumbtack"></i></button></div>
           <div class="sp-body" id="bookList"></div>
         </div>
         <div class="sp-section" id="sp-bookmark">
-          <div class="sp-head"><i class="fa fa-bookmark"></i> 북마크</div>
+          <div class="sp-head"><i class="fa fa-bookmark"></i> <span data-i18n="bookmark.title">북마크</span></div>
           <div class="sp-body" id="spBookmarkList"></div>
         </div>
         <div class="sp-section" id="sp-reading">
-          <div class="sp-head"><i class="fa fa-calendar-check"></i> 읽기 계획</div>
+          <div class="sp-head"><i class="fa fa-calendar-check"></i> <span data-i18n="reading.title">읽기 계획</span></div>
           <div class="sp-body" id="spReadingContent">
             <div style="padding:20px;text-align:center;color:var(--text3);font-size:12px"><i class="fa fa-calendar-check" style="font-size:24px;margin-bottom:8px;display:block;opacity:.4"></i>준비 중입니다</div>
           </div>
         </div>
         <div class="sp-section" id="sp-library">
-          <div class="sp-head"><i class="fa fa-book-open-reader"></i> 도서관</div>
+          <div class="sp-head"><i class="fa fa-book-open-reader"></i> <span data-i18n="library.title">도서관</span></div>
           <div class="sp-body" id="spLibraryBody">
             <div style="padding:20px;text-align:center;color:var(--text3);font-size:12px"><i class="fa fa-book-open-reader" style="font-size:24px;margin-bottom:8px;display:block;opacity:.4"></i>준비 중입니다</div>
           </div>
         </div>
         <div class="sp-section" id="sp-qna">
-          <div class="sp-head"><i class="fa fa-comments"></i> Q&A</div>
+          <div class="sp-head"><i class="fa fa-comments"></i> <span data-i18n="qna.title">Q&A</span></div>
           <div class="sp-body" id="spQnaBody">
             <div style="padding:20px;text-align:center;color:var(--text3);font-size:12px"><i class="fa fa-comments" style="font-size:24px;margin-bottom:8px;display:block;opacity:.4"></i>준비 중입니다</div>
           </div>
         </div>
         <div class="sp-section" id="sp-bugreport">
-          <div class="sp-head"><i class="fa fa-bug"></i> 버그 리포트</div>
+          <div class="sp-head"><i class="fa fa-bug"></i> <span data-i18n="nav.bugreport">버그 리포트</span></div>
           <div class="sp-body" id="spBugBody" style="display:flex;flex-direction:column;overflow:hidden"></div>
         </div>
         <div class="sp-section" id="sp-settings">
-          <div class="sp-head"><i class="fa fa-cog"></i> 설정</div>
+          <div class="sp-head"><i class="fa fa-cog"></i> <span data-i18n="settings.title">설정</span></div>
           <div class="sp-body" id="spSettingsBody"></div>
         </div>
       </div>
@@ -193,21 +207,44 @@
     </div><!-- /bibleBody -->
   </div><!-- /biblePane -->
 
+  <!-- PDF Panel (독립 flex child — 노트 왼쪽) -->
+  <div id="pdfPanel" class="pdf-panel-hide">
+    <div class="pdf-panel-header">
+      <i class="fa fa-file-pdf"></i>
+      <span class="pdf-panel-title">PDF 도서관</span>
+      <button class="pdf-panel-close" onclick="PDFPanel.headerClose()" title="닫기"><i class="fa fa-times"></i></button>
+    </div>
+    <!-- Tab Bar (열린 PDF 탭 목록) -->
+    <div class="pdf-tab-bar" id="pdfTabBar" style="display:none"></div>
+    <!-- Library View (default) -->
+    <div id="pdfLibraryView">
+      <div class="pdf-lib-actions">
+        <button class="pdf-lib-btn pdf-lib-btn-primary" onclick="PDFLibrary.uploadPdf()"><i class="fa fa-upload"></i> PDF 업로드</button>
+        <button class="pdf-lib-btn" onclick="PDFLibrary.newFolder()"><i class="fa fa-folder-plus"></i> 새 폴더</button>
+      </div>
+      <div class="pdf-folder-tree" id="pdfFolderTree"></div>
+    </div>
+    <!-- Viewer View -->
+    <div id="pdfViewerView">
+      <div id="pdfViewerHost"></div>
+    </div>
+  </div>
+
   <!-- RIGHT: Panel (초기 비활성) -->
   <div id="rightPanel" class="rp-hide">
     <div class="rp-tabs" id="rpTabs">
       <div class="rp-subtabs" id="subtabs-notes">
         <button class="rp-ico-btn" onclick="toggleExplorer()" title="노트 목록"><i class="fa fa-folder-open"></i></button>
-        <div class="rp-tab act" data-sub="notes" onclick="switchSub('notes')"><i class="fa fa-pen"></i> 노트</div>
-        <div class="rp-tab" data-sub="commentary" onclick="switchSub('commentary')"><i class="fa fa-scroll"></i> 주석</div>
-        <div class="rp-tab" data-sub="outline" onclick="switchSub('outline')"><i class="fa fa-sitemap"></i> 아웃라인</div>
+        <div class="rp-tab act" data-sub="notes" onclick="switchSub('notes')"><i class="fa fa-pen"></i> <span data-i18n="panel.notes">노트</span></div>
+        <div class="rp-tab" data-sub="commentary" onclick="switchSub('commentary')"><i class="fa fa-scroll"></i> <span data-i18n="panel.commentary">주석</span></div>
+        <div class="rp-tab" data-sub="outline" onclick="switchSub('outline')"><i class="fa fa-sitemap"></i> <span data-i18n="panel.outline">아웃라인</span></div>
         <button class="rp-ico-btn rp-close-btn" onclick="togglePanel('notes')" title="패널 닫기"><i class="fa fa-times"></i></button>
       </div>
       <div class="rp-subtabs" id="subtabs-dict" style="display:none">
-        <div class="rp-tab act" data-sub="dict-strongs" onclick="switchSub('dict-strongs')"><i class="fa fa-language"></i> 스트롱</div>
-        <div class="rp-tab" data-sub="dict-webster" onclick="switchSub('dict-webster')"><i class="fa fa-spell-check"></i> 웹스터</div>
-        <div class="rp-tab" data-sub="dict-enko" onclick="switchSub('dict-enko')"><i class="fa fa-exchange-alt"></i> 영한</div>
-        <div class="rp-tab" data-sub="dict-korean" onclick="switchSub('dict-korean')"><i class="fa fa-font"></i> 표준국어</div>
+        <div class="rp-tab act" data-sub="dict-strongs" onclick="switchSub('dict-strongs')"><i class="fa fa-language"></i> <span data-i18n="panel.strongDict">스트롱</span></div>
+        <div class="rp-tab" data-sub="dict-webster" onclick="switchSub('dict-webster')"><i class="fa fa-spell-check"></i> <span data-i18n="panel.websterDict">웹스터</span></div>
+        <div class="rp-tab" data-sub="dict-enko" onclick="switchSub('dict-enko')"><i class="fa fa-exchange-alt"></i> <span data-i18n="panel.enkoDict">영한</span></div>
+        <div class="rp-tab" data-sub="dict-korean" onclick="switchSub('dict-korean')"><i class="fa fa-font"></i> <span data-i18n="panel.koreanDict">표준국어</span></div>
         <button class="rp-ico-btn rp-close-btn" onclick="togglePanel('dictionary')" title="패널 닫기"><i class="fa fa-times"></i></button>
       </div>
       <div class="rp-subtabs" id="subtabs-search" style="display:none">
@@ -442,18 +479,18 @@
 
 <!-- ══ CONTEXT MENU ════════════════════════════ -->
 <div id="ctxMenu">
-  <div class="citem" onclick="ctxHL()"><i class="fa fa-highlighter"></i> 형광펜 적용 (드래그 선택 후)</div>
-  <div class="citem" onclick="ctxClearHL()" id="ctxClearHLItem" style="display:none"><i class="fa fa-eraser"></i> 형광펜 지우기</div>
-  <div class="citem" onclick="ctxVerseMemo()"><i class="fa fa-comment-dots"></i> 주석 작성</div>
-  <div class="citem" onclick="ctxNote()"><i class="fa fa-pen"></i> 새 노트 작성</div>
-  <div class="citem" onclick="ctxLinkNote()"><i class="fa fa-link"></i> 노트 연결</div>
-  <div class="citem" onclick="ctxDict()"><i class="fa fa-book"></i> 사전 보기</div>
+  <div class="citem" onclick="ctxHL()"><i class="fa fa-highlighter"></i> <span data-i18n="ctx.highlight">형광펜 적용 (드래그 선택 후)</span></div>
+  <div class="citem" onclick="ctxClearHL()" id="ctxClearHLItem" style="display:none"><i class="fa fa-eraser"></i> <span data-i18n="ctx.clearHL">형광펜 지우기</span></div>
+  <div class="citem" onclick="ctxVerseMemo()"><i class="fa fa-comment-dots"></i> <span data-i18n="ctx.verseMemo">주석 작성</span></div>
+  <div class="citem" onclick="ctxNote()"><i class="fa fa-pen"></i> <span data-i18n="ctx.newNote">새 노트 작성</span></div>
+  <div class="citem" onclick="ctxLinkNote()"><i class="fa fa-link"></i> <span data-i18n="ctx.linkNote">노트 연결</span></div>
+  <div class="citem" onclick="ctxDict()"><i class="fa fa-book"></i> <span data-i18n="ctx.viewDict">사전 보기</span></div>
   <div class="cdiv"></div>
-  <div class="citem" onclick="addBookmark()"><i class="fa fa-bookmark"></i> 북마크 추가/제거</div>
-  <div class="citem" onclick="ctxCopy()"><i class="fa fa-copy"></i> 구절 복사</div>
-  <div class="citem" onclick="ctxCopyRef()"><i class="fa fa-quote-right"></i> 참조 형식 복사</div>
+  <div class="citem" onclick="addBookmark()"><i class="fa fa-bookmark"></i> <span data-i18n="ctx.addBookmark">북마크 추가/제거</span></div>
+  <div class="citem" onclick="ctxCopy()"><i class="fa fa-copy"></i> <span data-i18n="ctx.copyVerse">구절 복사</span></div>
+  <div class="citem" onclick="ctxCopyRef()"><i class="fa fa-quote-right"></i> <span data-i18n="ctx.copyRef">참조 형식 복사</span></div>
   <div class="cdiv"></div>
-  <div class="citem" onclick="ctxInsertLink()"><i class="fa fa-link"></i> 노트에 구절 링크 삽입</div>
+  <div class="citem" onclick="ctxInsertLink()"><i class="fa fa-link"></i> <span data-i18n="ctx.insertLink">노트에 구절 링크 삽입</span></div>
 </div>
 
 <!-- ══ MODALS ══════════════════════════════════ -->
@@ -523,9 +560,21 @@
 <script src="data/books.js"></script>
 
 <!-- 코어 모듈 (의존성 없음, 먼저 로드) -->
+<script src="js/core/event-bus.js?v=1"></script>
+<script src="js/core/uri.js?v=1"></script>
+<script src="js/core/idb-store.js?v=1"></script>
+<script src="js/core/storage-adapter.js?v=1"></script>
+<script src="js/core/link-registry.js?v=1"></script>
+<script src="js/core/nav-router.js?v=1"></script>
+<script src="js/core/backlink-panel.js?v=1"></script>
+<script src="js/core/link-picker.js?v=1"></script>
+<script src="js/core/i18n.js?v=1"></script>
+<script src="js/core/input-manager.js?v=1"></script>
+<script src="js/core/virtual-scroll.js?v=1"></script>
+<script src="js/theme-switcher.js?v=7"></script>
 <script src="js/data-loader.js"></script>
 <script src="js/state.js"></script>
-<script src="js/theme.js"></script>
+<script src="js/theme.js?v=2"></script>
 <script src="js/storage.js"></script>
 <script src="js/ui-utils.js"></script>
 
@@ -636,9 +685,9 @@
 <script src="js/side-search.js"></script>
 
 <!-- 설정 패널 -->
-<script src="js/settings-panel.js"></script>
+<script src="js/settings-panel.js?v=6"></script>
 <script src="js/settings-panel-ctrl.js"></script>
-<script src="js/settings-panel-apply.js"></script>
+<script src="js/settings-panel-apply.js?v=5"></script>
 <script src="js/settings-panel-sync.js"></script>
 
 <!-- 컨텍스트 메뉴 & 패널 -->
@@ -681,6 +730,18 @@
 <script src="js/reading-plan.js"></script>
 <script src="js/reading-plan-ui.js"></script>
 <script src="js/reading-plan-render.js"></script>
+
+<!-- PDF 시스템 -->
+<script src="js/pdf/pdf-library.js?v=2"></script>
+<script src="js/pdf/pdf-panel.js?v=2"></script>
+<script src="js/pdf/pdf-viewer.js?v=2"></script>
+<script src="js/pdf/pdf-annotations.js?v=1"></script>
+<script src="js/pdf/pdf-tools.js?v=1"></script>
+<script src="js/pdf/pdf-drag-to-note.js?v=1"></script>
+
+<!-- 지식 그래프 -->
+<script src="js/graph/knowledge-graph.js?v=1"></script>
+<script src="js/graph/graph-filter.js?v=1"></script>
 
 <!-- 초기화 (반드시 마지막) -->
 <script src="js/app-paste.js"></script>

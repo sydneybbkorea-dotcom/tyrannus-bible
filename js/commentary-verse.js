@@ -79,28 +79,29 @@ function updateCommentary(){
   // 4) 하이라이트 메모 (앰버)
   if(memoMap.size > 0){
     const colorDot = {'hl-y':'rgba(255,215,64,.9)','hl-o':'rgba(255,171,64,.9)','hl-g':'rgba(105,240,174,.9)','hl-b':'rgba(64,196,255,.9)','hl-p':'rgba(206,147,216,.9)'};
-    const hlBgMap = {'hl-y':'rgba(255,215,64,.1)','hl-o':'rgba(255,171,64,.1)','hl-g':'rgba(105,240,174,.08)','hl-b':'rgba(64,196,255,.08)','hl-p':'rgba(206,147,216,.08)'};
 
     h += `<div class="comm-sec-card comm-sec-hl">
       <div class="comm-sec-head"><i class="fa fa-highlighter"></i> 하이라이트 메모</div>
       <div class="comm-sec-inner">`;
 
+    let memoIdx = 0;
     [...memoMap.entries()].forEach(([gid, {memo, text, color}])=>{
       const cls = color.split(' ').find(c=>c.startsWith('hl-'))||'hl-y';
       const dot = colorDot[cls]||'var(--gold)';
-      const hlBg = hlBgMap[cls]||'rgba(255,215,64,.1)';
       const mData = S.hlMemo?.[gid];
       const mName = mData?.name || '메모';
       const mTags = (mData?.tags||[]).map(t=>`<span class="comm-memo-tag">#${t}</span>`).join('');
       const mHtml = mData?.html || memo;
 
+      if(memoIdx > 0) h += `<div class="comm-hl-divider"></div>`;
       h += `<div class="comm-hl-card">
-        <div class="comm-hl-quote" style="background:${hlBg};border-left:3px solid ${dot}">
-          <span>❝</span> ${text}
+        <div class="comm-hl-quote" style="border-left-color:${dot}">
+          ${text}
         </div>
         <div class="comm-hl-body">${mHtml}</div>
         ${mTags?`<div class="comm-hl-tags">${mTags}</div>`:''}
       </div>`;
+      memoIdx++;
     });
     h += `</div></div>`;
   }
@@ -108,7 +109,7 @@ function updateCommentary(){
   // 5) 참고 주석
   if(comm){
     h += `<div class="comm-sec-card comm-sec-ref-note">
-      <div class="comm-sec-head"><i class="fa fa-scroll" style="color:var(--gold)"></i> 참고 주석</div>
+      <div class="comm-sec-head"><i class="fa fa-scroll"></i> 참고 주석</div>
       <div class="comm-sec-inner">${comm}</div>
     </div>`;
   }

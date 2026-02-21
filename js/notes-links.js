@@ -30,6 +30,11 @@ function makVLink(key, ref){
 }
 
 function navByKey(key){
+  // Use NavigationRouter if available
+  if(typeof NavigationRouter !== 'undefined'){
+    NavigationRouter.navigateByKey(key);
+    return;
+  }
   const p=key.split('_');
   if(p.length<2)return;
   openBibleTab(p[0], parseInt(p[1]), p[2]?parseInt(p[2]):null);

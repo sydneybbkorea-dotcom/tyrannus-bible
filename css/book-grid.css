@@ -25,7 +25,7 @@
   cursor:pointer; transition:all .12s;
 }
 .bn-ch:hover { background:var(--bg4); border-color:var(--text3); color:var(--text); }
-.bn-ch.act { background:var(--accent); border-color:var(--accent); color:#fff; font-weight:700; }
+.bn-ch.act { background:var(--accent-dim); border-color:var(--accent-color); color:var(--accent-color); font-weight:700; }
 @media(max-width:600px){
   .bn-book-grid { grid-template-columns:repeat(5,1fr); }
   .bn-ch-grid { grid-template-columns:repeat(7,1fr); }

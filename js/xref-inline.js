@@ -22,6 +22,11 @@ function hideXrefBar(){
 function _xrefNav(ref){
   const m=ref.match(/^(.+?)\s(\d+):(\d+)$/);
   if(!m) return;
-  if(typeof openBibleTab==='function') openBibleTab(m[1],+m[2],+m[3]);
-  else { S.book=m[1]; S.ch=+m[2]; S.selV=+m[3]; S.selVSet=new Set([+m[3]]); updateNavPickerLabel(); renderAll(); }
+  if(typeof NavigationRouter !== 'undefined'){
+    NavigationRouter.navigateTo(TyrannusURI.verse(m[1],+m[2],+m[3]));
+  } else if(typeof openBibleTab==='function'){
+    openBibleTab(m[1],+m[2],+m[3]);
+  } else {
+    S.book=m[1]; S.ch=+m[2]; S.selV=+m[3]; S.selVSet=new Set([+m[3]]); updateNavPickerLabel(); renderAll();
+  }
 }

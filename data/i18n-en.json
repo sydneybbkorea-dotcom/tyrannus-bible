@@ -1,0 +1,258 @@
+{
+  "nav": {
+    "bible": "Bible",
+    "notes": "Notes",
+    "dict": "Dict",
+    "bookmark": "Marks",
+    "reading": "Read",
+    "library": "Library",
+    "qna": "Q&A",
+    "bugreport": "Bug",
+    "settings": "Settings",
+    "login": "Login",
+    "graph": "Graph"
+  },
+  "bible": {
+    "title": "Standard King James Bible",
+    "korean": "KR",
+    "english": "EN",
+    "redLetter": "Words of Jesus",
+    "strongCodes": "Strong's Codes",
+    "highlight": "Highlight",
+    "search": "Search...",
+    "prevCh": "Previous",
+    "nextCh": "Next",
+    "newTab": "New Tab",
+    "noData": "Bible data for this chapter is being prepared.",
+    "fullBible": "Standard King James Bible — 66 Books",
+    "chapter": "Ch.",
+    "verse": "v.",
+    "bibleList": "Bible List"
+  },
+  "notes": {
+    "title": "Notes",
+    "newNote": "New Note",
+    "newFolder": "New Folder",
+    "collapseAll": "Collapse All",
+    "close": "Close",
+    "vault": "Vault",
+    "placeholder": "Enter title...",
+    "saved": "Saved",
+    "enterContent": "Please enter content",
+    "untitled": "Untitled",
+    "backlinks": "Backlinks",
+    "viewGraph": "View Graph",
+    "tags": "Tags...",
+    "deleteConfirm": "Delete this note?"
+  },
+  "editor": {
+    "paragraph": "Paragraph",
+    "heading1": "H1",
+    "heading2": "H2",
+    "heading3": "H3",
+    "body": "Body",
+    "quote": "Quote",
+    "size": "Size",
+    "bold": "Bold",
+    "italic": "Italic",
+    "underline": "Underline",
+    "strike": "Strikethrough",
+    "textColor": "Text Color",
+    "bgHighlight": "Background",
+    "bulletList": "Bullet List",
+    "numberList": "Numbered List",
+    "alignLeft": "Align Left",
+    "alignCenter": "Center",
+    "alignRight": "Align Right",
+    "table": "Table",
+    "hr": "Divider",
+    "undo": "Undo",
+    "redo": "Redo",
+    "indent": "Indent",
+    "outdent": "Outdent",
+    "insert": "Insert",
+    "noteLink": "Note",
+    "verseLink": "Verse",
+    "urlLink": "Link",
+    "youtube": "YouTube",
+    "fileAttach": "File",
+    "infoBox": "Info Box",
+    "warnBox": "Warning Box",
+    "ideaBox": "Idea Box",
+    "checkbox": "Check",
+    "dateStamp": "Date"
+  },
+  "panel": {
+    "notes": "Notes",
+    "commentary": "Commentary",
+    "outline": "Outline",
+    "strongDict": "Strong's",
+    "websterDict": "Webster",
+    "enkoDict": "EN-KR",
+    "koreanDict": "Korean",
+    "search": "Results",
+    "close": "Close Panel",
+    "noteList": "Note List"
+  },
+  "dict": {
+    "strongsTitle": "Strong's Concordance",
+    "strongsHint": "Search Strong's codes or\nclick a code in the verse text",
+    "strongsHelp": "H = Hebrew (OT) · G = Greek (NT)",
+    "strongsPlaceholder": "Strong's number (H1, G3056) or word...",
+    "websterTitle": "English Dictionary",
+    "websterHint": "Search for English word definitions",
+    "websterHelp": "Pronunciation · POS · Definition · Examples · Synonyms",
+    "websterPlaceholder": "English word (e.g., grace, faith)...",
+    "enkoTitle": "English-Korean Dictionary",
+    "enkoHint": "Search English words with Korean translations",
+    "enkoHelp": "English definition + Korean translation",
+    "enkoPlaceholder": "Search (e.g., salvation, mercy)...",
+    "koreanPlaceholder": "Korean dictionary search..."
+  },
+  "ctx": {
+    "highlight": "Highlight (select text first)",
+    "clearHL": "Clear Highlight",
+    "verseMemo": "Write Annotation",
+    "newNote": "New Note",
+    "linkNote": "Link to Note",
+    "viewDict": "View Dictionary",
+    "addBookmark": "Toggle Bookmark",
+    "copyVerse": "Copy Verse",
+    "copyRef": "Copy Reference",
+    "insertLink": "Insert Verse Link in Note"
+  },
+  "search": {
+    "placeholder": "Search... (Korean/English/H1234)",
+    "help": "Search Help",
+    "all": "All",
+    "ot": "OT",
+    "nt": "NT",
+    "bookSelect": "Select book...",
+    "notesFilter": "Notes",
+    "commFilter": "Commentary",
+    "filesFilter": "Files",
+    "advanced": "Advanced",
+    "listView": "List",
+    "refView": "Reference",
+    "treeView": "Tree",
+    "caseSensitive": "Case Sensitive",
+    "scopeVerse": "Verse",
+    "scopeChapter": "Chapter",
+    "scopeBook": "Book"
+  },
+  "settings": {
+    "title": "Settings",
+    "theme": "Theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeSepia": "Sepia",
+    "accent": "Accent Color",
+    "language": "Language",
+    "langKo": "한국어",
+    "langEn": "English",
+    "fontSize": "Font Size",
+    "letterSpacing": "Letter Spacing",
+    "lineHeight": "Line Height",
+    "resetDefaults": "Reset Defaults",
+    "logout": "Logout"
+  },
+  "modal": {
+    "storageTitle": "Storage",
+    "close": "Close",
+    "upgrade": "Upgrade",
+    "newFolderTitle": "Create New Folder",
+    "folderPlaceholder": "Folder name (e.g., Romans Study, Daily Devotion...)",
+    "cancel": "Cancel",
+    "create": "Create",
+    "verseLinkTitle": "Insert Verse Link",
+    "preview": "Preview",
+    "insert": "Insert",
+    "noteLinkTitle": "Insert Note Link",
+    "noteLinkSearch": "Search notes..."
+  },
+  "bookmark": {
+    "title": "Bookmarks",
+    "empty": "No bookmarks"
+  },
+  "reading": {
+    "title": "Reading Plan",
+    "preparing": "Coming soon"
+  },
+  "library": {
+    "title": "Library",
+    "preparing": "Coming soon"
+  },
+  "qna": {
+    "title": "Q&A",
+    "preparing": "Coming soon"
+  },
+  "comm": {
+    "verseMode": "By Verse",
+    "chapterMode": "By Chapter",
+    "hint": "Click a verse to\nview commentary"
+  },
+  "outline": {
+    "title": "Note Outline",
+    "expandAll": "Toggle Expand All"
+  },
+  "sync": {
+    "title": "Cloud Sync",
+    "connected": "Connected",
+    "disconnected": "Not connected"
+  },
+  "toast": {
+    "saved": "Saved",
+    "noteLinkInserted": "Note link inserted",
+    "verseLinkInserted": "Verse link inserted",
+    "noteLinked": "Note linked",
+    "selectVerse": "Please select a verse first"
+  },
+  "indicator": {
+    "hasNote": "Has note",
+    "hasBookmark": "Bookmarked",
+    "hasComm": "Has commentary"
+  },
+  "passageGuide": {
+    "refs": "References",
+    "notes": "Notes",
+    "hlApplied": "Highlighted",
+    "connectionGraph": "Connection Graph"
+  },
+  "xref": {
+    "label": "Refs"
+  },
+  "noteLink": {
+    "title": "Link to Note",
+    "search": "Search notes...",
+    "noResults": "No results",
+    "noNotes": "No notes available",
+    "folderEmpty": "No notes",
+    "connect": "Connect",
+    "defaultFolder": "Default",
+    "count": ""
+  },
+  "pdf": {
+    "open": "Open PDF",
+    "highlight": "Highlight",
+    "draw": "Draw",
+    "text": "Text",
+    "eraser": "Eraser",
+    "select": "Select",
+    "page": "Page",
+    "addToNote": "Add to Note",
+    "newNoteFromPdf": "Create Note",
+    "linkVerse": "Link Verse"
+  },
+  "graph": {
+    "title": "Knowledge Graph",
+    "filterNodes": "Node Filter",
+    "filterLinks": "Link Filter",
+    "verse": "Verse",
+    "note": "Note",
+    "pdfNode": "PDF",
+    "strong": "Strong's",
+    "commNode": "Commentary",
+    "viewGraph": "View Graph",
+    "tag": "Tag"
+  }
+}

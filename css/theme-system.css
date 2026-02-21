@@ -1,0 +1,205 @@
+/* ═══════════════════════════════════════════════
+   THEME SYSTEM — 3 Themes + 8 Accent Colors
+   HSL-based dynamic color system (Obsidian Light & Bright inspired)
+═══════════════════════════════════════════════ */
+
+/* ── Accent Color Palettes ── */
+:root, :root[data-accent="blue"] {
+  --accent-h: 214;
+  --accent-s: 92%;
+  --accent-l: 45%;
+}
+:root[data-accent="red"] {
+  --accent-h: 355;
+  --accent-s: 75%;
+  --accent-l: 55%;
+}
+:root[data-accent="orange"] {
+  --accent-h: 30;
+  --accent-s: 90%;
+  --accent-l: 46%;
+}
+:root[data-accent="yellow"] {
+  --accent-h: 46;
+  --accent-s: 100%;
+  --accent-l: 44%;
+}
+:root[data-accent="cyan"] {
+  --accent-h: 179;
+  --accent-s: 100%;
+  --accent-l: 37%;
+}
+:root[data-accent="purple"] {
+  --accent-h: 256;
+  --accent-s: 83%;
+  --accent-l: 63%;
+}
+:root[data-accent="pink"] {
+  --accent-h: 330;
+  --accent-s: 65%;
+  --accent-l: 53%;
+}
+:root[data-accent="black"] {
+  --accent-h: 0;
+  --accent-s: 0%;
+  --accent-l: 65%;
+}
+
+/* ── Base Color Palettes (배경 H/S/L) ── */
+:root, :root[data-base="blue"]    { --base-h: 214; --base-s: 35%; --base-l: 5%; }
+:root[data-base="red"]            { --base-h: 355; --base-s: 35%; --base-l: 5%; }
+:root[data-base="orange"]         { --base-h: 30;  --base-s: 35%; --base-l: 5%; }
+:root[data-base="yellow"]         { --base-h: 46;  --base-s: 35%; --base-l: 5%; }
+:root[data-base="cyan"]           { --base-h: 179; --base-s: 35%; --base-l: 5%; }
+:root[data-base="purple"]         { --base-h: 256; --base-s: 35%; --base-l: 5%; }
+:root[data-base="pink"]           { --base-h: 330; --base-s: 35%; --base-l: 5%; }
+:root[data-base="black"]          { --base-h: 0;   --base-s: 0%;  --base-l: 3%; }
+
+/* ── Computed Accent (shared across all themes) ── */
+:root {
+  --accent-color: hsl(var(--accent-h), var(--accent-s), var(--accent-l));
+  --accent-hover: hsl(var(--accent-h), var(--accent-s), calc(var(--accent-l) + 8%));
+  --accent-dim: hsla(var(--accent-h), var(--accent-s), var(--accent-l), 0.12);
+  --accent-sel: hsla(var(--accent-h), 60%, 50%, 0.20);
+}
+
+/* ── Theme 1: Light — clean neutral gray (cool 220°, accent-independent) ── */
+:root[data-theme="light"] {
+  --bg-primary:     hsl(220, 13%, 97%);     /* 깨끗한 연회색 (약간의 쿨톤) */
+  --bg-secondary:   hsl(220, 13%, 93%);     /* 패널 배경 — 구분감 확보 */
+  --bg-tertiary:    hsl(220, 12%, 88%);     /* 버튼/입력 — 확실한 구분 */
+  --bg-surface:     hsl(0, 0%, 100%);       /* 카드/본문 영역 — 순백 유지 */
+  --text-primary:   hsl(220, 15%, 15%);     /* 진한 차콜 — 강한 대비 */
+  --text-secondary: hsl(220, 10%, 35%);     /* 보조 텍스트 — 더 진하게 */
+  --text-muted:     hsl(220, 8%, 48%);      /* 흐린 텍스트 — 55→48 */
+  --text-faint:     hsl(220, 6%, 62%);      /* 매우 흐린 — 70→62 */
+  --border-color:   hsl(220, 12%, 84%);     /* 경계선 — 88→84 더 뚜렷 */
+  --shadow-color:   rgba(0, 0, 0, 0.10);    /* 그림자 — 0.06→0.10 */
+  --hl-opacity:     0.35;
+  --rail-bg-color:  hsl(220, 14%, 90%);     /* 레일 배경 */
+  --content-text:       hsl(0, 0%, 12%);    /* 본문 — 순수 짙은 검정 */
+  --content-text-sub:   hsl(0, 0%, 30%);    /* 보조 본문 — 35→30 */
+}
+
+/* ── Theme 2: Dark (default) — base S/L relative offsets ── */
+:root, :root[data-theme="dark"] {
+  --bg-primary:     hsl(var(--base-h), var(--base-s), var(--base-l));
+  --bg-secondary:   hsl(var(--base-h), calc(var(--base-s) - 7%), calc(var(--base-l) + 4%));
+  --bg-tertiary:    hsl(var(--base-h), calc(var(--base-s) - 13%), calc(var(--base-l) + 10%));
+  --bg-surface:     hsl(var(--base-h), calc(var(--base-s) - 7%), calc(var(--base-l) + 5%));
+  --text-primary:   hsl(var(--base-h), 10%, 92%);
+  --text-secondary: hsl(var(--base-h), 8%, 70%);
+  --text-muted:     hsl(var(--base-h), 6%, 48%);
+  --text-faint:     hsl(var(--base-h), 5%, 35%);
+  --border-color:   hsl(var(--base-h), calc(var(--base-s) - 13%), calc(var(--base-l) + 8%));
+  --shadow-color:   rgba(0, 0, 0, 0.50);
+  --hl-opacity:     0.45;
+  --rail-bg-color:  hsl(var(--base-h), var(--base-s), calc(var(--base-l) - 1%));
+  --content-text:       hsl(0, 0%, 93%);
+  --content-text-sub:   hsl(0, 0%, 73%);
+}
+
+/* ── Theme 3: Sepia ── */
+:root[data-theme="sepia"] {
+  --bg-primary:     hsl(35, 30%, 95%);
+  --bg-secondary:   hsl(35, 25%, 90%);
+  --bg-tertiary:    hsl(35, 20%, 85%);
+  --bg-surface:     hsl(35, 35%, 97%);
+  --text-primary:   hsl(30, 20%, 22%);
+  --text-secondary: hsl(30, 15%, 40%);
+  --text-muted:     hsl(30, 12%, 55%);
+  --text-faint:     hsl(30, 10%, 68%);
+  --border-color:   hsl(35, 20%, 82%);
+  --shadow-color:   rgba(80, 50, 20, 0.08);
+  --hl-opacity:     0.25;
+  --rail-bg-color:  hsl(35, 22%, 87%);
+  /* Content text — warm neutral, accent-independent */
+  --content-text:       hsl(30, 15%, 20%);
+  --content-text-sub:   hsl(30, 10%, 42%);
+}
+
+/* ── Dark + Black accent: monochrome accent colors ── */
+:root[data-theme="dark"][data-accent="black"],
+:root[data-accent="black"]:not([data-theme="light"]):not([data-theme="sepia"]) {
+  --accent-color:   hsl(0, 0%, 80%);
+  --accent-hover:   hsl(0, 0%, 90%);
+  --accent-dim:     hsla(0, 0%, 80%, 0.10);
+  --accent-sel:     hsla(0, 0%, 80%, 0.15);
+}
+
+/* ── Light + Black accent: true black for readability ── */
+:root[data-theme="light"][data-accent="black"] {
+  --accent-color:   hsl(0, 0%, 15%);
+  --accent-hover:   hsl(0, 0%, 25%);
+  --accent-dim:     hsla(0, 0%, 0%, 0.08);
+  --accent-sel:     hsla(0, 0%, 0%, 0.12);
+}
+
+/* ── Sepia + Black accent: warm black for readability ── */
+:root[data-theme="sepia"][data-accent="black"] {
+  --accent-color:   hsl(30, 10%, 18%);
+  --accent-hover:   hsl(30, 8%, 28%);
+  --accent-dim:     hsla(30, 10%, 10%, 0.08);
+  --accent-sel:     hsla(30, 10%, 10%, 0.12);
+}
+
+/* ── Design System Tokens ── */
+:root {
+  /* Spacing (4px base unit) */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-6: 24px;
+  --sp-8: 32px;
+  --sp-12: 48px;
+
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px var(--shadow-color);
+  --shadow-md: 0 4px 12px var(--shadow-color);
+  --shadow-lg: 0 8px 32px var(--shadow-color);
+
+  /* Animation */
+  --anim-fast: 150ms ease-out;
+  --anim-normal: 250ms ease;
+  --anim-slow: 350ms ease;
+
+  /* Typography Scale */
+  --font-h1: 24px;
+  --font-h2: 20px;
+  --font-h3: 17px;
+  --font-body: 15px;
+  --font-caption: 13px;
+  --font-small: 11px;
+
+  /* Touch targets */
+  --touch-min: 44px;
+  --mouse-min: 32px;
+
+  /* Highlight Colors */
+  --hl-yellow: hsla(48, 100%, 50%, var(--hl-opacity));
+  --hl-green:  hsla(120, 60%, 50%, var(--hl-opacity));
+  --hl-blue:   hsla(210, 80%, 55%, var(--hl-opacity));
+  --hl-pink:   hsla(330, 80%, 55%, var(--hl-opacity));
+  --hl-purple: hsla(270, 70%, 55%, var(--hl-opacity));
+  --hl-orange: hsla(30, 90%, 50%, var(--hl-opacity));
+
+  /* Focus ring (accessibility) */
+  --focus-ring: 0 0 0 2px var(--bg-primary), 0 0 0 4px var(--accent-color);
+}
+
+/* ── Focus Ring for Accessibility ── */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* ── WCAG AA contrast helpers ── */
+[data-theme="light"] .accent-text { color: hsl(var(--accent-h), var(--accent-s), calc(var(--accent-l) - 5%)); }
+[data-theme="dark"]  .accent-text { color: hsl(var(--accent-h), var(--accent-s), calc(var(--accent-l) + 10%)); }
+[data-theme="sepia"] .accent-text { color: hsl(var(--accent-h), var(--accent-s), calc(var(--accent-l) - 5%)); }

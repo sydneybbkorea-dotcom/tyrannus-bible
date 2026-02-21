@@ -1,70 +1,66 @@
 /* ═══════════════════════════════════════════════
-   COMMENTARY
+   COMMENTARY — Clean Study Notes
 ═══════════════════════════════════════════════ */
 .comm-body-wrap { flex:1; overflow-y:auto; padding:12px }
-/* ── 구절 그룹 카드 ── */
+
+/* ── 구절 그룹 ── */
 .comm-verse-group {
-  border-radius:12px; overflow:hidden; margin-bottom:12px;
-  background:var(--bg2); border:1px solid var(--border);
+  border-radius:0; border:none; background:transparent;
+  margin-bottom:16px;
 }
 .comm-verse-header {
   display:flex; align-items:center; justify-content:space-between;
-  padding:12px 16px;
-  font-size:14px; font-weight:700; color:var(--gold2);
+  padding:14px 16px;
+  font-size:15px; font-weight:700; color:var(--gold2);
   font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif;
-  background:var(--bg3); border-bottom:1px solid var(--border);
+  background:transparent; border-bottom:1px solid var(--border);
 }
 .comm-verse-header i { color:var(--gold); font-size:11px }
 .comm-verse-body { padding:8px }
 
-/* 섹션 카드 공통 */
+/* ── 섹션 카드 공통 (flat + 색선) ── */
 .comm-sec-card {
-  border-radius:10px; margin-bottom:6px; overflow:hidden;
+  border-radius:8px; margin-bottom:8px; overflow:hidden;
+  background:var(--bg3); border:1px solid var(--border);
+  border-left:3px solid var(--text3);
 }
 .comm-sec-card:last-child { margin-bottom:0 }
+
+/* 헤더 — muted text, 아이콘만 색상 */
 .comm-sec-head {
   display:flex; align-items:center; gap:6px; padding:8px 12px;
-  font-size:10px; font-weight:700; letter-spacing:.4px;
+  font-size:10px; font-weight:700; letter-spacing:.5px;
+  text-transform:uppercase;
+  color:var(--text3); border-bottom:1px solid var(--border);
 }
 .comm-sec-head i { font-size:10px }
 .comm-sec-inner { padding:8px 12px 10px; font-size:13px; line-height:1.8 }
 
-/* 1) 구절 주석 — 부드러운 자주/보라 */
-.comm-sec-note {
-  background:linear-gradient(135deg, rgba(160,120,200,.10), rgba(130,100,180,.06));
-  border:1px solid rgba(160,120,200,.15);
-}
-.comm-sec-note .comm-sec-head { color:rgba(180,140,220,.9) }
+/* ── 유형별 색선 + 아이콘 색상 ── */
+
+/* 1) 구절 주석 — 보라 */
+.comm-sec-note     { border-left-color:#a084c8; }
+.comm-sec-note .comm-sec-head i     { color:#a084c8; }
 .comm-sec-note .comm-sec-inner { color:var(--text) }
 
-/* 2) 연결된 구절 — 부드러운 블루 */
-.comm-sec-refs {
-  background:linear-gradient(135deg, rgba(100,160,240,.10), rgba(80,140,220,.06));
-  border:1px solid rgba(100,160,240,.15);
-}
-.comm-sec-refs .comm-sec-head { color:rgba(120,170,250,.9) }
+/* 2) 연결된 구절 — 블루 */
+.comm-sec-refs     { border-left-color:#6495ed; }
+.comm-sec-refs .comm-sec-head i     { color:#6495ed; }
 
-/* 3) 연결된 노트 — 부드러운 틸 */
-.comm-sec-notes {
-  background:linear-gradient(135deg, rgba(60,190,170,.10), rgba(40,170,150,.06));
-  border:1px solid rgba(60,190,170,.15);
-}
-.comm-sec-notes .comm-sec-head { color:rgba(80,210,190,.9) }
+/* 3) 연결된 노트 — 틸 */
+.comm-sec-notes    { border-left-color:#50c8b0; }
+.comm-sec-notes .comm-sec-head i    { color:#50c8b0; }
 
-/* 4) 하이라이트 메모 — 부드러운 앰버/로즈 */
-.comm-sec-hl {
-  background:linear-gradient(135deg, rgba(220,160,60,.10), rgba(200,140,50,.06));
-  border:1px solid rgba(220,160,60,.15);
-}
-.comm-sec-hl .comm-sec-head { color:var(--gold2) }
+/* 4) 하이라이트 메모 — 앰버 */
+.comm-sec-hl       { border-left-color:var(--gold); }
+.comm-sec-hl .comm-sec-head i       { color:var(--gold); }
 
-/* 5) 참고 주석 — 미묘한 회색 */
-.comm-sec-ref-note {
-  background:var(--bg3); border:1px solid var(--border);
-}
-.comm-sec-ref-note .comm-sec-head { color:var(--text3) }
+/* 5) 참고 주석 — 회색 */
+.comm-sec-ref-note { border-left-color:var(--text3); }
+.comm-sec-ref-note .comm-sec-head i { color:var(--text3); }
 .comm-sec-ref-note .comm-sec-inner { color:var(--text2) }
 
+/* 섹션 타이틀 (기존 호환) */
 .comm-sec-title {
   font-size:11px; font-weight:700; letter-spacing:.3px; margin-bottom:8px;
   display:flex; align-items:center; gap:5px;
@@ -72,43 +68,44 @@
 .comm-sec-title i { font-size:10px }
 .comm-sec-content { font-size:13px; color:var(--text2); line-height:1.85 }
 
-/* 연결된 노트 아이템 */
+/* ── 연결된 노트 아이템 ── */
 .comm-note-item {
   padding:8px 10px; border-radius:8px; cursor:pointer; transition:all .12s;
   display:flex; align-items:center; justify-content:space-between; gap:8px;
-  background:rgba(60,190,170,.08); margin-bottom:4px;
+  background:rgba(80,200,176,.08); margin-bottom:4px;
 }
-.comm-note-item:hover { background:rgba(60,190,170,.16) }
+.comm-note-item:hover { background:rgba(80,200,176,.16) }
 .comm-note-main { display:flex; align-items:center; gap:7px; font-size:13px; color:var(--text); flex:1; min-width:0 }
-.comm-note-main i { color:rgba(80,210,190,.8) }
+.comm-note-main i { color:#50c8b0 }
 .comm-note-main span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap }
 .comm-note-folder { font-size:9px; color:var(--text3); flex-shrink:0; display:flex; align-items:center; gap:3px }
 
-/* 하이라이트 메모 카드 — 인용+제목+내용 한 박스 */
+/* ── 하이라이트 메모 카드 — flat (중첩 제거) ── */
 .comm-hl-card {
-  background:var(--bg3); border-radius:10px; margin-bottom:8px;
-  overflow:hidden; border:1px solid var(--border);
+  background:transparent; border:none; border-radius:0;
+  padding:0; margin-bottom:12px;
 }
 .comm-hl-card:last-child { margin-bottom:0 }
 .comm-hl-quote {
-  padding:8px 12px; font-size:12.5px;
-  color:var(--text); font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif;
-  line-height:1.7; display:flex; align-items:baseline; gap:6px;
+  padding:6px 12px; font-size:12.5px;
+  color:var(--text2); font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif;
+  line-height:1.7;
+  border-left:3px solid var(--gold);
+  background:transparent;
 }
-.comm-hl-quote span:first-of-type { opacity:.5; flex-shrink:0 }
-.comm-hl-meta {
-  padding:5px 12px; display:flex; align-items:center; gap:6px;
-  background:var(--bg4);
-}
-.comm-hl-name { font-size:11px; font-weight:600; color:var(--text2) }
 .comm-hl-body {
-  padding:10px 12px; font-size:13px; color:var(--text); line-height:1.8;
+  padding:8px 12px; font-size:13px; color:var(--text); line-height:1.8;
   font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif;
 }
-.comm-hl-tags { padding:6px 12px; display:flex; flex-wrap:wrap; gap:4px; background:var(--bg4) }
+.comm-hl-tags { padding:4px 12px 8px; display:flex; flex-wrap:wrap; gap:4px; background:transparent }
 .comm-memo-tag {
   font-size:9px; color:var(--gold); background:var(--gold-dim);
   border-radius:4px; padding:2px 6px;
+}
+
+/* 하이라이트 메모 구분선 */
+.comm-hl-divider {
+  height:1px; background:var(--border); margin:4px 12px;
 }
 
 /* 구절 메모 */
@@ -117,17 +114,17 @@
   font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif;
 }
 
-/* 교차 참조 칩 */
+/* ── 교차 참조 칩 ── */
 .cross-refs { display:flex; gap:5px; flex-wrap:wrap }
 .cref {
   font-size:11px; font-family:'JetBrains Mono',monospace;
-  background:rgba(100,160,240,.12); color:rgba(130,180,255,.9); border-radius:6px;
-  padding:3px 8px; cursor:pointer; border:1px solid rgba(100,160,240,.18);
+  background:rgba(100,149,237,.12); color:rgba(130,180,255,.9); border-radius:6px;
+  padding:3px 8px; cursor:pointer; border:1px solid rgba(100,149,237,.18);
   transition:all .13s;
 }
-.cref:hover { background:rgba(100,160,240,.22) }
+.cref:hover { background:rgba(100,149,237,.22) }
 
-/* 기존 호환 */
+/* ── 기존 호환 ── */
 .comm-card {
   background:var(--bg3); border:1px solid var(--border); border-left:3px solid var(--gold);
   border-radius:0 var(--radius) var(--radius) 0; padding:12px 14px; margin-bottom:10px;
@@ -136,7 +133,8 @@
 .comm-txt { font-size:13px; color:var(--text2); line-height:1.85 }
 .comm-hint { text-align:center; color:var(--text3); padding:40px 16px; font-size:13px; line-height:1.9 }
 .comm-hint i { font-size:28px; display:block; margin-bottom:12px; color:var(--text3) }
-/* 장별/구절별 모드 바 */
+
+/* ── 장별/구절별 모드 바 ── */
 .comm-mode-bar {
   display:flex; gap:2px; padding:8px 12px; border-bottom:1px solid var(--border);
   background:var(--bg2); flex-shrink:0;
@@ -149,10 +147,11 @@
 }
 .comm-mode-btn:hover { color:var(--text2); background:var(--bg3) }
 .comm-mode-btn.comm-mode-active {
-  background:rgba(52,211,153,.08); color:#34d399; border-color:rgba(52,211,153,.3);
+  background:var(--accent-dim); color:var(--accent-color); border-color:hsla(var(--accent-h), var(--accent-s), var(--accent-l), 0.3);
   font-weight:600;
 }
-/* 장별 주석 */
+
+/* ── 장별 주석 ── */
 .comm-ch-title {
   font-size:12px; font-weight:700; color:var(--gold); padding:10px 14px 6px;
   font-family:'JetBrains Mono',monospace; letter-spacing:.3px;
@@ -191,3 +190,16 @@
 }
 .comm-ch-note:hover { background:var(--gold-sel) }
 
+/* ── Light mode — 색선 색상 보정 ── */
+[data-theme="light"] .comm-sec-note     { border-left-color:#8b6aaf; }
+[data-theme="light"] .comm-sec-note .comm-sec-head i { color:#7040a0; }
+
+[data-theme="light"] .comm-sec-refs     { border-left-color:#4a80d6; }
+[data-theme="light"] .comm-sec-refs .comm-sec-head i { color:#2f6ec0; }
+
+[data-theme="light"] .comm-sec-notes    { border-left-color:#3aaa96; }
+[data-theme="light"] .comm-sec-notes .comm-sec-head i { color:#0f7b6b; }
+
+[data-theme="light"] .comm-note-item { background:rgba(20,160,140,.08); }
+[data-theme="light"] .comm-note-item:hover { background:rgba(20,160,140,.15); }
+[data-theme="light"] .comm-note-main i { color:#0f7b6b; }

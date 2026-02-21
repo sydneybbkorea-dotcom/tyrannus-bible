@@ -71,6 +71,23 @@ function _spTogglePin(){
   if(btn) btn.classList.toggle('pinned', _spPinned);
 }
 
+// 지식 그래프 토글
+function toggleKnowledgeGraph(){
+  if(typeof KnowledgeGraph==='undefined') return;
+  if(KnowledgeGraph.isOpen()){
+    KnowledgeGraph.close();
+  } else {
+    // 현재 구절 URI를 중심으로 그래프 표시
+    var uri = null;
+    if(typeof TyrannusURI!=='undefined' && S.book && S.ch && S.vs){
+      uri = TyrannusURI.verse(S.book, S.ch, S.vs);
+    } else if(typeof TyrannusURI!=='undefined' && S.curNoteId){
+      uri = TyrannusURI.note(S.curNoteId);
+    }
+    KnowledgeGraph.show(uri, { depth: 3 });
+  }
+}
+
 function _initSection(name){
   if(name==='bible') buildBookList();
   else if(name==='bookmark') renderBookmarks();

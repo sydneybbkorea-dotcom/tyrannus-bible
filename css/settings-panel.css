@@ -1,5 +1,20 @@
 /* settings-panel.css — 설정 패널 (다크모드, 글꼴, 자간, 줄간) */
-.stp-wrap { padding:14px 16px; display:flex; flex-direction:column; gap:16px }
+.stp-wrap { padding:10px 16px; display:flex; flex-direction:column; gap:12px }
+
+/* ── Section groups ── */
+.stp-section {
+  display:flex; flex-direction:column; gap:10px;
+  padding:12px; border-radius:8px;
+  background:var(--bg3); border:1px solid var(--border);
+}
+.stp-sec-title {
+  font-size:10px; font-weight:700; color:var(--text3);
+  text-transform:uppercase; letter-spacing:.8px;
+  display:flex; align-items:center; gap:6px;
+  padding-bottom:6px; border-bottom:1px solid var(--border);
+}
+.stp-sec-title i { font-size:10px; color:var(--gold); width:14px; text-align:center }
+
 .stp-row { display:flex; flex-direction:column; gap:6px }
 .stp-row-toggle { flex-direction:row; align-items:center; justify-content:space-between }
 .stp-row-head {
@@ -7,6 +22,16 @@
   font-size:12px; font-weight:600; color:var(--text2);
 }
 .stp-row-head i { font-size:11px; color:var(--gold); width:14px; text-align:center }
+
+/* ── Color reset button ── */
+.stp-color-reset {
+  padding:5px 0; font-size:10px; font-weight:600;
+  color:var(--text3); background:transparent; border:1px dashed var(--border);
+  border-radius:5px; cursor:pointer; transition:all .15s;
+  display:flex; align-items:center; justify-content:center; gap:4px;
+}
+.stp-color-reset:hover { color:var(--text); border-color:var(--text3) }
+.stp-color-reset i { font-size:9px }
 .stp-label {
   font-size:12px; font-weight:600; color:var(--text2);
   display:flex; align-items:center; gap:6px;
@@ -57,58 +82,60 @@
   border-radius:6px; cursor:pointer; transition:all .15s;
 }
 .stp-reset button:hover { color:var(--text); background:var(--bg4) }
-/* 클라우드 동기화 카드 */
-.stp-cloud-card {
-  border:1px solid rgba(52,211,153,.3); border-radius:8px;
-  background:rgba(52,211,153,.06); overflow:hidden;
+/* ── Section divider ── */
+.stp-divider {
+  height:1px; background:var(--border); margin:4px 0;
 }
-.stp-cloud-head {
-  display:flex; align-items:center; justify-content:space-between;
-  padding:10px 12px; border-bottom:1px solid rgba(52,211,153,.15);
+
+/* ── Sync status indicator ── */
+.stp-sync-status {
+  margin-left:auto;
+  display:inline-flex; align-items:center; gap:5px;
+  font-size:10px; font-weight:600; color:var(--text3);
 }
-.stp-cloud-title {
-  font-size:12px; font-weight:700; color:#34d399;
-  display:flex; align-items:center; gap:6px;
+.stp-sync-dot {
+  width:6px; height:6px; border-radius:50%;
+  background:var(--text3);
 }
-.stp-cloud-title i { font-size:13px }
-.stp-cloud-head .sync-badge { font-size:9px; padding:1px 6px }
-.stp-cloud-body { padding:10px 12px; display:flex; flex-direction:column; gap:10px }
-/* 용량 바 */
-.stp-quota-bar-wrap { cursor:pointer; transition:opacity .15s }
-.stp-quota-bar-wrap:hover { opacity:.8 }
-.stp-quota-head {
-  display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;
+.stp-sync-ok .stp-sync-dot { background:var(--accent-color); }
+.stp-sync-ok { color:var(--accent-color); }
+.stp-sync-err .stp-sync-dot { background:#ef4444; }
+.stp-sync-err { color:#ef4444; }
+.stp-sync-off .stp-sync-dot { background:var(--text3); }
+
+/* ── Quota bar (same style as sliders) ── */
+.stp-sync-quota {
+  cursor:pointer; transition:opacity .15s;
+  display:flex; flex-direction:column; gap:6px;
 }
-.stp-quota-label { font-size:10px; font-weight:600; color:var(--text2) }
-.stp-quota-val {
-  font-size:10px; font-weight:700; color:#34d399;
-  font-family:'JetBrains Mono',monospace;
-}
+.stp-sync-quota:hover { opacity:.8; }
 .stp-quota-track {
-  width:100%; height:6px; background:var(--bg4); border-radius:3px; overflow:hidden;
+  width:100%; height:4px; background:var(--bg4); border-radius:2px; overflow:hidden;
 }
 .stp-quota-fill {
-  height:100%; width:0; background:#34d399; border-radius:3px;
+  height:100%; width:0; background:var(--accent-color); border-radius:2px;
   transition:width .4s ease, background .3s;
 }
-.stp-quota-fill.quota-yellow { background:var(--gold,#facc15) }
-.stp-quota-fill.quota-red { background:#ef4444 }
-/* 용량 추가 버튼 */
-.stp-cloud-upgrade {
+.stp-quota-fill.quota-yellow { background:var(--gold,#facc15); }
+.stp-quota-fill.quota-red { background:#ef4444; }
+
+/* ── Sync action button (same as reset button) ── */
+.stp-sync-action {
   width:100%; padding:6px 0; font-size:10px; font-weight:600;
-  color:#34d399; background:rgba(52,211,153,.1);
-  border:1px solid rgba(52,211,153,.25); border-radius:5px;
-  cursor:pointer; transition:all .15s;
+  color:var(--text3); background:var(--bg3); border:1px solid var(--border);
+  border-radius:5px; cursor:pointer; transition:all .15s;
   display:flex; align-items:center; justify-content:center; gap:5px;
 }
-.stp-cloud-upgrade:hover { background:rgba(52,211,153,.18); border-color:#34d399 }
-.stp-cloud-upgrade i { font-size:9px }
-/* 미로그인 안내 */
-.stp-cloud-login {
-  padding:10px 12px; font-size:11px; color:var(--text3);
-  display:flex; align-items:center; gap:6px;
+.stp-sync-action:hover { color:var(--text); background:var(--bg4); }
+.stp-sync-action i { font-size:9px; }
+
+/* ── Login hint ── */
+.stp-sync-login {
+  display:flex; align-items:center; gap:8px;
+  font-size:11px; color:var(--text3);
+  padding:6px 0;
 }
-.stp-cloud-login i { font-size:10px; color:var(--text3) }
+.stp-sync-login i { font-size:12px; color:var(--text3); opacity:.6; }
 /* 로그아웃 버튼 */
 .stp-logout { padding-top:12px; border-top:1px solid var(--border); margin-top:4px }
 .stp-logout-btn {
@@ -119,3 +146,87 @@
 }
 .stp-logout-btn:hover { background:rgba(239,68,68,.1); border-color:#ef4444 }
 .stp-logout-btn i { font-size:12px }
+
+/* ── Theme selector buttons ── */
+.stp-theme-btns {
+  display:flex; gap:6px;
+}
+.stp-theme-btn {
+  flex:1; padding:6px 8px; font-size:11px; font-weight:600;
+  color:var(--text2); background:var(--bg3); border:1px solid var(--border);
+  border-radius:6px; cursor:pointer; transition:all .15s;
+  display:flex; align-items:center; justify-content:center; gap:4px;
+}
+.stp-theme-btn:hover { color:var(--text); background:var(--bg4) }
+.stp-theme-btn.stp-theme-active {
+  color:var(--accent-color, var(--gold));
+  background:var(--accent-dim, var(--gold-dim));
+  border-color:var(--accent-color, var(--gold));
+}
+.stp-theme-btn i { font-size:10px }
+
+/* ── Accent color dots ── */
+.stp-accent-dots {
+  display:flex; gap:8px; flex-wrap:wrap;
+}
+.stp-accent-dot {
+  width:22px; height:22px; border-radius:50%;
+  border:2px solid transparent; cursor:pointer;
+  transition:all .15s; flex-shrink:0;
+}
+.stp-accent-dot:hover { transform:scale(1.15); opacity:.9 }
+.stp-accent-dot.stp-dot-active {
+  border-color:var(--text); box-shadow:0 0 0 2px var(--bg), 0 0 0 4px currentColor;
+}
+
+/* ── Base (background) color dots — square shape ── */
+.stp-base-dots {
+  display:flex; gap:8px; flex-wrap:wrap;
+}
+.stp-base-dot {
+  width:22px; height:22px; border-radius:4px;
+  border:2px solid transparent; cursor:pointer;
+  transition:all .15s; flex-shrink:0;
+}
+.stp-base-dot:hover { transform:scale(1.15); opacity:.9 }
+.stp-base-dot.stp-dot-active {
+  border-color:var(--text); box-shadow:0 0 0 2px var(--bg), 0 0 0 4px currentColor;
+}
+
+/* ── Text color dots ── */
+.stp-txtc-dot {
+  width:22px; height:22px; border-radius:50%;
+  border:2px solid transparent; cursor:pointer;
+  transition:all .15s; flex-shrink:0;
+  font-size:0; line-height:22px; text-align:center;
+}
+.stp-txtc-dot:hover { transform:scale(1.15); opacity:.9 }
+.stp-txtc-dot.stp-dot-active {
+  border-color:var(--text); box-shadow:0 0 0 2px var(--bg), 0 0 0 4px currentColor;
+}
+.stp-txtc-default {
+  background:var(--bg4); border:1px dashed var(--text3);
+  font-size:10px; font-weight:700; color:var(--text3);
+  display:flex; align-items:center; justify-content:center;
+}
+.stp-txtc-default.stp-dot-active {
+  border-style:solid; border-color:var(--text);
+  color:var(--text);
+}
+
+/* ── Custom color picker dot ── */
+.stp-dot-picker {
+  position:relative; overflow:hidden; display:inline-block;
+}
+.stp-pick-input {
+  position:absolute; inset:0; width:100%; height:100%;
+  opacity:0; cursor:pointer; border:none; padding:0;
+}
+
+/* ── Language selector ── */
+.stp-lang-sel {
+  background:var(--bg3); border:1px solid var(--border); border-radius:5px;
+  padding:4px 8px; font-size:11px; color:var(--text); outline:none;
+  cursor:pointer;
+}
+.stp-lang-sel:hover { background:var(--bg4) }

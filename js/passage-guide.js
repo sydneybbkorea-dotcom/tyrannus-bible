@@ -15,6 +15,9 @@ function buildPassageGuide(vn){
   if(refs.length) h+=`<span class="pg-stat"><i class="fa fa-link"></i> ${refs.length} 참조</span>`;
   if(linked.length) h+=`<span class="pg-stat"><i class="fa fa-pen"></i> ${linked.length} 노트</span>`;
   if(hasHL) h+=`<span class="pg-stat"><i class="fa fa-highlighter"></i> 하이라이트</span>`;
+  if(typeof KnowledgeGraph!=='undefined'){
+    h+=`<span class="pg-stat pg-stat-graph" onclick="event.stopPropagation();KnowledgeGraph.show(typeof TyrannusURI!=='undefined'?TyrannusURI.verse('${S.book}',${S.ch},${vn}):null,{depth:3})" style="cursor:pointer"><i class="fa fa-project-diagram"></i> ${typeof t==='function'?t('graph.viewGraph','연결 그래프'):'연결 그래프'}</span>`;
+  }
   h+=`</div>`;
   if(refs.length){
     h+=`<div class="pg-refs">`;

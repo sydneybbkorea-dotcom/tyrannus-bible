@@ -10,12 +10,28 @@ function updateBacklinks(){
     return;
   }
 
-  // Find all notes that have an nlink pointing to current note
-  const linked = S.notes.filter(n => {
-    if(n.id===S.curNoteId) return false;
-    const tmp=document.createElement('div'); tmp.innerHTML=n.content||'';
-    return [...tmp.querySelectorAll('.nlink')].some(el=>el.dataset.noteid===S.curNoteId);
-  });
+  var linked = [];
+
+  // Use LinkRegistry for O(1) backlink lookup if available
+  if(typeof LinkRegistry !== 'undefined' && LinkRegistry.isReady()){
+    var noteUri = TyrannusURI.note(S.curNoteId);
+    var incomingLinks = LinkRegistry.getIncoming(noteUri);
+    var linkedNoteIds = new Set();
+    incomingLinks.forEach(function(link){
+      var parsed = TyrannusURI.parse(link.sourceUri);
+      if(parsed && parsed.type === 'note' && parsed.segments[0] !== S.curNoteId){
+        linkedNoteIds.add(parsed.segments[0]);
+      }
+    });
+    linked = S.notes.filter(function(n){ return linkedNoteIds.has(n.id); });
+  } else {
+    // Fallback: O(N*M) HTML parsing (legacy)
+    linked = S.notes.filter(n => {
+      if(n.id===S.curNoteId) return false;
+      const tmp=document.createElement('div'); tmp.innerHTML=n.content||'';
+      return [...tmp.querySelectorAll('.nlink')].some(el=>el.dataset.noteid===S.curNoteId);
+    });
+  }
 
   if(!linked.length){
     panel.style.display='none';
@@ -34,6 +50,18 @@ function updateBacklinks(){
     d.onclick=()=>loadNote(n.id, true);
     listEl.appendChild(d);
   });
+
+  // 그래프 보기 버튼
+  if(typeof KnowledgeGraph !== 'undefined'){
+    var graphBtn = document.createElement('div');
+    graphBtn.className = 'bl-graph-btn';
+    graphBtn.innerHTML = '<i class="fa fa-project-diagram"></i> ' + (typeof t==='function'? t('graph.viewGraph','그래프 보기') : '그래프 보기');
+    graphBtn.onclick = function(){
+      var uri = typeof TyrannusURI!=='undefined' ? TyrannusURI.note(S.curNoteId) : null;
+      KnowledgeGraph.show(uri, { depth: 3 });
+    };
+    listEl.appendChild(graphBtn);
+  }
 
   // default expanded
   listEl.style.display='block';

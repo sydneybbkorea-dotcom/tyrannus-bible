@@ -9,7 +9,7 @@ function updateQuotaDisplay(used, limit){
   if(label) label.textContent=fmtMB(used)+' / '+fmtMB(limit);
   // 용량 값 색상 업데이트
   var valEl=document.querySelector('.stp-quota-val');
-  if(valEl) valEl.style.color=pct>=90?'#ef4444':pct>=70?'var(--gold)':'#34d399';
+  if(valEl) valEl.style.color=pct>=90?'#ef4444':pct>=70?'var(--gold)':'';
 }
 
 function fmtMB(b){ return b<1048576?(b/1024).toFixed(0)+' KB':(b/1048576).toFixed(1)+' MB'; }

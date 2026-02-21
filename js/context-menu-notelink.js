@@ -144,11 +144,17 @@ function toggleNoteLink(noteId){
 function confirmNoteLink(){
   const key = window._noteLinkKey;
   if(!key) return;
+  var verseUri = (typeof TyrannusURI !== 'undefined') ? TyrannusURI.fromLegacyVerseKey(key) : null;
+
   // 선택된 노트에 key 추가, 해제된 노트에서 key 제거
   S.notes.forEach(n => {
     if(!n.vRefs) n.vRefs = [];
     if(window._noteLinkSelected.has(n.id)){
       if(!n.vRefs.includes(key)) n.vRefs.push(key);
+      // Register in LinkRegistry
+      if(typeof LinkRegistry !== 'undefined' && LinkRegistry.isReady() && verseUri){
+        LinkRegistry.addLink(TyrannusURI.note(n.id), verseUri, 'reference', { label: key });
+      }
     } else {
       n.vRefs = n.vRefs.filter(r => r !== key);
     }

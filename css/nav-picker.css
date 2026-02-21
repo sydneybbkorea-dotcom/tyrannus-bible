@@ -110,6 +110,6 @@
   color:var(--text);
 }
 .np-ch.act {
-  background:var(--accent); border-color:var(--accent);
-  color:#fff; font-weight:700;
+  background:var(--accent-dim); border-color:var(--accent-color);
+  color:var(--accent-color); font-weight:700;
 }

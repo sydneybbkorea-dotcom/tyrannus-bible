@@ -1,0 +1,258 @@
+{
+  "nav": {
+    "bible": "성경",
+    "notes": "노트",
+    "dict": "사전",
+    "bookmark": "북마크",
+    "reading": "읽기",
+    "library": "도서관",
+    "qna": "Q&A",
+    "bugreport": "버그",
+    "settings": "설정",
+    "login": "로그인",
+    "graph": "그래프"
+  },
+  "bible": {
+    "title": "표준킹제임스성경",
+    "korean": "한",
+    "english": "영",
+    "redLetter": "예수님 말씀",
+    "strongCodes": "원어 코드",
+    "highlight": "형광펜 표시",
+    "search": "검색...",
+    "prevCh": "이전 장",
+    "nextCh": "다음 장",
+    "newTab": "새 탭",
+    "noData": "이 장의 성경 데이터가 준비 중이에요.",
+    "fullBible": "표준킹제임스성경 66권 전권 수록",
+    "chapter": "장",
+    "verse": "절",
+    "bibleList": "성경 목록"
+  },
+  "notes": {
+    "title": "노트",
+    "newNote": "새 노트",
+    "newFolder": "새 폴더",
+    "collapseAll": "모두 접기",
+    "close": "닫기",
+    "vault": "Vault",
+    "placeholder": "제목을 입력하세요...",
+    "saved": "저장됨",
+    "enterContent": "내용을 입력해주세요",
+    "untitled": "제목 없음",
+    "backlinks": "백링크",
+    "viewGraph": "그래프 보기",
+    "tags": "태그...",
+    "deleteConfirm": "이 노트를 삭제하시겠습니까?"
+  },
+  "editor": {
+    "paragraph": "단락",
+    "heading1": "H1",
+    "heading2": "H2",
+    "heading3": "H3",
+    "body": "본문",
+    "quote": "인용",
+    "size": "크기",
+    "bold": "굵게",
+    "italic": "기울임",
+    "underline": "밑줄",
+    "strike": "취소선",
+    "textColor": "텍스트 색상",
+    "bgHighlight": "배경 하이라이트",
+    "bulletList": "글머리 목록",
+    "numberList": "번호 목록",
+    "alignLeft": "왼쪽 정렬",
+    "alignCenter": "가운데 정렬",
+    "alignRight": "오른쪽 정렬",
+    "table": "표 삽입",
+    "hr": "구분선",
+    "undo": "실행 취소",
+    "redo": "다시 실행",
+    "indent": "들여쓰기",
+    "outdent": "내어쓰기",
+    "insert": "삽입",
+    "noteLink": "노트",
+    "verseLink": "구절",
+    "urlLink": "링크",
+    "youtube": "유튜브",
+    "fileAttach": "파일",
+    "infoBox": "정보 박스",
+    "warnBox": "경고 박스",
+    "ideaBox": "아이디어/묵상 박스",
+    "checkbox": "체크",
+    "dateStamp": "날짜"
+  },
+  "panel": {
+    "notes": "노트",
+    "commentary": "주석",
+    "outline": "아웃라인",
+    "strongDict": "스트롱",
+    "websterDict": "웹스터",
+    "enkoDict": "영한",
+    "koreanDict": "표준국어",
+    "search": "검색결과",
+    "close": "패널 닫기",
+    "noteList": "노트 목록"
+  },
+  "dict": {
+    "strongsTitle": "Strong's Concordance",
+    "strongsHint": "원어 코드를 검색하거나\n구절의 원어 코드를 클릭하세요",
+    "strongsHelp": "H = 히브리어 (구약) · G = 그리스어 (신약)",
+    "strongsPlaceholder": "스트롱 번호 (H1, G3056) 또는 원어 검색...",
+    "websterTitle": "English Dictionary",
+    "websterHint": "영어 단어의 정의를 검색하세요",
+    "websterHelp": "발음 · 품사 · 정의 · 예문 · 동의어",
+    "websterPlaceholder": "English word (e.g., grace, faith)...",
+    "enkoTitle": "English-Korean Dictionary",
+    "enkoHint": "영어 단어를 한국어와 함께 검색하세요",
+    "enkoHelp": "영어 정의 + 한국어 번역",
+    "enkoPlaceholder": "영한 검색 (e.g., salvation, mercy)...",
+    "koreanPlaceholder": "국어사전 검색..."
+  },
+  "ctx": {
+    "highlight": "형광펜 적용 (드래그 선택 후)",
+    "clearHL": "형광펜 지우기",
+    "verseMemo": "주석 작성",
+    "newNote": "새 노트 작성",
+    "linkNote": "노트 연결",
+    "viewDict": "사전 보기",
+    "addBookmark": "북마크 추가/제거",
+    "copyVerse": "구절 복사",
+    "copyRef": "참조 형식 복사",
+    "insertLink": "노트에 구절 링크 삽입"
+  },
+  "search": {
+    "placeholder": "검색어 입력... (한글/영어/H1234)",
+    "help": "검색 도움말",
+    "all": "전체",
+    "ot": "구약",
+    "nt": "신약",
+    "bookSelect": "책 선택...",
+    "notesFilter": "노트",
+    "commFilter": "주석",
+    "filesFilter": "파일",
+    "advanced": "고급",
+    "listView": "목록",
+    "refView": "참조",
+    "treeView": "트리",
+    "caseSensitive": "대소문자 구분",
+    "scopeVerse": "절",
+    "scopeChapter": "장",
+    "scopeBook": "권"
+  },
+  "settings": {
+    "title": "설정",
+    "theme": "테마",
+    "themeLight": "라이트",
+    "themeDark": "다크",
+    "themeSepia": "세피아",
+    "accent": "강조 색상",
+    "language": "언어",
+    "langKo": "한국어",
+    "langEn": "English",
+    "fontSize": "글꼴 크기",
+    "letterSpacing": "자간 간격",
+    "lineHeight": "줄 간격",
+    "resetDefaults": "기본값 복원",
+    "logout": "로그아웃"
+  },
+  "modal": {
+    "storageTitle": "저장 공간",
+    "close": "닫기",
+    "upgrade": "업그레이드",
+    "newFolderTitle": "새 폴더 만들기",
+    "folderPlaceholder": "폴더 이름 (예: 로마서 연구, 매일 묵상...)",
+    "cancel": "취소",
+    "create": "만들기",
+    "verseLinkTitle": "성경 구절 링크 삽입",
+    "preview": "미리보기",
+    "insert": "삽입",
+    "noteLinkTitle": "노트 링크 삽입",
+    "noteLinkSearch": "노트 제목 검색..."
+  },
+  "bookmark": {
+    "title": "북마크",
+    "empty": "북마크가 없습니다"
+  },
+  "reading": {
+    "title": "읽기 계획",
+    "preparing": "준비 중입니다"
+  },
+  "library": {
+    "title": "도서관",
+    "preparing": "준비 중입니다"
+  },
+  "qna": {
+    "title": "Q&A",
+    "preparing": "준비 중입니다"
+  },
+  "comm": {
+    "verseMode": "구절별",
+    "chapterMode": "장별",
+    "hint": "구절을 클릭하면\n주석을 볼 수 있어요"
+  },
+  "outline": {
+    "title": "노트 아웃라인",
+    "expandAll": "모두 펼치기/접기"
+  },
+  "sync": {
+    "title": "클라우드 동기화",
+    "connected": "연결됨",
+    "disconnected": "미연결"
+  },
+  "toast": {
+    "saved": "저장됨",
+    "noteLinkInserted": "노트 링크가 삽입됐어요",
+    "verseLinkInserted": "링크가 삽입됐어요",
+    "noteLinked": "노트가 연결됐어요",
+    "selectVerse": "구절을 먼저 클릭하세요"
+  },
+  "indicator": {
+    "hasNote": "노트 있음",
+    "hasBookmark": "북마크",
+    "hasComm": "주석 있음"
+  },
+  "passageGuide": {
+    "refs": "참조",
+    "notes": "노트",
+    "hlApplied": "하이라이트",
+    "connectionGraph": "연결 그래프"
+  },
+  "xref": {
+    "label": "참조"
+  },
+  "noteLink": {
+    "title": "노트 연결",
+    "search": "노트 검색...",
+    "noResults": "검색 결과 없음",
+    "noNotes": "작성된 노트가 없어요",
+    "folderEmpty": "노트 없음",
+    "connect": "연결",
+    "defaultFolder": "기본 폴더",
+    "count": "개"
+  },
+  "pdf": {
+    "open": "PDF 열기",
+    "highlight": "하이라이트",
+    "draw": "그리기",
+    "text": "텍스트",
+    "eraser": "지우기",
+    "select": "선택",
+    "page": "페이지",
+    "addToNote": "노트에 추가",
+    "newNoteFromPdf": "새 노트 생성",
+    "linkVerse": "구절 연결"
+  },
+  "graph": {
+    "title": "지식 그래프",
+    "filterNodes": "노드 필터",
+    "filterLinks": "링크 필터",
+    "verse": "구절",
+    "note": "노트",
+    "pdfNode": "PDF",
+    "strong": "원어",
+    "commNode": "주석",
+    "viewGraph": "그래프 보기",
+    "tag": "태그"
+  }
+}

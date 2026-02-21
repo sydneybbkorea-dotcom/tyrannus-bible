@@ -49,5 +49,16 @@ function insertNoteLink(noteId, noteTitle){
   }
   const linkHTML=`<span class="nlink" data-noteid="${noteId}" contenteditable="false" title="${noteTitle}"><i class="fa fa-file-alt"></i> ${noteTitle}</span>&#8203;`;
   insertInlineHTML(linkHTML);
+
+  // Register link in LinkRegistry
+  if(typeof LinkRegistry !== 'undefined' && LinkRegistry.isReady() && S.curNoteId){
+    LinkRegistry.addLink(
+      TyrannusURI.note(S.curNoteId),
+      TyrannusURI.note(noteId),
+      'reference',
+      { label: noteTitle }
+    );
+  }
+
   toast(`"${noteTitle}" 노트 링크가 삽입됐어요 🔗`);
 }

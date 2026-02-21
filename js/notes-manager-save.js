@@ -20,6 +20,14 @@ function saveNote(silent){
   if(idx>=0) S.notes[idx]=note; else S.notes.push(note);
   S.curNoteId=note.id; S.curFolder=fId;
   persist(); renderBible(); renderFolderTree(); updateBreadcrumb(); updateBacklinks();
+
+  // Sync links to LinkRegistry (async)
+  if(typeof LinkRegistry !== 'undefined' && LinkRegistry.isReady()){
+    LinkRegistry.syncFromNote(note.id, content);
+  }
+
+  if(typeof EventBus !== 'undefined') EventBus.emit('note:saved', { id: note.id });
+
   if(!silent) toast('저장됨 ✓');
   if(typeof _noteUpdateTabTitle==='function') _noteUpdateTabTitle();
 }

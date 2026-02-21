@@ -1,0 +1,282 @@
+/* ═══════════════════════════════════════════════
+   PDF VIEWER — Container, toolbar, annotation layer
+═══════════════════════════════════════════════ */
+
+/* ── PDF Panel Container ── */
+.pdf-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--bg-primary, var(--bg));
+}
+
+/* ── PDF Toolbar ── */
+.pdf-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
+  background: var(--bg-secondary, var(--bg2));
+  border-bottom: 1px solid var(--border-color, var(--border));
+  flex-shrink: 0;
+  overflow-x: auto;
+}
+.pdf-toolbar::-webkit-scrollbar { height: 0; }
+
+.pdf-tool-btn {
+  min-width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: var(--radius-sm, 4px);
+  font-size: 12px; color: var(--text-secondary, var(--text2));
+  cursor: pointer; transition: all var(--anim-fast, 150ms);
+  border: none; background: none;
+}
+.pdf-tool-btn:hover {
+  background: var(--bg-tertiary, var(--bg3));
+  color: var(--text-primary, var(--text));
+}
+.pdf-tool-btn.active {
+  background: var(--accent-dim, var(--gold-dim));
+  color: var(--accent-color, var(--gold));
+}
+.pdf-tool-btn i { font-size: 13px; }
+
+.pdf-tool-sep {
+  width: 1px; height: 20px;
+  background: var(--border-color, var(--border));
+  margin: 0 4px;
+}
+
+.pdf-page-info {
+  font-size: 11px; color: var(--text-secondary, var(--text2));
+  font-family: 'JetBrains Mono', monospace;
+  padding: 0 8px; white-space: nowrap;
+}
+
+.pdf-zoom-info {
+  font-size: 10px; color: var(--text-muted, var(--text3));
+  font-family: 'JetBrains Mono', monospace;
+  min-width: 40px; text-align: center;
+}
+
+/* ── PDF Viewport ── */
+.pdf-viewport {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  gap: 8px;
+}
+
+.pdf-page-wrap,
+.pdf-page-wrap canvas {
+  max-width: 100%;
+}
+
+.pdf-page-wrap {
+  position: relative;
+  box-shadow: var(--shadow-md, 0 4px 12px rgba(0,0,0,0.15));
+  background: white;
+  border-radius: 2px;
+}
+
+.pdf-page-wrap canvas {
+  display: block;
+  border-radius: 2px;
+}
+
+/* ── Annotation Layer (overlays on each page) ── */
+.pdf-annot-layer {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+.pdf-annot-layer.interactive {
+  pointer-events: auto;
+}
+
+/* Annotation types */
+.pdf-annot {
+  position: absolute;
+  pointer-events: auto;
+  cursor: pointer;
+}
+.pdf-annot-highlight {
+  background: rgba(250, 204, 21, 0.35);
+  mix-blend-mode: multiply;
+  border-radius: 2px;
+}
+.pdf-annot-underline {
+  border-bottom: 2px solid var(--accent-color, #086DDD);
+}
+.pdf-annot-text {
+  background: rgba(255, 255, 150, 0.9);
+  border: 1px solid rgba(200, 200, 100, 0.6);
+  border-radius: 3px;
+  padding: 4px 6px;
+  font-size: 11px;
+  color: #333;
+  max-width: 200px;
+  word-wrap: break-word;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+}
+
+/* Freehand drawing path */
+.pdf-annot-freehand {
+  pointer-events: none;
+}
+.pdf-annot-freehand path {
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+
+/* Area link indicator */
+.pdf-annot-area-link {
+  border: 2px dashed var(--accent-color, #086DDD);
+  background: hsla(var(--accent-h, 214), 80%, 50%, 0.08);
+  border-radius: 4px;
+}
+.pdf-annot-area-link::after {
+  content: '\f0c1';
+  font-family: 'Font Awesome 6 Free';
+  font-weight: 900;
+  position: absolute;
+  top: 2px; right: 4px;
+  font-size: 10px;
+  color: var(--accent-color, #086DDD);
+  opacity: 0.6;
+}
+
+/* ── Floating Selection Menu ── */
+.pdf-sel-menu {
+  position: absolute;
+  display: flex;
+  gap: 2px;
+  background: var(--bg-surface, var(--bg3));
+  border: 1px solid var(--border-color, var(--border));
+  border-radius: var(--radius-md, 8px);
+  padding: 4px;
+  box-shadow: var(--shadow-md);
+  z-index: 10;
+}
+.pdf-sel-btn {
+  padding: 6px 10px;
+  border-radius: var(--radius-sm, 4px);
+  font-size: 11px;
+  color: var(--text-primary, var(--text));
+  cursor: pointer; border: none;
+  background: none;
+  white-space: nowrap;
+  transition: background var(--anim-fast, 150ms);
+}
+.pdf-sel-btn:hover {
+  background: var(--bg-tertiary, var(--bg4));
+}
+.pdf-sel-btn i { margin-right: 4px; }
+
+/* ── PDF Citation in Notes ── */
+.pdf-cite {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  margin: 8px 0;
+  background: var(--bg-secondary, var(--bg2));
+  border-left: 3px solid var(--red, #f05050);
+  border-radius: 0 var(--radius-sm, 4px) var(--radius-sm, 4px) 0;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background var(--anim-fast, 150ms);
+}
+.pdf-cite:hover {
+  background: var(--bg-tertiary, var(--bg3));
+}
+.pdf-cite i {
+  color: var(--red, #f05050);
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.pdf-cite-text {
+  flex: 1;
+  color: var(--text-primary, var(--text));
+  font-style: italic;
+}
+.pdf-cite-ref {
+  font-size: 10px;
+  color: var(--text-muted, var(--text3));
+  font-family: 'JetBrains Mono', monospace;
+  flex-shrink: 0;
+}
+
+/* ── PDF Library Browser ── */
+.pdf-library-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px;
+}
+.pdf-library-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--bg-secondary, var(--bg2));
+  border: 1px solid var(--border-color, var(--border));
+  border-radius: var(--radius-md, 8px);
+  cursor: pointer;
+  transition: all var(--anim-fast, 150ms);
+}
+.pdf-library-item:hover {
+  background: var(--bg-tertiary, var(--bg3));
+  border-color: var(--accent-color, var(--gold));
+}
+.pdf-library-icon {
+  font-size: 24px;
+  color: var(--red, #f05050);
+  width: 32px; text-align: center;
+}
+.pdf-library-info {
+  flex: 1; min-width: 0;
+}
+.pdf-library-name {
+  font-size: 13px; font-weight: 600;
+  color: var(--text-primary, var(--text));
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.pdf-library-meta {
+  font-size: 10px; color: var(--text-muted, var(--text3));
+}
+
+/* ── Color picker for annotations ── */
+.pdf-color-bar {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+}
+.pdf-color-dot {
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all var(--anim-fast, 150ms);
+}
+.pdf-color-dot:hover { transform: scale(1.15); }
+.pdf-color-dot.active { border-color: var(--text-primary, var(--text)); }
+
+/* ── Responsive: Mobile fullscreen ── */
+@media (max-width: 599px) {
+  .pdf-panel {
+    position: fixed;
+    inset: 0;
+    z-index: 800;
+  }
+  .pdf-viewport { padding: 8px; }
+  .pdf-toolbar { padding: 4px 6px; }
+}

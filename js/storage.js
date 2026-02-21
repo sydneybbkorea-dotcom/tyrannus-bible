@@ -1,6 +1,14 @@
 function persist(){
   // localStorage (오프라인 백업)
   try { localStorage.setItem('kjb2',JSON.stringify({hl:S.hl,hlMemo:S.hlMemo||{},hlRanges:S.hlRanges||{},verseMemo:S.verseMemo||{},bk:[...S.bk],notes:S.notes,folders:S.folders,openFolders:[...S.openFolders],showRedLetter:S.showRedLetter||false,readPlan:S.readPlan||null})); } catch(e){}
+
+  // IndexedDB dual-write (async, non-blocking)
+  if(typeof StorageAdapter !== 'undefined' && StorageAdapter.isReady()){
+    // Save notes and folders to IDB in background
+    S.notes.forEach(function(n){ StorageAdapter.saveNote(n); });
+    S.folders.forEach(function(f){ StorageAdapter.saveFolder(f); });
+  }
+
   // Firestore (로그인 시 클라우드 저장 — 용량 체크 후)
   if(window.persistToCloud && window._firebaseReady){
     if(window.checkQuotaBeforeSave && !window.checkQuotaBeforeSave()) return;
