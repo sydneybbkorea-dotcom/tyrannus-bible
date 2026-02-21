@@ -67,14 +67,15 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   padding: 16px;
   gap: 8px;
 }
 
 .pdf-page-wrap,
 .pdf-page-wrap canvas {
-  max-width: 100%;
+  max-width: none;
+  flex-shrink: 0;
 }
 
 .pdf-page-wrap {
