@@ -149,6 +149,22 @@ var ThemeSwitcher = (function(){
   }
 
   function init(){
+    // 기존 방문자 1회 마이그레이션: 이전 기본값(blue) → 새 기본값(#bd8a00/#04050b)
+    if(!localStorage.getItem('kjb2-theme-v2')){
+      // 사용자가 직접 바꾼 적 없으면(blue 기본값) 새 기본값으로 리셋
+      var oldAccent = localStorage.getItem(ACCENT_KEY);
+      var oldBase = localStorage.getItem(BASE_KEY);
+      if(!oldAccent || oldAccent === 'blue'){
+        localStorage.removeItem(ACCENT_KEY);
+        localStorage.removeItem(CUSTOM_ACCENT_KEY);
+      }
+      if(!oldBase || oldBase === 'blue'){
+        localStorage.removeItem(BASE_KEY);
+        localStorage.removeItem(CUSTOM_BASE_KEY);
+      }
+      localStorage.setItem('kjb2-theme-v2', '1');
+    }
+
     setTheme(getTheme());
     var accent = getAccent();
     if(accent === 'custom') setCustomAccent(getCustomAccent());
