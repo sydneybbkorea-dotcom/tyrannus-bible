@@ -203,60 +203,98 @@ var PDFTools = (function(){
     };
   }
 
-  // ── Text Memo (모던 디자인) ──
+  // ── Text Memo (인라인 플로팅 — 블러 없음, 탭 위치 정확) ──
   function _showTextInput(layer, pt, pdfId, pageNum){
-    // Remove existing memo popup
-    var old = document.querySelector('.pdf-memo-overlay');
-    if(old) old.remove();
+    // Remove any existing memo elements
+    _closeMemo();
 
     var scale = _getViewport().scale;
+    var pixelX = pt.x * scale;
+    var pixelY = pt.y * scale;
 
-    // Create overlay
-    var overlay = document.createElement('div');
-    overlay.className = 'pdf-memo-overlay';
+    // ── Pin marker at exact tap point ──
+    var pin = document.createElement('div');
+    pin.className = 'pdf-memo-pin';
+    pin.style.left = pixelX + 'px';
+    pin.style.top  = pixelY + 'px';
+    layer.appendChild(pin);
 
+    // ── Floating popup positioned near tap point ──
     var popup = document.createElement('div');
     popup.className = 'pdf-memo-popup';
 
-    // Header
+    // Position: slightly right and below the pin, keep within page
+    var layerRect = layer.getBoundingClientRect();
+    var popLeft = pixelX + 16;
+    var popTop  = pixelY - 10;
+    // Prevent overflow right
+    if(popLeft + 260 > layerRect.width) popLeft = pixelX - 276;
+    if(popLeft < 0) popLeft = 4;
+    // Prevent overflow bottom
+    if(popTop + 240 > layerRect.height) popTop = pixelY - 250;
+    if(popTop < 0) popTop = 4;
+
+    popup.style.left = popLeft + 'px';
+    popup.style.top  = popTop  + 'px';
+
+    // ── Header (draggable) ──
     var header = document.createElement('div');
     header.className = 'pdf-memo-header';
     header.innerHTML = '<i class="fa fa-pen-to-square"></i><span>메모 추가</span>';
 
-    // Textarea
+    var closeBtn = document.createElement('button');
+    closeBtn.className = 'pdf-memo-close';
+    closeBtn.innerHTML = '<i class="fa fa-xmark"></i>';
+    closeBtn.onclick = function(){ _closeMemo(); };
+    header.appendChild(closeBtn);
+
+    // Drag logic
+    var dragState = { active: false, sx: 0, sy: 0, ox: 0, oy: 0 };
+    header.addEventListener('pointerdown', function(e){
+      if(e.target.closest('.pdf-memo-close')) return;
+      dragState.active = true;
+      dragState.sx = e.clientX;
+      dragState.sy = e.clientY;
+      dragState.ox = popup.offsetLeft;
+      dragState.oy = popup.offsetTop;
+      header.setPointerCapture(e.pointerId);
+      e.preventDefault();
+    });
+    header.addEventListener('pointermove', function(e){
+      if(!dragState.active) return;
+      popup.style.left = (dragState.ox + e.clientX - dragState.sx) + 'px';
+      popup.style.top  = (dragState.oy + e.clientY - dragState.sy) + 'px';
+    });
+    header.addEventListener('pointerup', function(e){
+      dragState.active = false;
+      try { header.releasePointerCapture(e.pointerId); } catch(err){}
+    });
+
+    // ── Textarea ──
     var textarea = document.createElement('textarea');
     textarea.className = 'pdf-memo-textarea';
     textarea.placeholder = '메모를 입력하세요...';
-    textarea.rows = 4;
 
-    // Color picker
-    var colorBar = document.createElement('div');
-    colorBar.className = 'pdf-memo-colors';
+    // ── Footer: color dots + save button ──
+    var footer = document.createElement('div');
+    footer.className = 'pdf-memo-footer';
+
     var colors = ['#FACC15','#4ADE80','#60A5FA','#F87171','#C084FC','#FB923C'];
-    var selectedColor = '#FFFFA0';
+    var selectedColor = '#FACC15';
     colors.forEach(function(c){
       var dot = document.createElement('button');
       dot.className = 'pdf-memo-color-dot' + (c === '#FACC15' ? ' active' : '');
       dot.style.background = c;
       dot.onclick = function(){
-        colorBar.querySelectorAll('.pdf-memo-color-dot').forEach(function(d){ d.classList.remove('active'); });
+        footer.querySelectorAll('.pdf-memo-color-dot').forEach(function(d){ d.classList.remove('active'); });
         dot.classList.add('active');
         selectedColor = c;
       };
-      colorBar.appendChild(dot);
+      footer.appendChild(dot);
     });
 
-    // Buttons
-    var btnRow = document.createElement('div');
-    btnRow.className = 'pdf-memo-btns';
-
-    var cancelBtn = document.createElement('button');
-    cancelBtn.className = 'pdf-memo-btn pdf-memo-btn-cancel';
-    cancelBtn.textContent = '취소';
-    cancelBtn.onclick = function(){ overlay.remove(); };
-
     var saveBtn = document.createElement('button');
-    saveBtn.className = 'pdf-memo-btn pdf-memo-btn-save';
+    saveBtn.className = 'pdf-memo-btn-save';
     saveBtn.innerHTML = '<i class="fa fa-check"></i> 저장';
     saveBtn.onclick = function(){
       var text = textarea.value.trim();
@@ -271,26 +309,18 @@ var PDFTools = (function(){
         _redoStack = [];
         PDFAnnotations.renderPage(pageNum, layer, _getViewport());
       }
-      overlay.remove();
+      _closeMemo();
     };
+    footer.appendChild(saveBtn);
 
-    btnRow.appendChild(cancelBtn);
-    btnRow.appendChild(saveBtn);
-
+    // Assemble
     popup.appendChild(header);
     popup.appendChild(textarea);
-    popup.appendChild(colorBar);
-    popup.appendChild(btnRow);
-    overlay.appendChild(popup);
-    document.body.appendChild(overlay);
+    popup.appendChild(footer);
+    layer.appendChild(popup);
 
-    // Focus textarea after render
+    // Focus textarea
     requestAnimationFrame(function(){ textarea.focus(); });
-
-    // Close on overlay click (outside popup)
-    overlay.addEventListener('click', function(e){
-      if(e.target === overlay) overlay.remove();
-    });
 
     // Enter to save (Shift+Enter for newline)
     textarea.addEventListener('keydown', function(e){
@@ -299,6 +329,16 @@ var PDFTools = (function(){
         saveBtn.click();
       }
     });
+
+    // Prevent pointer events on popup from triggering annotation tools
+    popup.addEventListener('pointerdown', function(e){ e.stopPropagation(); });
+    popup.addEventListener('pointermove', function(e){ e.stopPropagation(); });
+    popup.addEventListener('pointerup', function(e){ e.stopPropagation(); });
+  }
+
+  function _closeMemo(){
+    document.querySelectorAll('.pdf-memo-pin').forEach(function(el){ el.remove(); });
+    document.querySelectorAll('.pdf-memo-popup').forEach(function(el){ el.remove(); });
   }
 
   function _eraseAt(pt, pdfId, pageNum, layer){

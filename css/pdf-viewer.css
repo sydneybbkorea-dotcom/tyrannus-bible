@@ -273,108 +273,111 @@
 .pdf-color-dot:hover { transform: scale(1.15); }
 .pdf-color-dot.active { border-color: var(--text-primary, var(--text)); }
 
-/* ── Memo Popup (모던 디자인) ── */
-.pdf-memo-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background: rgba(0,0,0,.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  backdrop-filter: blur(4px);
+/* ── Memo Floating Panel (인라인, 블러 없음) ── */
+.pdf-memo-pin {
+  position: absolute;
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--accent-color, #bd8a00);
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,.4);
+  z-index: 12;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
 }
 .pdf-memo-popup {
-  width: 340px;
-  max-width: 90vw;
+  position: absolute;
+  z-index: 13;
+  width: 260px;
   background: var(--bg2, #1a1c24);
   border: 1px solid var(--border, #2a2c34);
-  border-radius: 14px;
-  box-shadow: 0 16px 48px rgba(0,0,0,.4);
+  border-radius: 10px;
+  box-shadow: 0 6px 24px rgba(0,0,0,.35);
   overflow: hidden;
 }
 .pdf-memo-header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 14px 18px;
+  gap: 6px;
+  padding: 8px 12px;
   border-bottom: 1px solid var(--border, #2a2c34);
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--text, #e8e8e8);
+  cursor: grab;
+  user-select: none;
 }
+.pdf-memo-header:active { cursor: grabbing; }
 .pdf-memo-header i {
-  color: var(--accent-color, var(--gold, #bd8a00));
-  font-size: 15px;
+  color: var(--accent-color, #bd8a00);
+  font-size: 12px;
+}
+.pdf-memo-header .pdf-memo-close {
+  margin-left: auto;
+  width: 20px; height: 20px;
+  display: flex; align-items: center; justify-content: center;
+  border: none; background: none;
+  color: var(--text3, #666);
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 11px;
+}
+.pdf-memo-header .pdf-memo-close:hover {
+  background: var(--bg3, #22242e);
+  color: var(--text, #e8e8e8);
 }
 .pdf-memo-textarea {
   width: 100%;
   border: none;
   background: var(--bg3, #22242e);
   color: var(--text, #e8e8e8);
-  font-size: 13px;
-  line-height: 1.6;
-  padding: 14px 18px;
-  resize: none;
+  font-size: 12px;
+  line-height: 1.55;
+  padding: 10px 12px;
+  resize: vertical;
   outline: none;
   font-family: inherit;
-  min-height: 100px;
+  min-height: 60px;
+  max-height: 160px;
+  box-sizing: border-box;
 }
 .pdf-memo-textarea::placeholder {
   color: var(--text3, #666);
 }
-.pdf-memo-colors {
+.pdf-memo-footer {
   display: flex;
-  gap: 6px;
-  padding: 10px 18px;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 10px;
   border-top: 1px solid var(--border, #2a2c34);
 }
 .pdf-memo-color-dot {
-  width: 22px; height: 22px;
+  width: 16px; height: 16px;
   border-radius: 50%;
   border: 2px solid transparent;
   cursor: pointer;
-  transition: all .15s;
+  transition: all .12s;
   padding: 0;
+  flex-shrink: 0;
 }
 .pdf-memo-color-dot:hover { transform: scale(1.15); }
 .pdf-memo-color-dot.active {
   border-color: var(--text, #e8e8e8);
-  box-shadow: 0 0 0 2px var(--bg2, #1a1c24), 0 0 0 4px var(--text3, #666);
 }
-.pdf-memo-btns {
-  display: flex;
-  gap: 8px;
-  padding: 12px 18px;
-  justify-content: flex-end;
-  border-top: 1px solid var(--border, #2a2c34);
-}
-.pdf-memo-btn {
-  padding: 7px 16px;
-  border-radius: 8px;
-  font-size: 12px;
+.pdf-memo-btn-save {
+  margin-left: auto;
+  padding: 5px 14px;
+  border-radius: 6px;
+  font-size: 11px;
   font-weight: 600;
   cursor: pointer;
   border: none;
-  transition: all .15s;
-}
-.pdf-memo-btn-cancel {
-  background: var(--bg3, #22242e);
-  color: var(--text2, #aaa);
-}
-.pdf-memo-btn-cancel:hover {
-  background: var(--border, #2a2c34);
-  color: var(--text, #e8e8e8);
-}
-.pdf-memo-btn-save {
-  background: var(--accent-color, var(--gold, #bd8a00));
+  background: var(--accent-color, #bd8a00);
   color: #fff;
+  transition: all .15s;
 }
 .pdf-memo-btn-save:hover {
   filter: brightness(1.15);
-}
-.pdf-memo-btn-save i {
-  margin-right: 4px;
 }
 
 /* ── Responsive: Mobile fullscreen ── */
