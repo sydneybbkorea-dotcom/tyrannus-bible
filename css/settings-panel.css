@@ -230,3 +230,38 @@
   cursor:pointer;
 }
 .stp-lang-sel:hover { background:var(--bg4) }
+
+/* ── Menu items (main view) ── */
+.stp-menu-item {
+  display:flex; align-items:center; gap:12px;
+  padding:12px; border-radius:8px;
+  background:var(--bg3); border:1px solid var(--border);
+  cursor:pointer; transition:all .15s;
+}
+.stp-menu-item:hover { background:var(--bg4) }
+.stp-menu-item.stp-menu-disabled { opacity:.6; cursor:default }
+.stp-menu-item.stp-menu-disabled:hover { background:var(--bg3) }
+.stp-menu-icon {
+  width:32px; height:32px; border-radius:8px;
+  background:var(--accent-dim, var(--gold-dim));
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+}
+.stp-menu-icon i { font-size:14px; color:var(--accent-color, var(--gold)) }
+.stp-menu-text { flex:1; min-width:0 }
+.stp-menu-title { font-size:13px; font-weight:600; color:var(--text) }
+.stp-menu-desc { font-size:10px; color:var(--text3); margin-top:2px }
+.stp-menu-arrow { font-size:10px; color:var(--text3) }
+.stp-menu-badge {
+  font-size:9px; font-weight:700; color:var(--text3);
+  background:var(--bg4); padding:2px 8px; border-radius:10px;
+}
+
+/* ── Subpage header (back button) ── */
+.stp-subpage-header {
+  display:flex; align-items:center; gap:8px;
+  padding:8px 4px; cursor:pointer; transition:color .15s;
+  font-size:13px; font-weight:600; color:var(--text2);
+}
+.stp-subpage-header:hover { color:var(--accent-color, var(--gold)) }
+.stp-subpage-header i { font-size:12px }
