@@ -81,9 +81,9 @@
     if(e.key==='Escape'){ closeCtx(); closeExplorer(); hideHLPicker(); }
   });
 
-  // Service Worker 등록 (오프라인 지원)
+  // Service Worker 등록 (오프라인 지원) — 상대 경로로 등록 (GitHub Pages 호환)
   if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('/sw.js').catch(function(e){
+    navigator.serviceWorker.register('./sw.js').catch(function(e){
       console.warn('[SW] Registration failed:', e);
     });
   }

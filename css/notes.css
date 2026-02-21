@@ -5,7 +5,7 @@
   width:640px; flex-shrink:0;
   background:var(--bg2); border-left:1px solid var(--border);
   display:flex; flex-direction:column; overflow:hidden; transition:width .22s;
-  position:relative;
+  position:relative; z-index:10;
 }
 #rightPanel.rp-hide { width:0; border:none; overflow:hidden }
 
@@ -32,8 +32,8 @@
 }
 .rp-ico-btn:hover { color:var(--text); background:var(--bg3) }
 .rp-close-btn { margin-left:auto }
-.rp-body { flex:1; overflow:hidden; display:flex; flex-direction:column }
-.rp-sec { display:none; flex:1; flex-direction:column; overflow:hidden }
+.rp-body { flex:1; overflow:hidden; display:flex; flex-direction:column; min-height:0 }
+.rp-sec { display:none; flex:1; flex-direction:column; overflow:hidden; min-height:0 }
 .rp-sec.act { display:flex }
 
 /* Note list items */
@@ -110,7 +110,7 @@
 /* ═══════════════════════════════════════════════
    NOTE LAYOUT — full width editor, drawer explorer
 ═══════════════════════════════════════════════ */
-#notesLayout { display:flex; flex:1; overflow:hidden; position:relative; flex-direction:column }
+#notesLayout { display:flex; flex:1; overflow:hidden; position:relative; flex-direction:column; min-height:0 }
 
 /* ── FLOATING FOLDER DRAWER — Obsidian 스타일 (slides from left) ── */
 #noteExplorer {
@@ -228,7 +228,7 @@
 
 /* Note editor area — full width */
 #noteEditor {
-  flex:1; display:flex; flex-direction:column; overflow:hidden; min-width:0;
+  flex:1; display:flex; flex-direction:column; overflow:hidden; min-width:0; min-height:0;
 }
 
 /* Editor topbar */

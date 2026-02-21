@@ -1,25 +1,25 @@
 // sw.js — Service Worker for offline support
-var CACHE_NAME = 'tyrannus-v2';
-var SHELL_CACHE = 'tyrannus-shell-v2';
-var DATA_CACHE = 'tyrannus-data-v2';
+var CACHE_NAME = 'tyrannus-v3';
+var SHELL_CACHE = 'tyrannus-shell-v3';
+var DATA_CACHE = 'tyrannus-data-v3';
 
-// App shell files — cache on install
+// App shell files — cache on install (상대 경로 — GitHub Pages 호환)
 var SHELL_FILES = [
-  '/',
-  '/index.html',
-  '/css/theme-system.css',
-  '/css/variables.css',
-  '/css/layout.css',
-  '/css/icon-rail.css',
-  '/css/side-panel.css',
-  '/css/topbar.css',
-  '/css/bible.css',
-  '/css/notes.css',
-  '/css/ui.css',
-  '/css/responsive.css',
-  '/css/knowledge-graph.css',
-  '/css/pdf-viewer.css',
-  '/data/books.js'
+  './',
+  './index.html',
+  './css/theme-system.css',
+  './css/variables.css',
+  './css/layout.css',
+  './css/icon-rail.css',
+  './css/side-panel.css',
+  './css/topbar.css',
+  './css/bible.css',
+  './css/notes.css',
+  './css/ui.css',
+  './css/responsive.css',
+  './css/knowledge-graph.css',
+  './css/pdf-viewer.css',
+  './data/books.js'
 ];
 
 // Bible data patterns — cache-first strategy
