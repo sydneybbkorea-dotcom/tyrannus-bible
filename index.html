@@ -3,7 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Tyrannus — 표준킹제임스성경</title>
+<title>투란누스 — 표준킹제임스성경 온라인</title>
+<meta name="description" content="투란누스 - 표준킹제임스성경(KJPBS) 온라인 성경 읽기. 한영 대조, 주석, 노트, 검색, 사전 기능 제공.">
+<meta name="keywords" content="투란누스, Tyrannus, 표준킹제임스성경, KJPBS, 성경, 온라인 성경, Bible, 킹제임스, 한영성경">
+<meta name="google-site-verification" content="5L-9vRIIWmhWJboVk_3zNkjgjMqXHuqhByK8WkaHooc" />
 
 <!-- Fonts -->
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -11,34 +14,34 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <!-- App CSS (모듈화) -->
-<link rel="stylesheet" href="css/theme-system.css?v=12">
-<link rel="stylesheet" href="css/variables.css?v=22">
-<link rel="stylesheet" href="css/layout.css?v=16">
-<link rel="stylesheet" href="css/icon-rail.css?v=16">
-<link rel="stylesheet" href="css/side-panel.css?v=15">
+<link rel="stylesheet" href="css/theme-system.css?v=15">
+<link rel="stylesheet" href="css/variables.css?v=25">
+<link rel="stylesheet" href="css/layout.css?v=17">
+<link rel="stylesheet" href="css/icon-rail.css?v=18">
+<link rel="stylesheet" href="css/side-panel.css?v=17">
 <link rel="stylesheet" href="css/topbar.css?v=17">
-<link rel="stylesheet" href="css/bible.css?v=25">
-<link rel="stylesheet" href="css/notes.css?v=24">
-<link rel="stylesheet" href="css/commentary.css?v=17">
-<link rel="stylesheet" href="css/search.css?v=15">
-<link rel="stylesheet" href="css/ui.css?v=15">
-<link rel="stylesheet" href="css/nav-picker.css?v=17">
-<link rel="stylesheet" href="css/book-grid.css?v=18">
-<link rel="stylesheet" href="css/bookmark.css?v=15">
+<link rel="stylesheet" href="css/bible.css?v=28">
+<link rel="stylesheet" href="css/notes.css?v=26">
+<link rel="stylesheet" href="css/commentary.css?v=19">
+<link rel="stylesheet" href="css/search.css?v=16">
+<link rel="stylesheet" href="css/ui.css?v=16">
+<link rel="stylesheet" href="css/nav-picker.css?v=18">
+<link rel="stylesheet" href="css/book-grid.css?v=19">
+<link rel="stylesheet" href="css/bookmark.css?v=16">
 <link rel="stylesheet" href="css/word-study.css?v=15">
 <link rel="stylesheet" href="css/xref-inline.css?v=15">
-<link rel="stylesheet" href="css/passage-guide.css?v=16">
+<link rel="stylesheet" href="css/passage-guide.css?v=17">
 <link rel="stylesheet" href="css/visual-filter.css?v=15">
 <link rel="stylesheet" href="css/reading-plan.css?v=15">
-<link rel="stylesheet" href="css/adv-search.css?v=15">
+<link rel="stylesheet" href="css/adv-search.css?v=17">
 <link rel="stylesheet" href="css/bug-report.css">
-<link rel="stylesheet" href="css/dict.css?v=18">
+<link rel="stylesheet" href="css/dict.css?v=19">
 <link rel="stylesheet" href="css/sync.css?v=15">
-<link rel="stylesheet" href="css/settings-panel.css?v=20">
-<link rel="stylesheet" href="css/typing.css?v=9">
+<link rel="stylesheet" href="css/settings-panel.css?v=21">
+<link rel="stylesheet" href="css/typing.css?v=10">
 <link rel="stylesheet" href="css/responsive.css?v=2">
 <link rel="stylesheet" href="css/pdf-panel.css?v=2">
-<link rel="stylesheet" href="css/pdf-viewer.css?v=4">
+<link rel="stylesheet" href="css/pdf-viewer.css?v=5">
 <link rel="stylesheet" href="css/knowledge-graph.css?v=4">
 
 <!-- PDF.js (UMD — sets window.pdfjsLib) -->
@@ -538,11 +541,11 @@
     <span class="tp-title"><i class="fa fa-keyboard"></i> 타자 연습</span>
     <div class="tp-header-right">
       <div class="tp-lang-group">
-        <button class="tp-lang active" id="tpLangKr" onclick="_tpSetLang('kr')">한글</button>
+        <button class="tp-lang active" id="tpLangKr" onclick="_tpSetLang('kr')">Korean</button>
         <button class="tp-lang" id="tpLangEn" onclick="_tpSetLang('en')">English</button>
       </div>
-      <button class="tp-theme-btn" id="tpThemeBtn" onclick="_tpToggleTheme()" title="라이트 모드"><i class="fa fa-sun"></i></button>
-      <button class="tp-close" onclick="toggleTypingPanel()" title="닫기"><i class="fa fa-times"></i></button>
+      <button class="tp-theme-btn" id="tpThemeBtn" onclick="_tpToggleTheme()" title="Light Mode"><i class="fa fa-sun"></i></button>
+      <button class="tp-close" onclick="toggleTypingPanel()" title="Close"><i class="fa fa-times"></i></button>
     </div>
   </div>
   <div class="tp-settings" id="tpSettings"></div>
@@ -577,7 +580,7 @@
 <script src="js/core/i18n.js?v=1"></script>
 <script src="js/core/input-manager.js?v=1"></script>
 <script src="js/core/virtual-scroll.js?v=1"></script>
-<script src="js/theme-switcher.js?v=9"></script>
+<script src="js/theme-switcher.js?v=10"></script>
 <script src="js/data-loader.js"></script>
 <script src="js/state.js?v=2"></script>
 <script src="js/theme.js?v=2"></script>
