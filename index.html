@@ -106,32 +106,29 @@
       <!-- 아이콘 레일 (슬라이드 영역) -->
       <div id="iconRail">
         <div class="rail-top">
-          <button class="rail-icon" data-rail="bible" onclick="toggleRail('bible')" title="성경 목록">
+          <button class="rail-icon" data-rail="bible" onclick="toggleRail('bible')" title="성경 검색">
             <i class="fa fa-book-bible"></i><span class="rail-label" data-i18n="nav.bible">성경</span>
           </button>
           <button class="rail-icon" data-rail="notes" onclick="toggleNotePanel()" title="노트">
             <i class="fa fa-pen"></i><span class="rail-label" data-i18n="nav.notes">노트</span>
           </button>
+          <button class="rail-icon" data-rail="pdf" onclick="togglePdfPanel()" title="PDF">
+            <i class="fa fa-file-pdf"></i><span class="rail-label">PDF</span>
+          </button>
           <button class="rail-icon" data-rail="dictionary" onclick="toggleDictPanel()" title="사전">
             <i class="fas fa-spell-check"></i><span class="rail-label" data-i18n="nav.dict">사전</span>
           </button>
-          <button class="rail-icon" data-rail="bookmark" onclick="toggleRail('bookmark')" title="북마크">
-            <i class="fa fa-bookmark"></i><span class="rail-label" data-i18n="nav.bookmark">북마크</span>
-          </button>
-          <button class="rail-icon" data-rail="reading" onclick="toggleRail('reading')" title="읽기 계획">
-            <i class="fa fa-calendar-check"></i><span class="rail-label" data-i18n="nav.reading">읽기</span>
-          </button>
           <button class="rail-icon" data-rail="library" onclick="toggleRail('library')" title="도서관">
             <i class="fa fa-book-open-reader"></i><span class="rail-label" data-i18n="nav.library">도서관</span>
-          </button>
-          <button class="rail-icon" data-rail="pdf" onclick="togglePdfPanel()" title="PDF 편집">
-            <i class="fa fa-file-pdf"></i><span class="rail-label">PDF</span>
           </button>
           <button class="rail-icon" data-rail="qna" onclick="toggleRail('qna')" title="Q&A">
             <i class="fa fa-comments"></i><span class="rail-label" data-i18n="nav.qna">Q&A</span>
           </button>
           <button class="rail-icon" data-rail="graph" onclick="toggleKnowledgeGraph()" title="지식 그래프">
             <i class="fa fa-project-diagram"></i><span class="rail-label">그래프</span>
+          </button>
+          <button class="rail-icon" data-rail="reading" onclick="toggleRail('reading')" title="읽기 계획">
+            <i class="fa fa-calendar-check"></i><span class="rail-label" data-i18n="nav.reading">읽기</span>
           </button>
           <button class="rail-icon" data-rail="typing" onclick="toggleTypingPanel()" title="타자 연습">
             <i class="fa fa-keyboard"></i><span class="rail-label">타자</span>
