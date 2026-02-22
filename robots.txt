@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sydneybbkorea-dotcom.github.io/tyrannus-bible/sitemap.xml
