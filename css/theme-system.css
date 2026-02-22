@@ -3,7 +3,7 @@
    HSL-based dynamic color system (Obsidian Light & Bright inspired)
 ═══════════════════════════════════════════════ */
 
-/* ── Default Accent (첫 방문 기본값: #bd8a00) ── */
+/* ── Default Accent (다크: #bd8a00, 라이트: #f06f38) ── */
 :root {
   --accent-h: 44;
   --accent-s: 100%;
@@ -12,9 +12,9 @@
 
 /* ── Default Book Accent (성경 본문 강조: 장 제목, 구절 번호) ── */
 :root {
-  --book-h: 44;
+  --book-h: 50;
   --book-s: 100%;
-  --book-l: 37%;
+  --book-l: 50%;
 }
 /* ── Accent Color Palettes ── */
 :root[data-accent="blue"] {
@@ -23,9 +23,9 @@
   --accent-l: 45%;
 }
 :root[data-accent="red"] {
-  --accent-h: 355;
-  --accent-s: 75%;
-  --accent-l: 55%;
+  --accent-h: 0;
+  --accent-s: 96%;
+  --accent-l: 43%;
 }
 :root[data-accent="orange"] {
   --accent-h: 30;
@@ -60,7 +60,7 @@
 
 /* ── Book Accent Color Palettes (성경 본문 강조색) ── */
 :root[data-book-accent="blue"]   { --book-h:214; --book-s:92%;  --book-l:45%; }
-:root[data-book-accent="red"]    { --book-h:355; --book-s:75%;  --book-l:55%; }
+:root[data-book-accent="red"]    { --book-h:0;   --book-s:96%;  --book-l:43%; }
 :root[data-book-accent="orange"] { --book-h:30;  --book-s:90%;  --book-l:46%; }
 :root[data-book-accent="yellow"] { --book-h:46;  --book-s:100%; --book-l:44%; }
 :root[data-book-accent="cyan"]   { --book-h:179; --book-s:100%; --book-l:37%; }
@@ -97,20 +97,25 @@
 
 /* ── Theme 1: Light — warm rose-white (red accent feel) ── */
 :root[data-theme="light"] {
-  --bg-primary:     hsl(0, 40%, 97%);       /* 따뜻한 로즈 화이트 */
-  --bg-secondary:   hsl(0, 32%, 94%);       /* 패널 — 부드러운 핑크 구분 */
-  --bg-tertiary:    hsl(0, 25%, 89%);       /* 입력/버튼 — 로즈 깊이 */
-  --bg-surface:     hsl(0, 25%, 99%);       /* 따뜻한 화이트 종이 */
+  --bg-primary:     hsl(0, 52%, 96%);       /* 선명한 로즈 화이트 */
+  --bg-secondary:   hsl(0, 45%, 92%);       /* 패널 — 뚜렷한 핑크 구분 */
+  --bg-tertiary:    hsl(0, 35%, 86%);       /* 입력/버튼 — 로즈 깊이 */
+  --bg-surface:     hsl(0, 40%, 98%);       /* 따뜻한 화이트 종이 */
   --text-primary:   hsl(350, 36%, 12%);     /* 깊은 다크 와인 — 최대 가독성 */
   --text-secondary: hsl(350, 22%, 34%);     /* 워밍 보조 텍스트 */
   --text-muted:     hsl(350, 14%, 52%);     /* 로즈 그레이 */
   --text-faint:     hsl(350, 8%, 66%);      /* 희미한 로즈 */
-  --border-color:   hsl(0, 28%, 85%);       /* 로즈 실크 경계선 */
-  --shadow-color:   rgba(120, 20, 30, 0.07);/* 레드 틴트 그림자 */
+  --border-color:   hsl(0, 38%, 82%);       /* 뚜렷한 로즈 경계선 */
+  --shadow-color:   rgba(120, 20, 30, 0.10);/* 강한 로즈 그림자 */
   --hl-opacity:     0.32;
-  --rail-bg-color:  hsl(0, 30%, 95%);       /* 레일 배경 — 웜 로즈 */
-  --content-text:       hsl(350, 28%, 12%); /* 와인 잉크 본문 */
+  --rail-bg-color:  hsl(0, 42%, 93%);       /* 레일 배경 — 선명한 웜 로즈 */
+  --content-text:       #720808;            /* 딥 버건디 잉크 본문 */
   --content-text-sub:   hsl(350, 14%, 34%); /* 보조 본문 */
+  /* 강조색 강제 오버라이드: 선명한 레드 */
+  --accent-color:   #d70404;
+  --accent-hover:   #e81818;
+  --accent-dim:     rgba(215, 4, 4, 0.12);
+  --accent-sel:     rgba(215, 4, 4, 0.20);
 }
 
 /* ── Theme 2: Dark (default) — base S/L relative offsets ── */
@@ -196,6 +201,46 @@
   --book-dim:   hsla(22, 20%, 10%, 0.08);
 }
 
+/* ── Glass Morphism Tokens (3-layer system) ── */
+:root, :root[data-theme="dark"] {
+  --glass-bg-1: rgba(255,255,255,0.03);
+  --glass-bg-2: rgba(255,255,255,0.05);
+  --glass-bg-3: rgba(255,255,255,0.07);
+  --glass-border: rgba(255,255,255,0.08);
+  --glass-highlight: inset 0 1px 0 rgba(255,255,255,0.05);
+  --glass-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  --glass-blur-1: blur(12px);
+  --glass-blur-2: blur(20px);
+  --glass-blur-3: blur(24px);
+  --body-gradient: linear-gradient(135deg, #0a0a1a, #0d1025, #151030, #0a0a1a);
+}
+
+:root[data-theme="light"] {
+  --glass-bg-1: rgba(255,255,255,0.45);
+  --glass-bg-2: rgba(255,255,255,0.55);
+  --glass-bg-3: rgba(255,255,255,0.65);
+  --glass-border: rgba(180,80,90,0.12);
+  --glass-highlight: inset 0 1px 0 rgba(255,255,255,0.5);
+  --glass-shadow: 0 8px 32px rgba(140,30,40,0.06);
+  --glass-blur-1: blur(12px);
+  --glass-blur-2: blur(20px);
+  --glass-blur-3: blur(24px);
+  --body-gradient: linear-gradient(135deg, #fff5f5, #ffe8e8, #fce0e0, #fff0f0);
+}
+
+:root[data-theme="sepia"] {
+  --glass-bg-1: rgba(255,245,230,0.35);
+  --glass-bg-2: rgba(255,245,230,0.50);
+  --glass-bg-3: rgba(255,245,230,0.60);
+  --glass-border: rgba(120,80,30,0.12);
+  --glass-highlight: inset 0 1px 0 rgba(255,250,240,0.4);
+  --glass-shadow: 0 8px 32px rgba(80,50,15,0.08);
+  --glass-blur-1: blur(12px);
+  --glass-blur-2: blur(20px);
+  --glass-blur-3: blur(24px);
+  --body-gradient: linear-gradient(135deg, #f5ead6, #f0e0c4, #ebe0c0, #f5ead6);
+}
+
 /* ── Design System Tokens ── */
 :root {
   /* Spacing (4px base unit) */
@@ -256,3 +301,31 @@
 [data-theme="light"] .accent-text { color: hsl(var(--accent-h), var(--accent-s), calc(var(--accent-l) - 8%)); }
 [data-theme="dark"]  .accent-text { color: hsl(var(--accent-h), var(--accent-s), calc(var(--accent-l) + 10%)); }
 [data-theme="sepia"] .accent-text { color: hsl(var(--accent-h), var(--accent-s), calc(var(--accent-l) - 5%)); }
+
+/* ── @supports fallback: backdrop-filter 미지원 시 불투명 배경 ── */
+@supports not (backdrop-filter: blur(1px)) {
+  :root, :root[data-theme="dark"] {
+    --glass-bg-1: var(--bg-secondary);
+    --glass-bg-2: var(--bg-tertiary);
+    --glass-bg-3: var(--bg-tertiary);
+  }
+  :root[data-theme="light"] {
+    --glass-bg-1: hsla(0, 45%, 92%, 0.95);
+    --glass-bg-2: hsla(0, 40%, 90%, 0.95);
+    --glass-bg-3: hsla(0, 35%, 88%, 0.95);
+  }
+  :root[data-theme="sepia"] {
+    --glass-bg-1: hsla(34, 26%, 87%, 0.95);
+    --glass-bg-2: hsla(32, 20%, 83%, 0.95);
+    --glass-bg-3: hsla(32, 18%, 80%, 0.95);
+  }
+}
+
+/* ── Mobile: reduce blur for performance ── */
+@media (max-width: 600px) {
+  :root {
+    --glass-blur-1: blur(8px);
+    --glass-blur-2: blur(12px);
+    --glass-blur-3: blur(16px);
+  }
+}

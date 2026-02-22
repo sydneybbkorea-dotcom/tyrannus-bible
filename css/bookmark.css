@@ -2,12 +2,14 @@
 .bk-group-head {
   padding:8px 14px 4px; font-size:10px; font-weight:700;
   color:var(--gold); text-transform:uppercase; letter-spacing:.5px;
+  background:var(--glass-bg-1); border-bottom:1px solid var(--glass-border);
 }
 .bk-item {
   display:flex; align-items:center; gap:6px; padding:7px 14px;
-  cursor:pointer; transition:background .1s; font-size:12px;
+  cursor:pointer; transition:all .15s; font-size:12px;
+  border-bottom:1px solid var(--glass-border);
 }
-.bk-item:hover { background:var(--bg3); }
+.bk-item:hover { background:var(--glass-bg-2); box-shadow:var(--glass-highlight); }
 .bk-ref {
   font-family:'JetBrains Mono',monospace; font-size:11px;
   color:var(--gold); min-width:36px; flex-shrink:0;

@@ -54,6 +54,11 @@ var PDFTools = (function(){
       return;
     }
 
+    // Highlight mode: pass through existing highlights for drag&drop
+    if(_currentTool === 'highlight' && e.target.closest('.pdf-annot-highlight')){
+      return;
+    }
+
     if(_currentTool === 'select') return;
 
     e.preventDefault();
@@ -392,16 +397,28 @@ var PDFTools = (function(){
   function undo(){
     if(!_undoStack.length) return;
     var annotId = _undoStack.pop();
-    _redoStack.push(annotId);
     var pdfId = typeof PDFViewer !== 'undefined' ? PDFViewer.getCurrentPdfId() : null;
     var pageNum = typeof PDFViewer !== 'undefined' ? PDFViewer.getCurrentPage() : 1;
-    if(pdfId) PDFAnnotations.remove(annotId, pdfId, pageNum);
+    if(!pdfId) return;
+    // Save full annotation data before deleting (for redo)
+    var annots = PDFAnnotations.getPage(pdfId, pageNum);
+    var annotData = null;
+    for(var i = 0; i < annots.length; i++){
+      if(annots[i].id === annotId){ annotData = JSON.parse(JSON.stringify(annots[i])); break; }
+    }
+    if(annotData) _redoStack.push(annotData);
+    PDFAnnotations.remove(annotId, pdfId, pageNum);
     var layer = document.querySelector('.pdf-annot-layer[data-page="' + pageNum + '"]');
     if(layer) PDFAnnotations.renderPage(pageNum, layer, _getViewport());
   }
 
   function redo(){
-    console.log('[PDFTools] Redo not yet implemented');
+    if(!_redoStack.length) return;
+    var annotData = _redoStack.pop();
+    PDFAnnotations.save(annotData);
+    _undoStack.push(annotData.id);
+    var layer = document.querySelector('.pdf-annot-layer[data-page="' + annotData.pageNum + '"]');
+    if(layer) PDFAnnotations.renderPage(annotData.pageNum, layer, _getViewport());
   }
 
   return {

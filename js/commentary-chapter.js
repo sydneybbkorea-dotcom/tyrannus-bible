@@ -1,91 +1,112 @@
 // commentary-chapter.js — chapter-level commentary rendering (updateChapterCommentary)
 function updateChapterCommentary(){
-  const el = document.getElementById('commentaryContent');
+  var el = document.getElementById('commentaryContent');
   if(!el) return;
 
-  const verses = BIBLE[S.book]?.[S.ch];
-  if(!verses){ el.innerHTML='<div class="comm-hint">이 장에 대한 데이터가 없습니다</div>'; return; }
+  var verses = BIBLE[S.book]?.[S.ch];
+  if(!verses){ el.innerHTML='<div class="comm-empty"><div class="comm-empty-icon"><i class="fa fa-scroll"></i></div><div class="comm-empty-msg">이 장에 대한 데이터가 없습니다</div></div>'; return; }
 
-  let h = `<div class="comm-ch-title">${S.book} ${S.ch}장 전체 주석</div>`;
-  const totalVerses = Object.keys(verses).length;
-  let hasAny = false;
+  var h = '<div class="cc-wrap">';
+  h += '<div class="cc-title"><i class="fa fa-book-open"></i> '+S.book+' '+S.ch+'장</div>';
 
-  for(let vn = 1; vn <= totalVerses; vn++){
-    const key = `${S.book}_${S.ch}_${vn}`;
-    const comm = COMMENTARY[S.book]?.[S.ch]?.[vn];
-    const refs = XREFS[key] || [];
-    const linked = S.notes.filter(n=>n.vRefs?.includes(key));
+  var totalVerses = Object.keys(verses).length;
+  var hasAny = false;
+  var colorDot = {'hl-y':'rgba(255,215,64,.8)','hl-o':'rgba(255,171,64,.8)','hl-g':'rgba(105,240,174,.8)','hl-b':'rgba(64,196,255,.8)','hl-p':'rgba(206,147,216,.8)'};
+
+  for(var vn = 1; vn <= totalVerses; vn++){
+    var key = S.book+'_'+S.ch+'_'+vn;
+    var comm = COMMENTARY[S.book]?.[S.ch]?.[vn];
+    var refs = XREFS[key] || [];
+    var linked = S.notes.filter(function(n){return n.vRefs?.includes(key)});
 
     // 하이라이트 메모
-    const vtxtEl = document.querySelector(`.vtxt[data-key="${key}"]`);
-    const memoList = [];
+    var vtxtEl = document.querySelector('.vtxt[data-key="'+key+'"]');
+    var memoList = [];
     if(vtxtEl){
-      const seen = new Set();
-      vtxtEl.querySelectorAll('mark[data-memo]').forEach(m=>{
-        const memo = m.dataset.memo?.trim();
+      var seen = new Set();
+      vtxtEl.querySelectorAll('mark[data-memo]').forEach(function(m){
+        var memo = m.dataset.memo?.trim();
         if(!memo) return;
-        const gid = m.dataset.gid || '';
+        var gid = m.dataset.gid || '';
         if(seen.has(gid)) return; seen.add(gid);
-        const allText = gid ? [...vtxtEl.querySelectorAll(`mark[data-gid="${gid}"]`)].map(x=>x.textContent).join('') : m.textContent;
-        const color = m.className.replace('hl-active','').trim();
-        memoList.push({ gid, memo, text:allText, color });
+        var allText = gid ? [].slice.call(vtxtEl.querySelectorAll('mark[data-gid="'+gid+'"]')).map(function(x){return x.textContent}).join('') : m.textContent;
+        var color = m.className.replace('hl-active','').trim();
+        memoList.push({ gid:gid, memo:memo, text:allText, color:color });
       });
     }
 
-    const hasContent = comm || refs.length || linked.length || memoList.length;
+    var hasContent = comm || refs.length || linked.length || memoList.length;
     if(!hasContent) continue;
     hasAny = true;
 
-    // 구절 텍스트
-    const verseText = verses[vn] || '';
-    const plainText = verseText.replace(/<[^>]+>/g, '');
+    var verseText = verses[vn] || '';
+    var plainText = verseText.replace(/<[^>]+>/g, '');
+    var isSel = S.selV === vn;
 
-    h += `<div class="comm-ch-verse" data-v="${vn}" onclick="selVerse(${vn})">`;
-    h += `<div class="comm-ch-vhead">
-      <span class="comm-ch-vnum">${vn}</span>
-      <span class="comm-ch-vtxt">${plainText.length > 60 ? plainText.slice(0,60)+'…' : plainText}</span>
-    </div>`;
+    h += '<div class="cc-verse'+(isSel?' cc-verse-sel':'')+'" data-v="'+vn+'">';
+
+    // 구절 헤더 (클릭으로 구절 선택 + 접힘 토글)
+    h += '<div class="cc-vhead" onclick="selVerse('+vn+')">';
+    h += '<span class="cc-vnum">'+vn+'</span>';
+    h += '<span class="cc-vtxt">'+(plainText.length > 70 ? plainText.slice(0,70)+'…' : plainText)+'</span>';
+
+    // 인라인 배지
+    var badges = '';
+    if(comm) badges += '<span class="cc-badge" title="주석"><i class="fa fa-scroll"></i></span>';
+    if(refs.length) badges += '<span class="cc-badge" title="참조"><i class="fa fa-link"></i>'+refs.length+'</span>';
+    if(linked.length) badges += '<span class="cc-badge" title="노트"><i class="fa fa-pen"></i></span>';
+    if(memoList.length) badges += '<span class="cc-badge" title="메모"><i class="fa fa-highlighter"></i></span>';
+    h += '<span class="cc-badges">'+badges+'</span>';
+    h += '</div>';
+
+    // 내용 영역
+    h += '<div class="cc-vbody">';
 
     // 주석
     if(comm){
-      h += `<div class="comm-ch-item"><span class="comm-ch-icon"><i class="fa fa-scroll"></i></span><div class="comm-ch-body">${comm}</div></div>`;
+      h += '<div class="cc-item cc-item-comm">'+comm+'</div>';
     }
 
     // 교차 참조
     if(refs.length){
-      h += `<div class="comm-ch-item"><span class="comm-ch-icon"><i class="fa fa-link"></i></span><div class="comm-ch-body"><div class="cross-refs">${refs.map(r=>`<span class="cref" onclick="event.stopPropagation();navByRef('${r}')">${r}</span>`).join('')}</div></div></div>`;
+      h += '<div class="cc-item cc-item-refs"><div class="cv-refs">';
+      refs.forEach(function(r){
+        h += '<span class="cref" onclick="event.stopPropagation();navByRef(\''+r+'\')">'+r+'</span>';
+      });
+      h += '</div></div>';
     }
 
     // 연결된 노트
     if(linked.length){
-      h += `<div class="comm-ch-item"><span class="comm-ch-icon"><i class="fa fa-pen"></i></span><div class="comm-ch-body">${linked.map(n=>`<span class="comm-ch-note" onclick="event.stopPropagation();loadNote('${n.id}',true);openPanel('notes');switchSub('notes')">${n.title||'제목 없음'}</span>`).join('')}</div></div>`;
+      h += '<div class="cc-item cc-item-notes">';
+      linked.forEach(function(n){
+        h += '<span class="cc-note-chip" onclick="event.stopPropagation();loadNote(\''+n.id+'\',true);openPanel(\'notes\');switchSub(\'notes\')"><i class="fa fa-file-alt"></i> '+(n.title||'제목 없음')+'</span>';
+      });
+      h += '</div>';
     }
 
     // 하이라이트 메모
     if(memoList.length){
-      const colorDot = {'hl-y':'rgba(255,215,64,.8)','hl-o':'rgba(255,171,64,.8)','hl-g':'rgba(105,240,174,.8)','hl-b':'rgba(64,196,255,.8)','hl-p':'rgba(206,147,216,.8)'};
-      memoList.forEach(({gid, memo, text, color})=>{
-        const cls = color.split(' ').find(c=>c.startsWith('hl-'))||'hl-y';
-        const dot = colorDot[cls]||'var(--gold)';
-        const mData = S.hlMemo?.[gid];
-        const mName = mData?.name || '메모';
-        const mHtml = mData?.html || memo;
-        h += `<div class="comm-ch-item"><span class="comm-ch-icon"><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:${dot}"></span></span><div class="comm-ch-body"><div style="font-size:10px;color:var(--text3);margin-bottom:2px">${mName}</div><div style="font-size:12px;color:var(--text2);line-height:1.6">${mHtml}</div></div></div>`;
+      memoList.forEach(function(item){
+        var cls = item.color.split(' ').find(function(c){return c.startsWith('hl-')})||'hl-y';
+        var dot = colorDot[cls]||'var(--gold)';
+        var mData = S.hlMemo?.[item.gid];
+        var mHtml = mData?.html || item.memo;
+        h += '<div class="cc-item cc-item-hl">';
+        h += '<div class="cc-hl-quote" style="border-left-color:'+dot+'">'+item.text+'</div>';
+        h += '<div class="cc-hl-memo">'+mHtml+'</div>';
+        h += '</div>';
       });
     }
 
-    h += `</div>`;
+    h += '</div>'; // cc-vbody
+    h += '</div>'; // cc-verse
   }
 
   if(!hasAny){
-    h += '<div class="comm-hint" style="margin-top:20px">이 장에 주석이나 메모가 없습니다</div>';
+    h += '<div class="comm-empty" style="margin-top:20px"><div class="comm-empty-icon"><i class="fa fa-feather-alt"></i></div><div class="comm-empty-msg">이 장에 주석이나 메모가 없습니다</div></div>';
   }
 
+  h += '</div>'; // cc-wrap
   el.innerHTML = h;
-
-  // 선택된 구절 강조
-  if(S.selV){
-    const sel = el.querySelector(`.comm-ch-verse[data-v="${S.selV}"]`);
-    if(sel) sel.classList.add('comm-ch-sel');
-  }
 }

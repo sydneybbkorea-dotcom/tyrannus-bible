@@ -49,6 +49,19 @@ function selVerse(vn, e){
   _updateStatV(); updateDict();
   if(typeof showXrefBar==='function'){ S.selV ? showXrefBar(S.selV) : hideXrefBar(); }
 }
+/* Shift+Click — 범위 선택 */
+function selVerseRange(from, to){
+  if(!S.selVSet) S.selVSet=new Set();
+  var lo=Math.min(from,to), hi=Math.max(from,to);
+  for(var v=lo; v<=hi; v++){
+    S.selVSet.add(v);
+    var r=document.querySelector('.vrow[data-v="'+v+'"]');
+    if(r) r.classList.add('vsel');
+  }
+  S.selV=to;
+  _updateStatV(); updateDict();
+  if(typeof showXrefBar==='function') showXrefBar(to);
+}
 function _updateStatV(){
   const statV=document.getElementById('statV'); if(!statV) return;
   const arr=[...(S.selVSet||[])].sort((a,b)=>a-b);
@@ -147,10 +160,6 @@ function hideVerseMenu(){
   _vmVerse=null;
 }
 
-/* ── 브라우저 기본 우클릭 메뉴 차단 ── */
-document.addEventListener('contextmenu', function(e){ e.preventDefault(); }, true);
-document.addEventListener('contextmenu', function(e){ e.preventDefault(); }, false);
-document.oncontextmenu = function(e){ if(e) e.preventDefault(); return false; };
 
 /* ── 구절 호버 툴팁 (마우스 따라다니는 구절 참조) ── */
 var _vHoverTip=null;

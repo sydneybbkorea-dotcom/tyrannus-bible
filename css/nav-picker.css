@@ -4,13 +4,13 @@
 .nav-picker-btn {
   display:flex; align-items:center; gap:6px;
   padding:5px 10px; border-radius:var(--radius);
-  background:var(--bg3); border:1px solid var(--border2);
+  background:var(--glass-bg-1); border:1px solid var(--glass-border);
   color:var(--text); font-size:13px; font-weight:500;
   font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif;
   cursor:pointer; transition:all .15s; white-space:nowrap;
 }
 .nav-picker-btn:hover {
-  border-color:var(--gold); background:var(--bg4);
+  border-color:var(--gold); background:var(--glass-bg-2);
 }
 .nav-picker-btn.open {
   border-color:var(--gold); background:var(--gold-dim);
@@ -30,8 +30,10 @@
   display:none; position:absolute;
   top:100%; left:0; margin-top:4px;
   width:420px; max-height:70vh;
-  background:var(--bg2); border:1px solid var(--border);
-  border-radius:10px; box-shadow:0 12px 40px rgba(0,0,0,.4);
+  background:var(--glass-bg-2);
+  backdrop-filter:var(--glass-blur-2); -webkit-backdrop-filter:var(--glass-blur-2);
+  border:1px solid var(--glass-border);
+  border-radius:10px; box-shadow:var(--glass-shadow);
   z-index:500; overflow:hidden;
   flex-direction:column;
 }
@@ -39,7 +41,7 @@
 
 /* 탭 헤더 (구약/신약) */
 .np-tabs {
-  display:flex; border-bottom:1px solid var(--border);
+  display:flex; border-bottom:1px solid var(--glass-border);
   padding:0; flex-shrink:0;
 }
 .np-tab {
@@ -48,7 +50,7 @@
   cursor:pointer; transition:all .15s;
   border-bottom:2px solid transparent;
 }
-.np-tab:hover { color:var(--text); background:var(--bg3); }
+.np-tab:hover { color:var(--text); background:var(--glass-bg-2); }
 .np-tab.act {
   color:var(--gold); border-bottom-color:var(--gold);
 }
@@ -66,13 +68,14 @@
 .np-book {
   padding:7px 4px; text-align:center;
   font-size:11px; font-weight:500; color:var(--text2);
-  background:var(--bg3); border:1px solid var(--border2);
+  background:var(--glass-bg-1); border:1px solid var(--glass-border);
   border-radius:6px; cursor:pointer;
-  transition:all .12s; overflow:hidden;
+  transition:all .15s; overflow:hidden;
   white-space:nowrap; text-overflow:ellipsis;
+  box-shadow:var(--glass-highlight);
 }
 .np-book:hover {
-  background:var(--bg4); border-color:var(--text3);
+  background:var(--glass-bg-2); border-color:var(--text3);
   color:var(--text);
 }
 .np-book.act {
@@ -82,7 +85,7 @@
 
 /* 장 그리드 (책 선택 후 펼침) */
 .np-chapters {
-  border-top:1px solid var(--border);
+  border-top:1px solid var(--glass-border);
   padding:10px; flex-shrink:0;
   max-height:200px; overflow-y:auto;
 }
@@ -102,12 +105,13 @@
 .np-ch {
   padding:6px 0; text-align:center;
   font-size:12px; color:var(--text2);
-  background:var(--bg3); border:1px solid var(--border2);
+  background:var(--glass-bg-1); border:1px solid var(--glass-border);
   border-radius:5px; cursor:pointer;
-  transition:all .12s;
+  transition:all .15s;
+  box-shadow:var(--glass-highlight);
 }
 .np-ch:hover {
-  background:var(--bg4); border-color:var(--text3);
+  background:var(--glass-bg-2); border-color:var(--text3);
   color:var(--text);
 }
 .np-ch.act {

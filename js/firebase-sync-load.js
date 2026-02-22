@@ -32,7 +32,7 @@ export async function loadFromFirestore(db, uid){
       await setDoc(doc(db,'users',uid,'data','notes'),{notes:S.notes||[],updatedAt:now});
     }
     window._firebaseReady=true;
-    window.renderAll?.(); window.newNote?.();
+    window.renderAll?.();
     return true;
   } catch(e){ console.error('Firestore 로드 실패:',e); return false; }
 }

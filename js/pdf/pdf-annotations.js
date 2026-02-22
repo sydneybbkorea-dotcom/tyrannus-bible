@@ -144,6 +144,22 @@ var PDFAnnotations = (function(){
           });
         })(annot);
 
+        // Click → tag popup
+        (function(annotRef, elRef){
+          elRef.addEventListener('click', function(ev){
+            ev.stopPropagation();
+            _showTagPopup(annotRef, elRef, viewport);
+          });
+        })(annot, el);
+
+        // Tag badge display
+        if(annot.tags && annot.tags.length){
+          var tagBadge = document.createElement('span');
+          tagBadge.className = 'pdf-annot-tag-badge';
+          tagBadge.textContent = annot.tags[0] + (annot.tags.length > 1 ? ' +' + (annot.tags.length-1) : '');
+          el.appendChild(tagBadge);
+        }
+
         // Note link badge (when linked to a note)
         if(annot.linkedNoteId){
           var badge = document.createElement('span');
@@ -300,8 +316,86 @@ var PDFAnnotations = (function(){
       color: opts.color || '#FACC15',
       strokeWidth: opts.strokeWidth || 2,
       linkedUri: opts.linkedUri || null,
+      tags: opts.tags || [],
       createdAt: Date.now()
     };
+  }
+
+  // ── Tag Popup UI ──
+  function _showTagPopup(annot, targetEl, viewport){
+    // Remove existing popup
+    document.querySelectorAll('.pdf-tag-popup').forEach(function(p){ p.remove(); });
+
+    var popup = document.createElement('div');
+    popup.className = 'pdf-tag-popup';
+
+    // Position below annotation element
+    var rect = targetEl.getBoundingClientRect();
+    var layer = targetEl.closest('.pdf-annot-layer');
+    var layerRect = layer ? layer.getBoundingClientRect() : {left:0,top:0};
+    popup.style.left = (rect.left - layerRect.left) + 'px';
+    popup.style.top = (rect.bottom - layerRect.top + 4) + 'px';
+
+    // Build existing tags chips
+    var tagsHtml = (annot.tags||[]).map(function(tag){
+      return '<span class="pdf-tag-chip">' + _escHtml(tag)
+        + '<button class="pdf-tag-remove" data-tag="' + _escHtml(tag) + '">&times;</button></span>';
+    }).join('');
+
+    popup.innerHTML = '<div class="pdf-tag-chips">' + tagsHtml + '</div>'
+      + '<div class="pdf-tag-input-row">'
+      + '<input class="pdf-tag-input" placeholder="태그 추가..." />'
+      + '<button class="pdf-tag-add-btn"><i class="fa fa-plus"></i></button>'
+      + '</div>';
+
+    layer.appendChild(popup);
+
+    // Add tag logic
+    var input = popup.querySelector('.pdf-tag-input');
+    var addBtn = popup.querySelector('.pdf-tag-add-btn');
+    function addTag(){
+      var tag = input.value.trim();
+      if(!tag) return;
+      if(!annot.tags) annot.tags = [];
+      if(annot.tags.indexOf(tag) === -1){
+        annot.tags.push(tag);
+        PDFAnnotations.save(annot);
+        _showTagPopup(annot, targetEl, viewport); // re-render popup
+      }
+      input.value = '';
+    }
+    addBtn.addEventListener('click', addTag);
+    input.addEventListener('keydown', function(e){
+      if(e.key === 'Enter'){ e.preventDefault(); addTag(); }
+    });
+
+    // Remove tag logic
+    popup.querySelectorAll('.pdf-tag-remove').forEach(function(btn){
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        var tag = btn.dataset.tag;
+        annot.tags = (annot.tags||[]).filter(function(t){ return t !== tag; });
+        PDFAnnotations.save(annot);
+        _showTagPopup(annot, targetEl, viewport);
+      });
+    });
+
+    // Close on outside click
+    setTimeout(function(){
+      document.addEventListener('click', function handler(e){
+        if(!popup.contains(e.target)){
+          popup.remove();
+          document.removeEventListener('click', handler);
+        }
+      });
+    }, 50);
+
+    input.focus();
+
+    // Stop propagation to prevent layer events
+    popup.addEventListener('pointerdown', function(e){ e.stopPropagation(); });
+    popup.addEventListener('pointermove', function(e){ e.stopPropagation(); });
+    popup.addEventListener('pointerup', function(e){ e.stopPropagation(); });
   }
 
   return {

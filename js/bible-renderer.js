@@ -64,7 +64,8 @@ function renderBible(){
     }
     row.onclick=e=>{
       if(e.target.closest('.vrow-menu-btn')) return;
-      if(e.ctrlKey||e.metaKey) selVerse(vn,e);
+      if(e.shiftKey && S.selV) selVerseRange(S.selV, vn);
+      else if(e.ctrlKey||e.metaKey) selVerse(vn,e);
       else focusVerse(vn);
     };
     cont.appendChild(row);

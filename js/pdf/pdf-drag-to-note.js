@@ -244,10 +244,13 @@ var PDFDragToNote = (function(){
   // ── Drag start handler (called from pdf-annotations.js) ──
 
   function onAnnotDragStart(e, annot){
-    // Only allow drag in select mode
-    if(typeof PDFTools !== 'undefined' && PDFTools.getTool() !== 'select'){
-      e.preventDefault();
-      return;
+    // Allow drag in select and highlight modes (block draw/text/eraser)
+    if(typeof PDFTools !== 'undefined'){
+      var tool = PDFTools.getTool();
+      if(tool !== 'select' && tool !== 'highlight'){
+        e.preventDefault();
+        return;
+      }
     }
 
     var pdfId = annot.pdfId || (typeof PDFViewer !== 'undefined' ? PDFViewer.getCurrentPdfId() : '');

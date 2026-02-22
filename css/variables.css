@@ -46,33 +46,23 @@
   --purple:   #6b4595;   /* 더스티 플럼 — 차분한 보라 */
 }
 
-/* Theme-specific overrides for component backgrounds */
-[data-theme="light"] #sidePanel { background: var(--bg-secondary); border-right-color: var(--border-color) }
+/* Theme-specific overrides for component backgrounds (glass-aware) */
 [data-theme="light"] #biblePane { background: var(--bg-surface) }
 [data-theme="light"] #bibleScroll { background: var(--bg-surface) }
-[data-theme="light"] #bibleTabBar { background: var(--bg-secondary) }
-[data-theme="light"] #rightPanel { background: var(--bg-secondary); border-left-color: var(--border-color) }
-[data-theme="light"] .rp-tabs { background: var(--bg-tertiary) }
-[data-theme="light"] .btab { background: var(--bg-tertiary); border-color: var(--border-color) }
-[data-theme="light"] .btab.btab-active { background: var(--bg-surface) }
 [data-theme="light"] .ch-head h1 { color: var(--book-hover) }
 [data-theme="light"] .vnum { color: var(--book-color) }
-[data-theme="light"] .vrow:hover { background: hsl(0, 30%, 93%) }
-[data-theme="light"] .vrow.vsel { background: var(--accent-sel) !important; outline: 1px solid hsla(var(--accent-h), 60%, 45%, 0.25) }
+[data-theme="light"] .vrow:hover { background: var(--glass-bg-1); border-left-color: hsla(var(--accent-h), 50%, 45%, 0.35) }
+[data-theme="light"] .vrow.vfocus { background: var(--glass-bg-2); border-left-color: var(--accent-color) }
+[data-theme="light"] .vrow.vsel { background: var(--accent-sel) !important; border-left-color: var(--accent-color) !important; box-shadow: inset 0 0 0 1px hsla(var(--accent-h), 50%, 45%, 0.15) }
 
 /* Sepia overrides */
-[data-theme="sepia"] #sidePanel { background: var(--bg-secondary); border-right-color: var(--border-color) }
 [data-theme="sepia"] #biblePane { background: var(--bg-surface) }
 [data-theme="sepia"] #bibleScroll { background: var(--bg-surface) }
-[data-theme="sepia"] #bibleTabBar { background: var(--bg-secondary) }
-[data-theme="sepia"] #rightPanel { background: var(--bg-secondary); border-left-color: var(--border-color) }
-[data-theme="sepia"] .rp-tabs { background: var(--bg-tertiary) }
-[data-theme="sepia"] .btab { background: var(--bg-tertiary); border-color: var(--border-color) }
-[data-theme="sepia"] .btab.btab-active { background: var(--bg-surface) }
 [data-theme="sepia"] .ch-head h1 { color: var(--book-hover) }
 [data-theme="sepia"] .vnum { color: var(--book-color) }
-[data-theme="sepia"] .vrow:hover { background: hsla(34, 20%, 84%, 0.5) }
-[data-theme="sepia"] .vrow.vsel { background: var(--accent-sel) !important; outline: 1px solid hsla(var(--accent-h), 50%, 45%, 0.22) }
+[data-theme="sepia"] .vrow:hover { background: var(--glass-bg-1); border-left-color: hsla(var(--accent-h), 40%, 45%, 0.35) }
+[data-theme="sepia"] .vrow.vfocus { background: var(--glass-bg-2); border-left-color: var(--accent-color) }
+[data-theme="sepia"] .vrow.vsel { background: var(--accent-sel) !important; border-left-color: var(--accent-color) !important; box-shadow: inset 0 0 0 1px hsla(var(--accent-h), 40%, 45%, 0.15) }
 
 :root {
   --topbar-h:   0px;

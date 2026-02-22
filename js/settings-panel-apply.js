@@ -89,13 +89,13 @@ function _stpSetLang(lang){
   }
 }
 
-// 색상 초기화 (테마 다크 + 강조 블루 + 배경 블루 + 성경글씨 기본)
+// 색상 초기화 (테마 다크 + 강조 레드 + 배경 레드 + 성경글씨 기본)
 function _stpResetColors(){
   if(typeof ThemeSwitcher !== 'undefined'){
     ThemeSwitcher.setTheme('dark');
-    ThemeSwitcher.setAccent('blue');
-    if(ThemeSwitcher.setBase) ThemeSwitcher.setBase('blue');
-    if(ThemeSwitcher.setBookAccent) ThemeSwitcher.setBookAccent('blue');
+    ThemeSwitcher.setAccent('red');
+    if(ThemeSwitcher.setBase) ThemeSwitcher.setBase('red');
+    if(ThemeSwitcher.setBookAccent) ThemeSwitcher.setBookAccent('red');
     if(ThemeSwitcher.resetContentColor) ThemeSwitcher.resetContentColor();
   }
   renderSettingsPanel();

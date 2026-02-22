@@ -114,10 +114,39 @@ var PDFViewer = (function(){
       + '<button class="pdf-tool-btn" id="pdfToolDraw" onclick="PDFTools.setTool(\'draw\')" title="그리기"><i class="fa fa-pen-fancy"></i></button>'
       + '<button class="pdf-tool-btn" id="pdfToolText" onclick="PDFTools.setTool(\'text\')" title="텍스트"><i class="fa fa-font"></i></button>'
       + '<button class="pdf-tool-btn" id="pdfToolEraser" onclick="PDFTools.setTool(\'eraser\')" title="지우기"><i class="fa fa-eraser"></i></button>'
+      + '<div class="pdf-tool-sep"></div>'
+      + '<button class="pdf-tool-btn" onclick="PDFTools.undo()" title="실행 취소"><i class="fa fa-rotate-left"></i></button>'
+      + '<button class="pdf-tool-btn" onclick="PDFTools.redo()" title="다시 실행"><i class="fa fa-rotate-right"></i></button>'
       + '</div>'
       + '<div class="pdf-viewport" id="pdfViewerContainer"></div>';
 
     _container = document.getElementById('pdfViewerContainer');
+    _initPanDrag();
+  }
+
+  // ── Pan/Drag (scroll by mouse drag when zoomed) ──
+  function _initPanDrag(){
+    var isDragging = false, startX, startY, scrollL, scrollT;
+    _container.addEventListener('pointerdown', function(e){
+      if(typeof PDFTools !== 'undefined' && PDFTools.getTool() !== 'select') return;
+      if(e.target.closest('.pdf-annot')) return;
+      isDragging = true;
+      startX = e.clientX; startY = e.clientY;
+      scrollL = _container.scrollLeft; scrollT = _container.scrollTop;
+      _container.style.cursor = 'grabbing';
+      e.preventDefault();
+    });
+    _container.addEventListener('pointermove', function(e){
+      if(!isDragging) return;
+      _container.scrollLeft = scrollL - (e.clientX - startX);
+      _container.scrollTop  = scrollT - (e.clientY - startY);
+    });
+    _container.addEventListener('pointerup', function(){
+      isDragging = false; _container.style.cursor = '';
+    });
+    _container.addEventListener('pointerleave', function(){
+      isDragging = false; _container.style.cursor = '';
+    });
   }
 
   // ── Fit scale to container width ──

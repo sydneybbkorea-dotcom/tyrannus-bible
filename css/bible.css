@@ -9,7 +9,9 @@
 #bibleViewBar {
   display:flex; align-items:center;
   height:34px; flex-shrink:0; padding:0;
-  background:var(--bg2); border-bottom:1px solid var(--border);
+  background:var(--bg-secondary);
+  border-bottom:1px solid var(--glass-border);
+  box-shadow:var(--glass-highlight);
   position:relative; z-index:90; overflow:visible;
 }
 #bibleViewBar .vb-left { padding-left:6px }
@@ -18,17 +20,17 @@
 .vb-sel {
   display:flex; align-items:center; gap:4px; padding:3px 10px;
   font-size:12px; font-weight:600; color:var(--text); white-space:nowrap;
-  background:var(--bg3); border:1px solid var(--border); border-radius:4px;
-  cursor:pointer; transition:all .12s;
+  background:var(--glass-bg-1); border:1px solid var(--glass-border); border-radius:4px;
+  cursor:pointer; transition:all .15s;
 }
-.vb-sel:hover { border-color:var(--text3); background:var(--bg4,var(--bg3)) }
+.vb-sel:hover { border-color:var(--text3); background:var(--glass-bg-2); }
 .vb-caret { font-size:10px; color:var(--text3); margin-left:2px }
 .vb-arrow {
   width:24px; height:24px; display:flex; align-items:center; justify-content:center;
   border:none; background:transparent; color:var(--text3); font-size:10px;
   cursor:pointer; border-radius:3px; transition:all .12s;
 }
-.vb-arrow:hover { background:var(--bg3); color:var(--text) }
+.vb-arrow:hover { background:var(--glass-bg-1); color:var(--text) }
 .vb-ch-num {
   font-size:12px; font-weight:700; color:var(--book-color); min-width:18px;
   text-align:center; font-family:'JetBrains Mono',monospace;
@@ -40,7 +42,7 @@
   border:none; background:transparent; color:var(--text3); font-size:11px;
   cursor:pointer; border-radius:4px; transition:all .12s;
 }
-.vb-btn:hover { background:var(--bg3); color:var(--text) }
+.vb-btn:hover { background:var(--glass-bg-1); color:var(--text) }
 .vb-btn.vb-on { color:var(--gold); background:var(--gold-dim) }
 .vb-svg { display:block }
 
@@ -48,9 +50,9 @@
 .vb-search {
   flex:1; display:flex; align-items:center; gap:4px;
   margin:0 8px; min-width:60px; max-width:320px;
-  background:var(--bg3); border:1px solid var(--border);
+  background:var(--glass-bg-1); border:1px solid var(--glass-border);
   border-radius:4px; padding:0 8px; height:24px;
-  transition:border-color .15s;
+  transition:all .15s;
 }
 .vb-search:focus-within { border-color:var(--gold) }
 .vb-sch-icon { font-size:10px; color:var(--text3); flex-shrink:0 }
@@ -68,10 +70,12 @@
 .cp-drop {
   position:absolute; top:100%; left:0; z-index:200; width:160px;
   max-height:320px; overflow-y:auto;
-  background:var(--bg2); border:1px solid var(--border);
-  border-top:none; box-shadow:0 8px 24px rgba(0,0,0,.3);
+  background:var(--glass-bg-2);
+  backdrop-filter:var(--glass-blur-2); -webkit-backdrop-filter:var(--glass-blur-2);
+  border:1px solid var(--glass-border);
+  border-top:none; box-shadow:var(--glass-shadow);
   border-radius:0 0 6px 6px;
-  scrollbar-width:thin; scrollbar-color:var(--border2) transparent;
+  scrollbar-width:thin; scrollbar-color:var(--glass-border) transparent;
 }
 .cp-drop::-webkit-scrollbar { width:6px }
 .cp-drop::-webkit-scrollbar-thumb { background:var(--border2); border-radius:3px }
@@ -81,7 +85,7 @@
   transition:background .08s; white-space:nowrap;
   overflow:hidden; text-overflow:ellipsis;
 }
-.cp-item:hover { background:var(--bg3); color:var(--text) }
+.cp-item:hover { background:var(--glass-bg-2); color:var(--text); box-shadow:var(--glass-highlight); }
 .cp-item.cp-item-act { color:var(--gold); font-weight:600; background:var(--gold-dim) }
 .cp-div { height:1px; background:var(--border); margin:4px 0 }
 /* 장 버튼 스타일 */
@@ -95,29 +99,31 @@
   color:var(--text3); font-size:14px; cursor:pointer; transition:all .12s;
   -webkit-tap-highlight-color:transparent; touch-action:manipulation;
 }
-.tb-pin:hover { background:var(--bg3); color:var(--text) }
+.tb-pin:hover { background:var(--glass-bg-1); color:var(--text) }
 /* ── Bible Tab Bar ── */
 #bibleTabBar {
-  display:flex; align-items:stretch; background:var(--bg2);
+  display:flex; align-items:stretch;
+  background:var(--bg-secondary);
   flex-shrink:0; height:36px;
-  border-bottom:1px solid var(--border);
+  border-bottom:1px solid var(--glass-border);
+  box-shadow:var(--glass-highlight);
   position:relative;
 }
 #bibleTabList { display:flex; align-items:flex-end; flex:1; min-width:0; gap:0; overflow:hidden; padding:6px 6px 0; }
 .btab {
   display:flex; align-items:center; gap:5px; padding:7px 20px 8px 24px; font-size:11.5px;
   color:var(--text3); cursor:pointer; white-space:nowrap;
-  transition:all .12s; flex-shrink:0; min-width:80px; max-width:400px;
+  transition:all .15s; flex-shrink:0; min-width:80px; max-width:400px;
   user-select:none; overflow:hidden;
   border-radius:var(--radius) var(--radius) 0 0;
-  background:var(--bg3);
-  border:1px solid var(--border);
+  background:var(--glass-bg-1);
+  border:1px solid var(--glass-border);
   border-bottom:none;
   position:relative;
   margin-right:-1px;
   z-index:0;
 }
-.btab:hover { background:var(--bg); color:var(--text2); z-index:1; }
+.btab:hover { background:var(--glass-bg-2); color:var(--text2); z-index:1; }
 .btab.btab-active {
   background:var(--bg); color:var(--text);
   border-color:var(--border);
@@ -213,16 +219,28 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
 [data-theme="sepia"] .vtxt-en-side { color:var(--text-secondary) }
 [data-theme="sepia"] .vtxt-en-below { color:var(--text-secondary) }
 #bibleScroll { flex:1; overflow-y:auto; padding:10px 12px 48px; }
-.ch-head { text-align:center; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--border) }
+.ch-head { text-align:center; margin-bottom:20px; padding-bottom:16px; border-bottom:1px solid var(--glass-border); background:var(--glass-bg-1); border-radius:var(--radius-md); padding:16px; margin:0 -4px 20px; }
 /* 장 제목: 고딕체 (UI 요소) — 성경 본문과 구분 */
 .ch-head h1 { font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif; font-size:26px; font-weight:700; color:var(--book-hover); margin-bottom:6px; letter-spacing:0.02em }
 .ch-head p { font-size:14px; color:var(--text3); letter-spacing:1px; font-style:italic; font-family:'Playfair Display',serif; }
 .vrow {
-  display:flex; gap:0; padding:2px 8px; border-radius:var(--radius); margin-bottom:0;
-  cursor:pointer; transition:background .12s; position:relative;
+  display:flex; gap:0; padding:2px 8px 2px 5px; border-radius:var(--radius); margin-bottom:0;
+  cursor:pointer; transition:background .15s, box-shadow .15s, border-color .15s; position:relative;
+  border-left:3px solid transparent;
 }
-.vrow:hover { background:var(--bg3) }
-.vrow.vsel { background:var(--accent-sel) !important; outline:1px solid rgba(80,140,232,.25); border-radius:var(--radius) }
+/* Hover — 은은한 배경 + 좌측 바 힌트 */
+.vrow:hover {
+  background:var(--glass-bg-1);
+  border-left-color:var(--accent-color);
+  border-left-color:hsla(var(--accent-h,38), 50%, 55%, 0.35);
+}
+/* 다중 선택 (Ctrl/Shift+클릭) — 진한 악센트 배경 + 좌측 솔리드 바 */
+.vrow.vsel {
+  background:var(--accent-sel) !important;
+  border-left-color:var(--accent-color) !important;
+  box-shadow:inset 0 0 0 1px hsla(var(--accent-h,38), 50%, 55%, 0.12);
+  border-radius:var(--radius);
+}
 /* 구절 번호: 본문 텍스트 안에 inline, hanging indent용 음수 마진 */
 .vnum {
   font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--book-color);
@@ -236,7 +254,7 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
 }
 .vtxt {
   font-family:'KoPubWorld Batang','Noto Serif KR',serif;
-  font-size:var(--vtxt-size,17px); font-weight:500; color:var(--text);
+  font-size:var(--vtxt-size,17px); font-weight:500; color:var(--content-text);
   flex:1; letter-spacing:var(--vtxt-ls,0.02em); line-height:var(--vtxt-lh,1.85);
   user-select:text; word-break:keep-all;
   padding-left:28px;
@@ -468,14 +486,24 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
 .vrow:hover .vrow-menu-btn { opacity:.5; }
 .vrow-menu-btn:hover { opacity:1 !important; background:var(--bg4); color:var(--gold); }
 
-/* ── 구절 포커스 (첫 클릭 시 은은한 표시) ── */
-.vrow.vfocus { background:var(--bg3); }
+/* ── 구절 포커스 (첫 클릭 시 — hover보다 뚜렷하게) ── */
+.vrow.vfocus {
+  background:var(--glass-bg-2);
+  border-left-color:var(--accent-color);
+  box-shadow:inset 0 0 0 1px hsla(var(--accent-h,38), 50%, 55%, 0.08);
+}
+.vrow.vfocus:hover {
+  background:var(--glass-bg-2);
+  border-left-color:var(--accent-color);
+}
 
 /* ── 구절 메뉴 드롭다운 ── */
 .verse-menu {
   position:fixed; display:none; z-index:999;
-  background:var(--bg2); border:1px solid var(--border2);
-  border-radius:8px; box-shadow:0 4px 20px rgba(0,0,0,.35);
+  background:var(--glass-bg-3);
+  backdrop-filter:var(--glass-blur-3); -webkit-backdrop-filter:var(--glass-blur-3);
+  border:1px solid var(--glass-border);
+  border-radius:8px; box-shadow:var(--glass-shadow);
   padding:5px 0; min-width:170px;
 }
 .vm-item {
@@ -487,19 +515,35 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
 .vm-item i { width:14px; font-size:11px; color:var(--text3); text-align:center; }
 .vm-item:hover i { color:var(--gold); }
 .vm-sep { height:1px; background:var(--border); margin:4px 0; }
-[data-theme="light"] .verse-menu { box-shadow:0 4px 20px rgba(25,35,60,.10); background:hsl(216, 18%, 97%); border-color:hsl(216, 12%, 85%); }
-[data-theme="sepia"] .verse-menu { box-shadow:0 4px 20px rgba(80,50,15,.10); background:hsl(40, 40%, 96%); border-color:hsl(32, 18%, 78%); }
+/* ── Light mode — Warm Rose 컴포넌트 오버라이드 ── */
+[data-theme="light"] .btab.btab-active { background:var(--bg-surface); }
+[data-theme="light"] .vb-btn:hover { background:var(--glass-bg-2); color:var(--text-primary); }
+[data-theme="light"] .vb-btn.vb-on { background:hsla(var(--accent-h),60%,50%,.12); color:var(--accent-color); }
+[data-theme="light"] .vb-arrow:hover { background:var(--glass-bg-2); color:var(--text-primary); }
+[data-theme="light"] .cp-item:hover { background:var(--glass-bg-2); color:var(--text-primary); }
+[data-theme="light"] .cp-item.cp-item-act { background:hsla(var(--accent-h),60%,50%,.12); }
+[data-theme="light"] .str-code { background:hsla(var(--accent-h),60%,50%,.10); border-color:hsla(var(--accent-h),60%,50%,.20); }
+[data-theme="light"] .vm-item:hover { background:var(--glass-bg-2); }
+[data-theme="light"] .tb-pin:hover { background:var(--glass-bg-2); color:var(--text-primary); }
+[data-theme="light"] .vb-search { background:var(--glass-bg-1); border-color:var(--glass-border); }
+[data-theme="light"] .vb-search:focus-within { border-color:var(--accent-color); }
+[data-theme="light"] .hlc-erase { background:var(--glass-bg-1); border-color:var(--glass-border) !important; }
+[data-theme="light"] .chnav { background:var(--glass-bg-1); border-color:var(--glass-border); }
+[data-theme="light"] .chnav:hover { background:hsla(var(--accent-h),60%,50%,.10); border-color:var(--accent-color); color:var(--accent-color); }
 
 /* ── 구절 호버 툴팁 (마우스 따라다니는 참조) ── */
 .v-hover-tip {
   position:fixed; display:none; padding:3px 10px;
   font-size:12px; font-weight:600; color:var(--gold);
-  background:var(--bg2); border-radius:4px;
+  background:var(--glass-bg-3);
+  backdrop-filter:var(--glass-blur-3); -webkit-backdrop-filter:var(--glass-blur-3);
+  border:1px solid var(--glass-border);
+  border-radius:4px;
   pointer-events:none; z-index:1000; white-space:nowrap;
   opacity:.92; font-family:'JetBrains Mono','Noto Sans KR',sans-serif;
-  box-shadow:0 2px 8px rgba(0,0,0,.15);
+  box-shadow:var(--glass-shadow);
 }
 
 .ch-nav { display:flex; justify-content:space-between; align-items:center; padding:20px 0 0; margin-top:20px; border-top:1px solid var(--border) }
-.chnav { padding:8px 20px; border-radius:var(--radius); font-size:12px; background:var(--bg3); border:1px solid var(--border2); color:var(--text2); transition:all .18s; font-weight:500 }
+.chnav { padding:8px 20px; border-radius:var(--radius); font-size:12px; background:var(--glass-bg-1); border:1px solid var(--glass-border); color:var(--text2); transition:all .15s; font-weight:500; box-shadow:var(--glass-highlight); }
 .chnav:hover { background:var(--accent-dim); border-color:var(--accent); color:var(--accent) }

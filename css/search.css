@@ -6,8 +6,9 @@
 /* 검색 입력 행 */
 .sch-row { display:flex; gap:4px }
 .sch-row input {
-  flex:1; background:var(--bg3); border:1px solid var(--border2); color:var(--text);
+  flex:1; background:var(--glass-bg-1); border:1px solid var(--glass-border); color:var(--text);
   border-radius:5px; padding:6px 10px; font-size:12px; outline:none;
+  transition:border-color .15s;
 }
 .sch-row input:focus { border-color:var(--gold) }
 .sch-row button {
@@ -25,7 +26,7 @@
 .sch-filters { display:flex; gap:4px; flex-wrap:wrap; align-items:center }
 .sf-chip {
   padding:3px 10px; border-radius:20px; font-size:10px; font-weight:600;
-  background:var(--bg3); border:1px solid var(--border); color:var(--text3);
+  background:var(--glass-bg-1); border:1px solid var(--glass-border); color:var(--text3);
   cursor:pointer; transition:all .15s; white-space:nowrap;
   -webkit-tap-highlight-color:transparent; touch-action:manipulation;
 }

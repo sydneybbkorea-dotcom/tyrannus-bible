@@ -16,10 +16,13 @@
   align-items: center;
   gap: 4px;
   padding: 6px 10px;
-  background: var(--bg-secondary, var(--bg2));
-  border-bottom: 1px solid var(--border-color, var(--border));
+  background: var(--glass-bg-1);
+  backdrop-filter: var(--glass-blur-1); -webkit-backdrop-filter: var(--glass-blur-1);
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: var(--glass-highlight);
   flex-shrink: 0;
-  overflow-x: auto;
+  flex-wrap: wrap;
+  overflow-x: visible;
 }
 .pdf-toolbar::-webkit-scrollbar { height: 0; }
 
@@ -257,11 +260,12 @@
   position: absolute;
   display: flex;
   gap: 2px;
-  background: var(--bg-surface, var(--bg3));
-  border: 1px solid var(--border-color, var(--border));
+  background: var(--glass-bg-3);
+  backdrop-filter: var(--glass-blur-3); -webkit-backdrop-filter: var(--glass-blur-3);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius-md, 8px);
   padding: 4px;
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--glass-shadow);
   z-index: 10;
 }
 .pdf-sel-btn {
@@ -384,10 +388,11 @@
   position: absolute;
   z-index: 13;
   width: 260px;
-  background: var(--bg2, #1a1c24);
-  border: 1px solid var(--border, #2a2c34);
+  background: var(--glass-bg-2);
+  backdrop-filter: var(--glass-blur-2); -webkit-backdrop-filter: var(--glass-blur-2);
+  border: 1px solid var(--glass-border);
   border-radius: 10px;
-  box-shadow: 0 6px 24px rgba(0,0,0,.35);
+  box-shadow: var(--glass-shadow);
   overflow: hidden;
 }
 .pdf-memo-header {
@@ -505,6 +510,36 @@
   font-size: 8px;
   color: #fff;
 }
+
+/* ── Pan/Drag cursor ── */
+.pdf-viewport { cursor: grab; }
+.pdf-viewport:active { cursor: grabbing; }
+
+/* ── Tag popup ── */
+.pdf-tag-popup { position:absolute; z-index:15; min-width:180px; max-width:260px;
+  background:var(--glass-bg-2); backdrop-filter:var(--glass-blur-2); -webkit-backdrop-filter:var(--glass-blur-2);
+  border:1px solid var(--glass-border);
+  border-radius:8px; box-shadow:var(--glass-shadow); padding:8px; }
+.pdf-tag-chips { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:6px; }
+.pdf-tag-chip { display:inline-flex; align-items:center; gap:2px; padding:2px 8px;
+  background:var(--accent-dim,rgba(189,138,0,.15)); color:var(--accent-color,#bd8a00);
+  border-radius:10px; font-size:10px; font-weight:600; }
+.pdf-tag-remove { border:none; background:none; color:inherit; cursor:pointer;
+  font-size:12px; padding:0 2px; opacity:.6; }
+.pdf-tag-remove:hover { opacity:1; }
+.pdf-tag-input-row { display:flex; gap:4px; }
+.pdf-tag-input { flex:1; border:1px solid var(--border,#2a2c34); background:var(--bg3,#22242e);
+  color:var(--text,#e8e8e8); border-radius:6px; padding:4px 8px; font-size:11px; outline:none; }
+.pdf-tag-add-btn { width:28px; height:28px; border:1px solid var(--border,#2a2c34);
+  background:var(--bg3,#22242e); color:var(--text3,#666); border-radius:6px;
+  cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:11px; }
+.pdf-tag-add-btn:hover { color:var(--accent-color,#bd8a00); border-color:var(--accent-color); }
+
+/* Tag badge on highlight */
+.pdf-annot-tag-badge { position:absolute; bottom:-14px; left:0;
+  font-size:9px; color:var(--accent-color,#bd8a00); background:var(--bg2,#1a1c24);
+  border:1px solid var(--border,#2a2c34); border-radius:8px; padding:1px 6px;
+  white-space:nowrap; pointer-events:none; opacity:.85; }
 
 /* ── Responsive: Mobile fullscreen ── */
 @media (max-width: 599px) {

@@ -5,7 +5,8 @@
 .stp-section {
   display:flex; flex-direction:column; gap:10px;
   padding:12px; border-radius:8px;
-  background:var(--bg3); border:1px solid var(--border);
+  background:var(--glass-bg-1); border:1px solid var(--glass-border);
+  box-shadow:var(--glass-highlight);
 }
 .stp-sec-title {
   font-size:10px; font-weight:700; color:var(--text3);
@@ -44,7 +45,7 @@
 /* 슬라이더 */
 .stp-range {
   -webkit-appearance:none; appearance:none; width:100%; height:4px;
-  background:var(--bg4); border-radius:2px; outline:none; cursor:pointer;
+  background:var(--glass-bg-2); border-radius:2px; outline:none; cursor:pointer;
 }
 .stp-range::-webkit-slider-thumb {
   -webkit-appearance:none; width:14px; height:14px; border-radius:50%;
@@ -153,11 +154,11 @@
 }
 .stp-theme-btn {
   flex:1; padding:6px 8px; font-size:11px; font-weight:600;
-  color:var(--text2); background:var(--bg3); border:1px solid var(--border);
+  color:var(--text2); background:var(--glass-bg-1); border:1px solid var(--glass-border);
   border-radius:6px; cursor:pointer; transition:all .15s;
   display:flex; align-items:center; justify-content:center; gap:4px;
 }
-.stp-theme-btn:hover { color:var(--text); background:var(--bg4) }
+.stp-theme-btn:hover { color:var(--text); background:var(--glass-bg-2); }
 .stp-theme-btn.stp-theme-active {
   color:var(--accent-color, var(--gold));
   background:var(--accent-dim, var(--gold-dim));
@@ -171,7 +172,7 @@
 }
 .stp-accent-dot {
   width:22px; height:22px; border-radius:50%;
-  border:2px solid transparent; cursor:pointer;
+  border:2px solid var(--glass-border); cursor:pointer;
   transition:all .15s; flex-shrink:0;
 }
 .stp-accent-dot:hover { transform:scale(1.15); opacity:.9 }
@@ -235,10 +236,11 @@
 .stp-menu-item {
   display:flex; align-items:center; gap:12px;
   padding:12px; border-radius:8px;
-  background:var(--bg3); border:1px solid var(--border);
+  background:var(--glass-bg-1); border:1px solid var(--glass-border);
+  box-shadow:var(--glass-highlight);
   cursor:pointer; transition:all .15s;
 }
-.stp-menu-item:hover { background:var(--bg4) }
+.stp-menu-item:hover { background:var(--glass-bg-2); }
 .stp-menu-item.stp-menu-disabled { opacity:.6; cursor:default }
 .stp-menu-item.stp-menu-disabled:hover { background:var(--bg3) }
 .stp-menu-icon {

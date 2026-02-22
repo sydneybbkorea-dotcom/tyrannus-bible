@@ -13,6 +13,8 @@ var ThemeSwitcher = (function(){
   var THEMES  = ['light', 'dark', 'sepia'];
   var ACCENTS = ['blue', 'red', 'orange', 'yellow', 'cyan', 'purple', 'pink', 'black'];
   var BASES   = ['blue', 'red', 'orange', 'yellow', 'cyan', 'purple', 'pink', 'black'];
+  var DARK_DEFAULT_ACCENT  = '#bd8a00';
+  var LIGHT_DEFAULT_ACCENT = '#f06f38';
 
   // bg 인라인 오버라이드 목록
   var BG_PROPS = ['--bg-primary','--bg-secondary','--bg-tertiary','--bg-surface',
@@ -43,7 +45,8 @@ var ThemeSwitcher = (function(){
     if(stored) return stored;
     return 'custom';
   }
-  function getCustomAccent(){ return localStorage.getItem(CUSTOM_ACCENT_KEY) || '#bd8a00'; }
+  function _defaultAccent(){ return getTheme() === 'light' ? LIGHT_DEFAULT_ACCENT : DARK_DEFAULT_ACCENT; }
+  function getCustomAccent(){ return localStorage.getItem(CUSTOM_ACCENT_KEY) || _defaultAccent(); }
   function getCustomBase(){ return localStorage.getItem(CUSTOM_BASE_KEY) || '#04050b'; }
 
   // 커스텀 배경 bg-* 인라인 적용/해제
@@ -89,11 +92,19 @@ var ThemeSwitcher = (function(){
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem(THEME_KEY, theme);
     _applyCustomBg();
+    // 테마 기본 강조색 자동 적용 (사용자가 직접 지정하지 않은 경우)
+    var accent = getAccent();
+    if(accent === 'custom'){
+      var cur = localStorage.getItem(CUSTOM_ACCENT_KEY);
+      if(!cur || cur === DARK_DEFAULT_ACCENT || cur === LIGHT_DEFAULT_ACCENT){
+        setCustomAccent(_defaultAccent());
+      }
+    }
     if(typeof EventBus !== 'undefined') EventBus.emit('theme:changed', { theme: theme });
   }
 
   function setAccent(accent){
-    if(ACCENTS.indexOf(accent) === -1) accent = 'blue';
+    if(ACCENTS.indexOf(accent) === -1) accent = 'red';
     var root = document.documentElement;
     root.setAttribute('data-accent', accent);
     root.style.removeProperty('--accent-h');
@@ -117,7 +128,7 @@ var ThemeSwitcher = (function(){
   }
 
   function setBase(base){
-    if(BASES.indexOf(base) === -1) base = 'blue';
+    if(BASES.indexOf(base) === -1) base = 'red';
     document.documentElement.setAttribute('data-base', base);
     localStorage.setItem(BASE_KEY, base);
     localStorage.removeItem(CUSTOM_BASE_KEY);
@@ -158,7 +169,7 @@ var ThemeSwitcher = (function(){
   function getCustomBookAccent(){ return localStorage.getItem(CUSTOM_BOOK_ACCENT_KEY) || '#bd8a00'; }
 
   function setBookAccent(preset){
-    if(ACCENTS.indexOf(preset) === -1) preset = 'blue';
+    if(ACCENTS.indexOf(preset) === -1) preset = 'red';
     var root = document.documentElement;
     root.setAttribute('data-book-accent', preset);
     root.style.removeProperty('--book-h');
@@ -195,11 +206,11 @@ var ThemeSwitcher = (function(){
       // 사용자가 직접 바꾼 적 없으면(blue 기본값) 새 기본값으로 리셋
       var oldAccent = localStorage.getItem(ACCENT_KEY);
       var oldBase = localStorage.getItem(BASE_KEY);
-      if(!oldAccent || oldAccent === 'blue'){
+      if(!oldAccent || oldAccent === 'blue' || oldAccent === 'red'){
         localStorage.removeItem(ACCENT_KEY);
         localStorage.removeItem(CUSTOM_ACCENT_KEY);
       }
-      if(!oldBase || oldBase === 'blue'){
+      if(!oldBase || oldBase === 'blue' || oldBase === 'red'){
         localStorage.removeItem(BASE_KEY);
         localStorage.removeItem(CUSTOM_BASE_KEY);
       }
@@ -224,7 +235,8 @@ var ThemeSwitcher = (function(){
 
   return {
     THEMES: THEMES, ACCENTS: ACCENTS, BASES: BASES,
-    hexToHSL: hexToHSL,
+    DARK_DEFAULT_ACCENT: DARK_DEFAULT_ACCENT, LIGHT_DEFAULT_ACCENT: LIGHT_DEFAULT_ACCENT,
+    hexToHSL: hexToHSL, defaultAccent: _defaultAccent,
     getTheme: getTheme, getAccent: getAccent, getBase: getBase,
     getCustomAccent: getCustomAccent, getCustomBase: getCustomBase,
     setTheme: setTheme, setAccent: setAccent, setBase: setBase,

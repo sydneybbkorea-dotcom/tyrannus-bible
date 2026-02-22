@@ -3,7 +3,7 @@
 .adv-tabs{display:flex;gap:2px;padding:8px 10px 0}
 .adv-tab{cursor:pointer}
 .adv-input-row{display:flex;gap:4px;padding:6px 10px}
-.adv-input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:6px 10px;font-size:12px;color:var(--text);outline:none}
+.adv-input{flex:1;background:var(--glass-bg-1);border:1px solid var(--glass-border);border-radius:5px;padding:6px 10px;font-size:12px;color:var(--text);outline:none;transition:border-color .15s}
 .adv-input:focus{border-color:var(--gold)}
 .adv-search-btn{padding:6px 12px;border-radius:5px;font-size:11px;font-weight:700;background:var(--gold);color:var(--bg);border:none;cursor:pointer;flex-shrink:0}
 .adv-help-btn{padding:6px 8px;border-radius:5px;font-size:11px;background:none;color:var(--text3);border:1px solid var(--border);cursor:pointer;flex-shrink:0;transition:color .15s}
@@ -39,15 +39,15 @@
 .adv-results{flex:1;overflow-y:auto;min-height:0}
 .adv-empty{padding:20px;text-align:center;color:var(--text3);font-size:12px}
 .adv-loading{padding:20px;text-align:center;color:var(--text3)}
-.adv-item{padding:6px 10px;cursor:pointer;border-bottom:1px solid var(--border);transition:background .1s}
-.adv-item:hover{background:rgba(212,175,55,.06)}
+.adv-item{padding:6px 10px;cursor:pointer;border-bottom:1px solid var(--glass-border);transition:all .15s}
+.adv-item:hover{background:var(--glass-bg-1)}
 .adv-ref{display:block;font-size:10px;color:var(--gold);font-family:'JetBrains Mono',monospace;margin-bottom:2px}
 .adv-txt{display:block;font-size:11px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .adv-hl{background:rgba(212,175,55,.25);color:var(--gold);border-radius:2px;padding:0 1px}
 
 /* 참조 칩 그리드 */
 .adv-ref-grid{display:flex;flex-wrap:wrap;gap:4px;padding:8px 10px}
-.adv-ref-chip{font-size:10px;padding:2px 6px;border-radius:4px;background:var(--bg3);color:var(--text2);cursor:pointer;border:1px solid var(--border);font-family:'JetBrains Mono',monospace;transition:all .15s}
+.adv-ref-chip{font-size:10px;padding:2px 6px;border-radius:4px;background:var(--glass-bg-1);color:var(--text2);cursor:pointer;border:1px solid var(--glass-border);font-family:'JetBrains Mono',monospace;transition:all .15s;box-shadow:var(--glass-highlight)}
 .adv-ref-chip:hover{border-color:var(--gold);color:var(--gold)}
 
 /* 트리 뷰 */
@@ -70,6 +70,22 @@
 .adv-help-title{font-size:11px;font-weight:700;color:var(--gold);margin-bottom:8px}
 .adv-help-item{font-size:11px;color:var(--text2);padding:3px 0;font-family:'JetBrains Mono',monospace}
 
-/* 라이트 테마 */
-[data-theme="light"] .adv-hl{background:rgba(212,175,55,.2);color:#8a6d1b}
-[data-theme="light"] .adv-ref-chip:hover{color:#8a6d1b}
+/* 라이트 테마 — 웜 로즈 잉크 하이라이트 */
+[data-theme="light"] .adv-hl{background:hsla(var(--accent-h),60%,50%,.18);color:hsl(var(--accent-h),var(--accent-s),calc(var(--accent-l) - 8%))}
+[data-theme="light"] .adv-ref-chip:hover{color:hsl(var(--accent-h),var(--accent-s),calc(var(--accent-l) - 8%))}
+[data-theme="light"] .adv-input{background:var(--glass-bg-1);border-color:var(--glass-border)}
+[data-theme="light"] .adv-input:focus{border-color:var(--accent-color)}
+[data-theme="light"] .adv-toggle-btn.on{color:var(--accent-color);border-color:var(--accent-color);background:hsla(var(--accent-h),60%,50%,.10)}
+[data-theme="light"] .adv-tst-chip{border-color:hsl(0,35%,82%)}
+[data-theme="light"] .adv-tst-chip.on{background:var(--accent-color);border-color:var(--accent-color)}
+[data-theme="light"] .adv-opt-btn.on,[data-theme="light"] .adv-scope-btn.on,[data-theme="light"] .adv-vm-btn.on{color:var(--accent-color);border-color:var(--accent-color);background:hsla(var(--accent-h),60%,50%,.10)}
+[data-theme="light"] .adv-item:hover{background:var(--glass-bg-2)}
+[data-theme="light"] .adv-ref-chip{background:var(--glass-bg-1);border-color:var(--glass-border)}
+[data-theme="light"] .adv-tree-head:hover{background:var(--glass-bg-2)}
+[data-theme="light"] .adv-more{background:hsla(var(--accent-h),60%,50%,.08);border-color:var(--accent-color)}
+[data-theme="light"] .adv-more:hover{background:hsla(var(--accent-h),60%,50%,.15)}
+[data-theme="light"] .adv-book-sel{background:var(--glass-bg-1);border-color:var(--glass-border)}
+
+/* 세피아 테마 — 따뜻한 하이라이트 */
+[data-theme="sepia"] .adv-hl{background:hsla(var(--accent-h),50%,45%,.18);color:hsl(var(--accent-h),var(--accent-s),calc(var(--accent-l) - 5%))}
+[data-theme="sepia"] .adv-ref-chip:hover{color:hsl(var(--accent-h),var(--accent-s),calc(var(--accent-l) - 5%))}
