@@ -52,18 +52,12 @@ document.addEventListener('click',e=>{
   }
 });
 
-/* ── 브라우저 기본 우클릭 메뉴 전체 차단 (Edge/Chrome/Firefox 등 모든 브라우저) ── */
-window.addEventListener('contextmenu', function(e){
-  e.preventDefault();
-  e.stopPropagation();
-  e.stopImmediatePropagation();
-  return false;
-}, true);
+/* ── 브라우저 기본 우클릭 메뉴 차단 (모든 브라우저) ──
+   .vrow 핸들러가 먼저 실행 → 커스텀 메뉴 표시,
+   그 외 영역은 document 핸들러가 브라우저 메뉴만 차단 */
 document.addEventListener('contextmenu', function(e){
   e.preventDefault();
-  e.stopPropagation();
-  return false;
-}, true);
+});
 document.oncontextmenu = function(){ return false; };
 
 /* ── 구절 호버 툴팁 (마우스 따라다니는 구절 참조) ── */
