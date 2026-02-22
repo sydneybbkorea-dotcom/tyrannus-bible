@@ -115,6 +115,7 @@ document.addEventListener('mouseup',function(){
 });
 
 document.addEventListener('click',e=>{
+  if(_ctrlDragged){_ctrlDragged=false;return;}
   if(e.target.closest('.verse-menu')||e.target.closest('.vrow-menu-btn')) return;
   hideVerseMenu();
   const bs=document.getElementById('bibleScroll');
