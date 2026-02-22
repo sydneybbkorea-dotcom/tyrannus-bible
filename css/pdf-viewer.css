@@ -474,6 +474,38 @@
   filter: brightness(1.15);
 }
 
+/* ── Highlight Drag & Drop ── */
+.pdf-annot-highlight[draggable="true"] { cursor: grab; }
+.pdf-annot-highlight[draggable="true"]:active { cursor: grabbing; }
+
+/* Note editor drop zone indicator */
+#noteContent.pdf-drop-active {
+  outline: 2px dashed var(--accent-color, var(--gold, #bd8a00));
+  outline-offset: -2px;
+  background: rgba(218,165,32,.05) !important;
+}
+
+/* Note link badge on linked highlights */
+.pdf-annot-link-badge {
+  position: absolute;
+  top: -6px; right: -6px;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--accent-color, var(--gold, #bd8a00));
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,.3);
+  z-index: 5;
+  transition: transform .12s;
+}
+.pdf-annot-link-badge:hover {
+  transform: scale(1.2);
+}
+.pdf-annot-link-badge i {
+  font-size: 8px;
+  color: #fff;
+}
+
 /* ── Responsive: Mobile fullscreen ── */
 @media (max-width: 599px) {
   .pdf-panel {

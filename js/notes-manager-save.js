@@ -21,9 +21,11 @@ function saveNote(silent){
   S.curNoteId=note.id; S.curFolder=fId;
   persist(); renderBible(); renderFolderTree(); updateBreadcrumb(); updateBacklinks();
 
-  // Sync links to LinkRegistry (async)
+  // Sync links to LinkRegistry (async), then refresh childlinks if active
   if(typeof LinkRegistry !== 'undefined' && LinkRegistry.isReady()){
-    LinkRegistry.syncFromNote(note.id, content);
+    LinkRegistry.syncFromNote(note.id, content).then(function(){
+      if(S._noteSubTab==='childlinks' && typeof renderChildLinks==='function') renderChildLinks();
+    });
   }
 
   if(typeof EventBus !== 'undefined') EventBus.emit('note:saved', { id: note.id });

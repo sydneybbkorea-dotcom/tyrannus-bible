@@ -74,9 +74,8 @@
 .kg-node-verse circle    { fill: #EAB308; stroke: #CA8A04; }
 .kg-node-note circle     { fill: #3B82F6; stroke: #2563EB; }
 .kg-node-pdf circle      { fill: #EF4444; stroke: #DC2626; }
-.kg-node-strong circle   { fill: #22C55E; stroke: #16A34A; }
+.kg-node-bookmark circle { fill: #22C55E; stroke: #16A34A; }
 .kg-node-commentary circle { fill: #A855F7; stroke: #9333EA; }
-.kg-node-tag circle      { fill: #F97316; stroke: #EA580C; }
 .kg-node-unknown circle  { fill: #6B7280; stroke: #4B5563; }
 
 /* Active/center node */
@@ -141,7 +140,7 @@
 .kg-chip-verse   { background: rgba(234, 179, 8, 0.15); color: #EAB308; border-color: rgba(234, 179, 8, 0.3); }
 .kg-chip-note    { background: rgba(59, 130, 246, 0.15); color: #3B82F6; border-color: rgba(59, 130, 246, 0.3); }
 .kg-chip-pdf     { background: rgba(239, 68, 68, 0.15); color: #EF4444; border-color: rgba(239, 68, 68, 0.3); }
-.kg-chip-strong  { background: rgba(34, 197, 94, 0.15); color: #22C55E; border-color: rgba(34, 197, 94, 0.3); }
+.kg-chip-bookmark { background: rgba(34, 197, 94, 0.15); color: #22C55E; border-color: rgba(34, 197, 94, 0.3); }
 .kg-chip-commentary { background: rgba(168, 85, 247, 0.15); color: #A855F7; border-color: rgba(168, 85, 247, 0.3); }
 
 .kg-chip-dot {
@@ -151,7 +150,7 @@
 .kg-chip-verse .kg-chip-dot   { background: #EAB308; }
 .kg-chip-note .kg-chip-dot    { background: #3B82F6; }
 .kg-chip-pdf .kg-chip-dot     { background: #EF4444; }
-.kg-chip-strong .kg-chip-dot  { background: #22C55E; }
+.kg-chip-bookmark .kg-chip-dot { background: #22C55E; }
 .kg-chip-commentary .kg-chip-dot { background: #A855F7; }
 
 /* ── Node Info Tooltip ── */
@@ -174,6 +173,45 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-bottom: 4px;
+}
+
+/* ── Inline Graph Host (panel sub-tab) ── */
+.kg-inline-host {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-primary, var(--bg));
+}
+.kg-inline-host svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+.kg-inline-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text-muted, var(--text3));
+  font-size: 12px;
+  text-align: center;
+  gap: 4px;
+}
+.kg-inline-empty i {
+  font-size: 24px;
+  opacity: 0.4;
+  margin-bottom: 6px;
+}
+#sec-graph {
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+}
+#sec-graph.act {
+  display: flex;
+  flex: 1;
 }
 
 /* ── Backlink Graph Button ── */

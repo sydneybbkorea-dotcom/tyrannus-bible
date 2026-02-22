@@ -31,7 +31,9 @@ function renameFolder(folderId){
 }
 
 window.newNote=function newNote(){
-  S.curNoteId=null; S.curTags=[]; S.navHistory=[];
+  if(typeof autoSaveCurrent==='function') autoSaveCurrent();
+  S.curNoteId='n_'+Date.now(); S.curTags=[]; S.navHistory=[];
+  S.curFolder=S.curFolder||'default';
   const el=document.getElementById('noteContent');
   if(!el) return;
   if(S.selV){
@@ -43,7 +45,9 @@ window.newNote=function newNote(){
     el.innerHTML='<h1></h1><br>';
     setTimeout(()=>{const h=el.querySelector('h1');if(h){const r=document.createRange();r.setStart(h,0);r.collapse(true);const s=window.getSelection();s.removeAllRanges();s.addRange(r);}},50);
   }
-  updateBacklinks(); updateBreadcrumb(); renderTagChips(); closeExplorer();
+  updateBacklinks(); updateBreadcrumb(); renderTagChips();
+  openPanel('notes'); switchSub('notes');
+  if(typeof NotePanel!=='undefined') NotePanel.showEditor(S.curNoteId);
   if(typeof _noteUpdateTabTitle==='function') _noteUpdateTabTitle();
   if(typeof _noteInitAutoSave==='function') _noteInitAutoSave();
 }

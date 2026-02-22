@@ -37,8 +37,9 @@ function loadNote(id, pushHistory){
   }
   renderTagChips(); updateBreadcrumb(); renderFolderTree();
   updateBacklinks();
+  if(S._noteSubTab==='childlinks' && typeof renderChildLinks==='function') renderChildLinks();
   openPanel('notes'); switchSub('notes');
-  closeExplorer();
+  if(typeof NotePanel!=='undefined') NotePanel.showEditor(id);
   if(typeof _noteUpdateTabTitle==='function') _noteUpdateTabTitle();
   if(typeof _noteInitAutoSave==='function') _noteInitAutoSave();
 }

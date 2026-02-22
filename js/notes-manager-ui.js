@@ -68,6 +68,65 @@ function updateBacklinks(){
   document.getElementById('blChevron').style.transform='';
 }
 
+// ── 자식링크 (Outgoing Links) ──
+function renderChildLinks(){
+  var listEl = document.getElementById('childLinksList');
+  if(!listEl) return;
+
+  if(!S.curNoteId){
+    listEl.innerHTML = '<div class="cl-empty"><i class="fa fa-file-circle-question"></i>노트를 선택하면<br>자식링크를 볼 수 있어요</div>';
+    return;
+  }
+
+  if(typeof LinkRegistry === 'undefined' || !LinkRegistry.isReady()){
+    listEl.innerHTML = '<div class="cl-empty"><i class="fa fa-spinner fa-spin"></i>링크 데이터 로딩 중...</div>';
+    return;
+  }
+
+  var noteUri = TyrannusURI.note(S.curNoteId);
+  var outgoing = LinkRegistry.getOutgoing(noteUri);
+
+  if(!outgoing.length){
+    listEl.innerHTML = '<div class="cl-empty"><i class="fa fa-share-nodes" style="opacity:.4"></i>이 노트에서 나가는 링크가 없습니다</div>';
+    return;
+  }
+
+  listEl.innerHTML = '';
+  outgoing.forEach(function(link){
+    var parsed = TyrannusURI.parse(link.targetUri);
+    if(!parsed) return;
+
+    var icon = 'fa-link';
+    var label = link.metadata && link.metadata.label ? link.metadata.label : link.targetUri;
+    var subtitle = '';
+
+    if(parsed.type === 'note'){
+      icon = 'fa-file-alt';
+      var targetNote = S.notes.find(function(n){ return n.id === parsed.segments[0]; });
+      if(targetNote){
+        label = targetNote.title || '제목 없음';
+        var folder = S.folders.find(function(f){ return f.id === targetNote.folderId; });
+        subtitle = folder ? folder.name : '';
+      }
+    } else if(parsed.type === 'verse'){
+      icon = 'fa-bible';
+      label = parsed.segments.join(' ');
+    } else if(parsed.type === 'pdf'){
+      icon = 'fa-file-pdf';
+    }
+
+    var entry = document.createElement('div');
+    entry.className = 'cl-entry';
+    entry.innerHTML = '<i class="fa ' + icon + '"></i>' +
+      '<span class="cl-label">' + label + '</span>' +
+      (subtitle ? '<span class="cl-folder">' + subtitle + '</span>' : '');
+    entry.onclick = function(){
+      NavigationRouter.navigateTo(link.targetUri);
+    };
+    listEl.appendChild(entry);
+  });
+}
+
 let _blOpen=true;
 function toggleBacklinks(){
   _blOpen=!_blOpen;

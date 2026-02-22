@@ -20,7 +20,7 @@ function showNoteCtx(e, noteId, noteTitle){
   const menu=document.createElement('div');
   menu.id='folderNoteCtx'; menu.className='fn-ctx';
   menu.innerHTML=`
-    <div class="fn-ctx-item" onclick="loadNote('${noteId}',false);closeExplorer();hideFolderNoteCtx()"><i class="fa fa-edit"></i> 열기</div>
+    <div class="fn-ctx-item" onclick="loadNote('${noteId}',false);hideFolderNoteCtx()"><i class="fa fa-edit"></i> 열기</div>
     <div class="fn-ctx-item fn-ctx-danger" onclick="deleteNote('${noteId}','${safe}')"><i class="fa fa-trash"></i> 노트 삭제</div>
   `;
   document.body.appendChild(menu);

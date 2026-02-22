@@ -49,6 +49,10 @@ function toggleNotePanel(){
     if(_activeRail && !_spPinned) closeSidePanel();
     openPanel('notes'); switchSub('notes');
     if(noteBtn) noteBtn.classList.add('active');
+    // 라이브러리가 기본 — 활성 탭 없으면 폴더 트리 렌더
+    if(typeof NotePanel!=='undefined' && !NotePanel.isInEditor()){
+      if(typeof renderFolderTree==='function') renderFolderTree();
+    }
   }
 }
 
@@ -71,20 +75,20 @@ function _spTogglePin(){
   if(btn) btn.classList.toggle('pinned', _spPinned);
 }
 
-// 지식 그래프 토글
+// 지식 그래프 토글 — 우측 패널 인라인 그래프 탭으로 전환
 function toggleKnowledgeGraph(){
   if(typeof KnowledgeGraph==='undefined') return;
-  if(KnowledgeGraph.isOpen()){
-    KnowledgeGraph.close();
+  var rp = document.getElementById('rightPanel');
+  var isGraphShowing = S.panelOpen === 'notes' && S._noteSubTab === 'graph'
+                       && rp && !rp.classList.contains('rp-hide');
+  if(isGraphShowing){
+    togglePanel('notes');
+    document.querySelector('.rail-icon[data-rail="graph"]')?.classList.remove('active');
   } else {
-    // 현재 구절 URI를 중심으로 그래프 표시
-    var uri = null;
-    if(typeof TyrannusURI!=='undefined' && S.book && S.ch && S.vs){
-      uri = TyrannusURI.verse(S.book, S.ch, S.vs);
-    } else if(typeof TyrannusURI!=='undefined' && S.curNoteId){
-      uri = TyrannusURI.note(S.curNoteId);
-    }
-    KnowledgeGraph.show(uri, { depth: 3 });
+    if(_activeRail && !_spPinned) closeSidePanel();
+    openPanel('notes');
+    switchSub('graph');
+    document.querySelector('.rail-icon[data-rail="graph"]')?.classList.add('active');
   }
 }
 

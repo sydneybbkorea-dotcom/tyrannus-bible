@@ -133,6 +133,33 @@ var PDFAnnotations = (function(){
         el.className = 'pdf-annot pdf-annot-highlight';
         _positionRect(el, annot.rect, viewport);
         if(annot.color) el.style.background = annot.color;
+
+        // Drag-to-note: make highlight draggable
+        el.setAttribute('draggable', 'true');
+        (function(annotRef){
+          el.addEventListener('dragstart', function(ev){
+            if(typeof PDFDragToNote !== 'undefined' && PDFDragToNote.onAnnotDragStart){
+              PDFDragToNote.onAnnotDragStart(ev, annotRef);
+            }
+          });
+        })(annot);
+
+        // Note link badge (when linked to a note)
+        if(annot.linkedNoteId){
+          var badge = document.createElement('span');
+          badge.className = 'pdf-annot-link-badge';
+          badge.innerHTML = '<i class="fa fa-pen-to-square"></i>';
+          badge.title = '연결된 노트로 이동';
+          (function(linkedUri){
+            badge.addEventListener('click', function(ev){
+              ev.stopPropagation();
+              if(typeof NavigationRouter !== 'undefined' && linkedUri){
+                NavigationRouter.navigateTo(linkedUri);
+              }
+            });
+          })(annot.linkedUri);
+          el.appendChild(badge);
+        }
         break;
 
       case 'underline':

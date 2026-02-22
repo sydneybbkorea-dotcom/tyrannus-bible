@@ -14,6 +14,9 @@ var PDFDragToNote = (function(){
     // Listen for text selection on PDF viewport
     document.addEventListener('mouseup', _onSelectionEnd);
     document.addEventListener('touchend', _onSelectionEnd);
+
+    // Initialize note editor as drop target for PDF highlights
+    _initDropTarget();
   }
 
   function _onSelectionEnd(e){
@@ -204,10 +207,157 @@ var PDFDragToNote = (function(){
     return div.innerHTML;
   }
 
+  // ── Drop Target: note editor receives dragged highlights ──
+
+  function _initDropTarget(){
+    var nc = document.getElementById('noteContent');
+    if(!nc) return;
+
+    nc.addEventListener('dragover', function(e){
+      if(!e.dataTransfer.types.includes('application/x-pdf-highlight')) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'copy';
+      nc.classList.add('pdf-drop-active');
+    });
+
+    nc.addEventListener('dragleave', function(e){
+      // Only remove when truly leaving (not entering child)
+      if(!nc.contains(e.relatedTarget)){
+        nc.classList.remove('pdf-drop-active');
+      }
+    });
+
+    nc.addEventListener('drop', function(e){
+      nc.classList.remove('pdf-drop-active');
+      var json = e.dataTransfer.getData('application/x-pdf-highlight');
+      if(!json) return;
+      e.preventDefault();
+      try {
+        var data = JSON.parse(json);
+        _insertDroppedHighlight(data, e);
+      } catch(err){
+        console.warn('[PDFDragToNote] drop parse error:', err);
+      }
+    });
+  }
+
+  // ── Drag start handler (called from pdf-annotations.js) ──
+
+  function onAnnotDragStart(e, annot){
+    // Only allow drag in select mode
+    if(typeof PDFTools !== 'undefined' && PDFTools.getTool() !== 'select'){
+      e.preventDefault();
+      return;
+    }
+
+    var pdfId = annot.pdfId || (typeof PDFViewer !== 'undefined' ? PDFViewer.getCurrentPdfId() : '');
+    var data = {
+      annotId: annot.id,
+      pdfId: pdfId,
+      pageNum: annot.pageNum,
+      text: annot.text || '',
+      color: annot.color || ''
+    };
+
+    e.dataTransfer.setData('application/x-pdf-highlight', JSON.stringify(data));
+    e.dataTransfer.effectAllowed = 'copy';
+
+    // Custom drag image: PDF icon + text preview
+    var ghost = document.createElement('div');
+    ghost.style.cssText = 'position:absolute;top:-9999px;left:-9999px;padding:6px 10px;'
+      + 'background:#1a1c24;border:1px solid #bd8a00;border-radius:6px;'
+      + 'font-size:11px;color:#e8e8e8;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;'
+      + 'display:flex;align-items:center;gap:6px;';
+    ghost.innerHTML = '<i class="fa fa-file-pdf" style="color:#f05050"></i>'
+      + _escapeHTML((data.text || 'PDF highlight').slice(0, 40));
+    document.body.appendChild(ghost);
+    e.dataTransfer.setDragImage(ghost, 16, 16);
+    setTimeout(function(){ document.body.removeChild(ghost); }, 0);
+  }
+
+  // ── Insert dropped highlight as citation block ──
+
+  function _insertDroppedHighlight(data, dropEvent){
+    var nc = document.getElementById('noteContent');
+    if(!nc) return;
+
+    // If note editor view is not visible, create a new note
+    var noteView = document.getElementById('noteEditorView') || document.getElementById('noteView');
+    var isHidden = !noteView || noteView.style.display === 'none' || noteView.classList.contains('hidden');
+    if(isHidden || !S.curNoteId){
+      if(typeof openPanel === 'function') openPanel('notes');
+      if(typeof switchSub === 'function') switchSub('notes');
+      if(typeof newNote === 'function') newNote();
+    }
+
+    // Place cursor at drop position
+    if(document.caretRangeFromPoint){
+      var range = document.caretRangeFromPoint(dropEvent.clientX, dropEvent.clientY);
+      if(range){
+        var sel = window.getSelection();
+        sel.removeAllRanges();
+        sel.addRange(range);
+      }
+    } else if(document.caretPositionFromPoint){
+      var pos = document.caretPositionFromPoint(dropEvent.clientX, dropEvent.clientY);
+      if(pos){
+        var range2 = document.createRange();
+        range2.setStart(pos.offsetNode, pos.offset);
+        range2.collapse(true);
+        var sel2 = window.getSelection();
+        sel2.removeAllRanges();
+        sel2.addRange(range2);
+      }
+    }
+
+    // Build citation HTML (reuse existing helper)
+    var citationHTML = _buildCitationHTML(data.pdfId, data.annotId, data.text, data.pageNum);
+    nc.focus();
+    document.execCommand('insertHTML', false, citationHTML);
+
+    // Register bidirectional link
+    if(typeof LinkRegistry !== 'undefined' && LinkRegistry.isReady() && S.curNoteId){
+      var annotUri = TyrannusURI.pdfAnnot(data.pdfId, data.annotId);
+      var noteUri = TyrannusURI.note(S.curNoteId);
+      LinkRegistry.addLink(noteUri, annotUri, 'annotation', {
+        label: (data.text || '').slice(0, 50),
+        page: data.pageNum
+      });
+    }
+
+    // Update annotation with linkedNoteId/linkedUri → badge display + re-render
+    if(typeof PDFAnnotations !== 'undefined' && S.curNoteId){
+      var pdfId = data.pdfId;
+      var pageNum = data.pageNum;
+      var annots = PDFAnnotations.getPage(pdfId, pageNum);
+      var target = null;
+      for(var i = 0; i < annots.length; i++){
+        if(annots[i].id === data.annotId){ target = annots[i]; break; }
+      }
+      if(target){
+        target.linkedNoteId = S.curNoteId;
+        target.linkedUri = TyrannusURI.note(S.curNoteId);
+        PDFAnnotations.save(target);
+        // Re-render annotation layer on that page
+        var layers = document.querySelectorAll('.pdf-annot-layer');
+        layers.forEach(function(layer){
+          var wrap = layer.closest('.pdf-page-wrap');
+          if(wrap && parseInt(wrap.dataset.page) === pageNum){
+            var scale = typeof PDFViewer !== 'undefined' ? PDFViewer.getScale() || 1 : 1;
+            PDFAnnotations.renderPage(pageNum, layer, { scale: scale });
+          }
+        });
+      }
+    }
+
+    if(typeof toast === 'function') toast('PDF 인용이 노트에 추가됨 ✓');
+  }
+
   return {
     init: init,
     addToNote: addToNote,
     createNote: createNote,
-    linkVerse: linkVerse
+    linkVerse: linkVerse,
+    onAnnotDragStart: onAnnotDragStart
   };
 })();

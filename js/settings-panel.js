@@ -150,15 +150,6 @@ function renderSettingsPanel(){
     h += '<i class="fa fa-chevron-right stp-menu-arrow"></i>';
     h += '</div>';
 
-    // 메뉴 카드: 읽기표 (준비중)
-    h += '<div class="stp-menu-item stp-menu-disabled">';
-    h += '<div class="stp-menu-icon"><i class="fa fa-book-reader"></i></div>';
-    h += '<div class="stp-menu-text">';
-    h += '<div class="stp-menu-title">읽기표</div>';
-    h += '<div class="stp-menu-desc">성경 읽기 계획</div>';
-    h += '</div>';
-    h += '<span class="stp-menu-badge">준비중</span>';
-    h += '</div>';
 
     // ━━━━━━ 섹션 3: 일반 ━━━━━━
     h += '<div class="stp-section">';

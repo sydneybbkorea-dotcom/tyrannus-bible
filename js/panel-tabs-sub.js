@@ -1,4 +1,4 @@
-// panel-tabs-sub.js — 서브탭(노트/주석/아웃라인, 사전 하위) 전환
+// panel-tabs-sub.js — 서브탭(노트/주석/자식링크, 사전 하위) 전환
 function switchSub(sub){
   const visibleGroup = document.querySelector('.rp-subtabs[style*="flex"]');
   if(visibleGroup){
@@ -6,12 +6,12 @@ function switchSub(sub){
     visibleGroup.querySelector(`[data-sub="${sub}"]`)?.classList.add('act');
   }
 
-  if(sub==='notes'||sub==='commentary'||sub==='outline'){
+  if(sub==='notes'||sub==='commentary'||sub==='graph'){
     S._noteSubTab = sub;
     document.getElementById('sec-notes')?.classList.toggle('act', sub==='notes');
     document.getElementById('sec-commentary')?.classList.toggle('act', sub==='commentary');
-    document.getElementById('sec-outline')?.classList.toggle('act', sub==='outline');
-    if(sub==='outline' && typeof renderOutline==='function') renderOutline();
+    document.getElementById('sec-graph')?.classList.toggle('act', sub==='graph');
+    if(sub==='graph' && typeof KnowledgeGraph!=='undefined') KnowledgeGraph.showInline();
     if(sub==='notes'){
       if(typeof _noteUpdateTabTitle==='function') _noteUpdateTabTitle();
       if(typeof _noteInitAutoSave==='function') _noteInitAutoSave();

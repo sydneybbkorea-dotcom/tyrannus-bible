@@ -2,15 +2,15 @@
 // Color-coded toggle chips for filtering visible graph elements
 
 var GraphFilter = (function(){
-  var _activeTypes = new Set(['verse', 'note', 'pdf', 'strong', 'commentary', 'tag']);
-  var _activeLinkTypes = new Set(['reference', 'annotation', 'cross-reference', 'strong', 'embed', 'tag']);
+  var _activeTypes = new Set(['verse', 'note', 'pdf', 'bookmark', 'commentary']);
+  var _activeLinkTypes = new Set(['reference', 'annotation', 'cross-reference', 'tag', 'embed']);
   var _minConnections = 0;
 
   var NODE_TYPES = [
     { id: 'verse',      label: null, icon: 'fa-book-bible', labelKey: 'graph.verse' },
     { id: 'note',       label: null, icon: 'fa-pen',        labelKey: 'graph.note' },
     { id: 'pdf',        label: null, icon: 'fa-file-pdf',   labelKey: 'graph.pdfNode' },
-    { id: 'strong',     label: null, icon: 'fa-language',   labelKey: 'graph.strong' },
+    { id: 'bookmark',   label: null, icon: 'fa-bookmark',   labelKey: 'graph.bookmark' },
     { id: 'commentary', label: null, icon: 'fa-scroll',     labelKey: 'graph.commNode' }
   ];
 

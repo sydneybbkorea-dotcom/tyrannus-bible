@@ -10,11 +10,7 @@ function _noteScheduleSave(){
 }
 
 function _noteUpdateTabTitle(){
-  var h1=document.querySelector('#noteContent h1:first-child');
-  var t=(h1?h1.textContent:'').trim()||'노트';
-  if(t.length>16) t=t.slice(0,16)+'…';
-  var tab=document.querySelector('.rp-tab[data-sub="notes"]');
-  if(tab) tab.innerHTML='<i class="fa fa-pen"></i> '+t;
+  if(typeof NotePanel!=='undefined') NotePanel.updateTabTitle();
 }
 
 function _noteInitAutoSave(){

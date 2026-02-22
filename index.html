@@ -18,7 +18,7 @@
 <link rel="stylesheet" href="css/side-panel.css?v=15">
 <link rel="stylesheet" href="css/topbar.css?v=17">
 <link rel="stylesheet" href="css/bible.css?v=21">
-<link rel="stylesheet" href="css/notes.css?v=20">
+<link rel="stylesheet" href="css/notes.css?v=22">
 <link rel="stylesheet" href="css/commentary.css?v=17">
 <link rel="stylesheet" href="css/search.css?v=15">
 <link rel="stylesheet" href="css/ui.css?v=15">
@@ -37,8 +37,8 @@
 <link rel="stylesheet" href="css/settings-panel.css?v=20">
 <link rel="stylesheet" href="css/responsive.css?v=2">
 <link rel="stylesheet" href="css/pdf-panel.css?v=2">
-<link rel="stylesheet" href="css/pdf-viewer.css?v=3">
-<link rel="stylesheet" href="css/knowledge-graph.css?v=1">
+<link rel="stylesheet" href="css/pdf-viewer.css?v=4">
+<link rel="stylesheet" href="css/knowledge-graph.css?v=4">
 
 <!-- PDF.js (UMD — sets window.pdfjsLib) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -135,8 +135,8 @@
           <button class="rail-icon" data-rail="qna" onclick="toggleRail('qna')" title="Q&A">
             <i class="fa fa-comments"></i><span class="rail-label" data-i18n="nav.qna">Q&A</span>
           </button>
-          <button class="rail-icon" onclick="toggleKnowledgeGraph()" title="지식 그래프">
-            <i class="fa fa-project-diagram"></i><span class="rail-label" data-i18n="graph.title">그래프</span>
+          <button class="rail-icon" data-rail="graph" onclick="toggleKnowledgeGraph()" title="지식 그래프">
+            <i class="fa fa-project-diagram"></i><span class="rail-label">그래프</span>
           </button>
         </div>
         <div class="rail-bottom">
@@ -236,10 +236,9 @@
   <div id="rightPanel" class="rp-hide">
     <div class="rp-tabs" id="rpTabs">
       <div class="rp-subtabs" id="subtabs-notes">
-        <button class="rp-ico-btn" onclick="toggleExplorer()" title="노트 목록"><i class="fa fa-folder-open"></i></button>
         <div class="rp-tab act" data-sub="notes" onclick="switchSub('notes')"><i class="fa fa-pen"></i> <span data-i18n="panel.notes">노트</span></div>
         <div class="rp-tab" data-sub="commentary" onclick="switchSub('commentary')"><i class="fa fa-scroll"></i> <span data-i18n="panel.commentary">주석</span></div>
-        <div class="rp-tab" data-sub="outline" onclick="switchSub('outline')"><i class="fa fa-sitemap"></i> <span data-i18n="panel.outline">아웃라인</span></div>
+        <div class="rp-tab" data-sub="graph" onclick="switchSub('graph')"><i class="fa fa-project-diagram"></i> <span>그래프</span></div>
         <button class="rp-ico-btn rp-close-btn" onclick="togglePanel('notes')" title="패널 닫기"><i class="fa fa-times"></i></button>
       </div>
       <div class="rp-subtabs" id="subtabs-dict" style="display:none">
@@ -258,20 +257,19 @@
 
       <!-- NOTES TAB -->
       <div class="rp-sec act" id="sec-notes">
-        <div id="notesLayout">
-          <div id="explorerOverlay" onclick="closeExplorer()"></div>
-          <div id="noteExplorer">
-            <div class="exp-head">
-              <span class="exp-title">Vault</span>
-              <div class="exp-actions">
-                <button class="exp-btn" title="새 노트" onclick="newNote()"><i class="fa fa-file-circle-plus"></i></button>
-                <button class="exp-btn" title="새 폴더" onclick="newFolder()"><i class="fa fa-folder-plus"></i></button>
-                <button class="exp-btn" title="모두 접기" onclick="_ftCollapseAll()"><i class="fa fa-compress-alt"></i></button>
-                <button class="exp-btn" title="닫기" onclick="closeExplorer()"><i class="fa fa-times"></i></button>
-              </div>
-            </div>
-            <div id="folderTree"></div>
+        <!-- Note Tab Bar (탭 없으면 숨김) -->
+        <div class="note-tab-bar" id="noteTabBar" style="display:none"></div>
+        <!-- Library View (기본 표시) -->
+        <div id="noteLibraryView">
+          <div class="note-lib-actions">
+            <button class="pdf-lib-btn pdf-lib-btn-primary" onclick="newNote()"><i class="fa fa-file-circle-plus"></i> 새 노트</button>
+            <button class="pdf-lib-btn" onclick="newFolder()"><i class="fa fa-folder-plus"></i> 새 폴더</button>
+            <button class="pdf-lib-btn" onclick="_ftCollapseAll()" title="모두 접기"><i class="fa fa-compress-alt"></i></button>
           </div>
+          <div id="folderTree"></div>
+        </div>
+        <!-- Editor View (기본 숨김) -->
+        <div id="noteEditorView" style="display:none">
           <div id="noteEditor">
             <div class="rte-bar">
               <div class="rte-row">
@@ -372,17 +370,9 @@
         </div>
       </div>
 
-      <!-- OUTLINE SUB-TAB -->
-      <div class="rp-sec" id="sec-outline">
-        <div class="outline-wrap" id="outlineContent">
-          <div class="outline-toolbar">
-            <span style="font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.5px"><i class="fa fa-sitemap" style="margin-right:4px"></i>노트 아웃라인</span>
-            <div style="display:flex;gap:4px">
-              <button class="outline-tb-btn" onclick="toggleOutlineExpand()" title="모두 펼치기/접기"><i class="fa fa-expand-arrows-alt"></i></button>
-            </div>
-          </div>
-          <div id="outlineTree" style="overflow-y:auto;flex:1;padding:6px 0"></div>
-        </div>
+      <!-- GRAPH SUB-TAB -->
+      <div class="rp-sec" id="sec-graph">
+        <div id="kgInlineHost" class="kg-inline-host"></div>
       </div>
 
       <!-- DICTIONARY TAB -->
@@ -655,6 +645,7 @@
 <script src="js/korean-search.js"></script>
 
 <!-- 노트 시스템 -->
+<script src="js/note-panel.js?v=1"></script>
 <script src="js/notes-autosave.js"></script>
 <script src="js/notes-editor.js"></script>
 <script src="js/notes-editor-insert.js"></script>
@@ -681,7 +672,7 @@
 <script src="js/passage-guide.js"></script>
 
 <!-- 아이콘 레일 & 사이드패널 -->
-<script src="js/icon-rail.js?v=2"></script>
+<script src="js/icon-rail.js?v=3"></script>
 <script src="js/side-notes.js"></script>
 <script src="js/bookmark-panel.js"></script>
 <script src="js/side-search.js"></script>
@@ -700,7 +691,7 @@
 <script src="js/context-menu-copy.js"></script>
 <script src="js/panels.js?v=2"></script>
 <script src="js/panel-tabs.js?v=2"></script>
-<script src="js/panel-tabs-sub.js?v=2"></script>
+<script src="js/panel-tabs-sub.js?v=4"></script>
 <script src="js/panel-nav.js?v=2"></script>
 <script src="js/outline.js"></script>
 <script src="js/outline-note.js"></script>
@@ -737,17 +728,17 @@
 <script src="js/pdf/pdf-library.js?v=2"></script>
 <script src="js/pdf/pdf-panel.js?v=2"></script>
 <script src="js/pdf/pdf-viewer.js?v=2"></script>
-<script src="js/pdf/pdf-annotations.js?v=2"></script>
+<script src="js/pdf/pdf-annotations.js?v=3"></script>
 <script src="js/pdf/pdf-tools.js?v=3"></script>
-<script src="js/pdf/pdf-drag-to-note.js?v=1"></script>
+<script src="js/pdf/pdf-drag-to-note.js?v=2"></script>
 
 <!-- 지식 그래프 -->
-<script src="js/graph/knowledge-graph.js?v=1"></script>
-<script src="js/graph/graph-filter.js?v=1"></script>
+<script src="js/graph/knowledge-graph.js?v=6"></script>
+<script src="js/graph/graph-filter.js?v=2"></script>
 
 <!-- 초기화 (반드시 마지막) -->
 <script src="js/app-paste.js"></script>
-<script src="js/app.js?v=2"></script>
+<script src="js/app.js?v=3"></script>
 
 </body>
 </html>

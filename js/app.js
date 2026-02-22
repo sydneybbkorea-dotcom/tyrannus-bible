@@ -43,7 +43,10 @@
     }
   }
 
-  // 3.5) Restore PDF library data
+  // 3.5) Initialize PDF drag-to-note (drop target on noteContent)
+  if(typeof PDFDragToNote !== 'undefined') PDFDragToNote.init();
+
+  // 3.6) Restore PDF library data
   if(typeof PDFLibrary !== 'undefined') PDFLibrary.restorePdf();
 
   // 4) 데이터 로드 완료 후 UI 렌더링

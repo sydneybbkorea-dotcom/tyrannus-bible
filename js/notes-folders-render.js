@@ -13,7 +13,7 @@ function _buildNoteNode(n,depth){
   el.style.paddingLeft=(8+depth*16+16)+'px';
   el.innerHTML=`<i class="fa fa-file-alt ft-note-icon"></i><span class="ft-note-name">${n.title||'제목 없음'}</span>`;
   el.title=n.title||'제목 없음';
-  el.onclick=e=>{e.stopPropagation();loadNote(n.id,false);closeExplorer();};
+  el.onclick=e=>{e.stopPropagation();loadNote(n.id,false);};
   el.addEventListener('contextmenu',e=>{
     e.preventDefault(); e.stopPropagation();
     showNoteCtx(e,n.id,n.title);
