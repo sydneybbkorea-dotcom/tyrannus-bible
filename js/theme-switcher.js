@@ -7,6 +7,8 @@ var ThemeSwitcher = (function(){
   var BASE_KEY   = 'kjb2-base';
   var CUSTOM_ACCENT_KEY = 'kjb2-accent-custom';
   var CUSTOM_BASE_KEY   = 'kjb2-base-custom';
+  var BOOK_ACCENT_KEY   = 'kjb2-book-accent';
+  var CUSTOM_BOOK_ACCENT_KEY = 'kjb2-book-accent-custom';
   var CONTENT_COLOR_KEY = 'kjb2-content-color';
   var THEMES  = ['light', 'dark', 'sepia'];
   var ACCENTS = ['blue', 'red', 'orange', 'yellow', 'cyan', 'purple', 'pink', 'black'];
@@ -54,20 +56,31 @@ var ThemeSwitcher = (function(){
     root.style.removeProperty('--base-h');
     root.style.removeProperty('--base-s');
     root.style.removeProperty('--base-l');
-    // 커스텀 + 다크 모드일 때만 직접 세팅
-    if(base === 'custom' && theme !== 'light' && theme !== 'sepia'){
+    // 커스텀 배경색 — 모든 테마 지원
+    if(base === 'custom'){
       var hex = localStorage.getItem(CUSTOM_BASE_KEY) || '#086DDD';
       var c = hexToHSL(hex);
       var h=c.h, s=c.s, l=c.l;
       root.style.setProperty('--base-h', h);
       root.style.setProperty('--base-s', s + '%');
       root.style.setProperty('--base-l', l + '%');
-      root.style.setProperty('--bg-primary',   'hsl('+h+','+s+'%,'+l+'%)');
-      root.style.setProperty('--bg-secondary', 'hsl('+h+','+clamp(s-7,0,100)+'%,'+clamp(l+4,0,100)+'%)');
-      root.style.setProperty('--bg-tertiary',  'hsl('+h+','+clamp(s-13,0,100)+'%,'+clamp(l+10,0,100)+'%)');
-      root.style.setProperty('--bg-surface',   'hsl('+h+','+clamp(s-7,0,100)+'%,'+clamp(l+5,0,100)+'%)');
-      root.style.setProperty('--border-color', 'hsl('+h+','+clamp(s-13,0,100)+'%,'+clamp(l+8,0,100)+'%)');
-      root.style.setProperty('--rail-bg-color','hsl('+h+','+s+'%,'+clamp(l-1,0,100)+'%)');
+      if(l > 50){
+        // Light/Sepia (밝은 배경): 오프셋 아래로
+        root.style.setProperty('--bg-primary',   'hsl('+h+','+s+'%,'+l+'%)');
+        root.style.setProperty('--bg-secondary', 'hsl('+h+','+s+'%,'+clamp(l-4,0,100)+'%)');
+        root.style.setProperty('--bg-tertiary',  'hsl('+h+','+s+'%,'+clamp(l-10,0,100)+'%)');
+        root.style.setProperty('--bg-surface',   'hsl('+h+','+clamp(s+5,0,100)+'%,'+clamp(l+2,0,100)+'%)');
+        root.style.setProperty('--border-color', 'hsl('+h+','+s+'%,'+clamp(l-12,0,100)+'%)');
+        root.style.setProperty('--rail-bg-color','hsl('+h+','+s+'%,'+clamp(l-3,0,100)+'%)');
+      } else {
+        // Dark (어두운 배경): 기존 동작 (오프셋 위로)
+        root.style.setProperty('--bg-primary',   'hsl('+h+','+s+'%,'+l+'%)');
+        root.style.setProperty('--bg-secondary', 'hsl('+h+','+clamp(s-7,0,100)+'%,'+clamp(l+4,0,100)+'%)');
+        root.style.setProperty('--bg-tertiary',  'hsl('+h+','+clamp(s-13,0,100)+'%,'+clamp(l+10,0,100)+'%)');
+        root.style.setProperty('--bg-surface',   'hsl('+h+','+clamp(s-7,0,100)+'%,'+clamp(l+5,0,100)+'%)');
+        root.style.setProperty('--border-color', 'hsl('+h+','+clamp(s-13,0,100)+'%,'+clamp(l+8,0,100)+'%)');
+        root.style.setProperty('--rail-bg-color','hsl('+h+','+s+'%,'+clamp(l-1,0,100)+'%)');
+      }
     }
   }
 
@@ -140,6 +153,34 @@ var ThemeSwitcher = (function(){
   }
   function resetContentColor(){ setContentColor(''); }
 
+  // ── Book Accent (성경 본문 강조색) ──
+  function getBookAccent(){ return localStorage.getItem(BOOK_ACCENT_KEY) || 'custom'; }
+  function getCustomBookAccent(){ return localStorage.getItem(CUSTOM_BOOK_ACCENT_KEY) || '#bd8a00'; }
+
+  function setBookAccent(preset){
+    if(ACCENTS.indexOf(preset) === -1) preset = 'blue';
+    var root = document.documentElement;
+    root.setAttribute('data-book-accent', preset);
+    root.style.removeProperty('--book-h');
+    root.style.removeProperty('--book-s');
+    root.style.removeProperty('--book-l');
+    localStorage.setItem(BOOK_ACCENT_KEY, preset);
+    localStorage.removeItem(CUSTOM_BOOK_ACCENT_KEY);
+    if(typeof EventBus !== 'undefined') EventBus.emit('theme:changed', { bookAccent: preset });
+  }
+
+  function setCustomBookAccent(hex){
+    var hsl = hexToHSL(hex);
+    var root = document.documentElement;
+    root.setAttribute('data-book-accent', 'custom');
+    root.style.setProperty('--book-h', hsl.h);
+    root.style.setProperty('--book-s', hsl.s + '%');
+    root.style.setProperty('--book-l', hsl.l + '%');
+    localStorage.setItem(BOOK_ACCENT_KEY, 'custom');
+    localStorage.setItem(CUSTOM_BOOK_ACCENT_KEY, hex);
+    if(typeof EventBus !== 'undefined') EventBus.emit('theme:changed', { bookAccent: 'custom' });
+  }
+
   function cycleTheme(){
     var cur = getTheme();
     var idx = THEMES.indexOf(cur);
@@ -172,6 +213,11 @@ var ThemeSwitcher = (function(){
     var base = getBase();
     if(base === 'custom') setCustomBase(getCustomBase());
     else setBase(base);
+    // Book accent 초기화
+    var bookAcc = getBookAccent();
+    if(bookAcc === 'custom') setCustomBookAccent(getCustomBookAccent());
+    else setBookAccent(bookAcc);
+
     var cc = getContentColor();
     if(cc) setContentColor(cc);
   }
@@ -184,6 +230,8 @@ var ThemeSwitcher = (function(){
     setTheme: setTheme, setAccent: setAccent, setBase: setBase,
     setCustomAccent: setCustomAccent, setCustomBase: setCustomBase,
     getContentColor: getContentColor, setContentColor: setContentColor, resetContentColor: resetContentColor,
+    getBookAccent: getBookAccent, getCustomBookAccent: getCustomBookAccent,
+    setBookAccent: setBookAccent, setCustomBookAccent: setCustomBookAccent,
     cycleTheme: cycleTheme, init: init
   };
 })();

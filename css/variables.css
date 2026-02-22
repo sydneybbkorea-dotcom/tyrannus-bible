@@ -33,17 +33,17 @@
 }
 
 :root[data-theme="light"] {
-  --red:      #e03e3e;
-  --blue:     #2f80ed;
-  --green:    #0f7b3f;
-  --purple:   #7b40c0;
+  --red:      #b81c2c;   /* 딥 레드 — 로즈 배경 위 선명 */
+  --blue:     #2968b8;   /* 딥 코발트 — 차분한 청색 */
+  --green:    #1a7a42;   /* 포레스트 그린 — 자연스러운 녹색 */
+  --purple:   #6b3dab;   /* 리갈 퍼플 — 품위있는 보라 */
 }
 
 :root[data-theme="sepia"] {
-  --red:      #c04030;
-  --blue:     #3870b0;
-  --green:    #287048;
-  --purple:   #7040a0;
+  --red:      #b84535;   /* 테라코타 레드 — 양피지 위 따뜻한 톤 */
+  --blue:     #3a6d9e;   /* 뮤트 블루 — 앰버와 조화 */
+  --green:    #2a6e48;   /* 웜 세이지 — 자연 녹색 */
+  --purple:   #6b4595;   /* 더스티 플럼 — 차분한 보라 */
 }
 
 /* Theme-specific overrides for component backgrounds */
@@ -55,10 +55,10 @@
 [data-theme="light"] .rp-tabs { background: var(--bg-tertiary) }
 [data-theme="light"] .btab { background: var(--bg-tertiary); border-color: var(--border-color) }
 [data-theme="light"] .btab.btab-active { background: var(--bg-surface) }
-[data-theme="light"] .ch-head h1 { color: var(--accent-color) }
-[data-theme="light"] .vnum { color: var(--accent-color) }
-[data-theme="light"] .vrow:hover { background: var(--bg-tertiary) }
-[data-theme="light"] .vrow.vsel { background: var(--accent-sel) !important; outline: 1px solid hsla(var(--accent-h), 60%, 45%, 0.30) }
+[data-theme="light"] .ch-head h1 { color: var(--book-hover) }
+[data-theme="light"] .vnum { color: var(--book-color) }
+[data-theme="light"] .vrow:hover { background: hsl(0, 30%, 93%) }
+[data-theme="light"] .vrow.vsel { background: var(--accent-sel) !important; outline: 1px solid hsla(var(--accent-h), 60%, 45%, 0.25) }
 
 /* Sepia overrides */
 [data-theme="sepia"] #sidePanel { background: var(--bg-secondary); border-right-color: var(--border-color) }
@@ -69,10 +69,10 @@
 [data-theme="sepia"] .rp-tabs { background: var(--bg-tertiary) }
 [data-theme="sepia"] .btab { background: var(--bg-tertiary); border-color: var(--border-color) }
 [data-theme="sepia"] .btab.btab-active { background: var(--bg-surface) }
-[data-theme="sepia"] .ch-head h1 { color: var(--accent-color) }
-[data-theme="sepia"] .vnum { color: var(--accent-color) }
-[data-theme="sepia"] .vrow:hover { background: var(--bg-secondary) }
-[data-theme="sepia"] .vrow.vsel { background: var(--accent-sel) !important; outline: 1px solid hsla(var(--accent-h), 50%, 50%, 0.25) }
+[data-theme="sepia"] .ch-head h1 { color: var(--book-hover) }
+[data-theme="sepia"] .vnum { color: var(--book-color) }
+[data-theme="sepia"] .vrow:hover { background: hsla(34, 20%, 84%, 0.5) }
+[data-theme="sepia"] .vrow.vsel { background: var(--accent-sel) !important; outline: 1px solid hsla(var(--accent-h), 50%, 45%, 0.22) }
 
 :root {
   --topbar-h:   0px;

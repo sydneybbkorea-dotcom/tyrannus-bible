@@ -60,6 +60,31 @@ function renderSettingsPanel(){
     h += '</label>';
     h += '</div></div>';
 
+    // ── 성경 글씨 색상 (Book Accent) ──
+    var curBookAccent = (typeof ThemeSwitcher !== 'undefined' && ThemeSwitcher.getBookAccent) ? ThemeSwitcher.getBookAccent() : 'custom';
+    h += '<div class="stp-row">';
+    h += '<div class="stp-row-head"><i class="fa fa-book-bible"></i> 성경 글씨 색상</div>';
+    h += '<div class="stp-accent-dots">';
+    var bookAccents = [
+      { id:'black',  color:'#a0a0a0' }, { id:'blue',   color:'#086DDD' },
+      { id:'red',    color:'#E93147' }, { id:'orange', color:'#ec7500' },
+      { id:'yellow', color:'#e0ac00' }, { id:'cyan',   color:'#00bfbc' },
+      { id:'purple', color:'#7852EE' }, { id:'pink',   color:'#D53984' }
+    ];
+    bookAccents.forEach(function(ba){
+      var active = curBookAccent === ba.id ? ' stp-dot-active' : '';
+      h += '<button class="stp-accent-dot' + active + '" style="background:' + ba.color + '"'
+         + ' onclick="_stpSetBookAccent(\'' + ba.id + '\')" title="' + ba.id + '"></button>';
+    });
+    var customBookHex = (typeof ThemeSwitcher !== 'undefined' && ThemeSwitcher.getCustomBookAccent) ? ThemeSwitcher.getCustomBookAccent() : '#bd8a00';
+    var bookPickActive = curBookAccent === 'custom' ? ' stp-dot-active' : '';
+    var bookPickBg = curBookAccent === 'custom' ? customBookHex : 'conic-gradient(#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)';
+    h += '<label class="stp-accent-dot stp-dot-picker' + bookPickActive + '" style="background:' + bookPickBg + '" title="커스텀">';
+    h += '<input type="color" class="stp-pick-input" value="' + customBookHex + '"'
+       + ' oninput="_stpPickBookAccentLive(this.value)" onchange="_stpPickBookAccent(this.value)">';
+    h += '</label>';
+    h += '</div></div>';
+
     var curBase = (typeof ThemeSwitcher !== 'undefined' && ThemeSwitcher.getBase) ? ThemeSwitcher.getBase() : 'blue';
     h += '<div class="stp-row">';
     h += '<div class="stp-row-head"><i class="fa fa-fill-drip"></i> <span data-i18n="settings.base">배경 색상</span></div>';
@@ -85,7 +110,8 @@ function renderSettingsPanel(){
     h += '</div></div>';
 
     var curContentColor = (typeof ThemeSwitcher !== 'undefined' && ThemeSwitcher.getContentColor) ? ThemeSwitcher.getContentColor() : '';
-    var isColorDefault = curAccent === 'blue' && curBase === 'blue' && curTheme === 'dark' && !curContentColor;
+    var isBookDefault = !curBookAccent || curBookAccent === 'custom';
+    var isColorDefault = curAccent === 'blue' && curBase === 'blue' && curTheme === 'dark' && !curContentColor && isBookDefault;
     if(!isColorDefault){
       h += '<button class="stp-color-reset" onclick="_stpResetColors()">'
          + '<i class="fa fa-undo"></i> 색상 초기화</button>';

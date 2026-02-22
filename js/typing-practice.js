@@ -19,7 +19,17 @@ var _tp = {
   finished: false,
   started: false,
   history: [],
-  audioCtx: null
+  audioCtx: null,
+  prevCpm: null,
+  bestCpm: 0,
+  sessionVerses: 0,
+  sessionAccSum: 0,
+  sessionTime: 0,
+  tpTheme: 'dark',
+  recentKeys: [],
+  lastInputTime: 0,
+  speedGauge: 0,
+  speedInterval: null
 };
 
 /* ═══ Typing Sound — 리얼 타자기 샘플 (Hermes Precisa 305) ═══ */
@@ -87,8 +97,24 @@ function _tpPlayEnterSound(){
 }
 
 /* ═══ Punctuation skip helper ═══ */
-var _tpPunctuation = /^[,.\-;:!?'"''""·…「」『』《》〈〉\(\)\[\]\/\\~@#$%^&*+=|`{}]$/;
+var _tpPunctuation = /^[,.\-;:!?'"''""·…「」『』《》〈〉\(\)\[\]\/\\~@#$%^&*+=|`{}«»‹›〝〞〟＂＇]$/;
 function _tpIsPunct(ch){ return _tpPunctuation.test(ch); }
+
+/* ═══ Character normalization (curly quotes → straight, etc.) ═══ */
+var _tpNormMap = {
+  '\u2018':"'", '\u2019':"'", '\u201A':"'",
+  '\u2039':"'", '\u203A':"'",
+  '\uFF07':"'", '\u0060':"'",
+  '\u201C':'"', '\u201D':'"', '\u201E':'"',
+  '\u00AB':'"', '\u00BB':'"',
+  '\u301D':'"', '\u301E':'"', '\u301F':'"',
+  '\uFF02':'"',
+  '\u300C':'"', '\u300D':'"', '\u300E':'"', '\u300F':'"',
+  '\u2014':'-', '\u2013':'-', '\uFF0D':'-',
+  '\u00B7':'.', '\u2027':'.'
+};
+function _tpNorm(ch){ return _tpNormMap[ch] || ch; }
+function _tpMatch(a, b){ return _tpNorm(a) === _tpNorm(b); }
 
 /* Build a mapping from typed position → target position, skipping punctuation */
 function _tpBuildMapping(target, typed){
@@ -98,7 +124,7 @@ function _tpBuildMapping(target, typed){
 
   for(var pi = 0; pi < typed.length; pi++){
     // Skip over target punctuation that user didn't type
-    while(ti < target.length && _tpIsPunct(target[ti]) && typed[pi] !== target[ti]){
+    while(ti < target.length && _tpIsPunct(target[ti]) && !_tpMatch(typed[pi], target[ti])){
       targetSkip.push(ti);
       ti++;
     }
@@ -137,6 +163,7 @@ function toggleTypingPanel(){
 function _tpInit(){
   _tpLoadSounds();
   _tpLoadStorage();
+  _tpApplyTheme();
   _tpRenderSettings();
   if(!_tp.started) _tpRenderBody();
 }
@@ -148,6 +175,10 @@ function _tpLoadStorage(){
     if(h) _tp.hearts = JSON.parse(h);
     var f = localStorage.getItem('tp_folders');
     if(f) _tp.folders = JSON.parse(f);
+    var bc = localStorage.getItem('tp_bestCpm');
+    if(bc) _tp.bestCpm = parseInt(bc) || 0;
+    var tt = localStorage.getItem('tp_theme');
+    if(tt) _tp.tpTheme = tt;
   } catch(e){}
 }
 function _tpSaveHearts(){
@@ -155,6 +186,28 @@ function _tpSaveHearts(){
 }
 function _tpSaveFolders(){
   try { localStorage.setItem('tp_folders', JSON.stringify(_tp.folders)); } catch(e){}
+}
+function _tpSaveBestCpm(){
+  try { localStorage.setItem('tp_bestCpm', String(_tp.bestCpm)); } catch(e){}
+}
+
+/* ═══ Theme Toggle (Dark / Light) ═══ */
+function _tpToggleTheme(){
+  _tp.tpTheme = _tp.tpTheme === 'dark' ? 'light' : 'dark';
+  try { localStorage.setItem('tp_theme', _tp.tpTheme); } catch(e){}
+  _tpApplyTheme();
+}
+function _tpApplyTheme(){
+  var el = document.getElementById('typingOverlay');
+  if(!el) return;
+  el.classList.toggle('tp-light', _tp.tpTheme === 'light');
+  var btn = document.getElementById('tpThemeBtn');
+  if(btn){
+    btn.innerHTML = _tp.tpTheme === 'dark'
+      ? '<i class="fa fa-sun"></i>'
+      : '<i class="fa fa-moon"></i>';
+    btn.title = _tp.tpTheme === 'dark' ? '라이트 모드' : '다크 모드';
+  }
 }
 
 /* ═══ Language ═══ */
@@ -419,6 +472,9 @@ function _tpBeginTyping(){
   _tp.startTime = 0;
   _tp.started = true;
   _tp.composing = false;
+  _tp.recentKeys = [];
+  _tp.lastInputTime = 0;
+  _tp.speedGauge = 0;
   _tpStopTimer();
   _tpRenderBody();
   setTimeout(function(){
@@ -434,12 +490,15 @@ function _tpOnInput(){
   var prev = _tp.typed;
   _tp.typed = ta.value;
 
-  // Error sound: check after value settles (non-composing, new char added)
+  // Error sound + speed tracking: check after value settles (non-composing, new char added)
   if(!_tp.composing && _tp.typed.length > prev.length){
+    var now = Date.now();
+    for(var ki = 0; ki < _tp.typed.length - prev.length; ki++) _tp.recentKeys.push(now);
+    _tp.lastInputTime = now;
     var result = _tpBuildMapping(_tp.verse.text, _tp.typed);
     var lastIdx = _tp.typed.length - 1;
     var mappedTarget = result.map[lastIdx];
-    if(mappedTarget >= 0 && _tp.typed[lastIdx] !== _tp.verse.text[mappedTarget]){
+    if(mappedTarget >= 0 && !_tpMatch(_tp.typed[lastIdx], _tp.verse.text[mappedTarget])){
       _tpPlayErrorSound();
     }
   }
@@ -448,15 +507,17 @@ function _tpOnInput(){
   if(!_tp.startTime && _tp.typed.length > 0){
     _tp.startTime = Date.now();
     _tpStartTimer();
+    _tp.speedInterval = setInterval(_tpTickSpeedGauge, 80);
   }
 
   _tpUpdateChars();
 
-  // Check completion (not during composition)
-  if(!_tp.composing && !_tp.finished){
+  // Check completion (even during composition for Korean last-char)
+  if(!_tp.finished){
     var mapping = _tpBuildMapping(_tp.verse.text, _tp.typed);
     if(mapping.nextTarget >= _tp.verse.text.length){
       _tp.finished = true;
+      _tp.composing = false;
       _tpStopTimer();
       _tpShowResults();
     }
@@ -479,7 +540,7 @@ function _tpUpdateChars(){
   for(var p = 0; p < result.map.length; p++){
     var ti = result.map[p];
     if(ti >= 0){
-      matchedSet[ti] = (typed[p] === target[ti]) ? 'correct' : 'wrong';
+      matchedSet[ti] = _tpMatch(typed[p], target[ti]) ? 'correct' : 'wrong';
     }
   }
   for(var s = 0; s < result.skipped.length; s++){
@@ -496,13 +557,16 @@ function _tpUpdateChars(){
     var origChar = target[i] === ' ' ? '\u00a0' : target[i];
 
     if(matchedSet[i] === 'correct'){
-      span.className = 'tp-char tp-correct';
+      var wasCorrect = span.classList.contains('tp-correct');
+      span.className = 'tp-char tp-correct' + (!wasCorrect ? ' tp-punch' : '');
       span.textContent = origChar;
     } else if(matchedSet[i] === 'wrong'){
-      span.className = 'tp-char tp-wrong';
+      var wasWrong = span.classList.contains('tp-wrong');
+      span.className = 'tp-char tp-wrong' + (!wasWrong ? ' tp-punch-err' : '');
       span.textContent = origChar;
     } else if(skippedSet[i]){
-      span.className = 'tp-char tp-correct';
+      var wasSkip = span.classList.contains('tp-correct');
+      span.className = 'tp-char tp-correct' + (!wasSkip ? ' tp-punch' : '');
       span.textContent = origChar;
     } else if(_tp.composing && i === cursorTarget && composingText){
       // 실시간 자음/모음 조합 표시
@@ -520,7 +584,104 @@ function _tpUpdateChars(){
 
 /* ═══ Timer & Stats ═══ */
 function _tpStartTimer(){ _tp.timerInterval = setInterval(_tpRenderStats, 500); }
-function _tpStopTimer(){ if(_tp.timerInterval){ clearInterval(_tp.timerInterval); _tp.timerInterval = null; } }
+function _tpStopTimer(){
+  if(_tp.timerInterval){ clearInterval(_tp.timerInterval); _tp.timerInterval = null; }
+  if(_tp.speedInterval){ clearInterval(_tp.speedInterval); _tp.speedInterval = null; }
+}
+
+/* ═══ Real-time Speed Gauge ═══ */
+function _tpTickSpeedGauge(){
+  if(!_tp.started || _tp.finished) return;
+  var now = Date.now();
+  // Overall CPM = correct chars only / total elapsed minutes
+  var target = 0;
+  if(_tp.startTime && _tp.typed.length > 0 && _tp.verse){
+    var elapsed = (now - _tp.startTime) / 60000; // minutes
+    if(elapsed > 0){
+      var r = _tpBuildMapping(_tp.verse.text, _tp.typed);
+      var corr = 0;
+      for(var ci = 0; ci < r.map.length; ci++){
+        if(r.map[ci] >= 0 && _tpMatch(_tp.typed[ci], _tp.verse.text[r.map[ci]])) corr++;
+      }
+      target = Math.round(corr / elapsed);
+    }
+  }
+  // Smooth interpolation
+  _tp.speedGauge += (target - _tp.speedGauge) * 0.15;
+  if(Math.abs(_tp.speedGauge - target) < 1) _tp.speedGauge = target;
+  // Update visual
+  var bar = document.getElementById('tpSpeedBar');
+  var num = document.getElementById('tpSpeedNum');
+  if(bar){
+    var pct = Math.min(100, _tp.speedGauge / 600 * 100);
+    bar.style.width = pct + '%';
+    if(_tp.speedGauge >= 600){
+      bar.style.background = 'linear-gradient(90deg, #ff0000, #ff8800, #ffee00, #00ff44, #00ccff, #8844ff, #ff00cc)';
+      bar.style.boxShadow = '0 0 20px rgba(255,0,200,0.5), 0 0 40px rgba(100,50,255,0.3)';
+    } else if(_tp.speedGauge > 400){
+      bar.style.background = 'linear-gradient(90deg, #e83030, #ff4040, #ff6050)';
+      bar.style.boxShadow = '0 0 16px rgba(255,50,50,0.5)';
+    } else if(_tp.speedGauge > 200){
+      bar.style.background = 'linear-gradient(90deg, #e8a020, #ff8c00)';
+      bar.style.boxShadow = '0 0 12px rgba(232,160,32,0.4)';
+    } else {
+      bar.style.background = 'linear-gradient(90deg, #4a8fe8, #e8a020)';
+      bar.style.boxShadow = '0 0 8px rgba(96,143,232,0.3)';
+    }
+  }
+  if(num){
+    var spd = Math.round(_tp.speedGauge);
+    num.textContent = spd;
+    // Dynamic scale: 1.0 at 0 → 3.0 at 600+
+    var ratio = Math.min(_tp.speedGauge, 600) / 600;
+    var scale = 1 + ratio * 2.0;
+    num.style.transform = 'scale(' + scale.toFixed(2) + ')';
+    if(_tp.speedGauge >= 600){
+      num.style.background = 'linear-gradient(90deg, #ff0000, #ff8800, #ffe600, #00ff44, #00ccff, #8844ff, #ff00cc)';
+      num.style.webkitBackgroundClip = 'text';
+      num.style.webkitTextFillColor = 'transparent';
+      num.style.backgroundClip = 'text';
+      num.style.filter = 'drop-shadow(0 0 24px rgba(255,0,200,0.7)) drop-shadow(0 0 48px rgba(100,50,255,0.4))';
+      num.style.textShadow = 'none';
+    } else if(_tp.speedGauge > 400){
+      num.style.background = 'none';
+      num.style.webkitTextFillColor = '';
+      num.style.backgroundClip = '';
+      num.style.filter = 'none';
+      num.style.color = '#ff3030';
+      num.style.textShadow = '0 0 30px rgba(255,48,48,0.8), 0 0 60px rgba(255,0,0,0.35), 0 2px 6px rgba(0,0,0,0.4)';
+    } else if(_tp.speedGauge > 200){
+      num.style.background = 'none';
+      num.style.webkitTextFillColor = '';
+      num.style.backgroundClip = '';
+      num.style.filter = 'none';
+      num.style.color = '#e8a020';
+      num.style.textShadow = '0 0 20px rgba(232,160,32,0.6), 0 0 40px rgba(232,160,32,0.2), 0 2px 4px rgba(0,0,0,0.25)';
+    } else if(_tp.speedGauge > 50){
+      num.style.background = 'none';
+      num.style.webkitTextFillColor = '';
+      num.style.backgroundClip = '';
+      num.style.filter = 'none';
+      num.style.color = '#60a5fa';
+      num.style.textShadow = '0 0 14px rgba(96,165,250,0.4), 0 2px 4px rgba(0,0,0,0.15)';
+    } else if(_tp.speedGauge > 0){
+      num.style.background = 'none';
+      num.style.webkitTextFillColor = '';
+      num.style.backgroundClip = '';
+      num.style.filter = 'none';
+      num.style.color = '#60a5fa';
+      num.style.textShadow = 'none';
+    } else {
+      num.style.background = 'none';
+      num.style.webkitTextFillColor = '';
+      num.style.backgroundClip = '';
+      num.style.filter = 'none';
+      num.style.color = '#3a4060';
+      num.style.textShadow = 'none';
+      num.style.transform = 'scale(1)';
+    }
+  }
+}
 
 function _tpRenderStats(){
   var el = document.getElementById('tpStats');
@@ -534,7 +695,7 @@ function _tpRenderStats(){
   var correct = 0;
   for(var i = 0; i < result.map.length; i++){
     var ti = result.map[i];
-    if(ti >= 0 && typed[i] === target[ti]) correct++;
+    if(ti >= 0 && _tpMatch(typed[i], target[ti])) correct++;
   }
 
   var accuracy = typed.length > 0 ? Math.round(correct / typed.length * 100) : 100;
@@ -566,7 +727,7 @@ function _tpShowResults(){
   for(var i = 0; i < result.map.length; i++){
     var ti = result.map[i];
     if(ti >= 0){
-      if(typed[i] === target[ti]) correct++;
+      if(_tpMatch(typed[i], target[ti])) correct++;
       else wrong++;
     }
   }
@@ -575,6 +736,23 @@ function _tpShowResults(){
   var accuracy = typed.length > 0 ? Math.round(correct / typed.length * 100) : 100;
   var cpm = minutes > 0 ? Math.round(typed.length / minutes) : 0;
   var wpm = minutes > 0 ? Math.round((typed.length / 5) / minutes) : 0;
+
+  // Previous CPM comparison
+  var prevCpm = _tp.prevCpm;
+  _tp.prevCpm = cpm;
+
+  // Best CPM tracking
+  if(cpm > _tp.bestCpm){ _tp.bestCpm = cpm; _tpSaveBestCpm(); }
+  var bestCpm = _tp.bestCpm;
+
+  // Session stats
+  _tp.sessionVerses++;
+  _tp.sessionAccSum += accuracy;
+  _tp.sessionTime += elapsed;
+  var sessionAvgAcc = Math.round(_tp.sessionAccSum / _tp.sessionVerses);
+  var sessionTimeM = Math.floor(_tp.sessionTime / 60);
+  var sessionTimeS = Math.floor(_tp.sessionTime % 60);
+  var sessionTimeStr = sessionTimeM + ':' + (sessionTimeS < 10 ? '0' : '') + sessionTimeS;
 
   var m = Math.floor(elapsed / 60);
   var sec = Math.floor(elapsed % 60);
@@ -638,6 +816,16 @@ function _tpShowResults(){
           '<div class="tp-rcard-unit">타/분</div>' +
           '<div class="tp-rcard-bar-wrap"><div class="tp-rcard-bar" style="width:' + speedPct + '%"></div></div>' +
           '<div class="tp-rcard-tag ' + speedClass + '">' + speedLabel + '</div>' +
+          (prevCpm !== null ? (function(){
+            var delta = cpm - prevCpm;
+            var sign = delta > 0 ? '+' : '';
+            var cls = delta > 0 ? 'tp-delta-up' : (delta < 0 ? 'tp-delta-down' : 'tp-delta-same');
+            var icon = delta > 0 ? 'fa-arrow-up' : (delta < 0 ? 'fa-arrow-down' : 'fa-equals');
+            return '<div class="tp-rcard-delta ' + cls + '">' +
+              '<i class="fa ' + icon + '"></i> ' + sign + delta +
+              ' <span class="tp-delta-prev">(이전: ' + prevCpm + ')</span></div>';
+          })() : '') +
+          '<div class="tp-rcard-best"><i class="fa fa-trophy"></i> 최고: ' + bestCpm + '</div>' +
         '</div>' +
 
         '<div class="tp-rcard">' +
@@ -660,6 +848,13 @@ function _tpShowResults(){
           (skipped > 0 ? '<span><span class="tp-dot" style="background:var(--text3);opacity:.5"></span>구두점 ' + skipped + '자</span>' : '') +
           '<span><span class="tp-dot" style="background:var(--text2)"></span>전체 ' + totalChars + '자</span>' +
         '</div>' +
+      '</div>' +
+
+      '<div class="tp-session-bar">' +
+        '<span><i class="fa fa-file-alt"></i> ' + _tp.sessionVerses + '구절</span>' +
+        '<span><i class="fa fa-bullseye"></i> 평균 ' + sessionAvgAcc + '%</span>' +
+        '<span><i class="fa fa-trophy"></i> 최고 ' + bestCpm + ' 타/분</span>' +
+        '<span><i class="fa fa-clock"></i> 총 ' + sessionTimeStr + '</span>' +
       '</div>' +
 
       '<div class="tp-result-acts">' +
@@ -704,8 +899,11 @@ function _tpCloseFolderMenu(){
   document.removeEventListener('click', _tpFolderOutside);
 }
 function _tpFolderOutside(e){
-  var wrap = document.querySelector('.tp-folder-wrap');
-  if(wrap && !wrap.contains(e.target)) _tpCloseFolderMenu();
+  var wraps = document.querySelectorAll('.tp-folder-wrap');
+  for(var i = 0; i < wraps.length; i++){
+    if(wraps[i].contains(e.target)) return;
+  }
+  _tpCloseFolderMenu();
 }
 function _tpRenderFolderMenu(){
   var menu = document.getElementById('tpFolderMenu');
@@ -804,9 +1002,21 @@ function _tpRenderBody(){
     '<div class="tp-verse-area">' +
       '<div class="tp-verse-header">' +
         '<div class="tp-verse-ref"><span class="tp-ref-book">' + (v.fullBook || v.book) + '</span> <span class="tp-ref-chv">' + v.ch + ':' + v.v + '</span></div>' +
-        '<button class="tp-heart-btn'+(isHearted?' tp-hearted':'')+'" id="tpHeartBtn" onclick="_tpToggleHeart()">' +
-          '<i class="fa'+(isHearted?'s':'r')+' fa-heart"></i>' +
-        '</button>' +
+        '<div class="tp-verse-acts">' +
+          '<button class="tp-heart-btn'+(isHearted?' tp-hearted':'')+'" id="tpHeartBtn" onclick="_tpToggleHeart()">' +
+            '<i class="fa'+(isHearted?'s':'r')+' fa-heart"></i>' +
+          '</button>' +
+          '<div class="tp-folder-wrap">' +
+            '<button class="tp-folder-btn" id="tpFolderBtn" onclick="_tpToggleFolderMenu()" title="폴더에 추가">' +
+              '<i class="fa fa-bookmark"></i>' +
+            '</button>' +
+            '<div class="tp-folder-menu" id="tpFolderMenu"></div>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="tp-speed-wrap">' +
+        '<div class="tp-speed-num" id="tpSpeedNum">0</div>' +
+        '<div class="tp-speed-gauge"><div class="tp-speed-bar" id="tpSpeedBar"></div></div>' +
       '</div>' +
       '<div class="tp-chars" id="tpChars">' + charSpans + '</div>' +
       '<textarea id="tpInput" class="tp-ghost-input" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>' +
@@ -839,7 +1049,7 @@ function _tpRenderBody(){
       if(val.length > 0 && _tp.verse){
         var r = _tpBuildMapping(_tp.verse.text, val);
         var idx = val.length - 1;
-        if(r.map[idx] >= 0 && val[idx] !== _tp.verse.text[r.map[idx]]){
+        if(r.map[idx] >= 0 && !_tpMatch(val[idx], _tp.verse.text[r.map[idx]])){
           _tpPlayErrorSound();
         }
       }
@@ -851,7 +1061,8 @@ function _tpRenderBody(){
       if(e.key === 'Enter'){
         e.preventDefault();
         _tpPlayEnterSound();
-        if(_tp.finished) _tpNextVerse();
+        _tpStopTimer();
+        _tpNextVerse();
         return;
       }
       // 키 종류별 사운드 분기

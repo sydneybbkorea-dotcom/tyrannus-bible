@@ -9,6 +9,13 @@
   --accent-s: 100%;
   --accent-l: 37%;
 }
+
+/* ── Default Book Accent (성경 본문 강조: 장 제목, 구절 번호) ── */
+:root {
+  --book-h: 44;
+  --book-s: 100%;
+  --book-l: 37%;
+}
 /* ── Accent Color Palettes ── */
 :root[data-accent="blue"] {
   --accent-h: 214;
@@ -51,6 +58,16 @@
   --accent-l: 65%;
 }
 
+/* ── Book Accent Color Palettes (성경 본문 강조색) ── */
+:root[data-book-accent="blue"]   { --book-h:214; --book-s:92%;  --book-l:45%; }
+:root[data-book-accent="red"]    { --book-h:355; --book-s:75%;  --book-l:55%; }
+:root[data-book-accent="orange"] { --book-h:30;  --book-s:90%;  --book-l:46%; }
+:root[data-book-accent="yellow"] { --book-h:46;  --book-s:100%; --book-l:44%; }
+:root[data-book-accent="cyan"]   { --book-h:179; --book-s:100%; --book-l:37%; }
+:root[data-book-accent="purple"] { --book-h:256; --book-s:83%;  --book-l:63%; }
+:root[data-book-accent="pink"]   { --book-h:330; --book-s:65%;  --book-l:53%; }
+:root[data-book-accent="black"]  { --book-h:0;   --book-s:0%;   --book-l:65%; }
+
 /* ── Default Base (첫 방문 기본값: #04050b) ── */
 :root { --base-h: 231; --base-s: 47%; --base-l: 3%; }
 /* ── Base Color Palettes (배경 H/S/L) ── */
@@ -71,22 +88,29 @@
   --accent-sel: hsla(var(--accent-h), 60%, 50%, 0.20);
 }
 
-/* ── Theme 1: Light — clean neutral gray (cool 220°, accent-independent) ── */
+/* ── Computed Book Accent (성경 본문 강조색) ── */
+:root {
+  --book-color: hsl(var(--book-h), var(--book-s), var(--book-l));
+  --book-hover: hsl(var(--book-h), var(--book-s), calc(var(--book-l) + 8%));
+  --book-dim:   hsla(var(--book-h), var(--book-s), var(--book-l), 0.12);
+}
+
+/* ── Theme 1: Light — warm rose-white (red accent feel) ── */
 :root[data-theme="light"] {
-  --bg-primary:     hsl(220, 13%, 97%);     /* 깨끗한 연회색 (약간의 쿨톤) */
-  --bg-secondary:   hsl(220, 13%, 93%);     /* 패널 배경 — 구분감 확보 */
-  --bg-tertiary:    hsl(220, 12%, 88%);     /* 버튼/입력 — 확실한 구분 */
-  --bg-surface:     hsl(0, 0%, 100%);       /* 카드/본문 영역 — 순백 유지 */
-  --text-primary:   hsl(220, 15%, 15%);     /* 진한 차콜 — 강한 대비 */
-  --text-secondary: hsl(220, 10%, 35%);     /* 보조 텍스트 — 더 진하게 */
-  --text-muted:     hsl(220, 8%, 48%);      /* 흐린 텍스트 — 55→48 */
-  --text-faint:     hsl(220, 6%, 62%);      /* 매우 흐린 — 70→62 */
-  --border-color:   hsl(220, 12%, 84%);     /* 경계선 — 88→84 더 뚜렷 */
-  --shadow-color:   rgba(0, 0, 0, 0.10);    /* 그림자 — 0.06→0.10 */
-  --hl-opacity:     0.35;
-  --rail-bg-color:  hsl(220, 14%, 90%);     /* 레일 배경 */
-  --content-text:       hsl(0, 0%, 12%);    /* 본문 — 순수 짙은 검정 */
-  --content-text-sub:   hsl(0, 0%, 30%);    /* 보조 본문 — 35→30 */
+  --bg-primary:     hsl(0, 40%, 97%);       /* 따뜻한 로즈 화이트 */
+  --bg-secondary:   hsl(0, 32%, 94%);       /* 패널 — 부드러운 핑크 구분 */
+  --bg-tertiary:    hsl(0, 25%, 89%);       /* 입력/버튼 — 로즈 깊이 */
+  --bg-surface:     hsl(0, 25%, 99%);       /* 따뜻한 화이트 종이 */
+  --text-primary:   hsl(350, 36%, 12%);     /* 깊은 다크 와인 — 최대 가독성 */
+  --text-secondary: hsl(350, 22%, 34%);     /* 워밍 보조 텍스트 */
+  --text-muted:     hsl(350, 14%, 52%);     /* 로즈 그레이 */
+  --text-faint:     hsl(350, 8%, 66%);      /* 희미한 로즈 */
+  --border-color:   hsl(0, 28%, 85%);       /* 로즈 실크 경계선 */
+  --shadow-color:   rgba(120, 20, 30, 0.07);/* 레드 틴트 그림자 */
+  --hl-opacity:     0.32;
+  --rail-bg-color:  hsl(0, 30%, 95%);       /* 레일 배경 — 웜 로즈 */
+  --content-text:       hsl(350, 28%, 12%); /* 와인 잉크 본문 */
+  --content-text-sub:   hsl(350, 14%, 34%); /* 보조 본문 */
 }
 
 /* ── Theme 2: Dark (default) — base S/L relative offsets ── */
@@ -107,23 +131,22 @@
   --content-text-sub:   hsl(0, 0%, 73%);
 }
 
-/* ── Theme 3: Sepia ── */
+/* ── Theme 3: Sepia — aged parchment (warm amber-brown) ── */
 :root[data-theme="sepia"] {
-  --bg-primary:     hsl(35, 30%, 95%);
-  --bg-secondary:   hsl(35, 25%, 90%);
-  --bg-tertiary:    hsl(35, 20%, 85%);
-  --bg-surface:     hsl(35, 35%, 97%);
-  --text-primary:   hsl(30, 20%, 22%);
-  --text-secondary: hsl(30, 15%, 40%);
-  --text-muted:     hsl(30, 12%, 55%);
-  --text-faint:     hsl(30, 10%, 68%);
-  --border-color:   hsl(35, 20%, 82%);
-  --shadow-color:   rgba(80, 50, 20, 0.08);
-  --hl-opacity:     0.25;
-  --rail-bg-color:  hsl(35, 22%, 87%);
-  /* Content text — warm neutral, accent-independent */
-  --content-text:       hsl(30, 15%, 20%);
-  --content-text-sub:   hsl(30, 10%, 42%);
+  --bg-primary:     hsl(36, 33%, 93%);      /* 따뜻한 양피지 */
+  --bg-secondary:   hsl(34, 26%, 87%);      /* 에이지드 패널 */
+  --bg-tertiary:    hsl(32, 20%, 80%);      /* 깊은 따뜻함 (입력/버튼) */
+  --bg-surface:     hsl(40, 40%, 96%);      /* 크림빛 종이 */
+  --text-primary:   hsl(22, 36%, 15%);      /* 깊은 에스프레소 브라운 */
+  --text-secondary: hsl(22, 18%, 34%);      /* 월넛 브라운 */
+  --text-muted:     hsl(25, 12%, 50%);      /* 부드러운 카키 */
+  --text-faint:     hsl(28, 8%, 64%);       /* 희미한 베이지 */
+  --border-color:   hsl(32, 18%, 78%);      /* 오크빛 경계선 */
+  --shadow-color:   rgba(80, 50, 15, 0.07); /* 따뜻한 앰버 그림자 */
+  --hl-opacity:     0.28;
+  --rail-bg-color:  hsl(34, 24%, 85%);      /* 레일 배경 */
+  --content-text:       hsl(22, 30%, 15%);  /* 초콜릿 잉크 본문 */
+  --content-text-sub:   hsl(22, 14%, 36%);  /* 보조 본문 */
 }
 
 /* ── Dark + Black accent: monochrome accent colors ── */
@@ -135,20 +158,42 @@
   --accent-sel:     hsla(0, 0%, 80%, 0.15);
 }
 
-/* ── Light + Black accent: true black for readability ── */
+/* ── Light + Black accent: warm ink for readability ── */
 :root[data-theme="light"][data-accent="black"] {
-  --accent-color:   hsl(0, 0%, 15%);
-  --accent-hover:   hsl(0, 0%, 25%);
-  --accent-dim:     hsla(0, 0%, 0%, 0.08);
-  --accent-sel:     hsla(0, 0%, 0%, 0.12);
+  --accent-color:   hsl(350, 18%, 18%);
+  --accent-hover:   hsl(350, 14%, 28%);
+  --accent-dim:     hsla(350, 18%, 10%, 0.08);
+  --accent-sel:     hsla(350, 18%, 10%, 0.12);
 }
 
-/* ── Sepia + Black accent: warm black for readability ── */
+/* ── Sepia + Black accent: espresso brown for readability ── */
 :root[data-theme="sepia"][data-accent="black"] {
-  --accent-color:   hsl(30, 10%, 18%);
-  --accent-hover:   hsl(30, 8%, 28%);
-  --accent-dim:     hsla(30, 10%, 10%, 0.08);
-  --accent-sel:     hsla(30, 10%, 10%, 0.12);
+  --accent-color:   hsl(22, 20%, 18%);
+  --accent-hover:   hsl(22, 16%, 28%);
+  --accent-dim:     hsla(22, 20%, 10%, 0.08);
+  --accent-sel:     hsla(22, 20%, 10%, 0.12);
+}
+
+/* ── Dark + Black book accent: monochrome book colors ── */
+:root[data-theme="dark"][data-book-accent="black"],
+:root[data-book-accent="black"]:not([data-theme="light"]):not([data-theme="sepia"]) {
+  --book-color: hsl(0, 0%, 80%);
+  --book-hover: hsl(0, 0%, 90%);
+  --book-dim:   hsla(0, 0%, 80%, 0.10);
+}
+
+/* ── Light + Black book accent: warm ink ── */
+:root[data-theme="light"][data-book-accent="black"] {
+  --book-color: hsl(350, 18%, 18%);
+  --book-hover: hsl(350, 14%, 28%);
+  --book-dim:   hsla(350, 18%, 10%, 0.08);
+}
+
+/* ── Sepia + Black book accent: espresso brown ── */
+:root[data-theme="sepia"][data-book-accent="black"] {
+  --book-color: hsl(22, 20%, 18%);
+  --book-hover: hsl(22, 16%, 28%);
+  --book-dim:   hsla(22, 20%, 10%, 0.08);
 }
 
 /* ── Design System Tokens ── */
@@ -208,6 +253,6 @@
 }
 
 /* ── WCAG AA contrast helpers ── */
-[data-theme="light"] .accent-text { color: hsl(var(--accent-h), var(--accent-s), calc(var(--accent-l) - 5%)); }
+[data-theme="light"] .accent-text { color: hsl(var(--accent-h), var(--accent-s), calc(var(--accent-l) - 8%)); }
 [data-theme="dark"]  .accent-text { color: hsl(var(--accent-h), var(--accent-s), calc(var(--accent-l) + 10%)); }
 [data-theme="sepia"] .accent-text { color: hsl(var(--accent-h), var(--accent-s), calc(var(--accent-l) - 5%)); }

@@ -55,6 +55,19 @@ function _stpPickBase(hex){
   renderSettingsPanel();
 }
 
+// 성경 글씨 색상 (Book Accent)
+function _stpSetBookAccent(preset){
+  if(typeof ThemeSwitcher !== 'undefined' && ThemeSwitcher.setBookAccent) ThemeSwitcher.setBookAccent(preset);
+  renderSettingsPanel();
+}
+function _stpPickBookAccentLive(hex){
+  if(typeof ThemeSwitcher !== 'undefined' && ThemeSwitcher.setCustomBookAccent) ThemeSwitcher.setCustomBookAccent(hex);
+}
+function _stpPickBookAccent(hex){
+  _stpPickBookAccentLive(hex);
+  renderSettingsPanel();
+}
+
 // 본문 텍스트 색상
 function _stpSetContentColor(hex){
   if(typeof ThemeSwitcher !== 'undefined' && ThemeSwitcher.setContentColor) ThemeSwitcher.setContentColor(hex);
@@ -76,12 +89,13 @@ function _stpSetLang(lang){
   }
 }
 
-// 색상 초기화 (테마 다크 + 강조 블루 + 배경 블루)
+// 색상 초기화 (테마 다크 + 강조 블루 + 배경 블루 + 성경글씨 기본)
 function _stpResetColors(){
   if(typeof ThemeSwitcher !== 'undefined'){
     ThemeSwitcher.setTheme('dark');
     ThemeSwitcher.setAccent('blue');
     if(ThemeSwitcher.setBase) ThemeSwitcher.setBase('blue');
+    if(ThemeSwitcher.setBookAccent) ThemeSwitcher.setBookAccent('blue');
     if(ThemeSwitcher.resetContentColor) ThemeSwitcher.resetContentColor();
   }
   renderSettingsPanel();
