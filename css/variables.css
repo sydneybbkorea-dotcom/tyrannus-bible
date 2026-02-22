@@ -51,9 +51,9 @@
 [data-theme="light"] #bibleScroll { background: var(--bg-surface) }
 [data-theme="light"] .ch-head h1 { color: var(--book-hover) }
 [data-theme="light"] .vnum { color: var(--book-color) }
-[data-theme="light"] .vrow:hover { background: var(--accent-sel); border-left-color: hsla(var(--accent-h), 50%, 45%, 0.35); box-shadow: inset 0 0 0 1px hsla(var(--accent-h), 50%, 45%, 0.15) }
-[data-theme="light"] .vrow.vfocus { background: var(--glass-bg-2); border-left-color: var(--accent-color) }
-[data-theme="light"] .vrow.vsel { background: hsla(var(--accent-h), 55%, 55%, 0.14) !important; border-left-color: var(--accent-color) !important; box-shadow: inset 0 1px 0 0 hsla(var(--accent-h), 60%, 70%, 0.25), inset 0 -1px 0 0 hsla(var(--accent-h), 30%, 30%, 0.06), 0 1px 3px 0 hsla(var(--accent-h), 40%, 40%, 0.06) }
+[data-theme="light"] .vrow:hover { background: hsla(var(--accent-h), 40%, 60%, 0.07); border-left-color: hsla(var(--accent-h), 50%, 45%, 0.3); box-shadow: none }
+[data-theme="light"] .vrow.vfocus { background: hsla(var(--accent-h), 45%, 55%, 0.12); border-left-color: var(--accent-color) }
+[data-theme="light"] .vrow.vsel { background: hsla(var(--accent-h), 55%, 55%, 0.22) !important; border-left-color: var(--accent-color) !important; box-shadow: inset 0 1px 0 0 hsla(var(--accent-h), 60%, 80%, 0.3), inset 0 -1px 0 0 hsla(var(--accent-h), 30%, 30%, 0.06), 0 1px 3px 0 hsla(var(--accent-h), 40%, 40%, 0.08) }
 
 /* Sepia overrides */
 [data-theme="sepia"] #biblePane { background: var(--bg-surface) }
