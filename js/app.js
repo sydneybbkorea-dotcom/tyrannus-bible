@@ -55,6 +55,14 @@
   renderAll();
   updateBreadcrumb();
 
+  // 5) 초기 상태: 모든 패널 닫기 (성경 본문만 표시)
+  var _rp = document.getElementById('rightPanel');
+  if(_rp && !_rp.classList.contains('rp-hide')) _rp.classList.add('rp-hide');
+  S.panelOpen = null;
+  document.body.classList.remove('panel-open');
+  document.querySelectorAll('.rail-icon').forEach(function(b){ b.classList.remove('active'); });
+  closeSidePanel();
+
   // i18n 적용 (데이터 로드 후 DOM 업데이트)
   if(typeof I18N !== 'undefined') I18N.applyI18N();
 
