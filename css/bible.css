@@ -228,17 +228,16 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
   cursor:pointer; transition:background .15s, box-shadow .15s, border-color .15s; position:relative;
   border-left:3px solid transparent;
 }
-/* Hover — 은은한 배경 + 좌측 바 힌트 */
+/* Hover — 악센트 배경 + 좌측 솔리드 바 */
 .vrow:hover {
-  background:var(--glass-bg-1);
+  background:var(--accent-sel);
   border-left-color:var(--accent-color);
-  border-left-color:hsla(var(--accent-h,38), 50%, 55%, 0.35);
-}
-/* 다중 선택 (Ctrl/Shift+클릭) — 진한 악센트 배경 + 좌측 솔리드 바 */
-.vrow.vsel {
-  background:var(--accent-sel) !important;
-  border-left-color:var(--accent-color) !important;
   box-shadow:inset 0 0 0 1px hsla(var(--accent-h,38), 50%, 55%, 0.12);
+}
+/* 다중 선택 (Ctrl/Shift+클릭) — 은은한 배경 + 좌측 바 힌트 */
+.vrow.vsel {
+  background:var(--glass-bg-1) !important;
+  border-left-color:hsla(var(--accent-h,38), 50%, 55%, 0.35) !important;
   border-radius:var(--radius);
 }
 /* 구절 번호: 본문 텍스트 안에 inline, hanging indent용 음수 마진 */

@@ -51,18 +51,18 @@
 [data-theme="light"] #bibleScroll { background: var(--bg-surface) }
 [data-theme="light"] .ch-head h1 { color: var(--book-hover) }
 [data-theme="light"] .vnum { color: var(--book-color) }
-[data-theme="light"] .vrow:hover { background: var(--glass-bg-1); border-left-color: hsla(var(--accent-h), 50%, 45%, 0.35) }
+[data-theme="light"] .vrow:hover { background: var(--accent-sel); border-left-color: var(--accent-color); box-shadow: inset 0 0 0 1px hsla(var(--accent-h), 50%, 45%, 0.15) }
 [data-theme="light"] .vrow.vfocus { background: var(--glass-bg-2); border-left-color: var(--accent-color) }
-[data-theme="light"] .vrow.vsel { background: var(--accent-sel) !important; border-left-color: var(--accent-color) !important; box-shadow: inset 0 0 0 1px hsla(var(--accent-h), 50%, 45%, 0.15) }
+[data-theme="light"] .vrow.vsel { background: var(--glass-bg-1) !important; border-left-color: hsla(var(--accent-h), 50%, 45%, 0.35) !important }
 
 /* Sepia overrides */
 [data-theme="sepia"] #biblePane { background: var(--bg-surface) }
 [data-theme="sepia"] #bibleScroll { background: var(--bg-surface) }
 [data-theme="sepia"] .ch-head h1 { color: var(--book-hover) }
 [data-theme="sepia"] .vnum { color: var(--book-color) }
-[data-theme="sepia"] .vrow:hover { background: var(--glass-bg-1); border-left-color: hsla(var(--accent-h), 40%, 45%, 0.35) }
+[data-theme="sepia"] .vrow:hover { background: var(--accent-sel); border-left-color: var(--accent-color); box-shadow: inset 0 0 0 1px hsla(var(--accent-h), 40%, 45%, 0.15) }
 [data-theme="sepia"] .vrow.vfocus { background: var(--glass-bg-2); border-left-color: var(--accent-color) }
-[data-theme="sepia"] .vrow.vsel { background: var(--accent-sel) !important; border-left-color: var(--accent-color) !important; box-shadow: inset 0 0 0 1px hsla(var(--accent-h), 40%, 45%, 0.15) }
+[data-theme="sepia"] .vrow.vsel { background: var(--glass-bg-1) !important; border-left-color: hsla(var(--accent-h), 40%, 45%, 0.35) !important }
 
 :root {
   --topbar-h:   0px;
