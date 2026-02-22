@@ -25,11 +25,8 @@ function handleFileAttach(e){
     // PDF files: save as Blob to IDB and open in viewer
     if(isPdf && typeof StorageAdapter !== 'undefined' && StorageAdapter.isReady()){
       StorageAdapter.saveFile(file, { name: file.name, type: 'application/pdf' }).then(function(pdfId){
-        if(pdfId && typeof PDFViewer !== 'undefined'){
-          PDFViewer.openFromFile(file);
-        }
         // Insert PDF reference in note
-        var h = `<div class="note-file-item pdf-file-ref" contenteditable="false" data-pdf-id="${pdfId}" onclick="PDFViewer.open('${pdfId}')">
+        var h = `<div class="note-file-item pdf-file-ref" contenteditable="false" data-pdf-id="${pdfId}">
           <i class="fa fa-file-pdf" style="font-size:20px;color:var(--red);flex-shrink:0;"></i>
           <div style="flex:1;min-width:0;">
             <div style="font-size:13px;color:var(--text);font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${file.name}</div>
@@ -40,6 +37,8 @@ function handleFileAttach(e){
           </span>
         </div>&#8203;`;
         document.execCommand('insertHTML', false, h);
+        // 즉시 PDF 패널 열기
+        _openPdfInPanel(pdfId);
       });
       return;
     }
@@ -71,3 +70,23 @@ function handleFileAttach(e){
     reader.readAsDataURL(file);
   });
 }
+
+/* PDF 패널 열기 공용 함수 */
+function _openPdfInPanel(pdfId){
+  if(typeof PDFPanel !== 'undefined'){
+    PDFPanel.open();
+    PDFPanel.showViewer(pdfId);
+  }
+}
+
+/* 노트 내 PDF 첨부 클릭 이벤트 위임 (기존+신규 모두 처리) */
+document.addEventListener('click', function(e){
+  var el = e.target.closest('.pdf-file-ref');
+  if(!el) return;
+  var nc = document.getElementById('noteContent');
+  if(!nc || !nc.contains(el)) return;
+  e.preventDefault();
+  e.stopPropagation();
+  var pdfId = el.dataset.pdfId;
+  if(pdfId) _openPdfInPanel(pdfId);
+});

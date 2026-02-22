@@ -68,8 +68,12 @@ var NavigationRouter = (function(){
     var page = null;
     if(segs[1] === 'page' && segs[2]) page = parseInt(segs[2]);
 
-    // Open PDF viewer if available
-    if(typeof PDFViewer !== 'undefined'){
+    // PDF 패널 열고 뷰어에서 표시
+    if(typeof PDFPanel !== 'undefined'){
+      PDFPanel.open();
+      PDFPanel.showViewer(pdfId);
+      if(page && typeof PDFViewer !== 'undefined') PDFViewer.goToPage(page);
+    } else if(typeof PDFViewer !== 'undefined'){
       PDFViewer.open(pdfId, page);
     }
     return true;
