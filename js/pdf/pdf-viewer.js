@@ -21,6 +21,19 @@ var PDFViewer = (function(){
     }
   }
 
+  // iOS Safari 14 이하 blob.arrayBuffer() 미지원 → FileReader 폴백
+  function _blobToArrayBuffer(blob){
+    if(typeof blob.arrayBuffer === 'function'){
+      return blob.arrayBuffer();
+    }
+    return new Promise(function(resolve, reject){
+      var reader = new FileReader();
+      reader.onload = function(){ resolve(reader.result); };
+      reader.onerror = function(){ reject(reader.error || new Error('FileReader 실패')); };
+      reader.readAsArrayBuffer(blob);
+    });
+  }
+
   // ── Open PDF by IDB id ──
   function open(pdfId, page){
     _currentPdfId = pdfId;
@@ -49,7 +62,7 @@ var PDFViewer = (function(){
       if(rec && rec.data){
         // 로컬 IDB에서 찾음
         if(rec.data instanceof Blob || rec.data instanceof File){
-          return rec.data.arrayBuffer();
+          return _blobToArrayBuffer(rec.data);
         }
         if(rec.data instanceof ArrayBuffer) return rec.data;
         if(rec.data && rec.data.buffer instanceof ArrayBuffer) return rec.data.buffer;
@@ -62,7 +75,7 @@ var PDFViewer = (function(){
           if(!blob) throw new Error('PDF 파일을 찾을 수 없습니다 (로컬/클라우드 모두 없음)');
           // 다운로드한 blob을 IDB에 캐시
           IDBStore.saveFile(blob, { id: pdfId, name: pdfId, type: 'application/pdf' });
-          return blob.arrayBuffer();
+          return _blobToArrayBuffer(blob);
         });
       }
       throw new Error('PDF 파일을 찾을 수 없습니다 (ID: ' + pdfId + ')');

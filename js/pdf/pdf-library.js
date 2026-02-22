@@ -103,9 +103,13 @@ var PDFLibrary = (function(){
   function uploadPdf(){
     var input = document.createElement('input');
     input.type = 'file';
-    input.accept = '.pdf,application/pdf';
+    input.accept = 'application/pdf,.pdf';
     input.multiple = true;
+    // iOS Safari: body에 추가해야 파일 선택 안정적
+    input.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0';
+    document.body.appendChild(input);
     input.onchange = function(){
+      document.body.removeChild(input);
       if(!input.files || input.files.length === 0) return;
       var fileCount = input.files.length;
       var fileList = Array.prototype.slice.call(input.files);
