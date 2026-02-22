@@ -14,61 +14,111 @@ function _parseKoreanWiki(parsed, word){
   if(!parsed || !parsed.text || !parsed.text['*']) return null;
   var html = parsed.text['*'];
   var doc = new DOMParser().parseFromString('<div>' + html + '</div>', 'text/html');
-  var root = doc.body.firstChild;
+  var root = doc.querySelector('.mw-parser-output') || doc.body.firstChild;
 
-  var result = { word: word, entries: [] };
+  var result = { word: word, pron: '', entries: [] };
   var inKorean = false;
   var curEntry = null;
+  var lastHeadingLevel = 0;
+  var skipSection = false;
 
   var children = root.children;
   for(var i = 0; i < children.length; i++){
     var el = children[i];
     var tag = el.tagName;
-    var text = (el.textContent || '').trim();
 
-    // h2 = 언어 섹션 (한국어, 영어, 일본어 등)
-    if(tag === 'H2'){
-      inKorean = /한국어/.test(text);
+    // Wiktionary는 heading을 <div class="mw-heading mw-headingN"> 안에 감쌈
+    if(tag === 'DIV' && el.classList.contains('mw-heading')){
+      var innerH = el.querySelector('h2, h3, h4, h5');
+      if(innerH){
+        tag = innerH.tagName;
+        var hText = innerH.textContent.trim();
+
+        // H2 = 언어 섹션 (한국어, 영어, 일본어 등)
+        if(tag === 'H2'){
+          inKorean = /한국어/.test(hText);
+          lastHeadingLevel = 2;
+          skipSection = false;
+          continue;
+        }
+
+        if(!inKorean) continue;
+
+        // H3 = 품사 (명사, 동사, 형용사 등) 또는 발음/어원
+        if(tag === 'H3'){
+          lastHeadingLevel = 3;
+          var posClean = hText.replace(/\[편집\]/g, '').trim();
+          if(/발음|어원|참고|번역|파생어/.test(posClean)){
+            skipSection = true;
+            continue;
+          }
+          skipSection = false;
+          curEntry = { pos: posClean, defs: [], related: [] };
+          result.entries.push(curEntry);
+          continue;
+        }
+
+        // H4 = 하위 항목 (명사 1, 명사 2, 관련 어휘 등)
+        if(tag === 'H4'){
+          lastHeadingLevel = 4;
+          var h4Text = hText.replace(/\[편집\]/g, '').trim();
+          if(/관련\s*어휘|참고/.test(h4Text)){
+            skipSection = false; // 관련 어휘는 수집
+            continue;
+          }
+          if(/발음|어원|번역/.test(h4Text)){
+            skipSection = true;
+            continue;
+          }
+          skipSection = false;
+          // 하위 품사 항목 (명사 1, 명사 2 등) → 새 엔트리로 분리하지 않음
+          continue;
+        }
+
+        // H5 = 관련 어휘 등
+        if(tag === 'H5'){
+          lastHeadingLevel = 5;
+          skipSection = false;
+          continue;
+        }
+      }
       continue;
     }
 
     if(!inKorean) continue;
+    if(skipSection) continue;
 
-    // h3 = 품사 (명사, 동사, 형용사, 부사, 감탄사 등) 또는 발음/어원
-    if(tag === 'H3'){
-      var posText = text.replace(/\[편집\]/g, '').trim();
-      if(/발음|어원|참고|번역/.test(posText)) continue;
-      curEntry = { pos: posText, defs: [], examples: [], related: [] };
-      result.entries.push(curEntry);
+    // 발음 정보 (IPA) 추출
+    if(tag === 'UL' && !curEntry){
+      var ipaEl = el.querySelector('.IPA');
+      if(ipaEl && !result.pron){
+        result.pron = ipaEl.textContent.trim();
+      }
       continue;
     }
 
-    // h4 = 하위 섹션 (관련 어휘, 파생어, 참고 등)
-    if(tag === 'H4'){
-      continue;
-    }
-
-    // ol = 정의 목록
-    if(tag === 'OL' && curEntry){
+    // OL = 정의 목록
+    if(tag === 'OL'){
+      if(!curEntry){
+        curEntry = { pos: '', defs: [], related: [] };
+        result.entries.push(curEntry);
+      }
       var items = el.querySelectorAll(':scope > li');
       for(var j = 0; j < items.length; j++){
         var li = items[j];
-        // 하위 ol (예문) 분리
-        var subOl = li.querySelector('ol, ul');
+        var subList = li.querySelector('ol, ul');
         var defText = '';
         var exTexts = [];
 
-        if(subOl){
-          // 예문 추출
-          var subItems = subOl.querySelectorAll('li');
+        if(subList){
+          var subItems = subList.querySelectorAll('li');
           for(var k = 0; k < subItems.length; k++){
             var ex = subItems[k].textContent.trim();
             if(ex) exTexts.push(ex);
           }
-          // 정의 = li 텍스트 - 하위 목록 텍스트
           var clone = li.cloneNode(true);
-          var subClone = clone.querySelector('ol, ul');
-          if(subClone) subClone.remove();
+          var sc = clone.querySelector('ol, ul');
+          if(sc) sc.remove();
           defText = clone.textContent.trim();
         } else {
           defText = li.textContent.trim();
@@ -81,37 +131,29 @@ function _parseKoreanWiki(parsed, word){
       continue;
     }
 
-    // ul = 관련어, 파생어 등
-    if(tag === 'UL' && curEntry){
-      var relItems = el.querySelectorAll('li');
-      for(var r = 0; r < relItems.length; r++){
-        var rel = relItems[r].textContent.trim();
-        if(rel && curEntry.related.length < 10) curEntry.related.push(rel);
-      }
-      continue;
-    }
-
-    // dl = 발음 정보 등
+    // DL = 예문 (definition → example 패턴)
     if(tag === 'DL' && curEntry){
-      var dds = el.querySelectorAll('dd');
-      for(var d = 0; d < dds.length; d++){
-        var dd = dds[d].textContent.trim();
-        if(dd && /예[:\s]|:/.test(dd)){
-          curEntry.examples.push(dd);
+      var exLis = el.querySelectorAll('dd ul li, dd li');
+      for(var d = 0; d < exLis.length; d++){
+        var exText = exLis[d].textContent.trim();
+        if(exText && curEntry.defs.length > 0){
+          var lastDef = curEntry.defs[curEntry.defs.length - 1];
+          lastDef.examples.push(exText);
         }
       }
       continue;
     }
 
-    // 품사 없이 바로 정의가 나오는 경우
-    if(tag === 'OL' && !curEntry){
-      curEntry = { pos: '', defs: [], examples: [], related: [] };
-      result.entries.push(curEntry);
-      var items2 = el.querySelectorAll(':scope > li');
-      for(var j2 = 0; j2 < items2.length; j2++){
-        var t2 = items2[j2].textContent.trim();
-        if(t2) curEntry.defs.push({ text: t2, examples: [] });
+    // UL = 관련어/유의어/반의어/동사/형용사
+    if(tag === 'UL' && curEntry){
+      var relItems = el.querySelectorAll(':scope > li');
+      for(var r = 0; r < relItems.length; r++){
+        var relText = relItems[r].textContent.trim();
+        if(relText && !/^어원/.test(relText) && curEntry.related.length < 12){
+          curEntry.related.push(relText);
+        }
       }
+      continue;
     }
   }
 

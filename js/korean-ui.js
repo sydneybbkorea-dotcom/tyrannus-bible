@@ -4,6 +4,11 @@ function renderKoreanDef(data){
 
   var h = '<div class="comm-ref-lbl"><i class="fa fa-font"></i> ' + _escHtml(data.word) + '</div>';
 
+  // 발음 표시
+  if(data.pron){
+    h += '<div class="dict-phonetic"><span class="dict-ipa">' + _escHtml(data.pron) + '</span></div>';
+  }
+
   data.entries.forEach(function(entry){
     h += '<div class="comm-card">';
     if(entry.pos){
@@ -12,14 +17,14 @@ function renderKoreanDef(data){
     entry.defs.forEach(function(def, i){
       h += '<div class="dict-def"><span class="dict-num">' + (i + 1) + '.</span> ' + _escHtml(def.text) + '</div>';
       if(def.examples && def.examples.length > 0){
-        def.examples.slice(0, 2).forEach(function(ex){
-          h += '<div class="dict-example">' + _escHtml(ex) + '</div>';
+        def.examples.slice(0, 3).forEach(function(ex){
+          h += '<div class="dict-example">"' + _escHtml(ex) + '"</div>';
         });
       }
     });
     if(entry.related && entry.related.length > 0){
       h += '<div class="dict-syn"><i class="fa fa-link"></i> ' +
-        entry.related.map(function(r){ return _koreanWordLink(r); }).join(', ') +
+        entry.related.map(function(r){ return _koreanRelated(r); }).join(' ') +
         '</div>';
     }
     h += '</div>';
@@ -29,10 +34,25 @@ function renderKoreanDef(data){
   return h;
 }
 
-function _koreanWordLink(word){
-  var clean = word.replace(/[()（）]/g, '').trim();
+/* 관련어 항목 렌더링 — "유의어: 사모, 애정" 형태 처리 */
+function _koreanRelated(text){
+  // "유의어: 사모, 애정" 또는 "동사: 사랑하다" 패턴
+  var match = text.match(/^([^:：]+)[:\s：]\s*(.+)$/);
+  if(match){
+    var label = match[1].trim();
+    var words = match[2].split(/[,，、]\s*/);
+    var links = words.map(function(w){
+      var clean = w.replace(/[()（）\[\]]/g, '').trim();
+      if(!clean) return '';
+      return '<span class="dict-related-word" onclick="searchKoreanWord(\'' +
+        clean.replace(/'/g, "\\'") + '\')">' + _escHtml(w.trim()) + '</span>';
+    }).filter(Boolean).join(', ');
+    return '<span style="color:var(--text3);font-size:11px">' + _escHtml(label) + ':</span> ' + links;
+  }
+  // 단순 단어
+  var clean2 = text.replace(/[()（）\[\]]/g, '').trim();
   return '<span class="dict-related-word" onclick="searchKoreanWord(\'' +
-    clean.replace(/'/g, "\\'") + '\')">' + _escHtml(word) + '</span>';
+    clean2.replace(/'/g, "\\'") + '\')">' + _escHtml(text) + '</span>';
 }
 
 function _koreanEmpty(){
