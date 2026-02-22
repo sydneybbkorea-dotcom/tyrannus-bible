@@ -204,33 +204,16 @@ function hideVerseMenu(){
 }
 
 
-/* ── 구절 호버 툴팁 (마우스 따라다니는 구절 참조) ── */
+/* ── 구절 호버 툴팁 (비활성화) ── */
+/*
 var _vHoverTip=null;
-function _ensureVHoverTip(){
-  if(_vHoverTip) return;
-  _vHoverTip=document.createElement('div');
-  _vHoverTip.id='vHoverTip';
-  _vHoverTip.className='v-hover-tip';
-  document.body.appendChild(_vHoverTip);
-}
+function _ensureVHoverTip(){}
 document.addEventListener('mousemove', function(e){
-  var bs=document.getElementById('bibleScroll');
-  var row=e.target.closest('.vrow');
-  if(!row||!bs||!bs.contains(row)){
-    if(_vHoverTip) _vHoverTip.style.display='none';
-    return;
-  }
-  _ensureVHoverTip();
-  var vn=row.dataset.v;
-  _vHoverTip.textContent=S.book+' '+S.ch+':'+vn;
-  _vHoverTip.style.display='block';
-  var x=e.clientX+14, y=e.clientY-32;
-  var tw=_vHoverTip.offsetWidth||80;
-  if(x+tw>window.innerWidth-8) x=e.clientX-tw-8;
   if(y<4) y=e.clientY+18;
   _vHoverTip.style.left=x+'px';
   _vHoverTip.style.top=y+'px';
 });
+*/
 
 function addBookmark(){
   if(!S.selV){toast('먼저 구절을 클릭하세요');return}
