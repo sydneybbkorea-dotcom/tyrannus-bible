@@ -1322,10 +1322,19 @@ function _tpRenderBody(){
 
 /* ═══ Score Submission — TOP 100 진입 시에만 등록 ═══ */
 function _tpSubmitScore(cpm, accuracy, verse){
-  if(!_tp.nickname || _tp.nickname.length < 2) return;
-  if(!window._tpRanking) return;
+  if(!_tp.nickname || _tp.nickname.length < 2){
+    console.log('[Ranking] 닉네임 미입력, 스킵');
+    return;
+  }
+  if(!window._tpRanking){
+    console.warn('[Ranking] _tpRanking 모듈 미로드');
+    return;
+  }
+
+  console.log('[Ranking] 점수 제출 시도:', _tp.nickname, cpm, accuracy);
 
   window._tpRanking.fetchRankings('all').then(function(rankings){
+    console.log('[Ranking] 현재 랭킹 수:', rankings.length);
     var myNick = _tp.nickname.toLowerCase();
 
     // 내 기존 기록 확인
@@ -1338,16 +1347,21 @@ function _tpSubmitScore(cpm, accuracy, verse){
     }
 
     // 기존 기록보다 낮으면 스킵
-    if(myExisting && cpm <= myExisting.cpm) return;
+    if(myExisting && cpm <= myExisting.cpm){
+      console.log('[Ranking] 기존 기록(' + myExisting.cpm + ')보다 낮음, 스킵');
+      return;
+    }
 
     // TOP 100 진입 가능한지 확인
     var qualifies = rankings.length < 100;
     if(!qualifies){
       var lastCpm = rankings[rankings.length - 1].cpm || 0;
-      // 내가 이미 100위 안에 있으면 갱신 가능, 아니면 꼴찌보다 높아야 진입
       qualifies = cpm > lastCpm || !!myExisting;
     }
-    if(!qualifies) return;
+    if(!qualifies){
+      console.log('[Ranking] TOP 100 밖, 스킵');
+      return;
+    }
 
     // 순위 계산 (나 자신 제외)
     var rank = 1;
@@ -1356,12 +1370,18 @@ function _tpSubmitScore(cpm, accuracy, verse){
     }
 
     var verseRef = (verse.fullBook || verse.book) + ' ' + verse.ch + ':' + verse.v;
+    console.log('[Ranking] submitScore 호출:', _tp.nickname, cpm);
     window._tpRanking.submitScore(_tp.nickname, cpm, accuracy, verseRef, _tp.lang)
       .then(function(result){
+        console.log('[Ranking] 결과:', result);
         if(result === 'new') toast(_tpT('rankSubmitted') + ' (#' + rank + ')');
         else if(result === 'updated') toast(_tpT('rankUpdated') + ' (#' + rank + ')');
+        else if(result === 'error') toast(_tpT('rankError'));
       });
-  }).catch(function(){});
+  }).catch(function(e){
+    console.error('[Ranking] 제출 실패:', e);
+    toast(_tpT('rankError'));
+  });
 }
 
 /* ═══ Ranking Toggle ═══ */
