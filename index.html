@@ -32,7 +32,7 @@
 <link rel="stylesheet" href="css/reading-plan.css?v=15">
 <link rel="stylesheet" href="css/adv-search.css?v=15">
 <link rel="stylesheet" href="css/bug-report.css">
-<link rel="stylesheet" href="css/dict.css?v=17">
+<link rel="stylesheet" href="css/dict.css?v=18">
 <link rel="stylesheet" href="css/sync.css?v=15">
 <link rel="stylesheet" href="css/settings-panel.css?v=20">
 <link rel="stylesheet" href="css/typing.css?v=6">
@@ -412,7 +412,9 @@
               onkeydown="if(event.key==='Enter')searchKorean()">
             <button onclick="searchKorean()" style="padding:6px 12px;border-radius:5px;font-size:11px;font-weight:700;background:var(--gold);color:var(--bg);border:none;cursor:pointer;flex-shrink:0"><i class="fa fa-search"></i></button>
           </div>
-          <iframe id="koreanFrame" src="https://stdict.korean.go.kr/main/main.do" style="flex:1;border:none;width:100%;min-height:0"></iframe>
+          <div class="comm-body-wrap" id="dictKorean" style="overflow-y:auto;flex:1">
+            <div class="comm-hint"><i class="fa fa-font"></i> 표준국어사전<br>한국어 단어의 뜻을 검색하세요<br><br><span style="font-size:10px;color:var(--text3)">명사 · 동사 · 형용사 · 부사 · 관련어</span></div>
+          </div>
         </div>
       </div>
 
@@ -653,6 +655,8 @@
 <script src="js/enko-ui.js"></script>
 <script src="js/enko-search.js"></script>
 <script src="js/enko-translate.js"></script>
+<script src="js/korean-api.js"></script>
+<script src="js/korean-ui.js"></script>
 <script src="js/korean-search.js"></script>
 
 <!-- 노트 시스템 -->

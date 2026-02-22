@@ -71,6 +71,21 @@
   font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif;
 }
 
+/* 관련어 클릭 링크 */
+.dict-related-word {
+  cursor:pointer; color:var(--accent-color,#60a5fa);
+  transition:color .1s;
+}
+.dict-related-word:hover {
+  color:var(--gold); text-decoration:underline;
+}
+
+/* 출처 표시 */
+.dict-src {
+  text-align:right; font-size:10px; color:var(--text3);
+  opacity:.5; padding:8px 14px 4px; font-style:italic;
+}
+
 /* 라이트 테마 */
 [data-theme="light"] .dict-ko-card {
   background:linear-gradient(135deg,rgba(16,185,129,.12),rgba(16,185,129,.05));
