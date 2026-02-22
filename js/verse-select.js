@@ -52,12 +52,9 @@ document.addEventListener('click',e=>{
   }
 });
 
-/* ── 브라우저 기본 우클릭 메뉴 차단 (성경 본문 영역) ── */
+/* ── 브라우저 기본 우클릭 메뉴 전체 차단 ── */
 document.addEventListener('contextmenu', function(e){
-  var bs=document.getElementById('bibleScroll');
-  if(bs && bs.contains(e.target)){
-    e.preventDefault();
-  }
+  e.preventDefault();
 });
 
 /* ── 구절 호버 툴팁 (마우스 따라다니는 구절 참조) ── */
