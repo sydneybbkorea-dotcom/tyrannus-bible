@@ -46,23 +46,37 @@ var PDFViewer = (function(){
     return idbReady.then(function(){
       return IDBStore.loadFile(pdfId);
     }).then(function(rec){
-      if(!rec || !rec.data){
-        throw new Error('PDF 파일을 찾을 수 없습니다 (ID: ' + pdfId + ')');
+      if(rec && rec.data){
+        // 로컬 IDB에서 찾음
+        if(rec.data instanceof Blob || rec.data instanceof File){
+          return rec.data.arrayBuffer();
+        }
+        if(rec.data instanceof ArrayBuffer) return rec.data;
+        if(rec.data && rec.data.buffer instanceof ArrayBuffer) return rec.data.buffer;
+        throw new Error('알 수 없는 데이터 형식');
       }
-      // Convert data to ArrayBuffer
-      if(rec.data instanceof Blob || rec.data instanceof File){
-        return rec.data.arrayBuffer();
+      // 로컬에 없으면 클라우드에서 다운로드 시도
+      if(window.downloadPdfBlobFromCloud){
+        _showCloudDownloading();
+        return window.downloadPdfBlobFromCloud(pdfId).then(function(blob){
+          if(!blob) throw new Error('PDF 파일을 찾을 수 없습니다 (로컬/클라우드 모두 없음)');
+          // 다운로드한 blob을 IDB에 캐시
+          IDBStore.saveFile(blob, { id: pdfId, name: pdfId, type: 'application/pdf' });
+          return blob.arrayBuffer();
+        });
       }
-      if(rec.data instanceof ArrayBuffer) return rec.data;
-      if(rec.data && rec.data.buffer instanceof ArrayBuffer) return rec.data.buffer;
-      throw new Error('알 수 없는 데이터 형식');
+      throw new Error('PDF 파일을 찾을 수 없습니다 (ID: ' + pdfId + ')');
     }).then(function(buf){
       return window.pdfjsLib.getDocument({ data: new Uint8Array(buf) }).promise;
     }).then(function(pdf){
       _pdfDoc = pdf;
       _totalPages = pdf.numPages;
       _buildViewerUI();
-      return _fitScale();
+      // IDB에서 어노테이션 로드 (하이라이트, 메모 등)
+      var annotReady = (typeof PDFAnnotations !== 'undefined')
+        ? PDFAnnotations.load(pdfId)
+        : Promise.resolve();
+      return annotReady.then(function(){ return _fitScale(); });
     }).then(function(){
       _renderVisiblePages();
       _updatePageInfo();
@@ -82,6 +96,15 @@ var PDFViewer = (function(){
       '<div style="display:flex;align-items:center;justify-content:center;flex:1;' +
       'color:var(--text3);font-size:13px;gap:8px">' +
       '<i class="fa fa-spinner fa-spin"></i> PDF 로딩 중...</div>';
+  }
+
+  function _showCloudDownloading(){
+    var host = document.getElementById('pdfViewerHost');
+    if(host) host.innerHTML =
+      '<div style="display:flex;align-items:center;justify-content:center;flex:1;' +
+      'color:var(--text3);font-size:13px;gap:8px;flex-direction:column">' +
+      '<i class="fa fa-cloud-arrow-down fa-2x" style="opacity:.5"></i>' +
+      '<span><i class="fa fa-spinner fa-spin"></i> 클라우드에서 PDF 다운로드 중...</span></div>';
   }
 
   function _showError(msg){
@@ -313,6 +336,23 @@ var PDFViewer = (function(){
   function getTotalPages(){ return _totalPages; }
   function getScale(){ return _scale; }
 
+  // 현재 렌더된 페이지들의 어노테이션 레이어 새로고침
+  function rerenderAnnotations(){
+    if(!_pdfDoc || !_container) return;
+    _renderedPages.forEach(function(_, num){
+      var wrap = document.getElementById('pdf-page-' + num);
+      if(!wrap) return;
+      var layer = wrap.querySelector('.pdf-annot-layer');
+      if(!layer) return;
+      _pdfDoc.getPage(num).then(function(page){
+        var vp = page.getViewport({ scale: _scale });
+        if(typeof PDFAnnotations !== 'undefined'){
+          PDFAnnotations.renderPage(num, layer, vp);
+        }
+      });
+    });
+  }
+
   return {
     open: open,
     goToPage: goToPage,
@@ -326,6 +366,7 @@ var PDFViewer = (function(){
     getCurrentPdfId: getCurrentPdfId,
     getCurrentPage: getCurrentPage,
     getTotalPages: getTotalPages,
-    getScale: getScale
+    getScale: getScale,
+    rerenderAnnotations: rerenderAnnotations
   };
 })();

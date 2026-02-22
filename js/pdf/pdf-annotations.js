@@ -42,7 +42,11 @@ var PDFAnnotations = (function(){
 
     if(typeof EventBus !== 'undefined') EventBus.emit('pdf:annotated', annot);
 
-    return IDBStore.put('pdf-annots', annot);
+    return IDBStore.put('pdf-annots', annot).then(function(result){
+      // 클라우드 동기화 트리거
+      if(window.persistPdfAnnotsToCloud) window.persistPdfAnnotsToCloud();
+      return result;
+    });
   }
 
   // Delete an annotation
@@ -52,7 +56,9 @@ var PDFAnnotations = (function(){
     if(arr){
       _annotsByPage.set(key, arr.filter(function(a){ return a.id !== annotId; }));
     }
-    return IDBStore.del('pdf-annots', annotId);
+    return IDBStore.del('pdf-annots', annotId).then(function(){
+      if(window.persistPdfAnnotsToCloud) window.persistPdfAnnotsToCloud();
+    });
   }
 
   // Get annotations for a page
@@ -233,16 +239,63 @@ var PDFAnnotations = (function(){
           + '</div>';
         el.appendChild(bubble);
 
-        // 아이콘 클릭 → 토글
-        (function(iconEl, bubbleEl){
-          iconEl.addEventListener('click', function(e){
+        // 아이콘: 클릭(버블 토글) + 드래그(이동)
+        (function(iconEl, bubbleEl, pinEl, annotRef, vp){
+          var DRAG_THRESHOLD = 5;
+          var drag = { active: false, moved: false, sx: 0, sy: 0, ox: 0, oy: 0, pid: null };
+
+          iconEl.addEventListener('pointerdown', function(e){
             e.stopPropagation();
-            var wasOpen = bubbleEl.classList.contains('open');
-            // 다른 열린 버블 닫기
-            document.querySelectorAll('.pdf-memo-bubble.open').forEach(function(b){ b.classList.remove('open'); });
-            if(!wasOpen) bubbleEl.classList.add('open');
+            e.preventDefault();
+            drag.pid = e.pointerId;
+            drag.sx = e.clientX;
+            drag.sy = e.clientY;
+            drag.ox = pinEl.offsetLeft;
+            drag.oy = pinEl.offsetTop;
+            drag.moved = false;
+            drag.active = true;
+            try { iconEl.setPointerCapture(e.pointerId); } catch(err){}
           });
-        })(icon, bubble);
+
+          iconEl.addEventListener('pointermove', function(e){
+            if(!drag.active || e.pointerId !== drag.pid) return;
+            var dx = e.clientX - drag.sx;
+            var dy = e.clientY - drag.sy;
+            if(!drag.moved && Math.abs(dx) < DRAG_THRESHOLD && Math.abs(dy) < DRAG_THRESHOLD) return;
+            drag.moved = true;
+            pinEl.classList.add('dragging');
+            pinEl.style.left = (drag.ox + dx) + 'px';
+            pinEl.style.top  = (drag.oy + dy) + 'px';
+          });
+
+          iconEl.addEventListener('pointerup', function(e){
+            if(!drag.active || e.pointerId !== drag.pid) return;
+            drag.active = false;
+            try { iconEl.releasePointerCapture(e.pointerId); } catch(err){}
+            pinEl.classList.remove('dragging');
+
+            if(drag.moved){
+              // 새 위치 저장 (픽셀 → PDF 좌표)
+              var s = vp.scale || 1;
+              annotRef.rect.x = parseFloat(pinEl.style.left) / s;
+              annotRef.rect.y = parseFloat(pinEl.style.top) / s;
+              PDFAnnotations.save(annotRef);
+            } else {
+              // 클릭 → 버블 토글
+              var wasOpen = bubbleEl.classList.contains('open');
+              document.querySelectorAll('.pdf-memo-bubble.open').forEach(function(b){ b.classList.remove('open'); });
+              if(!wasOpen) bubbleEl.classList.add('open');
+            }
+          });
+
+          iconEl.addEventListener('pointercancel', function(){
+            drag.active = false;
+            pinEl.classList.remove('dragging');
+          });
+
+          // click 이벤트가 레이어로 버블링되면 버블이 즉시 닫히므로 차단
+          iconEl.addEventListener('click', function(e){ e.stopPropagation(); });
+        })(icon, bubble, el, annot, viewport);
 
         // 노트에 추가 버튼
         (function(annotRef, bubbleEl){

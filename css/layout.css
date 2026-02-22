@@ -20,3 +20,46 @@ body {
 ::-webkit-scrollbar-thumb:hover { background:var(--text3) }
 button { cursor:pointer; border:none; background:none; color:inherit; font-family:inherit }
 input, textarea, select { font-family:inherit; color:inherit }
+
+/* ── Panel Resize Handle ── */
+.panel-resize-handle {
+  width: 5px;
+  flex-shrink: 0;
+  cursor: col-resize;
+  position: relative;
+  z-index: 20;
+  background: transparent;
+  transition: background .15s;
+}
+.panel-resize-handle::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  left: 1px;
+  width: 3px;
+  border-radius: 2px;
+  background: transparent;
+  transition: background .15s;
+}
+.panel-resize-handle:hover::after,
+.panel-resize-handle.active::after {
+  background: var(--gold, #daa520);
+}
+.panel-resize-handle:hover,
+.panel-resize-handle.active {
+  background: var(--gold-dim, rgba(218,165,32,.15));
+}
+
+/* ── Drag State ── */
+body.resizing {
+  cursor: col-resize !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
+body.resizing * {
+  cursor: col-resize !important;
+  transition: none !important;
+}
+body.resizing iframe {
+  pointer-events: none !important;
+}

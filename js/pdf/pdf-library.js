@@ -127,6 +127,10 @@ var PDFLibrary = (function(){
               folderId: S.curPdfFolder || 'pdf-default',
               createdAt: Date.now()
             });
+            // Firebase Storage에 blob 업로드 (비동기, 백그라운드)
+            if(window.uploadPdfBlobToCloud){
+              window.uploadPdfBlobToCloud(id, file);
+            }
           });
           promises.push(promise);
         });
@@ -182,9 +186,10 @@ var PDFLibrary = (function(){
       ? '"' + folderName + '" 폴더와 PDF ' + totalFiles + '개를 모두 삭제할까요?'
       : '"' + folderName + '" 폴더를 삭제할까요?';
     if(!confirm(msg)) return;
-    // Delete files from IDB
+    // Delete files from IDB + Firebase Storage
     S.pdfFiles.filter(function(f){ return all.indexOf(f.folderId) !== -1; }).forEach(function(f){
       if(typeof IDBStore !== 'undefined') IDBStore.del('files', f.id);
+      if(window.deletePdfBlobFromCloud) window.deletePdfBlobFromCloud(f.id);
     });
     S.pdfFiles = S.pdfFiles.filter(function(f){ return all.indexOf(f.folderId) === -1; });
     S.pdfFolders = S.pdfFolders.filter(function(f){ return all.indexOf(f.id) === -1; });
@@ -210,6 +215,8 @@ var PDFLibrary = (function(){
     if(!confirm('"' + fileName + '"을(를) 삭제할까요?')) return;
     S.pdfFiles = S.pdfFiles.filter(function(f){ return f.id !== fileId; });
     if(typeof IDBStore !== 'undefined') IDBStore.del('files', fileId);
+    // Firebase Storage에서도 삭제
+    if(window.deletePdfBlobFromCloud) window.deletePdfBlobFromCloud(fileId);
     persistPdf();
     render();
     toast('"' + fileName + '"이(가) 삭제되었습니다');
@@ -283,6 +290,8 @@ var PDFLibrary = (function(){
         openPdfFolders: Array.from(S.openPdfFolders)
       }));
     } catch(e){}
+    // 클라우드 동기화 트리거
+    if(window.persistPdfMetaToCloud) window.persistPdfMetaToCloud();
   }
 
   function restorePdf(){

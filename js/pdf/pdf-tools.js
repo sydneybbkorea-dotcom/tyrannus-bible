@@ -375,15 +375,51 @@ var PDFTools = (function(){
     var annots = PDFAnnotations.getPage(pdfId, pageNum);
     for(var i = annots.length - 1; i >= 0; i--){
       var a = annots[i];
-      if(a.rect){
-        if(pt.x >= a.rect.x && pt.x <= a.rect.x + a.rect.width &&
-           pt.y >= a.rect.y && pt.y <= a.rect.y + a.rect.height){
-          PDFAnnotations.remove(a.id, pdfId, pageNum);
-          PDFAnnotations.renderPage(pageNum, layer, _getViewport());
-          return;
-        }
+      var hit = false;
+
+      if(a.type === 'freehand' && a.points && a.points.length > 0){
+        // freehand: 클릭 지점과 경로 선분 사이 최소 거리 확인
+        hit = _isNearPath(pt, a.points, (a.strokeWidth || 2) + 10);
+      } else if(a.rect){
+        // rect 기반 (highlight, text, underline, area-link)
+        hit = pt.x >= a.rect.x && pt.x <= a.rect.x + (a.rect.width || 20) &&
+              pt.y >= a.rect.y && pt.y <= a.rect.y + (a.rect.height || 20);
+      }
+
+      if(hit){
+        PDFAnnotations.remove(a.id, pdfId, pageNum);
+        PDFAnnotations.renderPage(pageNum, layer, _getViewport());
+        return;
       }
     }
+  }
+
+  // 점 pt가 경로(points) 위의 어떤 선분에서 threshold 이내인지 확인
+  function _isNearPath(pt, points, threshold){
+    for(var i = 0; i < points.length - 1; i++){
+      if(_distToSegment(pt, points[i], points[i + 1]) <= threshold) return true;
+    }
+    // 점이 하나뿐인 경우
+    if(points.length === 1){
+      var dx = pt.x - points[0].x, dy = pt.y - points[0].y;
+      return Math.sqrt(dx * dx + dy * dy) <= threshold;
+    }
+    return false;
+  }
+
+  // 점 p에서 선분 v-w까지의 최소 거리
+  function _distToSegment(p, v, w){
+    var dx = w.x - v.x, dy = w.y - v.y;
+    var lenSq = dx * dx + dy * dy;
+    if(lenSq === 0){
+      var d0 = p.x - v.x, d1 = p.y - v.y;
+      return Math.sqrt(d0 * d0 + d1 * d1);
+    }
+    var t = ((p.x - v.x) * dx + (p.y - v.y) * dy) / lenSq;
+    if(t < 0) t = 0; else if(t > 1) t = 1;
+    var projX = v.x + t * dx, projY = v.y + t * dy;
+    var ex = p.x - projX, ey = p.y - projY;
+    return Math.sqrt(ex * ex + ey * ey);
   }
 
   function _hexToRgba(hex, alpha){

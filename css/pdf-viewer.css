@@ -160,6 +160,18 @@
   color: rgba(0,0,0,.6);
 }
 
+/* Memo icon drag state */
+.pdf-annot-text-pin.dragging {
+  z-index: 20;
+  opacity: .85;
+}
+.pdf-annot-text-pin.dragging .pdf-memo-icon {
+  cursor: grabbing;
+  transform: scale(1.2);
+  box-shadow: 0 4px 16px rgba(0,0,0,.4);
+}
+.pdf-annot-text-pin.dragging .pdf-memo-bubble { display: none; }
+
 /* ── Expanded memo bubble ── */
 .pdf-memo-bubble {
   display: none;

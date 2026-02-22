@@ -10,7 +10,8 @@ export function getQuota(){ return {..._quota}; }
 export function calculateDataSize(){
   const S=window.S;
   const all={hl:S.hl||{},hlMemo:S.hlMemo||{},hlRanges:S.hlRanges||{},verseMemo:S.verseMemo||{},
-    bk:[...(S.bk||[])],notes:S.notes||[],folders:S.folders||[],openFolders:[...(S.openFolders||[])]};
+    bk:[...(S.bk||[])],notes:S.notes||[],folders:S.folders||[],openFolders:[...(S.openFolders||[])],
+    pdfFolders:S.pdfFolders||[],pdfFiles:S.pdfFiles||[]};
   return new Blob([JSON.stringify(all)]).size;
 }
 

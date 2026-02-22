@@ -14,7 +14,7 @@
   overflow: hidden;
 }
 #pdfPanel.pdf-panel-hide {
-  width: 0;
+  width: 0 !important;
   border: none;
   overflow: hidden;
 }

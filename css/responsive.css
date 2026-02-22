@@ -72,6 +72,8 @@
 
 /* ── Mobile (~599px) ── */
 @media (max-width: 599px) {
+  .panel-resize-handle { display: none !important; }
+
   #iconRail {
     position: fixed;
     bottom: 0; left: 0; right: 0;
