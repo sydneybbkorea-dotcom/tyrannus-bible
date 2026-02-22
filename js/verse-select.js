@@ -118,6 +118,9 @@ document.addEventListener('click',e=>{
   if(_ctrlDragged){_ctrlDragged=false;return;}
   if(e.target.closest('.verse-menu')||e.target.closest('.vrow-menu-btn')) return;
   hideVerseMenu();
+  // 왼쪽 사이드바 빈 곳 클릭 → 선택 해제
+  var ir=document.getElementById('iconRail'), sp=document.getElementById('sidePanel');
+  if((ir&&ir.contains(e.target))||(sp&&sp.contains(e.target))){ clearAllSel(); return; }
   const bs=document.getElementById('bibleScroll');
   if(!bs||!bs.contains(e.target)) return;
   if(!e.target.closest('.vrow')&&!e.target.closest('#ctxMenu')&&!e.target.closest('#hlPicker')){
