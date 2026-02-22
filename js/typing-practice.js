@@ -1320,17 +1320,48 @@ function _tpRenderBody(){
   }
 }
 
-/* ═══ Score Submission ═══ */
+/* ═══ Score Submission — TOP 100 진입 시에만 등록 ═══ */
 function _tpSubmitScore(cpm, accuracy, verse){
   if(!_tp.nickname || _tp.nickname.length < 2) return;
   if(!window._tpRanking) return;
-  var verseRef = (verse.fullBook || verse.book) + ' ' + verse.ch + ':' + verse.v;
-  window._tpRanking.submitScore(_tp.nickname, cpm, accuracy, verseRef, _tp.lang)
-    .then(function(result){
-      if(result === 'new') toast(_tpT('rankSubmitted'));
-      else if(result === 'updated') toast(_tpT('rankUpdated'));
-    })
-    .catch(function(){});
+
+  window._tpRanking.fetchRankings('all').then(function(rankings){
+    var myNick = _tp.nickname.toLowerCase();
+
+    // 내 기존 기록 확인
+    var myExisting = null;
+    for(var i = 0; i < rankings.length; i++){
+      if(rankings[i].nickname && rankings[i].nickname.toLowerCase() === myNick){
+        myExisting = rankings[i];
+        break;
+      }
+    }
+
+    // 기존 기록보다 낮으면 스킵
+    if(myExisting && cpm <= myExisting.cpm) return;
+
+    // TOP 100 진입 가능한지 확인
+    var qualifies = rankings.length < 100;
+    if(!qualifies){
+      var lastCpm = rankings[rankings.length - 1].cpm || 0;
+      // 내가 이미 100위 안에 있으면 갱신 가능, 아니면 꼴찌보다 높아야 진입
+      qualifies = cpm > lastCpm || !!myExisting;
+    }
+    if(!qualifies) return;
+
+    // 순위 계산 (나 자신 제외)
+    var rank = 1;
+    for(var i = 0; i < rankings.length; i++){
+      if(rankings[i].nickname && rankings[i].nickname.toLowerCase() !== myNick && rankings[i].cpm > cpm) rank++;
+    }
+
+    var verseRef = (verse.fullBook || verse.book) + ' ' + verse.ch + ':' + verse.v;
+    window._tpRanking.submitScore(_tp.nickname, cpm, accuracy, verseRef, _tp.lang)
+      .then(function(result){
+        if(result === 'new') toast(_tpT('rankSubmitted') + ' (#' + rank + ')');
+        else if(result === 'updated') toast(_tpT('rankUpdated') + ' (#' + rank + ')');
+      });
+  }).catch(function(){});
 }
 
 /* ═══ Ranking Toggle ═══ */
