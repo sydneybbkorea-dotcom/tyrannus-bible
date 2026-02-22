@@ -1,9 +1,11 @@
 // xref-inline.js — 구절 선택 시 교차참조 미니 바 표시
 function showXrefBar(vn){
   hideXrefBar();
-  if(!vn||!XREFS) return;
-  const key=`${S.book}_${S.ch}_${vn}`;
-  const refs=XREFS[key]; if(!refs||!refs.length) return;
+  if(!vn) return;
+  const refs = (typeof getAllRefsForVerse==='function')
+    ? getAllRefsForVerse(S.book, S.ch, vn)
+    : (XREFS && XREFS[`${S.book}_${S.ch}_${vn}`]) || [];
+  if(!refs.length) return;
   const row=document.querySelector(`.vrow[data-v="${vn}"]`);
   if(!row) return;
   const bar=document.createElement('div');

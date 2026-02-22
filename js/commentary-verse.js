@@ -6,7 +6,9 @@ function updateCommentary(){
 
   const key=`${S.book}_${S.ch}_${vn}`;
   const comm=COMMENTARY[S.book]?.[S.ch]?.[vn];
-  const refs=XREFS[key]||[];
+  const refs = (typeof getAllRefsForVerse==='function')
+    ? getAllRefsForVerse(S.book, S.ch, vn)
+    : (XREFS[key]||[]);
   const linked=S.notes.filter(n=>n.vRefs?.includes(key));
   const vMemo = S.verseMemo?.[key]; // 구절 전체 주석 메모
 
