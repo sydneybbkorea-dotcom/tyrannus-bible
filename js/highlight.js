@@ -41,15 +41,15 @@ document.addEventListener('copy', e=>{
     showCopyRef(`${arr.length}개 구절 복사됨 📋`);
     return;
   }
-  /* 단일 선택: 기존 방식(드래그 서식 보존) */
+  /* 단일 선택: 드래그 서식 보존 + 본문 글꼴 적용 */
   const ref = S.selV ? `${S.book} ${S.ch}:${S.selV}` : '';
+  const vs = typeof _getVtxtStyle==='function' ? _getVtxtStyle() : {fs:'17px',lh:'1.85',ls:'0.02em',fw:'500'};
   const range = sel.getRangeAt(0);
   const frag = range.cloneContents();
   const wrap = document.createElement('span');
-  wrap.className = 'vtxt';
-  wrap.style.cssText = "font-family:'KoPubWorld Batang','Noto Serif KR',serif;";
+  wrap.style.cssText = "font-family:'KoPubWorld Batang','Noto Serif KR',serif;font-size:"+vs.fs+";font-weight:"+vs.fw+";line-height:"+vs.lh+";letter-spacing:"+vs.ls+";";
   wrap.appendChild(frag);
-  const refHtml = ref ? `<b style="font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif;font-size:12px;color:#c9973a;">${ref}</b><br>` : '';
+  const refHtml = ref ? `<b style="font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif;font-size:12px;color:#c9973a;font-weight:700;">${ref}</b><br>` : '';
   e.clipboardData.setData('text/html', refHtml + wrap.outerHTML);
   e.clipboardData.setData('text/plain', (ref ? ref + '\n' : '') + selText);
   e.preventDefault();
