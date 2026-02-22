@@ -67,15 +67,10 @@ function renderBible(){
       row.innerHTML=`<span class="vtxt${rl}" data-key="${key}"><span class="vnum">${vn}</span>${displayTxt}</span>${indic}`;
     }
     row.onclick=e=>{
+      if(e.target.closest('.vtb-btn')) return;
       if(e.ctrlKey||e.metaKey) selVerse(vn,e);
       else focusVerse(vn);
     };
-    row.addEventListener('contextmenu', function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      focusVerse(vn);
-      setTimeout(()=>showCtx(e), 10);
-    });
     cont.appendChild(row);
   });
   // 저장된 하이라이트 범위 복원 (원어 코드 표시 중에는 건너뜀)
