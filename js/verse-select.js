@@ -52,13 +52,12 @@ document.addEventListener('click',e=>{
   }
 });
 
-/* ── 브라우저 기본 우클릭 메뉴 차단 (모든 브라우저) ──
-   .vrow 핸들러가 먼저 실행 → 커스텀 메뉴 표시,
-   그 외 영역은 document 핸들러가 브라우저 메뉴만 차단 */
-document.addEventListener('contextmenu', function(e){
-  e.preventDefault();
-});
-document.oncontextmenu = function(){ return false; };
+/* ── 브라우저 기본 우클릭 메뉴 차단 (Edge/Chrome/Firefox) ──
+   캡처 단계에서 preventDefault → 브라우저 메뉴 차단,
+   전파는 유지 → .vrow 핸들러의 커스텀 메뉴는 정상 실행 */
+document.addEventListener('contextmenu', function(e){ e.preventDefault(); }, true);
+document.addEventListener('contextmenu', function(e){ e.preventDefault(); }, false);
+document.oncontextmenu = function(e){ if(e) e.preventDefault(); return false; };
 
 /* ── 구절 호버 툴팁 (마우스 따라다니는 구절 참조) ── */
 var _vHoverTip=null;
