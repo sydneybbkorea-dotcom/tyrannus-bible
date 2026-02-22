@@ -327,12 +327,12 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
   font-family:'KoPubWorld Batang','Noto Serif KR',serif;
   font-weight: 700;
 }
-/* ── 구절 행 배경 하이라이트 (은은한 배경) ── */
-.vrow.hl-row-y { background:rgba(250,204,21,.12) !important }
-.vrow.hl-row-o { background:rgba(251,146,60,.12) !important }
-.vrow.hl-row-g { background:rgba(52,211,153,.10) !important }
-.vrow.hl-row-b { background:rgba(96,165,250,.12) !important }
-.vrow.hl-row-p { background:rgba(192,132,252,.12) !important }
+/* ── 구절 행 배경 하이라이트 ── */
+.vrow.hl-row-y { background:rgba(255,214,0,.22) !important }
+.vrow.hl-row-o { background:rgba(255,152,56,.20) !important }
+.vrow.hl-row-g { background:rgba(34,224,160,.18) !important }
+.vrow.hl-row-b { background:rgba(80,170,255,.20) !important }
+.vrow.hl-row-p { background:rgba(200,140,255,.20) !important }
 .vrow.hl-row-y:hover,.vrow.hl-row-o:hover,.vrow.hl-row-g:hover,.vrow.hl-row-b:hover,.vrow.hl-row-p:hover { filter:brightness(1.15) }
 
 .vindic { display:flex; flex-direction:column; gap:2px; margin-top:7px; flex-shrink:0 }
@@ -370,33 +370,33 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
   color: inherit;
 }
 
-/* ── 다크 테마 하이라이트 (기본) — 부드럽고 세련된 톤 ── */
-.vtxt mark.hl-y { background: rgba(250,204,21,.30); }   /* 골드 옐로우 */
-.vtxt mark.hl-o { background: rgba(251,146,60,.28); }   /* 웜 오렌지 */
-.vtxt mark.hl-g { background: rgba(52,211,153,.25); }   /* 민트 그린 */
-.vtxt mark.hl-b { background: rgba(96,165,250,.28); }   /* 소프트 블루 */
-.vtxt mark.hl-p { background: rgba(192,132,252,.28); }  /* 라벤더 퍼플 */
+/* ── 다크 테마 인라인 하이라이트 — 선명하고 생생한 톤 ── */
+.vtxt mark.hl-y { background: rgba(255,220,30,.45); }   /* 밝은 옐로우 */
+.vtxt mark.hl-o { background: rgba(255,160,60,.42); }   /* 비비드 오렌지 */
+.vtxt mark.hl-g { background: rgba(40,230,160,.38); }   /* 네온 그린 */
+.vtxt mark.hl-b { background: rgba(90,175,255,.42); }   /* 스카이 블루 */
+.vtxt mark.hl-p { background: rgba(210,150,255,.40); }  /* 브라이트 퍼플 */
 
 /* vrow 전체 배경 hl (구절 전체 선택 시) */
-.hl-y { background:rgba(250,204,21,.14); border-radius:2px }
-.hl-o { background:rgba(251,146,60,.14); border-radius:2px }
-.hl-g { background:rgba(52,211,153,.12); border-radius:2px }
-.hl-b { background:rgba(96,165,250,.14); border-radius:2px }
-.hl-p { background:rgba(192,132,252,.14); border-radius:2px }
+.hl-y { background:rgba(255,220,30,.22); border-radius:2px }
+.hl-o { background:rgba(255,160,60,.20); border-radius:2px }
+.hl-g { background:rgba(40,230,160,.18); border-radius:2px }
+.hl-b { background:rgba(90,175,255,.20); border-radius:2px }
+.hl-p { background:rgba(210,150,255,.20); border-radius:2px }
 
-/* ── 라이트 테마 하이라이트 — 잉크 위 부드러운 워시 ── */
-[data-theme="light"] .vtxt mark.hl-y { background: rgba(250,204,21,.32); }
-[data-theme="light"] .vtxt mark.hl-o { background: rgba(251,146,60,.28); }
-[data-theme="light"] .vtxt mark.hl-g { background: rgba(16,185,129,.25); }
-[data-theme="light"] .vtxt mark.hl-b { background: rgba(59,130,246,.22); }
-[data-theme="light"] .vtxt mark.hl-p { background: rgba(168,85,247,.22); }
+/* ── 라이트 테마 하이라이트 — 선명한 워터컬러 ── */
+[data-theme="light"] .vtxt mark.hl-y { background: rgba(255,215,0,.45); }
+[data-theme="light"] .vtxt mark.hl-o { background: rgba(255,140,50,.38); }
+[data-theme="light"] .vtxt mark.hl-g { background: rgba(16,200,120,.35); }
+[data-theme="light"] .vtxt mark.hl-b { background: rgba(50,140,255,.32); }
+[data-theme="light"] .vtxt mark.hl-p { background: rgba(170,80,255,.30); }
 
-/* ── 세피아 테마 하이라이트 — 양피지 위 따뜻한 수채화 ── */
-[data-theme="sepia"] .vtxt mark.hl-y { background: rgba(220,180,20,.28); }
-[data-theme="sepia"] .vtxt mark.hl-o { background: rgba(210,130,50,.25); }
-[data-theme="sepia"] .vtxt mark.hl-g { background: rgba(42,160,100,.22); }
-[data-theme="sepia"] .vtxt mark.hl-b { background: rgba(58,109,158,.22); }
-[data-theme="sepia"] .vtxt mark.hl-p { background: rgba(107,69,149,.22); }
+/* ── 세피아 테마 하이라이트 — 따뜻하고 또렷한 톤 ── */
+[data-theme="sepia"] .vtxt mark.hl-y { background: rgba(240,195,20,.40); }
+[data-theme="sepia"] .vtxt mark.hl-o { background: rgba(230,140,45,.36); }
+[data-theme="sepia"] .vtxt mark.hl-g { background: rgba(40,180,110,.32); }
+[data-theme="sepia"] .vtxt mark.hl-b { background: rgba(60,130,200,.32); }
+[data-theme="sepia"] .vtxt mark.hl-p { background: rgba(140,80,180,.30); }
 
 /* HL picker dots */
 .hlc-dot {
