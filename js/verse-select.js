@@ -52,10 +52,19 @@ document.addEventListener('click',e=>{
   }
 });
 
-/* ── 브라우저 기본 우클릭 메뉴 전체 차단 ── */
+/* ── 브라우저 기본 우클릭 메뉴 전체 차단 (Edge/Chrome/Firefox 등 모든 브라우저) ── */
+window.addEventListener('contextmenu', function(e){
+  e.preventDefault();
+  e.stopPropagation();
+  e.stopImmediatePropagation();
+  return false;
+}, true);
 document.addEventListener('contextmenu', function(e){
   e.preventDefault();
-});
+  e.stopPropagation();
+  return false;
+}, true);
+document.oncontextmenu = function(){ return false; };
 
 /* ── 구절 호버 툴팁 (마우스 따라다니는 구절 참조) ── */
 var _vHoverTip=null;
