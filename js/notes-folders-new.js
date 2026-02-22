@@ -39,7 +39,7 @@ window.newNote=function newNote(){
   if(S.selV){
     const k=`${S.book}_${S.ch}_${S.selV}`;
     const vt=BIBLE[S.book]?.[S.ch]?.[S.selV-1]||'';
-    const title=`${S.book} ${S.ch}:${S.selV} 묵상`;
+    const title=`${S.book} ${S.ch}:${S.selV}`;
     el.innerHTML='<h1>'+title+'</h1>'+makVLink(k,`${S.book} ${S.ch}:${S.selV}`)+'&#8203; <span class="vtxt" style="font-family:\'KoPubWorld Batang\',\'Noto Serif KR\',serif;line-height:1.85;">'+vt+'</span><br><br>';
   }else{
     el.innerHTML='<h1></h1><br>';
