@@ -5,8 +5,14 @@ function restoreSel(){
   });
 }
 
-/* 포커스만 (일반 클릭 / 우클릭) — 시각적 선택 표시 없이 현재 구절 설정 */
+/* 포커스 토글 (일반 클릭) — 같은 구절 다시 클릭하면 참조바 숨김 */
 function focusVerse(vn){
+  if(S.selV===vn){
+    S.selV=null;
+    if(typeof hideXrefBar==='function') hideXrefBar();
+    updateDict();
+    return;
+  }
   S.selV=vn;
   updateDict();
   if(typeof showXrefBar==='function') showXrefBar(vn);
