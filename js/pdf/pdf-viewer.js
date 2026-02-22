@@ -141,6 +141,7 @@ var PDFViewer = (function(){
       + '<button class="pdf-tool-btn" onclick="PDFTools.undo()" title="실행 취소"><i class="fa fa-rotate-left"></i></button>'
       + '<button class="pdf-tool-btn" onclick="PDFTools.redo()" title="다시 실행"><i class="fa fa-rotate-right"></i></button>'
       + '</div>'
+      + '<div class="pdf-tool-options" id="pdfToolOptions"></div>'
       + '<div class="pdf-viewport" id="pdfViewerContainer"></div>';
 
     _container = document.getElementById('pdfViewerContainer');

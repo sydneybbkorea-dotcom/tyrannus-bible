@@ -62,6 +62,97 @@
   min-width: 40px; text-align: center;
 }
 
+/* ── Tool Options Bar ── */
+.pdf-tool-options {
+  display: none;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  background: var(--bg-secondary, var(--bg2));
+  border-bottom: 1px solid var(--border-color, var(--border));
+  flex-shrink: 0;
+}
+.pdf-opt-color {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  padding: 0;
+  transition: transform .12s;
+  flex-shrink: 0;
+}
+.pdf-opt-color:hover { transform: scale(1.18); }
+.pdf-opt-color.active { border-color: var(--text, #e8e8e8); transform: scale(1.15); }
+.pdf-opt-label {
+  font-size: 10px;
+  color: var(--text3, #666);
+  margin-left: 4px;
+}
+.pdf-opt-fontsize {
+  background: var(--bg3, #22242e);
+  color: var(--text, #e8e8e8);
+  border: 1px solid var(--border, #2a2c34);
+  border-radius: 4px;
+  padding: 2px 4px;
+  font-size: 11px;
+  outline: none;
+  cursor: pointer;
+}
+
+/* ── Inline text annotation (직접 입력 텍스트) ── */
+.pdf-annot-inline-text {
+  position: absolute;
+  pointer-events: auto;
+  cursor: move;
+  z-index: 4;
+  word-break: break-word;
+  line-height: 1.4;
+  padding: 2px 4px;
+  border-radius: 2px;
+  white-space: pre-wrap;
+}
+.pdf-annot-inline-text:hover {
+  outline: 1px dashed var(--accent-color, #bd8a00);
+  outline-offset: 2px;
+}
+
+/* Inline text editor */
+.pdf-inline-editor {
+  position: absolute;
+  z-index: 15;
+  min-width: 60px;
+  min-height: 24px;
+  padding: 2px 4px;
+  border: 2px solid var(--accent-color, #bd8a00);
+  border-radius: 3px;
+  background: rgba(255,255,255,.9);
+  color: #000;
+  outline: none;
+  line-height: 1.4;
+  word-break: break-word;
+  white-space: pre-wrap;
+  box-shadow: 0 2px 8px rgba(0,0,0,.2);
+}
+
+/* ── Tag popup color row ── */
+.pdf-tag-color-row {
+  display: flex;
+  gap: 4px;
+  padding: 0 0 6px 0;
+  border-bottom: 1px solid var(--border, #2a2c34);
+  margin-bottom: 6px;
+}
+.pdf-tag-color-dot {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  padding: 0;
+  transition: transform .12s;
+}
+.pdf-tag-color-dot:hover { transform: scale(1.15); }
+.pdf-tag-color-dot.active { border-color: var(--text, #e8e8e8); }
+
 /* ── PDF Viewport ── */
 .pdf-viewport {
   flex: 1;

@@ -11,6 +11,8 @@ var PDFTools = (function(){
   var _startPoint = null;
   var _activePointerId = null;
 
+  var _fontSize = 16;
+
   function setTool(tool){
     _currentTool = tool;
 
@@ -30,7 +32,62 @@ var PDFTools = (function(){
         layer.classList.remove('interactive');
       }
     });
+
+    // 옵션바 업데이트
+    _updateToolOptions(tool);
   }
+
+  function _updateToolOptions(tool){
+    var bar = document.getElementById('pdfToolOptions');
+    if(!bar) return;
+    bar.innerHTML = '';
+
+    if(tool === 'select' || tool === 'eraser'){
+      bar.style.display = 'none';
+      return;
+    }
+    bar.style.display = 'flex';
+
+    // 색상 선택 (draw, highlight, text 모두)
+    var colors = ['#FACC15','#4ADE80','#60A5FA','#F87171','#C084FC','#FB923C','#000000','#FFFFFF'];
+    colors.forEach(function(c){
+      var dot = document.createElement('button');
+      dot.className = 'pdf-opt-color' + (c === _currentColor ? ' active' : '');
+      dot.style.background = c;
+      if(c === '#FFFFFF') dot.style.border = '1px solid var(--border,#444)';
+      dot.addEventListener('click', function(){
+        _currentColor = c;
+        bar.querySelectorAll('.pdf-opt-color').forEach(function(d){ d.classList.remove('active'); });
+        dot.classList.add('active');
+      });
+      bar.appendChild(dot);
+    });
+
+    // 텍스트 도구: 글자 크기 선택
+    if(tool === 'text'){
+      var sep = document.createElement('div');
+      sep.className = 'pdf-tool-sep';
+      bar.appendChild(sep);
+
+      var label = document.createElement('span');
+      label.className = 'pdf-opt-label';
+      label.textContent = '크기';
+      bar.appendChild(label);
+
+      var sel = document.createElement('select');
+      sel.className = 'pdf-opt-fontsize';
+      [10, 12, 14, 16, 20, 24, 28, 32, 40].forEach(function(s){
+        var opt = document.createElement('option');
+        opt.value = s; opt.textContent = s + 'px';
+        if(s === _fontSize) opt.selected = true;
+        sel.appendChild(opt);
+      });
+      sel.addEventListener('change', function(){ _fontSize = parseInt(sel.value); });
+      bar.appendChild(sel);
+    }
+  }
+
+  function getFontSize(){ return _fontSize; }
 
   function getTool(){ return _currentTool; }
   function setColor(color){ _currentColor = color; }
@@ -74,6 +131,9 @@ var PDFTools = (function(){
 
     if(_currentTool === 'draw'){
       _currentPath = [{ x: pt.x, y: pt.y, pressure: e.pressure || 0.5 }];
+    } else if(_currentTool === 'eraser'){
+      var pdfId = typeof PDFViewer !== 'undefined' ? PDFViewer.getCurrentPdfId() : null;
+      if(pdfId) _eraseAt(pt, pdfId, pageNum, layer);
     }
   }
 
@@ -89,6 +149,9 @@ var PDFTools = (function(){
       _drawLivePreview(layer);
     } else if(_currentTool === 'highlight'){
       _drawSelectionPreview(layer, pt);
+    } else if(_currentTool === 'eraser'){
+      var pdfId = typeof PDFViewer !== 'undefined' ? PDFViewer.getCurrentPdfId() : null;
+      if(pdfId) _eraseAt(pt, pdfId, pageNum, layer);
     }
   }
 
@@ -208,165 +271,85 @@ var PDFTools = (function(){
     };
   }
 
-  // ── Text Memo (인라인 플로팅 — 블러 없음, 탭 위치 정확) ──
+  // ── Text: 인라인 직접 입력 ──
   function _showTextInput(layer, pt, pdfId, pageNum){
-    // Remove any existing memo elements
-    _closeMemo();
+    _closeInlineEditor();
 
     var scale = _getViewport().scale;
     var pixelX = pt.x * scale;
     var pixelY = pt.y * scale;
+    var fs = _fontSize;
 
-    // ── Pin marker at exact tap point ──
-    var pin = document.createElement('div');
-    pin.className = 'pdf-memo-pin';
-    pin.style.left = pixelX + 'px';
-    pin.style.top  = pixelY + 'px';
-    layer.appendChild(pin);
+    var editor = document.createElement('div');
+    editor.className = 'pdf-inline-editor';
+    editor.contentEditable = 'true';
+    editor.style.left = pixelX + 'px';
+    editor.style.top = pixelY + 'px';
+    editor.style.fontSize = fs + 'px';
+    editor.style.color = _currentColor;
+    editor.dataset.pdfId = pdfId;
+    editor.dataset.pageNum = pageNum;
+    editor.dataset.ptX = pt.x;
+    editor.dataset.ptY = pt.y;
 
-    // ── Floating popup positioned near tap point ──
-    var popup = document.createElement('div');
-    popup.className = 'pdf-memo-popup';
+    layer.appendChild(editor);
 
-    // Position: slightly right and below the pin, keep within page
-    var layerRect = layer.getBoundingClientRect();
-    var popLeft = pixelX + 16;
-    var popTop  = pixelY - 10;
-    // Prevent overflow right
-    if(popLeft + 260 > layerRect.width) popLeft = pixelX - 276;
-    if(popLeft < 0) popLeft = 4;
-    // Prevent overflow bottom
-    if(popTop + 240 > layerRect.height) popTop = pixelY - 250;
-    if(popTop < 0) popTop = 4;
+    // 포인터 이벤트 차단
+    editor.addEventListener('pointerdown', function(e){ e.stopPropagation(); });
+    editor.addEventListener('pointermove', function(e){ e.stopPropagation(); });
+    editor.addEventListener('pointerup', function(e){ e.stopPropagation(); });
 
-    popup.style.left = popLeft + 'px';
-    popup.style.top  = popTop  + 'px';
+    requestAnimationFrame(function(){ editor.focus(); });
 
-    // ── Header (draggable) ──
-    var header = document.createElement('div');
-    header.className = 'pdf-memo-header';
-    header.innerHTML = '<i class="fa fa-pen-to-square"></i><span>메모 추가</span>';
-
-    var closeBtn = document.createElement('button');
-    closeBtn.className = 'pdf-memo-close';
-    closeBtn.innerHTML = '<i class="fa fa-xmark"></i>';
-    closeBtn.onclick = function(){ _closeMemo(); };
-    header.appendChild(closeBtn);
-
-    // Drag logic
-    var dragState = { active: false, sx: 0, sy: 0, ox: 0, oy: 0 };
-    header.addEventListener('pointerdown', function(e){
-      if(e.target.closest('.pdf-memo-close')) return;
-      dragState.active = true;
-      dragState.sx = e.clientX;
-      dragState.sy = e.clientY;
-      dragState.ox = popup.offsetLeft;
-      dragState.oy = popup.offsetTop;
-      header.setPointerCapture(e.pointerId);
-      e.preventDefault();
-    });
-    header.addEventListener('pointermove', function(e){
-      if(!dragState.active) return;
-      popup.style.left = (dragState.ox + e.clientX - dragState.sx) + 'px';
-      popup.style.top  = (dragState.oy + e.clientY - dragState.sy) + 'px';
-    });
-    header.addEventListener('pointerup', function(e){
-      dragState.active = false;
-      try { header.releasePointerCapture(e.pointerId); } catch(err){}
-    });
-
-    // ── Textarea ──
-    var textarea = document.createElement('textarea');
-    textarea.className = 'pdf-memo-textarea';
-    textarea.placeholder = '메모를 입력하세요...';
-
-    // ── Footer: color dots + save button ──
-    var footer = document.createElement('div');
-    footer.className = 'pdf-memo-footer';
-
-    var colors = ['#FACC15','#4ADE80','#60A5FA','#F87171','#C084FC','#FB923C'];
-    var selectedColor = '#FACC15';
-    colors.forEach(function(c){
-      var dot = document.createElement('button');
-      dot.className = 'pdf-memo-color-dot' + (c === '#FACC15' ? ' active' : '');
-      dot.style.background = c;
-      dot.onclick = function(){
-        footer.querySelectorAll('.pdf-memo-color-dot').forEach(function(d){ d.classList.remove('active'); });
-        dot.classList.add('active');
-        selectedColor = c;
-      };
-      footer.appendChild(dot);
-    });
-
-    var noteBtn = document.createElement('button');
-    noteBtn.className = 'pdf-memo-btn-note';
-    noteBtn.innerHTML = '<i class="fa fa-pen"></i>';
-    noteBtn.title = '저장 + 노트에 추가';
-    noteBtn.onclick = function(){
-      var text = textarea.value.trim();
-      if(text){
-        var annot = PDFAnnotations.createAnnot('text', pdfId, pageNum, {
-          rect: { x: pt.x, y: pt.y, width: 200 / scale, height: 80 / scale },
-          text: text,
-          color: selectedColor
-        });
-        PDFAnnotations.save(annot);
-        _undoStack.push(annot.id);
-        _redoStack = [];
-        PDFAnnotations.renderPage(pageNum, layer, _getViewport());
-        // 노트에 추가
-        if(typeof PDFAnnotations._insertMemoToNote === 'function'){
-          PDFAnnotations._insertMemoToNote(annot);
-        }
-      }
-      _closeMemo();
-    };
-    footer.appendChild(noteBtn);
-
-    var saveBtn = document.createElement('button');
-    saveBtn.className = 'pdf-memo-btn-save';
-    saveBtn.innerHTML = '<i class="fa fa-check"></i> 저장';
-    saveBtn.onclick = function(){
-      var text = textarea.value.trim();
-      if(text){
-        var annot = PDFAnnotations.createAnnot('text', pdfId, pageNum, {
-          rect: { x: pt.x, y: pt.y, width: 200 / scale, height: 80 / scale },
-          text: text,
-          color: selectedColor
-        });
-        PDFAnnotations.save(annot);
-        _undoStack.push(annot.id);
-        _redoStack = [];
-        PDFAnnotations.renderPage(pageNum, layer, _getViewport());
-      }
-      _closeMemo();
-    };
-    footer.appendChild(saveBtn);
-
-    // Assemble
-    popup.appendChild(header);
-    popup.appendChild(textarea);
-    popup.appendChild(footer);
-    layer.appendChild(popup);
-
-    // Focus textarea
-    requestAnimationFrame(function(){ textarea.focus(); });
-
-    // Enter to save (Shift+Enter for newline)
-    textarea.addEventListener('keydown', function(e){
-      if(e.key === 'Enter' && !e.shiftKey){
+    // Escape → 취소, Enter(no shift) → 저장
+    editor.addEventListener('keydown', function(e){
+      if(e.key === 'Escape'){
+        _closeInlineEditor();
+      } else if(e.key === 'Enter' && !e.shiftKey){
         e.preventDefault();
-        saveBtn.click();
+        _saveInlineEditor(editor, layer);
       }
     });
 
-    // Prevent pointer events on popup from triggering annotation tools
-    popup.addEventListener('pointerdown', function(e){ e.stopPropagation(); });
-    popup.addEventListener('pointermove', function(e){ e.stopPropagation(); });
-    popup.addEventListener('pointerup', function(e){ e.stopPropagation(); });
+    // 바깥 클릭 시 저장
+    setTimeout(function(){
+      document.addEventListener('pointerdown', function handler(e){
+        if(editor.parentNode && !editor.contains(e.target)){
+          _saveInlineEditor(editor, layer);
+          document.removeEventListener('pointerdown', handler);
+        }
+      });
+    }, 100);
   }
 
-  function _closeMemo(){
+  function _saveInlineEditor(editor, layer){
+    var text = (editor.innerText || '').trim();
+    if(!text){ _closeInlineEditor(); return; }
+
+    var pdfId = editor.dataset.pdfId;
+    var pageNum = parseInt(editor.dataset.pageNum);
+    var ptX = parseFloat(editor.dataset.ptX);
+    var ptY = parseFloat(editor.dataset.ptY);
+    var scale = _getViewport().scale;
+    var fs = parseInt(editor.style.fontSize) || 16;
+    var color = editor.style.color || _currentColor;
+
+    var annot = PDFAnnotations.createAnnot('text', pdfId, pageNum, {
+      rect: { x: ptX, y: ptY, width: editor.offsetWidth / scale, height: editor.offsetHeight / scale },
+      text: text,
+      color: color,
+      fontSize: fs / scale  // PDF 좌표계 기준 크기
+    });
+    PDFAnnotations.save(annot);
+    _undoStack.push(annot.id);
+    _redoStack = [];
+    _closeInlineEditor();
+    PDFAnnotations.renderPage(pageNum, layer, _getViewport());
+  }
+
+  function _closeInlineEditor(){
+    document.querySelectorAll('.pdf-inline-editor').forEach(function(el){ el.remove(); });
+    // 레거시 메모 팝업도 정리
     document.querySelectorAll('.pdf-memo-pin').forEach(function(el){ el.remove(); });
     document.querySelectorAll('.pdf-memo-popup').forEach(function(el){ el.remove(); });
   }
@@ -461,6 +444,7 @@ var PDFTools = (function(){
     setTool: setTool,
     getTool: getTool,
     setColor: setColor,
+    getFontSize: getFontSize,
     initPageEvents: initPageEvents,
     undo: undo,
     redo: redo

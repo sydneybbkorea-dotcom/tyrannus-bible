@@ -215,10 +215,84 @@ var PDFAnnotations = (function(){
         break;
 
       case 'text':
-        // 컨테이너 (아이콘 위치용)
+        var scale = viewport.scale || 1;
+
+        // ── fontSize가 있으면 인라인 텍스트로 표시 ──
+        if(annot.fontSize){
+          el = document.createElement('div');
+          el.className = 'pdf-annot pdf-annot-inline-text';
+          el.style.left = (annot.rect.x * scale) + 'px';
+          el.style.top  = (annot.rect.y * scale) + 'px';
+          el.style.fontSize = (annot.fontSize * scale) + 'px';
+          el.style.color = annot.color || '#000';
+          el.textContent = annot.text;
+
+          // 드래그 이동 + 더블클릭 편집
+          (function(elRef, annotRef, vp){
+            var DRAG_THRESHOLD = 5;
+            var drag = { active:false, moved:false, sx:0, sy:0, ox:0, oy:0, pid:null };
+
+            elRef.addEventListener('pointerdown', function(e){
+              e.stopPropagation();
+              e.preventDefault();
+              drag.pid = e.pointerId;
+              drag.sx = e.clientX; drag.sy = e.clientY;
+              drag.ox = elRef.offsetLeft; drag.oy = elRef.offsetTop;
+              drag.moved = false; drag.active = true;
+              try { elRef.setPointerCapture(e.pointerId); } catch(err){}
+            });
+            elRef.addEventListener('pointermove', function(e){
+              if(!drag.active || e.pointerId !== drag.pid) return;
+              var dx = e.clientX - drag.sx, dy = e.clientY - drag.sy;
+              if(!drag.moved && Math.abs(dx) < DRAG_THRESHOLD && Math.abs(dy) < DRAG_THRESHOLD) return;
+              drag.moved = true;
+              elRef.style.left = (drag.ox + dx) + 'px';
+              elRef.style.top  = (drag.oy + dy) + 'px';
+            });
+            elRef.addEventListener('pointerup', function(e){
+              if(!drag.active || e.pointerId !== drag.pid) return;
+              drag.active = false;
+              try { elRef.releasePointerCapture(e.pointerId); } catch(err){}
+              if(drag.moved){
+                var s = vp.scale || 1;
+                annotRef.rect.x = parseFloat(elRef.style.left) / s;
+                annotRef.rect.y = parseFloat(elRef.style.top) / s;
+                PDFAnnotations.save(annotRef);
+              }
+            });
+            elRef.addEventListener('click', function(e){ e.stopPropagation(); });
+
+            // 더블클릭 → 인라인 편집
+            elRef.addEventListener('dblclick', function(e){
+              e.stopPropagation();
+              elRef.contentEditable = 'true';
+              elRef.style.outline = '2px solid var(--accent-color, #bd8a00)';
+              elRef.focus();
+              // blur 시 저장
+              elRef.addEventListener('blur', function handler(){
+                elRef.contentEditable = 'false';
+                elRef.style.outline = '';
+                var newText = (elRef.innerText || '').trim();
+                if(newText){
+                  annotRef.text = newText;
+                  annotRef.rect.width = elRef.offsetWidth / (vp.scale||1);
+                  annotRef.rect.height = elRef.offsetHeight / (vp.scale||1);
+                  PDFAnnotations.save(annotRef);
+                } else {
+                  PDFAnnotations.remove(annotRef.id, annotRef.pdfId, annotRef.pageNum);
+                  var layer = elRef.closest('.pdf-annot-layer');
+                  if(layer) PDFAnnotations.renderPage(annotRef.pageNum, layer, vp);
+                }
+                elRef.removeEventListener('blur', handler);
+              });
+            });
+          })(el, annot, viewport);
+          break;
+        }
+
+        // ── 레거시: fontSize 없으면 메모 아이콘 핀 ──
         el = document.createElement('div');
         el.className = 'pdf-annot pdf-annot-text-pin';
-        var scale = viewport.scale || 1;
         el.style.left = (annot.rect.x * scale) + 'px';
         el.style.top  = (annot.rect.y * scale) + 'px';
 
@@ -275,13 +349,11 @@ var PDFAnnotations = (function(){
             pinEl.classList.remove('dragging');
 
             if(drag.moved){
-              // 새 위치 저장 (픽셀 → PDF 좌표)
               var s = vp.scale || 1;
               annotRef.rect.x = parseFloat(pinEl.style.left) / s;
               annotRef.rect.y = parseFloat(pinEl.style.top) / s;
               PDFAnnotations.save(annotRef);
             } else {
-              // 클릭 → 버블 토글
               var wasOpen = bubbleEl.classList.contains('open');
               document.querySelectorAll('.pdf-memo-bubble.open').forEach(function(b){ b.classList.remove('open'); });
               if(!wasOpen) bubbleEl.classList.add('open');
@@ -293,7 +365,6 @@ var PDFAnnotations = (function(){
             pinEl.classList.remove('dragging');
           });
 
-          // click 이벤트가 레이어로 버블링되면 버블이 즉시 닫히므로 차단
           iconEl.addEventListener('click', function(e){ e.stopPropagation(); });
         })(icon, bubble, el, annot, viewport);
 
@@ -368,6 +439,7 @@ var PDFAnnotations = (function(){
       text: opts.text || '',
       color: opts.color || '#FACC15',
       strokeWidth: opts.strokeWidth || 2,
+      fontSize: opts.fontSize || null,
       linkedUri: opts.linkedUri || null,
       tags: opts.tags || [],
       createdAt: Date.now()
@@ -395,11 +467,42 @@ var PDFAnnotations = (function(){
         + '<button class="pdf-tag-remove" data-tag="' + _escHtml(tag) + '">&times;</button></span>';
     }).join('');
 
-    popup.innerHTML = '<div class="pdf-tag-chips">' + tagsHtml + '</div>'
-      + '<div class="pdf-tag-input-row">'
-      + '<input class="pdf-tag-input" placeholder="태그 추가..." />'
-      + '<button class="pdf-tag-add-btn"><i class="fa fa-plus"></i></button>'
-      + '</div>';
+    // ── 색상 선택 행 ──
+    var colorRow = document.createElement('div');
+    colorRow.className = 'pdf-tag-color-row';
+    var hlColors = ['#FACC15','#4ADE80','#60A5FA','#F87171','#C084FC','#FB923C'];
+    hlColors.forEach(function(c){
+      var dot = document.createElement('button');
+      dot.className = 'pdf-tag-color-dot';
+      dot.style.background = c;
+      // 현재 색상과 매칭 여부 확인
+      var r = parseInt(c.slice(1,3),16), g = parseInt(c.slice(3,5),16), b = parseInt(c.slice(5,7),16);
+      if(annot.color && annot.color.indexOf(r + ',') !== -1 && annot.color.indexOf(g + ',') !== -1){
+        dot.classList.add('active');
+      }
+      dot.addEventListener('click', function(e){
+        e.stopPropagation();
+        colorRow.querySelectorAll('.pdf-tag-color-dot').forEach(function(d){ d.classList.remove('active'); });
+        dot.classList.add('active');
+        annot.color = _hexToRgba(c, 0.35);
+        PDFAnnotations.save(annot);
+        if(targetEl) targetEl.style.background = annot.color;
+      });
+      colorRow.appendChild(dot);
+    });
+    popup.appendChild(colorRow);
+
+    // 태그 칩 + 입력
+    var chipsDiv = document.createElement('div');
+    chipsDiv.className = 'pdf-tag-chips';
+    chipsDiv.innerHTML = tagsHtml;
+    popup.appendChild(chipsDiv);
+
+    var inputRow = document.createElement('div');
+    inputRow.className = 'pdf-tag-input-row';
+    inputRow.innerHTML = '<input class="pdf-tag-input" placeholder="태그 추가..." />'
+      + '<button class="pdf-tag-add-btn"><i class="fa fa-plus"></i></button>';
+    popup.appendChild(inputRow);
 
     layer.appendChild(popup);
 
@@ -449,6 +552,14 @@ var PDFAnnotations = (function(){
     popup.addEventListener('pointerdown', function(e){ e.stopPropagation(); });
     popup.addEventListener('pointermove', function(e){ e.stopPropagation(); });
     popup.addEventListener('pointerup', function(e){ e.stopPropagation(); });
+  }
+
+  function _hexToRgba(hex, alpha){
+    if(hex.startsWith('rgba') || hex.startsWith('rgb')) return hex;
+    var r = parseInt(hex.slice(1,3), 16) || 0;
+    var g = parseInt(hex.slice(3,5), 16) || 0;
+    var b = parseInt(hex.slice(5,7), 16) || 0;
+    return 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
   }
 
   return {
