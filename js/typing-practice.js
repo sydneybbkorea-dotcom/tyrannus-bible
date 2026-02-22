@@ -607,15 +607,8 @@ function _tpShowResults(){
   var circ = 2 * Math.PI * 52;
   var ringOffset = circ - (circ * accuracy / 100);
 
-  // Folder dropdown
-  var folderAdd = '';
+  // Folder button (항상 표시)
   var fnames = Object.keys(_tp.folders);
-  if(fnames.length > 0){
-    folderAdd = '<select class="tp-select" id="tpAddFolderSel" style="font-size:12px"><option value="">폴더에 추가...</option>';
-    fnames.forEach(function(n){ folderAdd += '<option value="'+n+'">'+n+'</option>'; });
-    folderAdd += '</select>';
-    folderAdd += '<button class="tp-small-btn" onclick="_tpAddToFolder(document.getElementById(\'tpAddFolderSel\').value)"><i class="fa fa-plus"></i></button>';
-  }
 
   el.innerHTML =
     '<div class="tp-result">' +
@@ -674,7 +667,12 @@ function _tpShowResults(){
         '<button class="tp-heart-btn' + (isHearted ? ' tp-hearted' : '') + '" id="tpHeartBtn" onclick="_tpToggleHeart()">' +
           '<i class="fa' + (isHearted ? 's' : 'r') + ' fa-heart"></i>' +
         '</button>' +
-        folderAdd +
+        '<div class="tp-folder-wrap">' +
+          '<button class="tp-folder-btn" id="tpFolderBtn" onclick="_tpToggleFolderMenu()" title="폴더에 추가">' +
+            '<i class="fa fa-folder-plus"></i>' +
+          '</button>' +
+          '<div class="tp-folder-menu" id="tpFolderMenu"></div>' +
+        '</div>' +
       '</div>' +
       '<div class="tp-result-enter"><i class="fa fa-level-down-alt fa-rotate-90"></i> Enter 키를 눌러 다음 구절로</div>' +
     '</div>';
@@ -685,6 +683,78 @@ function _tpShowResults(){
     else if(e.key === 'Escape'){ e.preventDefault(); toggleTypingPanel(); }
   };
   document.addEventListener('keydown', _tp._resultKeyHandler);
+}
+
+/* ═══ Folder Menu (결과 화면) ═══ */
+function _tpToggleFolderMenu(){
+  var menu = document.getElementById('tpFolderMenu');
+  if(!menu) return;
+  var isOpen = menu.classList.contains('tp-fm-open');
+  if(isOpen){ _tpCloseFolderMenu(); return; }
+  _tpRenderFolderMenu();
+  menu.classList.add('tp-fm-open');
+  // 바깥 클릭 닫기
+  setTimeout(function(){
+    document.addEventListener('click', _tpFolderOutside);
+  }, 10);
+}
+function _tpCloseFolderMenu(){
+  var menu = document.getElementById('tpFolderMenu');
+  if(menu) menu.classList.remove('tp-fm-open');
+  document.removeEventListener('click', _tpFolderOutside);
+}
+function _tpFolderOutside(e){
+  var wrap = document.querySelector('.tp-folder-wrap');
+  if(wrap && !wrap.contains(e.target)) _tpCloseFolderMenu();
+}
+function _tpRenderFolderMenu(){
+  var menu = document.getElementById('tpFolderMenu');
+  if(!menu || !_tp.verse) return;
+  var key = _tp.verse.key;
+  var fnames = Object.keys(_tp.folders);
+  var h = '';
+  if(fnames.length > 0){
+    h += '<div class="tp-fm-label">폴더 선택</div>';
+    fnames.forEach(function(n){
+      var inFolder = _tp.folders[n] && _tp.folders[n].indexOf(key) >= 0;
+      h += '<div class="tp-fm-item' + (inFolder ? ' tp-fm-added' : '') + '" onclick="_tpToggleFolderItem(\'' + n.replace(/'/g, "\\'") + '\')">';
+      h += '<i class="fa ' + (inFolder ? 'fa-check-circle' : 'fa-circle') + '"></i>';
+      h += '<span>' + n + '</span>';
+      if(inFolder) h += '<span class="tp-fm-badge">추가됨</span>';
+      h += '</div>';
+    });
+    h += '<div class="tp-fm-divider"></div>';
+  }
+  h += '<div class="tp-fm-item tp-fm-create" onclick="_tpCreateFolderFromMenu()">';
+  h += '<i class="fa fa-plus"></i><span>새 폴더 만들기</span>';
+  h += '</div>';
+  menu.innerHTML = h;
+}
+function _tpToggleFolderItem(name){
+  if(!_tp.verse) return;
+  var key = _tp.verse.key;
+  if(!_tp.folders[name]) _tp.folders[name] = [];
+  var idx = _tp.folders[name].indexOf(key);
+  if(idx >= 0){
+    _tp.folders[name].splice(idx, 1);
+    toast(_tp.verse.ref + ' → "' + name + '" 에서 제거됨');
+  } else {
+    _tp.folders[name].push(key);
+    toast(_tp.verse.ref + ' → "' + name + '" 폴더에 추가됨');
+  }
+  _tpSaveFolders();
+  _tpRenderFolderMenu();
+}
+function _tpCreateFolderFromMenu(){
+  var name = prompt('새 폴더 이름을 입력하세요:');
+  if(!name || !name.trim()) return;
+  var n = name.trim();
+  if(_tp.folders[n]){ toast('이미 존재하는 폴더입니다'); return; }
+  _tp.folders[n] = [];
+  if(_tp.verse) _tp.folders[n].push(_tp.verse.key);
+  _tpSaveFolders();
+  _tpRenderFolderMenu();
+  toast('"' + n + '" 폴더 생성' + (_tp.verse ? ' + 구절 추가됨' : ''));
 }
 
 /* ═══ Hearts ═══ */
