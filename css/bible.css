@@ -449,6 +449,16 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
 .mnsl-item:hover, .mnsl-item.mnsl-active { background:var(--gold-dim); color:var(--gold) }
 
 
+/* ── 구절 호버 툴팁 (마우스 따라다니는 참조) ── */
+.v-hover-tip {
+  position:fixed; display:none; padding:3px 10px;
+  font-size:12px; font-weight:600; color:var(--gold);
+  background:var(--bg2); border-radius:4px;
+  pointer-events:none; z-index:1000; white-space:nowrap;
+  opacity:.92; font-family:'JetBrains Mono','Noto Sans KR',sans-serif;
+  box-shadow:0 2px 8px rgba(0,0,0,.15);
+}
+
 .ch-nav { display:flex; justify-content:space-between; align-items:center; padding:20px 0 0; margin-top:20px; border-top:1px solid var(--border) }
 .chnav { padding:8px 20px; border-radius:var(--radius); font-size:12px; background:var(--bg3); border:1px solid var(--border2); color:var(--text2); transition:all .18s; font-weight:500 }
 .chnav:hover { background:var(--accent-dim); border-color:var(--accent); color:var(--accent) }

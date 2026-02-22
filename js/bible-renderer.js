@@ -66,11 +66,14 @@ function renderBible(){
       // 한글만 (기본) 또는 영어 데이터 없을 때 한글 폴백
       row.innerHTML=`<span class="vtxt${rl}" data-key="${key}"><span class="vnum">${vn}</span>${displayTxt}</span>${indic}`;
     }
-    row.onclick=e=>selVerse(vn,e);
+    row.onclick=e=>{
+      if(e.ctrlKey||e.metaKey) selVerse(vn,e);
+      else focusVerse(vn);
+    };
     row.addEventListener('contextmenu', function(e) {
       e.preventDefault();
       e.stopPropagation();
-      selVerse(vn,e);
+      focusVerse(vn);
       setTimeout(()=>showCtx(e), 10);
     });
     cont.appendChild(row);
