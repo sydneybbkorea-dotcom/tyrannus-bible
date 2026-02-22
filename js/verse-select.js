@@ -80,6 +80,36 @@ function clearAllSel(){
   if(typeof hideXrefBar==='function') hideXrefBar();
   hideVerseMenu();
 }
+/* ── Ctrl+드래그 다중 선택 ── */
+var _ctrlDrag=false;
+document.addEventListener('mousedown',function(e){
+  if(!(e.ctrlKey||e.metaKey)||e.button!==0) return;
+  var row=e.target.closest('.vrow');
+  if(!row) return;
+  var bs=document.getElementById('bibleScroll');
+  if(!bs||!bs.contains(row)) return;
+  _ctrlDrag=true;
+  e.preventDefault(); // 텍스트 선택 방지
+});
+document.addEventListener('mousemove',function(e){
+  if(!_ctrlDrag) return;
+  var row=e.target.closest('.vrow');
+  if(!row) return;
+  var vn=+row.dataset.v;
+  if(!vn||S.selVSet&&S.selVSet.has(vn)) return;
+  if(!S.selVSet) S.selVSet=new Set();
+  S.selVSet.add(vn);
+  row.classList.add('vsel');
+  S.selV=vn;
+  _updateStatV();
+});
+document.addEventListener('mouseup',function(){
+  if(!_ctrlDrag) return;
+  _ctrlDrag=false;
+  updateDict();
+  if(S.selV&&typeof showXrefBar==='function') showXrefBar(S.selV);
+});
+
 document.addEventListener('click',e=>{
   if(e.target.closest('.verse-menu')||e.target.closest('.vrow-menu-btn')) return;
   hideVerseMenu();
