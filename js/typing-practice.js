@@ -122,7 +122,10 @@ var _tpStrings = {
     rankLoading: '랭킹을 불러오는 중...',
     rankBack: '돌아가기',
     myRank: '내 순위',
-    noNickname: '닉네임을 입력해주세요'
+    noNickname: '닉네임을 입력해주세요',
+    score: '점수',
+    rankColScore: '점수',
+    scoreFormula: function(cpm, acc, sc){ return cpm + ' 타/분 × ' + acc + '% = ' + sc; }
   },
   en: {
     title: 'Typing Practice',
@@ -208,7 +211,10 @@ var _tpStrings = {
     rankLoading: 'Loading rankings...',
     rankBack: 'Back',
     myRank: 'My Rank',
-    noNickname: 'Please enter a nickname'
+    noNickname: 'Please enter a nickname',
+    score: 'Score',
+    rankColScore: 'Score',
+    scoreFormula: function(cpm, acc, sc){ return cpm + ' CPM × ' + acc + '% = ' + sc; }
   }
 };
 function _tpT(key){ var v = _tpStrings[_tp.lang][key]; return v !== undefined ? v : (_tpStrings.kr[key] !== undefined ? _tpStrings.kr[key] : key); }
@@ -994,6 +1000,10 @@ function _tpShowResults(){
   var skipPct = totalChars > 0 ? (skipped / totalChars * 100).toFixed(1) : 0;
   var speedPct = Math.min(100, Math.round(cpm / 600 * 100));
 
+  // Combined score: CPM × accuracy/100 (오타가 점수를 깎음)
+  var score = Math.round(cpm * accuracy / 100);
+  var scorePct = Math.min(100, Math.round(score / 600 * 100));
+
   // SVG ring
   var circ = 2 * Math.PI * 52;
   var ringOffset = circ - (circ * accuracy / 100);
@@ -1042,10 +1052,10 @@ function _tpShowResults(){
         '</div>' +
 
         '<div class="tp-rcard">' +
-          '<div class="tp-rcard-big" style="color:var(--gold)">' + bestCpm + '</div>' +
-          '<div class="tp-rcard-unit">'+_tpT('bestLabel')+' '+_tpT('cpmUnit')+'</div>' +
-          '<div class="tp-rcard-bar-wrap"><div class="tp-rcard-bar" style="width:' + Math.min(100, Math.round(bestCpm / 600 * 100)) + '%"></div></div>' +
-          '<div class="tp-rcard-wpm" style="font-size:28px"><i class="fa fa-trophy"></i></div>' +
+          '<div class="tp-rcard-big tp-score-glow">' + score + '</div>' +
+          '<div class="tp-rcard-unit">'+_tpT('score')+'</div>' +
+          '<div class="tp-rcard-bar-wrap"><div class="tp-rcard-bar" style="width:' + scorePct + '%"></div></div>' +
+          '<div class="tp-score-formula">' + _tpT('scoreFormula')(cpm, accuracy, score) + '</div>' +
         '</div>' +
       '</div>' +
 
@@ -1094,7 +1104,7 @@ function _tpShowResults(){
   document.addEventListener('keydown', _tp._resultKeyHandler);
 
   // Submit score to ranking (async, non-blocking)
-  _tpSubmitScore(cpm, accuracy, v);
+  _tpSubmitScore(score, cpm, accuracy, v);
 }
 
 /* ═══ Folder Menu (결과 화면) ═══ */
@@ -1321,7 +1331,7 @@ function _tpRenderBody(){
 }
 
 /* ═══ Score Submission — TOP 100 진입 시에만 등록 ═══ */
-function _tpSubmitScore(cpm, accuracy, verse){
+function _tpSubmitScore(score, cpm, accuracy, verse){
   if(!_tp.nickname || _tp.nickname.length < 2){
     console.log('[Ranking] 닉네임 미입력, 스킵');
     return;
@@ -1331,7 +1341,7 @@ function _tpSubmitScore(cpm, accuracy, verse){
     return;
   }
 
-  console.log('[Ranking] 점수 제출 시도:', _tp.nickname, cpm, accuracy);
+  console.log('[Ranking] 점수 제출 시도:', _tp.nickname, 'score=' + score, 'cpm=' + cpm, 'acc=' + accuracy);
 
   window._tpRanking.fetchRankings('all').then(function(rankings){
     console.log('[Ranking] 현재 랭킹 수:', rankings.length);
@@ -1346,17 +1356,17 @@ function _tpSubmitScore(cpm, accuracy, verse){
       }
     }
 
-    // 기존 기록보다 낮으면 스킵
-    if(myExisting && cpm <= myExisting.cpm){
-      console.log('[Ranking] 기존 기록(' + myExisting.cpm + ')보다 낮음, 스킵');
+    // 기존 기록(score)보다 낮으면 스킵
+    if(myExisting && score <= (myExisting.score || 0)){
+      console.log('[Ranking] 기존 점수(' + (myExisting.score||0) + ')보다 낮음, 스킵');
       return;
     }
 
     // TOP 100 진입 가능한지 확인
     var qualifies = rankings.length < 100;
     if(!qualifies){
-      var lastCpm = rankings[rankings.length - 1].cpm || 0;
-      qualifies = cpm > lastCpm || !!myExisting;
+      var lastScore = rankings[rankings.length - 1].score || 0;
+      qualifies = score > lastScore || !!myExisting;
     }
     if(!qualifies){
       console.log('[Ranking] TOP 100 밖, 스킵');
@@ -1366,12 +1376,12 @@ function _tpSubmitScore(cpm, accuracy, verse){
     // 순위 계산 (나 자신 제외)
     var rank = 1;
     for(var i = 0; i < rankings.length; i++){
-      if(rankings[i].nickname && rankings[i].nickname.toLowerCase() !== myNick && rankings[i].cpm > cpm) rank++;
+      if(rankings[i].nickname && rankings[i].nickname.toLowerCase() !== myNick && (rankings[i].score||0) > score) rank++;
     }
 
     var verseRef = (verse.fullBook || verse.book) + ' ' + verse.ch + ':' + verse.v;
-    console.log('[Ranking] submitScore 호출:', _tp.nickname, cpm);
-    window._tpRanking.submitScore(_tp.nickname, cpm, accuracy, verseRef, _tp.lang)
+    console.log('[Ranking] submitScore 호출:', _tp.nickname, 'score=' + score);
+    window._tpRanking.submitScore(_tp.nickname, score, cpm, accuracy, verseRef, _tp.lang)
       .then(function(result){
         console.log('[Ranking] 결과:', result);
         if(result === 'new') toast(_tpT('rankSubmitted') + ' (#' + rank + ')');
@@ -1472,6 +1482,7 @@ function _tpRenderRankTable(data){
   h += '<thead><tr>' +
     '<th>'+_tpT('rankCol')+'</th>' +
     '<th>'+_tpT('rankColNickname')+'</th>' +
+    '<th>'+_tpT('rankColScore')+'</th>' +
     '<th>'+_tpT('rankColCpm')+'</th>' +
     '<th>'+_tpT('rankColAcc')+'</th>' +
     '<th class="tp-rank-hide-mobile">'+_tpT('rankColVerse')+'</th>' +
@@ -1497,6 +1508,7 @@ function _tpRenderRankTable(data){
     h += '<tr class="' + (isMe ? 'tp-rank-me' : '') + (rank <= 3 ? ' tp-rank-top3' : '') + '">' +
       '<td class="tp-rank-pos">' + medal + '</td>' +
       '<td class="tp-rank-nick">' + _tpEscHtml(r.nickname || '?') + (isMe ? ' <span class="tp-rank-me-badge">'+_tpT('myRank')+'</span>' : '') + '</td>' +
+      '<td class="tp-rank-score">' + (r.score || 0) + '</td>' +
       '<td class="tp-rank-cpm">' + (r.cpm || 0) + '</td>' +
       '<td class="tp-rank-acc">' + (r.accuracy || 0) + '%</td>' +
       '<td class="tp-rank-verse tp-rank-hide-mobile">' + _tpEscHtml(r.verseRef || '') + '</td>' +

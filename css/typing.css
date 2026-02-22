@@ -792,6 +792,18 @@
   animation:tp-blink-light 1s step-end infinite;
 }
 
+/* ═══ Score Card ═══ */
+.tp-score-glow { color:var(--gold) !important; }
+.tp-score-formula {
+  font-size:11px; color:var(--text3); margin-top:6px;
+  font-family:'JetBrains Mono',monospace;
+  opacity:0.7;
+}
+.tp-rank-score {
+  font-weight:800; color:var(--gold);
+  font-family:'JetBrains Mono',monospace; font-size:16px;
+}
+
 /* ═══ Nickname Input ═══ */
 .tp-nickname-row {
   display:flex; align-items:center; gap:10px;

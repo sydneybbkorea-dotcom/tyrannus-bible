@@ -13,12 +13,14 @@ const db = getFirestore(app);
 const COL = 'typing-rankings';
 
 /**
- * Submit score — 1인 1기록, 기존보다 CPM 높을 때만 업데이트
+ * Submit score — 1인 1기록, 기존보다 score 높을 때만 업데이트
+ * score = CPM × (accuracy / 100)
  * @returns {string} 'new'|'updated'|'not_best'|'error'
  */
-async function submitScore(nickname, cpm, accuracy, verseRef, lang) {
+async function submitScore(nickname, score, cpm, accuracy, verseRef, lang) {
   try {
     if (!nickname || nickname.length < 2 || nickname.length > 12) return 'error';
+    if (score < 0 || score > 1500) return 'error';
     if (cpm < 1 || cpm > 1500) return 'error';
     if (accuracy < 0 || accuracy > 100) return 'error';
 
@@ -26,27 +28,23 @@ async function submitScore(nickname, cpm, accuracy, verseRef, lang) {
     var ref = doc(db, COL, docId);
     var snap = await getDoc(ref);
 
+    var data = {
+      nickname: nickname,
+      score: score,
+      cpm: cpm,
+      accuracy: accuracy,
+      verseRef: verseRef || '',
+      lang: lang || 'kr',
+      timestamp: Date.now()
+    };
+
     if (snap.exists()) {
       var existing = snap.data();
-      if (cpm <= existing.cpm) return 'not_best';
-      await setDoc(ref, {
-        nickname: nickname,
-        cpm: cpm,
-        accuracy: accuracy,
-        verseRef: verseRef || '',
-        lang: lang || 'kr',
-        timestamp: Date.now()
-      });
+      if (score <= (existing.score || 0)) return 'not_best';
+      await setDoc(ref, data);
       return 'updated';
     } else {
-      await setDoc(ref, {
-        nickname: nickname,
-        cpm: cpm,
-        accuracy: accuracy,
-        verseRef: verseRef || '',
-        lang: lang || 'kr',
-        timestamp: Date.now()
-      });
+      await setDoc(ref, data);
       return 'new';
     }
   } catch (e) {
@@ -56,13 +54,13 @@ async function submitScore(nickname, cpm, accuracy, verseRef, lang) {
 }
 
 /**
- * Fetch TOP 100 rankings sorted by CPM desc
+ * Fetch TOP 100 rankings sorted by score desc
  * @param {string} langFilter - 'all'|'kr'|'en'
- * @returns {Array} [{nickname, cpm, accuracy, verseRef, lang, timestamp}, ...]
+ * @returns {Array} [{nickname, score, cpm, accuracy, verseRef, lang, timestamp}, ...]
  */
 async function fetchRankings(langFilter) {
   try {
-    var q = query(collection(db, COL), orderBy('cpm', 'desc'), limit(100));
+    var q = query(collection(db, COL), orderBy('score', 'desc'), limit(100));
     var snap = await getDocs(q);
     var results = [];
     snap.forEach(function(d) {
@@ -91,11 +89,10 @@ async function getUserRank(nickname) {
     if (!snap.exists()) return null;
     var userData = snap.data();
 
-    // Count how many have higher CPM
     var all = await fetchRankings('all');
     var rank = 1;
     for (var i = 0; i < all.length; i++) {
-      if (all[i].cpm > userData.cpm) rank++;
+      if ((all[i].score || 0) > (userData.score || 0)) rank++;
     }
     return { rank: rank, data: userData };
   } catch (e) {
