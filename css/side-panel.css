@@ -27,6 +27,7 @@
 .sp-pin-btn.pinned { opacity:1; color:var(--gold); transform:rotate(45deg); }
 .sp-pin-btn.pinned i { text-shadow:0 0 4px rgba(212,175,55,.4); }
 .sp-body { flex:1; overflow-y:auto; }
+#bookList { display:flex; flex-direction:column; height:100%; overflow:hidden; }
 .sp-search-wrap {
   padding:8px 10px; border-bottom:1px solid var(--border); flex-shrink:0;
 }

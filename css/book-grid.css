@@ -1,8 +1,29 @@
 /* book-grid.css — 사이드바 성경 2컬럼 (책 목록 | 장 번호) */
 
+/* ── 구약/신약 탭 바 ── */
+.bn-tabs {
+  display:flex; flex-shrink:0;
+  border-bottom:1px solid var(--glass-border);
+}
+.bn-tab {
+  flex:1; text-align:center; padding:8px 0;
+  font-size:12px; font-weight:600; color:var(--text3);
+  cursor:pointer; transition:all .15s;
+  border-bottom:2px solid transparent;
+  user-select:none;
+}
+.bn-tab:hover {
+  color:var(--text); background:var(--glass-bg-1);
+}
+.bn-tab.active {
+  color:var(--accent-color);
+  border-bottom-color:var(--accent-color);
+  background:var(--glass-bg-1);
+}
+
 /* 전체 2컬럼 분할 */
 .bn-split {
-  display:flex; height:100%; min-height:0;
+  display:flex; flex:1; min-height:0;
 }
 
 /* ── 왼쪽: 책 목록 ── */
@@ -12,15 +33,6 @@
 .bn-ch-col ~ .bn-book-col,
 .bn-book-col:has(~ .bn-ch-col) {
   border-right:1px solid var(--glass-border);
-}
-
-/* 섹션 헤더 (구약/신약) */
-.bn-section-head {
-  padding:8px 12px 5px; font-size:10px; font-weight:700;
-  color:var(--gold); text-transform:uppercase; letter-spacing:1px;
-  background:var(--glass-bg-1); position:sticky; top:0; z-index:2;
-  border-bottom:1px solid var(--glass-border);
-  backdrop-filter:var(--glass-blur-1); -webkit-backdrop-filter:var(--glass-blur-1);
 }
 
 /* 책 이름 행 */
