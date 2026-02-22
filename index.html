@@ -49,6 +49,8 @@
 
 <!-- Firebase (ES module — 병렬 로드) -->
 <script type="module" src="js/firebase.js"></script>
+<!-- 타자 연습 랭킹 (ES module) -->
+<script type="module" src="js/typing-ranking-firebase.js"></script>
 </head>
 
 <body data-input="mouse">
@@ -544,6 +546,7 @@
         <button class="tp-lang active" id="tpLangKr" onclick="_tpSetLang('kr')">Korean</button>
         <button class="tp-lang" id="tpLangEn" onclick="_tpSetLang('en')">English</button>
       </div>
+      <button class="tp-rank-btn" onclick="_tpShowRanking()" title="Ranking"><i class="fa fa-trophy"></i></button>
       <button class="tp-theme-btn" id="tpThemeBtn" onclick="_tpToggleTheme()" title="Light Mode"><i class="fa fa-sun"></i></button>
       <button class="tp-close" onclick="toggleTypingPanel()" title="Close"><i class="fa fa-times"></i></button>
     </div>

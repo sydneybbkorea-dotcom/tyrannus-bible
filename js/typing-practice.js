@@ -29,8 +29,203 @@ var _tp = {
   recentKeys: [],
   lastInputTime: 0,
   speedGauge: 0,
-  speedInterval: null
+  speedInterval: null,
+  nickname: '',
+  rankingView: false,
+  rankingData: [],
+  rankingFilter: 'all'
 };
+
+/* ═══ i18n — 타자연습 내부 번역 ═══ */
+var _tpStrings = {
+  kr: {
+    title: '타자 연습',
+    langKr: '한글',
+    lightMode: '라이트 모드',
+    darkMode: '다크 모드',
+    close: '닫기',
+    allBible: '전체 성경',
+    book: '책',
+    chapter: '장',
+    favorites: '즐겨찾기',
+    folder: '폴더',
+    selectBook: '책 선택...',
+    selectChapter: '장 선택...',
+    selectFolder: '폴더 선택...',
+    chapterN: function(n){ return n + '장'; },
+    newFolder: '새 폴더',
+    folderExists: '이미 존재하는 폴더입니다',
+    enterFolderName: '폴더 이름을 입력하세요:',
+    deleteFolder: function(n){ return '"' + n + '" 폴더를 삭제하시겠습니까?'; },
+    alreadyAdded: '이미 추가된 구절입니다',
+    addedToFolder: function(ref, n){ return ref + ' → "' + n + '" 폴더에 추가됨'; },
+    removedFromFolder: function(ref, n){ return ref + ' → "' + n + '" 에서 제거됨'; },
+    loadingBible: '성경 데이터를 불러오는 중입니다...',
+    noFavorites: '즐겨찾기가 비어있습니다. 구절에 하트를 눌러주세요.',
+    cannotLoad: '구절을 불러올 수 없습니다',
+    selectFolderAdd: '폴더를 선택하고 구절을 추가해주세요',
+    selectBook2: '책을 선택해주세요',
+    selectChapter2: '장을 선택해주세요',
+    cannotFind: '구절을 찾을 수 없습니다. 범위를 확인해주세요.',
+    typingComplete: '타이핑 완료!',
+    accuracy: '정확도',
+    cpmUnit: '타/분',
+    timeLabel: '소요 시간',
+    charAnalysis: '문자 분석',
+    correct: '정확',
+    errors: '오류',
+    punctuation: '구두점',
+    total: '전체',
+    charSuffix: '자',
+    verses: '구절',
+    average: '평균',
+    best: '최고',
+    totalTime: '총',
+    nextVerse: '다음 구절',
+    addToFolder: '폴더에 추가',
+    pressEnter: 'Enter 키를 눌러 다음 구절로',
+    selectFolderLabel: '폴더 선택',
+    added: '추가됨',
+    createFolder: '새 폴더 만들기',
+    enterNewFolder: '새 폴더 이름을 입력하세요:',
+    folderCreated: function(n, hasVerse){ return '"' + n + '" 폴더 생성' + (hasVerse ? ' + 구절 추가됨' : ''); },
+    startMsg: '설정을 선택한 후 시작 버튼을 눌러주세요',
+    start: '시작',
+    veryFast: '매우 빠름',
+    fast: '빠름',
+    normal: '보통',
+    slow: '느림',
+    perfect: '완벽!',
+    excellent: '우수',
+    good: '양호',
+    needsPractice: '연습 필요',
+    prev: '이전',
+    bestLabel: '최고',
+    nickname: '닉네임',
+    nicknamePlaceholder: '닉네임 (2~12자)',
+    ranking: '랭킹',
+    rankingTitle: '타자 랭킹 TOP 100',
+    rankAll: '전체',
+    rankKr: '한국어',
+    rankEn: '영어',
+    rankCol: '순위',
+    rankColNickname: '닉네임',
+    rankColCpm: 'CPM',
+    rankColAcc: '정확도',
+    rankColVerse: '구절',
+    rankColDate: '날짜',
+    rankEmpty: '아직 기록이 없습니다. 첫 번째 랭커가 되어보세요!',
+    rankSubmitted: '랭킹에 등록되었습니다!',
+    rankUpdated: '새로운 최고 기록! 랭킹이 갱신되었습니다!',
+    rankNotBest: '기존 기록보다 낮아 갱신되지 않았습니다',
+    rankError: '랭킹 등록 중 오류가 발생했습니다',
+    rankLoading: '랭킹을 불러오는 중...',
+    rankBack: '돌아가기',
+    myRank: '내 순위',
+    noNickname: '닉네임을 입력해주세요'
+  },
+  en: {
+    title: 'Typing Practice',
+    langKr: '한글',
+    lightMode: 'Light Mode',
+    darkMode: 'Dark Mode',
+    close: 'Close',
+    allBible: 'All Bible',
+    book: 'Book',
+    chapter: 'Chapter',
+    favorites: 'Favorites',
+    folder: 'Folder',
+    selectBook: 'Select book...',
+    selectChapter: 'Select chapter...',
+    selectFolder: 'Select folder...',
+    chapterN: function(n){ return 'Ch. ' + n; },
+    newFolder: 'New Folder',
+    folderExists: 'Folder already exists',
+    enterFolderName: 'Enter folder name:',
+    deleteFolder: function(n){ return 'Delete folder "' + n + '"?'; },
+    alreadyAdded: 'Verse already added',
+    addedToFolder: function(ref, n){ return ref + ' → added to "' + n + '"'; },
+    removedFromFolder: function(ref, n){ return ref + ' → removed from "' + n + '"'; },
+    loadingBible: 'Loading Bible data...',
+    noFavorites: 'No favorites yet. Tap the heart icon on a verse.',
+    cannotLoad: 'Cannot load verse',
+    selectFolderAdd: 'Select a folder and add verses',
+    selectBook2: 'Please select a book',
+    selectChapter2: 'Please select a chapter',
+    cannotFind: 'Cannot find verse. Please check the range.',
+    typingComplete: 'Typing Complete!',
+    accuracy: 'Accuracy',
+    cpmUnit: 'CPM',
+    timeLabel: 'Time',
+    charAnalysis: 'Character Analysis',
+    correct: 'Correct',
+    errors: 'Errors',
+    punctuation: 'Punct.',
+    total: 'Total',
+    charSuffix: '',
+    verses: 'verses',
+    average: 'Avg',
+    best: 'Best',
+    totalTime: 'Total',
+    nextVerse: 'Next Verse',
+    addToFolder: 'Add to folder',
+    pressEnter: 'Press Enter for next verse',
+    selectFolderLabel: 'Select Folder',
+    added: 'Added',
+    createFolder: 'Create New Folder',
+    enterNewFolder: 'Enter new folder name:',
+    folderCreated: function(n, hasVerse){ return '"' + n + '" folder created' + (hasVerse ? ' + verse added' : ''); },
+    startMsg: 'Choose settings and press Start',
+    start: 'Start',
+    veryFast: 'Blazing',
+    fast: 'Fast',
+    normal: 'Normal',
+    slow: 'Slow',
+    perfect: 'Perfect!',
+    excellent: 'Excellent',
+    good: 'Good',
+    needsPractice: 'Keep trying',
+    prev: 'Prev',
+    bestLabel: 'Best',
+    nickname: 'Nickname',
+    nicknamePlaceholder: 'Nickname (2-12 chars)',
+    ranking: 'Ranking',
+    rankingTitle: 'Typing Ranking TOP 100',
+    rankAll: 'All',
+    rankKr: 'Korean',
+    rankEn: 'English',
+    rankCol: 'Rank',
+    rankColNickname: 'Nickname',
+    rankColCpm: 'CPM',
+    rankColAcc: 'Accuracy',
+    rankColVerse: 'Verse',
+    rankColDate: 'Date',
+    rankEmpty: 'No records yet. Be the first to rank!',
+    rankSubmitted: 'Score submitted to ranking!',
+    rankUpdated: 'New personal best! Ranking updated!',
+    rankNotBest: 'Score not updated (lower than your best)',
+    rankError: 'Error submitting to ranking',
+    rankLoading: 'Loading rankings...',
+    rankBack: 'Back',
+    myRank: 'My Rank',
+    noNickname: 'Please enter a nickname'
+  }
+};
+function _tpT(key){ var v = _tpStrings[_tp.lang][key]; return v !== undefined ? v : (_tpStrings.kr[key] !== undefined ? _tpStrings.kr[key] : key); }
+
+/* Helper: get English book name when in EN mode */
+function _tpBookName(krName){
+  if(_tp.lang === 'en' && typeof BOOK_EN !== 'undefined' && BOOK_EN[krName]) return BOOK_EN[krName];
+  return krName;
+}
+function _tpBookShort(krName){
+  if(_tp.lang === 'en' && typeof BOOK_EN !== 'undefined' && BOOK_EN[krName]){
+    var en = BOOK_EN[krName];
+    // Short English: "1 Corinthians" → "1Co", "Genesis" → "Gen"
+    return en.length <= 5 ? en : en.replace(/^(\d?\s?)(\w{3}).*/, '$1$2');
+  }
+  return BOOK_SHORT[krName] || krName;
+}
 
 /* ═══ Typing Sound — 리얼 타자기 샘플 (Hermes Precisa 305) ═══ */
 var _tpBufs = { key:null, space:null, bell:null };
@@ -164,6 +359,7 @@ function _tpInit(){
   _tpLoadSounds();
   _tpLoadStorage();
   _tpApplyTheme();
+  _tpUpdateHeaderLang();
   _tpRenderSettings();
   if(!_tp.started) _tpRenderBody();
 }
@@ -179,7 +375,12 @@ function _tpLoadStorage(){
     if(bc) _tp.bestCpm = parseInt(bc) || 0;
     var tt = localStorage.getItem('tp_theme');
     if(tt) _tp.tpTheme = tt;
+    var nn = localStorage.getItem('tp_nickname');
+    if(nn) _tp.nickname = nn;
   } catch(e){}
+}
+function _tpSaveNickname(){
+  try { localStorage.setItem('tp_nickname', _tp.nickname); } catch(e){}
 }
 function _tpSaveHearts(){
   try { localStorage.setItem('tp_hearts', JSON.stringify(_tp.hearts)); } catch(e){}
@@ -206,7 +407,7 @@ function _tpApplyTheme(){
     btn.innerHTML = _tp.tpTheme === 'dark'
       ? '<i class="fa fa-sun"></i>'
       : '<i class="fa fa-moon"></i>';
-    btn.title = _tp.tpTheme === 'dark' ? '라이트 모드' : '다크 모드';
+    btn.title = _tp.tpTheme === 'dark' ? _tpT('lightMode') : _tpT('darkMode');
   }
 }
 
@@ -215,13 +416,25 @@ function _tpSetLang(lang){
   _tp.lang = lang;
   document.getElementById('tpLangKr')?.classList.toggle('active', lang==='kr');
   document.getElementById('tpLangEn')?.classList.toggle('active', lang==='en');
+  // Update header text
+  _tpUpdateHeaderLang();
   if(lang === 'en' && !KJV && typeof loadBibleEN === 'function'){
     loadBibleEN().then(function(){
-      _tp.verse = null; _tp.started = false; _tpStopTimer(); _tpRenderBody();
+      _tp.verse = null; _tp.started = false; _tpStopTimer();
+      _tpRenderSettings(); _tpRenderBody();
     });
     return;
   }
-  _tp.verse = null; _tp.started = false; _tpStopTimer(); _tpRenderBody();
+  _tp.verse = null; _tp.started = false; _tpStopTimer();
+  _tpRenderSettings(); _tpRenderBody();
+}
+function _tpUpdateHeaderLang(){
+  var titleEl = document.querySelector('#typingOverlay .tp-title');
+  if(titleEl) titleEl.innerHTML = '<i class="fa fa-keyboard"></i> ' + _tpT('title');
+  var themeBtn = document.getElementById('tpThemeBtn');
+  if(themeBtn) themeBtn.title = _tp.tpTheme === 'dark' ? _tpT('lightMode') : _tpT('darkMode');
+  var closeBtn = document.querySelector('#typingOverlay .tp-close');
+  if(closeBtn) closeBtn.title = _tpT('close');
 }
 
 /* ═══ Source ═══ */
@@ -250,11 +463,11 @@ function _tpRenderSettings(){
   if(!el) return;
 
   var sources = [
-    {id:'all',     label:'전체 성경', icon:'fa-bible'},
-    {id:'book',    label:'책',       icon:'fa-book'},
-    {id:'chapter', label:'장',       icon:'fa-file-alt'},
-    {id:'hearts',  label:'즐겨찾기', icon:'fa-heart'},
-    {id:'folder',  label:'폴더',     icon:'fa-folder'}
+    {id:'all',     label:_tpT('allBible'), icon:'fa-bible'},
+    {id:'book',    label:_tpT('book'),     icon:'fa-book'},
+    {id:'chapter', label:_tpT('chapter'),  icon:'fa-file-alt'},
+    {id:'hearts',  label:_tpT('favorites'),icon:'fa-heart'},
+    {id:'folder',  label:_tpT('folder'),   icon:'fa-folder'}
   ];
   var h = '<div class="tp-source-row">';
   sources.forEach(function(s){
@@ -265,17 +478,17 @@ function _tpRenderSettings(){
   // Book / Chapter selectors
   if(_tp.source === 'book' || _tp.source === 'chapter'){
     h += '<div class="tp-sel-row">';
-    h += '<select class="tp-select" id="tpBookSel" onchange="_tpOnBookChange()"><option value="">책 선택...</option>';
+    h += '<select class="tp-select" id="tpBookSel" onchange="_tpOnBookChange()"><option value="">'+_tpT('selectBook')+'</option>';
     var allBooks = BOOKS.OT.concat(BOOKS.NT);
     allBooks.forEach(function(b){
-      h += '<option value="'+b+'"'+(_tp.book===b?' selected':'')+'>'+b+'</option>';
+      h += '<option value="'+b+'"'+(_tp.book===b?' selected':'')+'>'+_tpBookName(b)+'</option>';
     });
     h += '</select>';
     if(_tp.source === 'chapter' && _tp.book){
       var cnt = CHCNT[_tp.book] || 1;
-      h += '<select class="tp-select" id="tpChSel" onchange="_tpOnChChange()"><option value="">장 선택...</option>';
+      h += '<select class="tp-select" id="tpChSel" onchange="_tpOnChChange()"><option value="">'+_tpT('selectChapter')+'</option>';
       for(var i=1; i<=cnt; i++){
-        h += '<option value="'+i+'"'+(_tp.ch===i?' selected':'')+'>'+i+'장</option>';
+        h += '<option value="'+i+'"'+(_tp.ch===i?' selected':'')+'>'+_tpT('chapterN')(i)+'</option>';
       }
       h += '</select>';
     }
@@ -287,14 +500,14 @@ function _tpRenderSettings(){
     h += '<div class="tp-sel-row">';
     var fnames = Object.keys(_tp.folders);
     if(fnames.length > 0){
-      h += '<select class="tp-select" id="tpFolderSel" onchange="_tpOnFolderChange()"><option value="">폴더 선택...</option>';
+      h += '<select class="tp-select" id="tpFolderSel" onchange="_tpOnFolderChange()"><option value="">'+_tpT('selectFolder')+'</option>';
       fnames.forEach(function(n){
         var c = _tp.folders[n].length;
         h += '<option value="'+n+'"'+(_tp.folderName===n?' selected':'')+'>'+n+' ('+c+')</option>';
       });
       h += '</select>';
     }
-    h += '<button class="tp-small-btn" onclick="_tpCreateFolder()"><i class="fa fa-plus"></i> 새 폴더</button>';
+    h += '<button class="tp-small-btn" onclick="_tpCreateFolder()"><i class="fa fa-plus"></i> '+_tpT('newFolder')+'</button>';
     if(_tp.folderName && _tp.folders[_tp.folderName]){
       h += '<button class="tp-small-btn tp-del" onclick="_tpDeleteFolder()"><i class="fa fa-trash"></i></button>';
     }
@@ -305,7 +518,7 @@ function _tpRenderSettings(){
       h += '<div class="tp-folder-list">';
       verses.forEach(function(key, idx){
         var p = key.split('_');
-        var short = BOOK_SHORT[p[0]] || p[0];
+        var short = _tpBookShort(p[0]);
         h += '<span class="tp-folder-tag">'+short+' '+p[1]+':'+p[2]+' <i class="fa fa-times" onclick="_tpRemoveFromFolder('+idx+')"></i></span>';
       });
       h += '</div>';
@@ -317,10 +530,10 @@ function _tpRenderSettings(){
 
 /* ═══ Folder CRUD ═══ */
 function _tpCreateFolder(){
-  var name = prompt('폴더 이름을 입력하세요:');
+  var name = prompt(_tpT('enterFolderName'));
   if(!name || !name.trim()) return;
   var n = name.trim();
-  if(_tp.folders[n]){ toast('이미 존재하는 폴더입니다'); return; }
+  if(_tp.folders[n]){ toast(_tpT('folderExists')); return; }
   _tp.folders[n] = [];
   _tp.folderName = n;
   _tpSaveFolders();
@@ -328,7 +541,7 @@ function _tpCreateFolder(){
 }
 function _tpDeleteFolder(){
   if(!_tp.folderName) return;
-  if(!confirm('"'+_tp.folderName+'" 폴더를 삭제하시겠습니까?')) return;
+  if(!confirm(_tpT('deleteFolder')(_tp.folderName))) return;
   delete _tp.folders[_tp.folderName];
   _tp.folderName = null;
   _tpSaveFolders();
@@ -338,10 +551,10 @@ function _tpAddToFolder(name){
   if(!_tp.verse || !name) return;
   var key = _tp.verse.key;
   if(!_tp.folders[name]) _tp.folders[name] = [];
-  if(_tp.folders[name].indexOf(key) >= 0){ toast('이미 추가된 구절입니다'); return; }
+  if(_tp.folders[name].indexOf(key) >= 0){ toast(_tpT('alreadyAdded')); return; }
   _tp.folders[name].push(key);
   _tpSaveFolders();
-  toast(_tp.verse.ref + ' → "'+name+'" 폴더에 추가됨');
+  toast(_tpT('addedToFolder')(_tp.verse.ref, name));
 }
 function _tpRemoveFromFolder(idx){
   if(!_tp.folderName || !_tp.folders[_tp.folderName]) return;
@@ -357,7 +570,7 @@ function _tpNextVerse(){
     if(_tp.lang === 'en' && typeof loadBibleEN === 'function'){
       loadBibleEN().then(_tpNextVerse);
     } else {
-      toast('성경 데이터를 불러오는 중입니다...');
+      toast(_tpT('loadingBible'));
     }
     return;
   }
@@ -365,17 +578,17 @@ function _tpNextVerse(){
   // Hearts source
   if(_tp.source === 'hearts'){
     var hkeys = Object.keys(_tp.hearts);
-    if(hkeys.length === 0){ toast('즐겨찾기가 비어있습니다. 구절에 하트를 눌러주세요.'); return; }
+    if(hkeys.length === 0){ toast(_tpT('noFavorites')); return; }
     var hk = hkeys[Math.floor(Math.random() * hkeys.length)];
     _tp.verse = _tpVerseFromKey(hk);
-    if(!_tp.verse){ toast('구절을 불러올 수 없습니다'); return; }
+    if(!_tp.verse){ toast(_tpT('cannotLoad')); return; }
     _tpBeginTyping(); return;
   }
 
   // Folder source
   if(_tp.source === 'folder'){
     if(!_tp.folderName || !_tp.folders[_tp.folderName] || _tp.folders[_tp.folderName].length === 0){
-      toast('폴더를 선택하고 구절을 추가해주세요'); return;
+      toast(_tpT('selectFolderAdd')); return;
     }
     var fkeys = _tp.folders[_tp.folderName];
     var pool = fkeys.slice();
@@ -383,16 +596,16 @@ function _tpNextVerse(){
     fkeys.forEach(function(k){ if(_tp.hearts[k]) for(var i=0;i<3;i++) pool.push(k); });
     var fk = pool[Math.floor(Math.random() * pool.length)];
     _tp.verse = _tpVerseFromKey(fk);
-    if(!_tp.verse){ toast('구절을 불러올 수 없습니다'); return; }
+    if(!_tp.verse){ toast(_tpT('cannotLoad')); return; }
     _tpBeginTyping(); return;
   }
 
   // All / Book / Chapter source
   if((_tp.source === 'book' || _tp.source === 'chapter') && !_tp.book){
-    toast('책을 선택해주세요'); return;
+    toast(_tpT('selectBook2')); return;
   }
   if(_tp.source === 'chapter' && !_tp.ch){
-    toast('장을 선택해주세요'); return;
+    toast(_tpT('selectChapter2')); return;
   }
 
   var books;
@@ -439,13 +652,13 @@ function _tpNextVerse(){
     _tp.history.push(key);
     if(_tp.history.length > 20) _tp.history.shift();
 
-    var short = BOOK_SHORT[book] || book;
-    _tp.verse = { book:book, ch:ch, v:vIdx+1, text:text, key:key, ref:short+' '+ch+':'+(vIdx+1), fullBook:book };
+    var short = _tpBookShort(book);
+    _tp.verse = { book:book, ch:ch, v:vIdx+1, text:text, key:key, ref:short+' '+ch+':'+(vIdx+1), fullBook:_tpBookName(book) };
     _tpBeginTyping();
     return;
   }
 
-  toast('구절을 찾을 수 없습니다. 범위를 확인해주세요.');
+  toast(_tpT('cannotFind'));
 }
 
 function _tpVerseFromKey(key){
@@ -457,8 +670,8 @@ function _tpVerseFromKey(key){
   if(!raw) return null;
   var text = raw.replace(/<[^>]+>/g, '').replace(/¶\s*/g, '').trim();
   if(!text) return null;
-  var short = BOOK_SHORT[book] || book;
-  return { book:book, ch:ch, v:v, text:text, key:key, ref:short+' '+ch+':'+v, fullBook:book };
+  var short = _tpBookShort(book);
+  return { book:book, ch:ch, v:v, text:text, key:key, ref:short+' '+ch+':'+v, fullBook:_tpBookName(book) };
 }
 
 /* ═══ Typing Session ═══ */
@@ -707,7 +920,7 @@ function _tpRenderStats(){
 
   el.innerHTML =
     '<span><i class="fa fa-clock"></i> ' + timeStr + '</span>' +
-    '<span><i class="fa fa-tachometer-alt"></i> ' + cpm + ' 타/분</span>' +
+    '<span><i class="fa fa-tachometer-alt"></i> ' + cpm + ' '+_tpT('cpmUnit')+'</span>' +
     '<span><i class="fa fa-bullseye"></i> ' + accuracy + '%</span>' +
     '<span><i class="fa fa-tasks"></i> ' + progress + '%</span>';
 }
@@ -760,17 +973,17 @@ function _tpShowResults(){
 
   // Speed rating
   var speedLabel, speedClass;
-  if(cpm >= 500){ speedLabel = '매우 빠름'; speedClass = 'tp-spd-fast'; }
-  else if(cpm >= 300){ speedLabel = '빠름'; speedClass = 'tp-spd-good'; }
-  else if(cpm >= 150){ speedLabel = '보통'; speedClass = 'tp-spd-normal'; }
-  else { speedLabel = '느림'; speedClass = 'tp-spd-slow'; }
+  if(cpm >= 500){ speedLabel = _tpT('veryFast'); speedClass = 'tp-spd-fast'; }
+  else if(cpm >= 300){ speedLabel = _tpT('fast'); speedClass = 'tp-spd-good'; }
+  else if(cpm >= 150){ speedLabel = _tpT('normal'); speedClass = 'tp-spd-normal'; }
+  else { speedLabel = _tpT('slow'); speedClass = 'tp-spd-slow'; }
 
   // Accuracy rating
   var accLabel;
-  if(accuracy >= 98) accLabel = '완벽!';
-  else if(accuracy >= 95) accLabel = '우수';
-  else if(accuracy >= 90) accLabel = '양호';
-  else accLabel = '연습 필요';
+  if(accuracy >= 98) accLabel = _tpT('perfect');
+  else if(accuracy >= 95) accLabel = _tpT('excellent');
+  else if(accuracy >= 90) accLabel = _tpT('good');
+  else accLabel = _tpT('needsPractice');
 
   var v = _tp.verse;
   var isHearted = !!_tp.hearts[v.key];
@@ -792,7 +1005,7 @@ function _tpShowResults(){
     '<div class="tp-result">' +
       '<div class="tp-result-head">' +
         '<div class="tp-result-icon"><i class="fa fa-check-circle"></i></div>' +
-        '<div class="tp-result-title">타이핑 완료!</div>' +
+        '<div class="tp-result-title">'+_tpT('typingComplete')+'</div>' +
         '<div class="tp-result-ref">' + (v.fullBook || v.book) + ' ' + v.ch + ':' + v.v + '</div>' +
       '</div>' +
 
@@ -808,12 +1021,12 @@ function _tpShowResults(){
               '<span class="tp-ring-lbl">' + accLabel + '</span>' +
             '</div>' +
           '</div>' +
-          '<div class="tp-rcard-title">정확도</div>' +
+          '<div class="tp-rcard-title">'+_tpT('accuracy')+'</div>' +
         '</div>' +
 
         '<div class="tp-rcard">' +
           '<div class="tp-rcard-big">' + cpm + '</div>' +
-          '<div class="tp-rcard-unit">타/분</div>' +
+          '<div class="tp-rcard-unit">'+_tpT('cpmUnit')+'</div>' +
           '<div class="tp-rcard-bar-wrap"><div class="tp-rcard-bar" style="width:' + speedPct + '%"></div></div>' +
           '<div class="tp-rcard-tag ' + speedClass + '">' + speedLabel + '</div>' +
           (prevCpm !== null ? (function(){
@@ -823,53 +1036,54 @@ function _tpShowResults(){
             var icon = delta > 0 ? 'fa-arrow-up' : (delta < 0 ? 'fa-arrow-down' : 'fa-equals');
             return '<div class="tp-rcard-delta ' + cls + '">' +
               '<i class="fa ' + icon + '"></i> ' + sign + delta +
-              ' <span class="tp-delta-prev">(이전: ' + prevCpm + ')</span></div>';
+              ' <span class="tp-delta-prev">('+_tpT('prev')+': ' + prevCpm + ')</span></div>';
           })() : '') +
-          '<div class="tp-rcard-best"><i class="fa fa-trophy"></i> 최고: ' + bestCpm + '</div>' +
+          '<div class="tp-rcard-best"><i class="fa fa-trophy"></i> '+_tpT('bestLabel')+': ' + bestCpm + '</div>' +
         '</div>' +
 
         '<div class="tp-rcard">' +
-          '<div class="tp-rcard-big">' + timeStr + '</div>' +
-          '<div class="tp-rcard-unit">소요 시간</div>' +
-          '<div class="tp-rcard-wpm">' + wpm + ' WPM</div>' +
+          '<div class="tp-rcard-big" style="color:var(--gold)">' + bestCpm + '</div>' +
+          '<div class="tp-rcard-unit">'+_tpT('bestLabel')+' '+_tpT('cpmUnit')+'</div>' +
+          '<div class="tp-rcard-bar-wrap"><div class="tp-rcard-bar" style="width:' + Math.min(100, Math.round(bestCpm / 600 * 100)) + '%"></div></div>' +
+          '<div class="tp-rcard-wpm" style="font-size:28px"><i class="fa fa-trophy"></i></div>' +
         '</div>' +
       '</div>' +
 
       '<div class="tp-result-chart">' +
-        '<div class="tp-chart-title"><i class="fa fa-chart-bar"></i> 문자 분석</div>' +
+        '<div class="tp-chart-title"><i class="fa fa-chart-bar"></i> '+_tpT('charAnalysis')+'</div>' +
         '<div class="tp-chart-bar">' +
           (correct > 0 ? '<div class="tp-cbar-ok" style="width:' + correctPct + '%"></div>' : '') +
           (wrong > 0 ? '<div class="tp-cbar-err" style="width:' + wrongPct + '%"></div>' : '') +
           (skipped > 0 ? '<div class="tp-cbar-skip" style="width:' + skipPct + '%"></div>' : '') +
         '</div>' +
         '<div class="tp-chart-legend">' +
-          '<span><span class="tp-dot" style="background:var(--gold)"></span>정확 ' + correct + '자</span>' +
-          '<span><span class="tp-dot" style="background:#ff4757"></span>오류 ' + wrong + '자</span>' +
-          (skipped > 0 ? '<span><span class="tp-dot" style="background:var(--text3);opacity:.5"></span>구두점 ' + skipped + '자</span>' : '') +
-          '<span><span class="tp-dot" style="background:var(--text2)"></span>전체 ' + totalChars + '자</span>' +
+          '<span><span class="tp-dot" style="background:var(--gold)"></span>'+_tpT('correct')+' ' + correct + _tpT('charSuffix')+'</span>' +
+          '<span><span class="tp-dot" style="background:#ff4757"></span>'+_tpT('errors')+' ' + wrong + _tpT('charSuffix')+'</span>' +
+          (skipped > 0 ? '<span><span class="tp-dot" style="background:var(--text3);opacity:.5"></span>'+_tpT('punctuation')+' ' + skipped + _tpT('charSuffix')+'</span>' : '') +
+          '<span><span class="tp-dot" style="background:var(--text2)"></span>'+_tpT('total')+' ' + totalChars + _tpT('charSuffix')+'</span>' +
         '</div>' +
       '</div>' +
 
       '<div class="tp-session-bar">' +
-        '<span><i class="fa fa-file-alt"></i> ' + _tp.sessionVerses + '구절</span>' +
-        '<span><i class="fa fa-bullseye"></i> 평균 ' + sessionAvgAcc + '%</span>' +
-        '<span><i class="fa fa-trophy"></i> 최고 ' + bestCpm + ' 타/분</span>' +
-        '<span><i class="fa fa-clock"></i> 총 ' + sessionTimeStr + '</span>' +
+        '<span><i class="fa fa-file-alt"></i> ' + _tp.sessionVerses + ' '+_tpT('verses')+'</span>' +
+        '<span><i class="fa fa-bullseye"></i> '+_tpT('average')+' ' + sessionAvgAcc + '%</span>' +
+        '<span><i class="fa fa-trophy"></i> '+_tpT('best')+' ' + bestCpm + ' '+_tpT('cpmUnit')+'</span>' +
+        '<span><i class="fa fa-clock"></i> '+_tpT('totalTime')+' ' + sessionTimeStr + '</span>' +
       '</div>' +
 
       '<div class="tp-result-acts">' +
-        '<button class="tp-next-btn" onclick="_tpNextVerse()"><i class="fa fa-arrow-right"></i> 다음 구절</button>' +
+        '<button class="tp-next-btn" onclick="_tpNextVerse()"><i class="fa fa-arrow-right"></i> '+_tpT('nextVerse')+'</button>' +
         '<button class="tp-heart-btn' + (isHearted ? ' tp-hearted' : '') + '" id="tpHeartBtn" onclick="_tpToggleHeart()">' +
           '<i class="fa' + (isHearted ? 's' : 'r') + ' fa-heart"></i>' +
         '</button>' +
         '<div class="tp-folder-wrap">' +
-          '<button class="tp-folder-btn" id="tpFolderBtn" onclick="_tpToggleFolderMenu()" title="폴더에 추가">' +
+          '<button class="tp-folder-btn" id="tpFolderBtn" onclick="_tpToggleFolderMenu()" title="'+_tpT('addToFolder')+'">' +
             '<i class="fa fa-folder-plus"></i>' +
           '</button>' +
           '<div class="tp-folder-menu" id="tpFolderMenu"></div>' +
         '</div>' +
       '</div>' +
-      '<div class="tp-result-enter"><i class="fa fa-level-down-alt fa-rotate-90"></i> Enter 키를 눌러 다음 구절로</div>' +
+      '<div class="tp-result-enter"><i class="fa fa-level-down-alt fa-rotate-90"></i> '+_tpT('pressEnter')+'</div>' +
     '</div>';
 
   // Document-level Enter key listener
@@ -878,6 +1092,9 @@ function _tpShowResults(){
     else if(e.key === 'Escape'){ e.preventDefault(); toggleTypingPanel(); }
   };
   document.addEventListener('keydown', _tp._resultKeyHandler);
+
+  // Submit score to ranking (async, non-blocking)
+  _tpSubmitScore(cpm, accuracy, v);
 }
 
 /* ═══ Folder Menu (결과 화면) ═══ */
@@ -912,19 +1129,19 @@ function _tpRenderFolderMenu(){
   var fnames = Object.keys(_tp.folders);
   var h = '';
   if(fnames.length > 0){
-    h += '<div class="tp-fm-label">폴더 선택</div>';
+    h += '<div class="tp-fm-label">'+_tpT('selectFolderLabel')+'</div>';
     fnames.forEach(function(n){
       var inFolder = _tp.folders[n] && _tp.folders[n].indexOf(key) >= 0;
       h += '<div class="tp-fm-item' + (inFolder ? ' tp-fm-added' : '') + '" onclick="_tpToggleFolderItem(\'' + n.replace(/'/g, "\\'") + '\')">';
       h += '<i class="fa ' + (inFolder ? 'fa-check-circle' : 'fa-circle') + '"></i>';
       h += '<span>' + n + '</span>';
-      if(inFolder) h += '<span class="tp-fm-badge">추가됨</span>';
+      if(inFolder) h += '<span class="tp-fm-badge">'+_tpT('added')+'</span>';
       h += '</div>';
     });
     h += '<div class="tp-fm-divider"></div>';
   }
   h += '<div class="tp-fm-item tp-fm-create" onclick="_tpCreateFolderFromMenu()">';
-  h += '<i class="fa fa-plus"></i><span>새 폴더 만들기</span>';
+  h += '<i class="fa fa-plus"></i><span>'+_tpT('createFolder')+'</span>';
   h += '</div>';
   menu.innerHTML = h;
 }
@@ -935,24 +1152,24 @@ function _tpToggleFolderItem(name){
   var idx = _tp.folders[name].indexOf(key);
   if(idx >= 0){
     _tp.folders[name].splice(idx, 1);
-    toast(_tp.verse.ref + ' → "' + name + '" 에서 제거됨');
+    toast(_tpT('removedFromFolder')(_tp.verse.ref, name));
   } else {
     _tp.folders[name].push(key);
-    toast(_tp.verse.ref + ' → "' + name + '" 폴더에 추가됨');
+    toast(_tpT('addedToFolder')(_tp.verse.ref, name));
   }
   _tpSaveFolders();
   _tpRenderFolderMenu();
 }
 function _tpCreateFolderFromMenu(){
-  var name = prompt('새 폴더 이름을 입력하세요:');
+  var name = prompt(_tpT('enterNewFolder'));
   if(!name || !name.trim()) return;
   var n = name.trim();
-  if(_tp.folders[n]){ toast('이미 존재하는 폴더입니다'); return; }
+  if(_tp.folders[n]){ toast(_tpT('folderExists')); return; }
   _tp.folders[n] = [];
   if(_tp.verse) _tp.folders[n].push(_tp.verse.key);
   _tpSaveFolders();
   _tpRenderFolderMenu();
-  toast('"' + n + '" 폴더 생성' + (_tp.verse ? ' + 구절 추가됨' : ''));
+  toast(_tpT('folderCreated')(n, !!_tp.verse));
 }
 
 /* ═══ Hearts ═══ */
@@ -977,13 +1194,37 @@ function _tpRenderBody(){
   var el = document.getElementById('tpBody');
   if(!el) return;
 
+  // Ranking view
+  if(_tp.rankingView){
+    _tpRenderRanking(el);
+    return;
+  }
+
   if(!_tp.started || !_tp.verse){
     el.innerHTML =
       '<div class="tp-start-screen">' +
         '<div class="tp-start-icon"><i class="fa fa-keyboard"></i></div>' +
-        '<p class="tp-start-msg">설정을 선택한 후 시작 버튼을 눌러주세요</p>' +
-        '<button class="tp-start-btn" onclick="_tpNextVerse()"><i class="fa fa-play"></i> 시작</button>' +
+        '<div class="tp-nickname-row">' +
+          '<i class="fa fa-user"></i>' +
+          '<input type="text" id="tpNicknameInput" class="tp-nickname-input" ' +
+            'placeholder="'+_tpT('nicknamePlaceholder')+'" ' +
+            'value="'+(_tp.nickname||'').replace(/"/g,'&quot;')+'" ' +
+            'maxlength="12" autocomplete="off" />' +
+        '</div>' +
+        '<p class="tp-start-msg">'+_tpT('startMsg')+'</p>' +
+        '<button class="tp-start-btn" onclick="_tpNextVerse()"><i class="fa fa-play"></i> '+_tpT('start')+'</button>' +
       '</div>';
+    // Attach nickname input listener
+    var nickInput = document.getElementById('tpNicknameInput');
+    if(nickInput){
+      nickInput.addEventListener('input', function(){
+        _tp.nickname = this.value.trim();
+        _tpSaveNickname();
+      });
+      nickInput.addEventListener('keydown', function(e){
+        if(e.key === 'Enter'){ e.preventDefault(); _tpNextVerse(); }
+      });
+    }
     return;
   }
 
@@ -1007,7 +1248,7 @@ function _tpRenderBody(){
             '<i class="fa'+(isHearted?'s':'r')+' fa-heart"></i>' +
           '</button>' +
           '<div class="tp-folder-wrap">' +
-            '<button class="tp-folder-btn" id="tpFolderBtn" onclick="_tpToggleFolderMenu()" title="폴더에 추가">' +
+            '<button class="tp-folder-btn" id="tpFolderBtn" onclick="_tpToggleFolderMenu()" title="'+_tpT('addToFolder')+'">' +
               '<i class="fa fa-bookmark"></i>' +
             '</button>' +
             '<div class="tp-folder-menu" id="tpFolderMenu"></div>' +
@@ -1023,7 +1264,7 @@ function _tpRenderBody(){
     '</div>' +
     '<div class="tp-stats" id="tpStats">' +
       '<span><i class="fa fa-clock"></i> 0:00</span>' +
-      '<span><i class="fa fa-tachometer-alt"></i> 0 타/분</span>' +
+      '<span><i class="fa fa-tachometer-alt"></i> 0 '+_tpT('cpmUnit')+'</span>' +
       '<span><i class="fa fa-bullseye"></i> 100%</span>' +
       '<span><i class="fa fa-tasks"></i> 0%</span>' +
     '</div>';
@@ -1077,4 +1318,144 @@ function _tpRenderBody(){
       }
     });
   }
+}
+
+/* ═══ Score Submission ═══ */
+function _tpSubmitScore(cpm, accuracy, verse){
+  if(!_tp.nickname || _tp.nickname.length < 2) return;
+  if(!window._tpRanking) return;
+  var verseRef = (verse.fullBook || verse.book) + ' ' + verse.ch + ':' + verse.v;
+  window._tpRanking.submitScore(_tp.nickname, cpm, accuracy, verseRef, _tp.lang)
+    .then(function(result){
+      if(result === 'new') toast(_tpT('rankSubmitted'));
+      else if(result === 'updated') toast(_tpT('rankUpdated'));
+    })
+    .catch(function(){});
+}
+
+/* ═══ Ranking Toggle ═══ */
+function _tpShowRanking(){
+  _tp.rankingView = true;
+  _tp.started = false;
+  _tpStopTimer();
+  if(_tp._resultKeyHandler){
+    document.removeEventListener('keydown', _tp._resultKeyHandler);
+    _tp._resultKeyHandler = null;
+  }
+  _tpRenderBody();
+}
+
+function _tpHideRanking(){
+  _tp.rankingView = false;
+  _tpRenderBody();
+}
+
+/* ═══ Ranking UI ═══ */
+function _tpRenderRanking(el){
+  if(!el) el = document.getElementById('tpBody');
+  if(!el) return;
+
+  el.innerHTML =
+    '<div class="tp-ranking-wrap">' +
+      '<div class="tp-ranking-header">' +
+        '<button class="tp-rank-back" onclick="_tpHideRanking()"><i class="fa fa-arrow-left"></i> '+_tpT('rankBack')+'</button>' +
+        '<div class="tp-ranking-title"><i class="fa fa-trophy"></i> '+_tpT('rankingTitle')+'</div>' +
+      '</div>' +
+      '<div class="tp-rank-filters">' +
+        '<button class="tp-rank-filter'+(_tp.rankingFilter==='all'?' active':'')+'" onclick="_tpSetRankFilter(\'all\')">'+_tpT('rankAll')+'</button>' +
+        '<button class="tp-rank-filter'+(_tp.rankingFilter==='kr'?' active':'')+'" onclick="_tpSetRankFilter(\'kr\')">'+_tpT('rankKr')+'</button>' +
+        '<button class="tp-rank-filter'+(_tp.rankingFilter==='en'?' active':'')+'" onclick="_tpSetRankFilter(\'en\')">'+_tpT('rankEn')+'</button>' +
+      '</div>' +
+      '<div class="tp-rank-table-wrap" id="tpRankTable">' +
+        '<div class="tp-rank-loading"><i class="fa fa-spinner fa-spin"></i> '+_tpT('rankLoading')+'</div>' +
+      '</div>' +
+    '</div>';
+
+  _tpLoadRankings();
+}
+
+function _tpSetRankFilter(filter){
+  _tp.rankingFilter = filter;
+  // Update filter button states
+  var btns = document.querySelectorAll('.tp-rank-filter');
+  for(var i = 0; i < btns.length; i++){
+    btns[i].classList.remove('active');
+  }
+  // Set active based on index
+  var idx = filter === 'all' ? 0 : (filter === 'kr' ? 1 : 2);
+  if(btns[idx]) btns[idx].classList.add('active');
+  // Reload
+  var tableWrap = document.getElementById('tpRankTable');
+  if(tableWrap) tableWrap.innerHTML = '<div class="tp-rank-loading"><i class="fa fa-spinner fa-spin"></i> '+_tpT('rankLoading')+'</div>';
+  _tpLoadRankings();
+}
+
+function _tpLoadRankings(){
+  if(!window._tpRanking){
+    var tableWrap = document.getElementById('tpRankTable');
+    if(tableWrap) tableWrap.innerHTML = '<div class="tp-rank-empty">'+_tpT('rankError')+'</div>';
+    return;
+  }
+  window._tpRanking.fetchRankings(_tp.rankingFilter)
+    .then(function(data){
+      _tp.rankingData = data;
+      _tpRenderRankTable(data);
+    })
+    .catch(function(){
+      var tableWrap = document.getElementById('tpRankTable');
+      if(tableWrap) tableWrap.innerHTML = '<div class="tp-rank-empty">'+_tpT('rankError')+'</div>';
+    });
+}
+
+function _tpRenderRankTable(data){
+  var tableWrap = document.getElementById('tpRankTable');
+  if(!tableWrap) return;
+
+  if(!data || data.length === 0){
+    tableWrap.innerHTML = '<div class="tp-rank-empty"><i class="fa fa-inbox"></i><p>'+_tpT('rankEmpty')+'</p></div>';
+    return;
+  }
+
+  var myNick = (_tp.nickname || '').toLowerCase();
+  var h = '<table class="tp-rank-table">';
+  h += '<thead><tr>' +
+    '<th>'+_tpT('rankCol')+'</th>' +
+    '<th>'+_tpT('rankColNickname')+'</th>' +
+    '<th>'+_tpT('rankColCpm')+'</th>' +
+    '<th>'+_tpT('rankColAcc')+'</th>' +
+    '<th class="tp-rank-hide-mobile">'+_tpT('rankColVerse')+'</th>' +
+    '<th class="tp-rank-hide-mobile">'+_tpT('rankColDate')+'</th>' +
+    '</tr></thead><tbody>';
+
+  for(var i = 0; i < data.length; i++){
+    var r = data[i];
+    var rank = i + 1;
+    var isMe = myNick && r.nickname && r.nickname.toLowerCase() === myNick;
+    var medal = '';
+    if(rank === 1) medal = '<span class="tp-medal tp-gold">🥇</span>';
+    else if(rank === 2) medal = '<span class="tp-medal tp-silver">🥈</span>';
+    else if(rank === 3) medal = '<span class="tp-medal tp-bronze">🥉</span>';
+    else medal = '<span class="tp-rank-num">' + rank + '</span>';
+
+    var dateStr = '';
+    if(r.timestamp){
+      var d = new Date(r.timestamp);
+      dateStr = d.getFullYear() + '.' + (d.getMonth()+1) + '.' + d.getDate();
+    }
+
+    h += '<tr class="' + (isMe ? 'tp-rank-me' : '') + (rank <= 3 ? ' tp-rank-top3' : '') + '">' +
+      '<td class="tp-rank-pos">' + medal + '</td>' +
+      '<td class="tp-rank-nick">' + _tpEscHtml(r.nickname || '?') + (isMe ? ' <span class="tp-rank-me-badge">'+_tpT('myRank')+'</span>' : '') + '</td>' +
+      '<td class="tp-rank-cpm">' + (r.cpm || 0) + '</td>' +
+      '<td class="tp-rank-acc">' + (r.accuracy || 0) + '%</td>' +
+      '<td class="tp-rank-verse tp-rank-hide-mobile">' + _tpEscHtml(r.verseRef || '') + '</td>' +
+      '<td class="tp-rank-date tp-rank-hide-mobile">' + dateStr + '</td>' +
+      '</tr>';
+  }
+  h += '</tbody></table>';
+  tableWrap.innerHTML = h;
+}
+
+function _tpEscHtml(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
