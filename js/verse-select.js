@@ -8,6 +8,11 @@ function restoreSel(){
 /* ── 구절 클릭: 첫 클릭=선택, 두번째 클릭=참조바 토글 ── */
 function focusVerse(vn){
   hideVerseMenu();
+  // 다중 선택 상태에서 일반 클릭 → 전부 해제
+  if(S.selVSet && S.selVSet.size){
+    document.querySelectorAll('.vrow.vsel').forEach(r=>r.classList.remove('vsel'));
+    S.selVSet.clear(); _updateStatV();
+  }
   // 이미 선택된 구절 다시 클릭 → 참조바 토글
   if(S.selV===vn){
     var bar=document.getElementById('xrefBar');
