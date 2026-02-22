@@ -1,30 +1,52 @@
-// book-nav.js — 사이드바 책/장 그리드 렌더링
-var _bnTab='OT', _bnSelBook=null;
+// book-nav.js — 사이드바 책/장 2컬럼 렌더링
+var _bnSelBook = null;
 
 function buildBookList(){
-  _bnSelBook=S.book; _bnTab=BOOKS.OT.includes(S.book)?'OT':'NT';
+  _bnSelBook = null;
   renderBookGrid();
 }
+
 function renderBookGrid(){
-  const c=document.getElementById('bookList'); if(!c) return;
-  const books=_bnTab==='OT'?BOOKS.OT:BOOKS.NT;
-  let h=`<div class="bn-tabs">`;
-  h+=`<div class="bn-tab${_bnTab==='OT'?' act':''}" onclick="_bnSwitchTab('OT')">구약</div>`;
-  h+=`<div class="bn-tab${_bnTab==='NT'?' act':''}" onclick="_bnSwitchTab('NT')">신약</div></div>`;
-  h+=`<div class="bn-books"><div class="bn-book-grid">`;
-  books.forEach(b=>{
-    const short=BOOK_SHORT[b]||b.slice(0,2), act=(b===_bnSelBook);
-    h+=`<div class="bn-book${act?' act':''}" onclick="_bnPickBook('${b}')" title="${b}">${short}</div>`;
+  const c = document.getElementById('bookList');
+  if(!c) return;
+
+  let h = '<div class="bn-split">';
+
+  // 왼쪽: 책 목록 (스크롤)
+  h += '<div class="bn-book-col">';
+  h += '<div class="bn-section-head">구약</div>';
+  BOOKS.OT.forEach(b => {
+    const sel = (b === _bnSelBook);
+    const cur = (b === S.book);
+    h += `<div class="bn-book${sel ? ' sel' : ''}${cur ? ' current' : ''}" onclick="_bnPickBook('${b}')">${b}</div>`;
   });
-  h+=`</div></div>`;
+  h += '<div class="bn-section-head">신약</div>';
+  BOOKS.NT.forEach(b => {
+    const sel = (b === _bnSelBook);
+    const cur = (b === S.book);
+    h += `<div class="bn-book${sel ? ' sel' : ''}${cur ? ' current' : ''}" onclick="_bnPickBook('${b}')">${b}</div>`;
+  });
+  h += '</div>';
+
+  // 오른쪽: 장 번호 패널 (책 선택 시에만 표시)
   if(_bnSelBook){
-    const cnt=CHCNT[_bnSelBook]||1;
-    h+=`<div class="bn-chapters"><div class="bn-ch-label"><span>${_bnSelBook}</span> 장 선택</div><div class="bn-ch-grid">`;
-    for(let i=1;i<=cnt;i++){
-      const act=(_bnSelBook===S.book&&i===S.ch);
-      h+=`<div class="bn-ch${act?' act':''}" onclick="_bnPickCh(${i})">${i}</div>`;
+    h += '<div class="bn-ch-col">';
+    const cnt = CHCNT[_bnSelBook] || 1;
+    const short = BOOK_SHORT[_bnSelBook] || _bnSelBook;
+    h += `<div class="bn-ch-head">${short}</div>`;
+    for(let i = 1; i <= cnt; i++){
+      const act = (_bnSelBook === S.book && i === S.ch);
+      h += `<div class="bn-ch${act ? ' act' : ''}" onclick="_bnPickCh(${i})">${i}</div>`;
     }
-    h+=`</div></div>`;
+    h += '</div>';
   }
-  c.innerHTML=h;
+
+  h += '</div>';
+  c.innerHTML = h;
+
+  // 선택된 책으로 스크롤
+  if(_bnSelBook){
+    const el = c.querySelector('.bn-book.sel');
+    if(el) setTimeout(() => el.scrollIntoView({block:'nearest', behavior:'smooth'}), 50);
+  }
 }

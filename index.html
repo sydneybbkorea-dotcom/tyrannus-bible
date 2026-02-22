@@ -13,7 +13,7 @@
 <!-- App CSS (모듈화) -->
 <link rel="stylesheet" href="css/theme-system.css?v=10">
 <link rel="stylesheet" href="css/variables.css?v=20">
-<link rel="stylesheet" href="css/layout.css?v=15">
+<link rel="stylesheet" href="css/layout.css?v=16">
 <link rel="stylesheet" href="css/icon-rail.css?v=16">
 <link rel="stylesheet" href="css/side-panel.css?v=15">
 <link rel="stylesheet" href="css/topbar.css?v=17">
@@ -22,8 +22,8 @@
 <link rel="stylesheet" href="css/commentary.css?v=17">
 <link rel="stylesheet" href="css/search.css?v=15">
 <link rel="stylesheet" href="css/ui.css?v=15">
-<link rel="stylesheet" href="css/nav-picker.css?v=16">
-<link rel="stylesheet" href="css/book-grid.css?v=16">
+<link rel="stylesheet" href="css/nav-picker.css?v=17">
+<link rel="stylesheet" href="css/book-grid.css?v=18">
 <link rel="stylesheet" href="css/bookmark.css?v=15">
 <link rel="stylesheet" href="css/word-study.css?v=15">
 <link rel="stylesheet" href="css/xref-inline.css?v=15">
@@ -35,6 +35,7 @@
 <link rel="stylesheet" href="css/dict.css?v=17">
 <link rel="stylesheet" href="css/sync.css?v=15">
 <link rel="stylesheet" href="css/settings-panel.css?v=20">
+<link rel="stylesheet" href="css/typing.css?v=5">
 <link rel="stylesheet" href="css/responsive.css?v=2">
 <link rel="stylesheet" href="css/pdf-panel.css?v=2">
 <link rel="stylesheet" href="css/pdf-viewer.css?v=4">
@@ -52,11 +53,6 @@
 <!-- 숨겨진 호환용 요소들 -->
 <select id="bookSel" style="display:none" onchange="onBookChange()"></select>
 <select id="chSel" style="display:none" onchange="onChChange()"></select>
-<button id="navPickerBtn" class="nav-picker-btn" style="display:none" onclick="toggleNavPicker()">
-  <span id="navPickerLabel">창세기 1장</span>
-  <i class="fa fa-chevron-down nav-picker-arrow"></i>
-</button>
-<div id="navPickerPopup" class="nav-picker-popup"></div>
 <input type="hidden" id="qsInput">
 
 <!-- ══ MAIN ════════════════════════════════════ -->
@@ -80,10 +76,13 @@
     <div id="bibleViewBar">
       <button class="tb-pin" id="bibleTabAdd" onclick="addBibleTab()" title="새 탭"><i class="fa fa-plus"></i></button>
       <div class="vb-left">
-        <button class="vb-sel" id="vbBookSel" onclick="openBookDrop()"><span id="vbBookLabel">창세기</span> <i class="fa fa-caret-down vb-caret"></i></button>
-        <button class="vb-sel vb-ch-sel" id="vbChSel" onclick="openChDrop()"><span id="vbChNum">1</span>장 <i class="fa fa-caret-down vb-caret"></i></button>
+        <button class="nav-picker-btn" id="navPickerBtn" onclick="toggleNavPicker()">
+          <span id="navPickerLabel">창세기 1장</span>
+          <i class="fa fa-chevron-down nav-picker-arrow"></i>
+        </button>
         <button class="vb-arrow" onclick="prevCh()" title="이전 장"><i class="fa fa-chevron-left"></i></button>
         <button class="vb-arrow" onclick="nextCh()" title="다음 장"><i class="fa fa-chevron-right"></i></button>
+        <div id="navPickerPopup" class="nav-picker-popup"></div>
       </div>
       <div class="vb-search">
         <i class="fa fa-search vb-sch-icon"></i>
@@ -101,10 +100,6 @@
         <span class="vb-sep"></span>
         <span class="vb-info" id="vbVerseCount"></span>
       </div>
-      <!-- 책 드롭다운 -->
-      <div id="bookDropdown" class="cp-drop" style="display:none"></div>
-      <!-- 장 드롭다운 -->
-      <div id="chDropdown" class="cp-drop cp-drop-ch" style="display:none"></div>
     </div>
     <!-- 3행: 아이콘레일 + 사이드패널 + 본문 (레일만 슬라이드) -->
     <div id="bibleBody">
@@ -137,6 +132,9 @@
           </button>
           <button class="rail-icon" data-rail="graph" onclick="toggleKnowledgeGraph()" title="지식 그래프">
             <i class="fa fa-project-diagram"></i><span class="rail-label">그래프</span>
+          </button>
+          <button class="rail-icon" data-rail="typing" onclick="toggleTypingPanel()" title="타자 연습">
+            <i class="fa fa-keyboard"></i><span class="rail-label">타자</span>
           </button>
         </div>
         <div class="rail-bottom">
@@ -535,6 +533,22 @@
   </div>
 </div>
 
+<!-- Typing Practice Overlay -->
+<div id="typingOverlay" class="tp-overlay">
+  <div class="tp-header">
+    <span class="tp-title"><i class="fa fa-keyboard"></i> 타자 연습</span>
+    <div class="tp-header-right">
+      <div class="tp-lang-group">
+        <button class="tp-lang active" id="tpLangKr" onclick="_tpSetLang('kr')">한글</button>
+        <button class="tp-lang" id="tpLangEn" onclick="_tpSetLang('en')">English</button>
+      </div>
+      <button class="tp-close" onclick="toggleTypingPanel()" title="닫기"><i class="fa fa-times"></i></button>
+    </div>
+  </div>
+  <div class="tp-settings" id="tpSettings"></div>
+  <div class="tp-body" id="tpBody"></div>
+</div>
+
 <!-- Verse Tooltip -->
 <div id="vtip"><div id="vtip-ref"></div><div id="vtip-txt"></div></div>
 <!-- Toast -->
@@ -735,6 +749,9 @@
 <!-- 지식 그래프 -->
 <script src="js/graph/knowledge-graph.js?v=6"></script>
 <script src="js/graph/graph-filter.js?v=2"></script>
+
+<!-- 타자 연습 -->
+<script src="js/typing-practice.js?v=5"></script>
 
 <!-- 초기화 (반드시 마지막) -->
 <script src="js/app-paste.js"></script>

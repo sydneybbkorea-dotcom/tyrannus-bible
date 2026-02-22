@@ -12,7 +12,7 @@ body {
 /* 레거시 bookNav 요소 숨김 (아이콘 레일로 대체) */
 #bookNav, #bookNavTab, #bookNavOverlay { display:none !important; }
 
-#bookList { overflow-y:auto; flex:1; padding:0; min-width:260px; }
+#bookList { overflow:hidden; flex:1; padding:0; min-width:260px; }
 
 ::-webkit-scrollbar { width:5px; height:5px }
 ::-webkit-scrollbar-track { background:transparent }
