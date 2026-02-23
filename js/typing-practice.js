@@ -875,7 +875,7 @@ function _tpOnInput(){
 
   // 기호 입력 무시: 오타로 인식하지 않고 자동 제거
   if(!_tp.composing){
-    var cleaned = _tp.typed.replace(/[\[\]{};':"<>,\.\/\?]/g, '');
+    var cleaned = _tp.typed.replace(/[\[\]{};':"<>,\.\/\?\u2018\u2019\u201C\u201D\u201A\u201E\u00AB\u00BB]/g, '');
     if(cleaned !== _tp.typed){
       _tp.typed = cleaned;
       ta.value = cleaned;
