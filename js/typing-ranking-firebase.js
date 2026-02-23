@@ -53,7 +53,7 @@ async function submitScore(nickname, score, cpm, accuracy, verseRef, lang) {
     }
   } catch (e) {
     console.error('Ranking submit error:', e);
-    return 'error';
+    return 'error:' + (e.code || e.message || 'unknown');
   }
 }
 

@@ -1816,11 +1816,11 @@ function _tpSubmitScore(score, cpm, accuracy, verse){
         if(result === 'new') toast(_tpT('rankSubmitted') + ' (#' + rank + ')');
         else if(result === 'updated') toast(_tpT('rankUpdated') + ' (#' + rank + ')');
         else if(result === 'no_auth') toast(_tpT('rankNeedLogin'));
-        else if(result === 'error') toast(_tpT('rankError'));
+        else if(typeof result === 'string' && result.indexOf('error') === 0) toast(result);
       });
   }).catch(function(e){
     console.error('[Ranking] 제출 실패:', e);
-    toast(_tpT('rankError'));
+    toast('catch: ' + (e.code || e.message || e));
   });
 }
 
