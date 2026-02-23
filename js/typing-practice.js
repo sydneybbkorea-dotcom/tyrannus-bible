@@ -1210,8 +1210,8 @@ function _tpShowResults(){
   var skipPct = totalChars > 0 ? (skipped / totalChars * 100).toFixed(1) : 0;
   var speedPct = Math.min(100, Math.round(cpm / 600 * 100));
 
-  // Combined score: CPM × accuracy/100 × 1.5 (기본 보정)
-  var score = Math.round(cpm * accuracy / 100 * 2.5);
+  // Combined score: CPM × accuracy/100 × 2.8 (보정 계수)
+  var score = Math.round(cpm * accuracy / 100 * 2.8);
   var scorePct = Math.min(100, Math.round(score / 900 * 100));
 
   // SVG ring
