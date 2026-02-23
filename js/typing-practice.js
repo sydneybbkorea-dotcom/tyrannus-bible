@@ -1065,19 +1065,17 @@ function _tpStopTimer(){
 function _tpTickSpeedGauge(){
   if(!_tp.started || _tp.finished) return;
   var now = Date.now();
-  // Overall jamo CPM = 맞은 글자의 자모 수 / 경과 시간 (분)
+  // Overall CPM = correct chars only / total elapsed minutes
   var target = 0;
   if(_tp.startTime && _tp.typed.length > 0 && _tp.verse){
     var elapsed = (now - _tp.startTime) / 60000; // minutes
     if(elapsed > 0){
       var r = _tpBuildMapping(_tp.verse.text, _tp.typed);
-      var corrJamo = 0;
+      var corr = 0;
       for(var ci = 0; ci < r.map.length; ci++){
-        if(r.map[ci] >= 0 && _tpMatch(_tp.typed[ci], _tp.verse.text[r.map[ci]])){
-          corrJamo += _tpDecompose(_tp.typed[ci]).length;
-        }
+        if(r.map[ci] >= 0 && _tpMatch(_tp.typed[ci], _tp.verse.text[r.map[ci]])) corr++;
       }
-      target = Math.round(corrJamo / elapsed);
+      target = Math.round(corr / elapsed);
     }
   }
   // Smooth interpolation
