@@ -838,7 +838,9 @@ function _tpVerseFromKey(key){
   var data = _tp.lang === 'en' ? KJV : BIBLE;
   var raw = data && data[book] && data[book][ch] && data[book][ch][v-1];
   if(!raw) return null;
-  var text = raw.replace(/<[^>]+>/g, '').replace(/¶\s*/g, '').trim();
+  var text = raw.replace(/<[^>]+>/g, '').replace(/¶\s*/g, '')
+    .replace(/['"''\u2018\u2019\u201A""\u201C\u201D\u201E\u00AB\u00BB\u2039\u203A\u301D\u301E\u301F\uFF02\uFF07]/g, '')
+    .replace(/\s{2,}/g, ' ').trim();
   if(!text) return null;
   var short = _tpBookShort(book);
   return { book:book, ch:ch, v:v, text:text, key:key, ref:short+' '+ch+':'+v, fullBook:_tpBookName(book) };
