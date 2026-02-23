@@ -39,6 +39,7 @@
 <link rel="stylesheet" href="css/sync.css?v=15">
 <link rel="stylesheet" href="css/settings-panel.css?v=21">
 <link rel="stylesheet" href="css/typing.css?v=10">
+<link rel="stylesheet" href="css/hymns.css?v=1">
 <link rel="stylesheet" href="css/responsive.css?v=2">
 <link rel="stylesheet" href="css/pdf-panel.css?v=2">
 <link rel="stylesheet" href="css/pdf-viewer.css?v=5">
@@ -138,6 +139,9 @@
           <button class="rail-icon" data-rail="typing" onclick="toggleTypingPanel()" title="타자 연습">
             <i class="fa fa-keyboard"></i><span class="rail-label">타자</span>
           </button>
+          <button class="rail-icon" data-rail="hymns" onclick="toggleHymnsOverlay()" title="찬양">
+            <i class="fa fa-music"></i><span class="rail-label">찬양</span>
+          </button>
         </div>
         <div class="rail-bottom">
           <button class="rail-icon" data-rail="bugreport" onclick="toggleRail('bugreport')" title="버그 리포트">
@@ -206,6 +210,50 @@
         <button class="chnav" onclick="nextCh()">다음 장 <i class="fa fa-chevron-right"></i></button>
       </div>
     </div><!-- /bibleScroll -->
+    <!-- 찬양 오버레이 -->
+    <div id="hymnsOverlay" class="hymns-overlay" style="display:none">
+      <div class="hymns-header" id="hymnsHeader">
+        <div class="hym-hdr-left">
+          <button class="hym-back-btn" id="hymBackBtn" onclick="_hymGoBack()" style="display:none">
+            <i class="fa fa-arrow-left"></i></button>
+          <span class="hym-title" id="hymTitle"><i class="fa fa-music"></i> 찬양</span>
+        </div>
+        <div class="hym-hdr-center">
+          <div class="hym-search-wrap" id="hymSearchWrap">
+            <i class="fa fa-search hym-search-icon"></i>
+            <input class="hym-search" id="hymSearch" placeholder="번호 검색..." oninput="_hymOnSearch(this.value)">
+          </div>
+        </div>
+        <div class="hym-hdr-right">
+          <div class="hym-filter-group" id="hymFilterGroup">
+            <button class="hym-filter-btn hym-filter-active" data-filter="all" onclick="_hymSetFilter('all')">전체</button>
+            <button class="hym-filter-btn" data-filter="fav" onclick="_hymSetFilter('fav')"><i class="fa fa-heart"></i></button>
+            <button class="hym-filter-btn" data-filter="playlists" onclick="_hymSetFilter('playlists')"><i class="fa fa-list"></i></button>
+          </div>
+          <button class="hymns-close" onclick="toggleHymnsOverlay()" title="닫기"><i class="fa fa-times"></i></button>
+        </div>
+      </div>
+      <div class="hymns-body" id="hymnsBody">
+        <div class="hym-view" id="hymViewList"></div>
+        <div class="hym-view" id="hymViewDetail" style="display:none"></div>
+        <div class="hym-view" id="hymViewPlaylists" style="display:none"></div>
+        <div class="hym-view" id="hymViewPlaylistDetail" style="display:none"></div>
+      </div>
+      <div class="hym-player-bar" id="hymPlayerBar" style="display:none">
+        <div class="hym-pb-info" onclick="_hymOpenCurrentDetail()">
+          <span class="hym-pb-title" id="hymPbTitle"></span>
+        </div>
+        <div class="hym-pb-controls">
+          <button class="hym-pb-btn" onclick="_hymPrev()"><i class="fa fa-step-backward"></i></button>
+          <button class="hym-pb-btn hym-pb-play" id="hymPbPlayBtn" onclick="_hymTogglePlay()"><i class="fa fa-play"></i></button>
+          <button class="hym-pb-btn" onclick="_hymNext()"><i class="fa fa-step-forward"></i></button>
+        </div>
+        <div class="hym-pb-progress">
+          <div class="hym-pb-track" id="hymPbTrack" onmousedown="_hymSeekStart(event,'mini')" ontouchstart="_hymSeekStart(event,'mini')"><div class="hym-pb-fill" id="hymPbFill"></div></div>
+          <span class="hym-pb-time" id="hymPbTime">0:00</span>
+        </div>
+      </div>
+    </div>
     </div><!-- /bibleBody -->
   </div><!-- /biblePane -->
 
@@ -559,6 +607,8 @@
 <div id="vtip"><div id="vtip-ref"></div><div id="vtip-txt"></div></div>
 <!-- Toast -->
 <div id="toast"></div>
+<!-- Hymn Audio -->
+<audio id="hymAudio" preload="none"></audio>
 
 <!-- ═══════════════════════════════════════════════
      SCRIPTS (모듈화된 JS)
@@ -761,6 +811,9 @@
 
 <!-- 타자 연습 -->
 <script src="js/typing-practice.js?v=8"></script>
+
+<!-- 찬양 -->
+<script src="js/hymns.js?v=1"></script>
 
 <!-- 초기화 (반드시 마지막) -->
 <script src="js/panel-resize.js?v=1"></script>

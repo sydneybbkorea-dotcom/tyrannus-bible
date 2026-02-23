@@ -30,4 +30,8 @@ Object.assign(S, {
   pdfFiles: [],
   curPdfFolder: 'pdf-default',
   openPdfFolders: new Set(['pdf-default']),
+  // Hymn state
+  hymnFav: new Set(),
+  hymnPlaylists: [],
+  hymnLastPlayed: null,
 });

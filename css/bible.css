@@ -552,3 +552,5 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
 .ch-nav { display:flex; justify-content:space-between; align-items:center; padding:20px 0 0; margin-top:20px; border-top:1px solid var(--border) }
 .chnav { padding:8px 20px; border-radius:var(--radius); font-size:12px; background:var(--glass-bg-1); border:1px solid var(--glass-border); color:var(--text2); transition:all .15s; font-weight:500; box-shadow:var(--glass-highlight); }
 .chnav:hover { background:var(--accent-dim); border-color:var(--accent); color:var(--accent) }
+
+/* ═══ 찬양 오버레이 → css/hymns.css 로 이전됨 ═══ */

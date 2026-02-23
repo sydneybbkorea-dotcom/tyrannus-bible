@@ -92,6 +92,20 @@ function toggleKnowledgeGraph(){
   }
 }
 
+/* ═══ 찬양 오버레이 토글 ═══ */
+function toggleHymnsOverlay(){
+  if(typeof _hymToggleOverlay === 'function'){ _hymToggleOverlay(); return; }
+  var el = document.getElementById('hymnsOverlay');
+  var scroll = document.getElementById('bibleScroll');
+  if(!el) return;
+  var show = el.style.display === 'none';
+  el.style.display = show ? 'flex' : 'none';
+  if(scroll) scroll.style.display = show ? 'none' : '';
+  var ri = document.querySelector('.rail-icon[data-rail="hymns"]');
+  if(ri) ri.classList.toggle('active', show);
+  if(show && _activeRail && !_spPinned) closeSidePanel();
+}
+
 function _initSection(name){
   if(name==='bible') buildBookList();
   else if(name==='bookmark') renderBookmarks();

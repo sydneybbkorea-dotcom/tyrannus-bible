@@ -1,6 +1,6 @@
 function persist(){
   // localStorage (오프라인 백업)
-  try { localStorage.setItem('kjb2',JSON.stringify({hl:S.hl,hlMemo:S.hlMemo||{},hlRanges:S.hlRanges||{},verseMemo:S.verseMemo||{},bk:[...S.bk],notes:S.notes,folders:S.folders,openFolders:[...S.openFolders],showRedLetter:S.showRedLetter||false,readPlan:S.readPlan||null})); } catch(e){}
+  try { localStorage.setItem('kjb2',JSON.stringify({hl:S.hl,hlMemo:S.hlMemo||{},hlRanges:S.hlRanges||{},verseMemo:S.verseMemo||{},bk:[...S.bk],notes:S.notes,folders:S.folders,openFolders:[...S.openFolders],showRedLetter:S.showRedLetter||false,readPlan:S.readPlan||null,hymnFav:[...S.hymnFav],hymnPlaylists:S.hymnPlaylists,hymnLastPlayed:S.hymnLastPlayed})); } catch(e){}
 
   // IndexedDB dual-write (async, non-blocking)
   if(typeof StorageAdapter !== 'undefined' && StorageAdapter.isReady()){
@@ -29,5 +29,8 @@ window.restore = function restore(){
     if(d.openFolders) S.openFolders=new Set(d.openFolders);
     if(d.showRedLetter) S.showRedLetter=d.showRedLetter;
     if(d.readPlan) S.readPlan=d.readPlan;
+    if(d.hymnFav) S.hymnFav=new Set(d.hymnFav);
+    if(d.hymnPlaylists) S.hymnPlaylists=d.hymnPlaylists;
+    if(d.hymnLastPlayed) S.hymnLastPlayed=d.hymnLastPlayed;
   } catch(e){}
 }
