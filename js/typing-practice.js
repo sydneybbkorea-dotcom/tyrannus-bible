@@ -300,11 +300,11 @@ function _tpPlayKeySound(code){
   }
 }
 
-/* 오타: 벨 딩 + 더블 키탭 (확실한 오류 피드백) */
+/* 오타: 벨 딩 + 더블 키탭 (타자음보다 약간 큰 정도) */
 function _tpPlayErrorSound(){
-  _tpPlayBuf(_tpBufs.bell, 0.7, 0.8);
-  _tpPlayBuf(_tpBufs.key, 0.55, 0.9);
-  setTimeout(function(){ _tpPlayBuf(_tpBufs.key, 0.5, 0.7); }, 60);
+  _tpPlayBuf(_tpBufs.bell, 0.7, 0.4);
+  _tpPlayBuf(_tpBufs.key, 0.55, 0.5);
+  setTimeout(function(){ _tpPlayBuf(_tpBufs.key, 0.5, 0.35); }, 60);
 }
 
 /* 스페이스바: 넓은 바 타격 (return 사운드 가볍게) */
@@ -1211,7 +1211,7 @@ function _tpShowResults(){
   var speedPct = Math.min(100, Math.round(cpm / 600 * 100));
 
   // Combined score: CPM × accuracy/100 × 1.5 (기본 보정)
-  var score = Math.round(cpm * accuracy / 100 * 1.5);
+  var score = Math.round(cpm * accuracy / 100 * 2.5);
   var scorePct = Math.min(100, Math.round(score / 900 * 100));
 
   // SVG ring
