@@ -332,6 +332,13 @@ function _tpPlayFinishSound(){
 var _tpPunctuation = /^[,.\-;:!?'"''""·…「」『』《》〈〉\(\)\[\]\/\\~@#$%^&*+=|`{}«»‹›〝〞〟＂＇]$/;
 function _tpIsPunct(ch){ return _tpPunctuation.test(ch); }
 
+/* 자모 기반 타수 계산 (한컴타자연습 방식: 가=2타, 한=3타, 영문/공백=1타) */
+function _tpCountJamo(text){
+  var count = 0;
+  for(var i = 0; i < text.length; i++) count += _tpDecompose(text[i]).length;
+  return count;
+}
+
 /* ═══ Character normalization (curly quotes → straight, etc.) ═══ */
 var _tpNormMap = {
   '\u2018':"'", '\u2019':"'", '\u201A':"'",
@@ -1152,7 +1159,8 @@ function _tpRenderStats(){
   }
 
   var accuracy = typed.length > 0 ? Math.round(correct / typed.length * 100) : 100;
-  var cpm = minutes > 0 ? Math.round(typed.length / minutes) : 0;
+  var jamoCount = _tpCountJamo(typed);
+  var cpm = minutes > 0 ? Math.round(jamoCount / minutes) : 0;
   var progress = Math.min(100, Math.round(result.nextTarget / target.length * 100));
   var m = Math.floor(elapsed/60);
   var sec = Math.floor(elapsed%60);
@@ -1187,8 +1195,9 @@ function _tpShowResults(){
   var skipped = result.skipped.length;
   var totalChars = target.length;
   var accuracy = typed.length > 0 ? Math.round(correct / typed.length * 100) : 100;
-  var cpm = minutes > 0 ? Math.round(typed.length / minutes) : 0;
-  var wpm = minutes > 0 ? Math.round((typed.length / 5) / minutes) : 0;
+  var jamoCount = _tpCountJamo(typed);
+  var cpm = minutes > 0 ? Math.round(jamoCount / minutes) : 0;
+  var wpm = minutes > 0 ? Math.round((jamoCount / 5) / minutes) : 0;
 
   // Previous CPM comparison
   var prevCpm = _tp.prevCpm;
@@ -1211,11 +1220,11 @@ function _tpShowResults(){
   var sec = Math.floor(elapsed % 60);
   var timeStr = m + ':' + (sec < 10 ? '0' : '') + sec;
 
-  // Speed rating
+  // Speed rating (자모 기반 CPM 기준)
   var speedLabel, speedClass;
-  if(cpm >= 500){ speedLabel = _tpT('veryFast'); speedClass = 'tp-spd-fast'; }
-  else if(cpm >= 300){ speedLabel = _tpT('fast'); speedClass = 'tp-spd-good'; }
-  else if(cpm >= 150){ speedLabel = _tpT('normal'); speedClass = 'tp-spd-normal'; }
+  if(cpm >= 600){ speedLabel = _tpT('veryFast'); speedClass = 'tp-spd-fast'; }
+  else if(cpm >= 400){ speedLabel = _tpT('fast'); speedClass = 'tp-spd-good'; }
+  else if(cpm >= 250){ speedLabel = _tpT('normal'); speedClass = 'tp-spd-normal'; }
   else { speedLabel = _tpT('slow'); speedClass = 'tp-spd-slow'; }
 
   // Accuracy rating
@@ -1234,8 +1243,8 @@ function _tpShowResults(){
   var skipPct = totalChars > 0 ? (skipped / totalChars * 100).toFixed(1) : 0;
   var speedPct = Math.min(100, Math.round(cpm / 600 * 100));
 
-  // Combined score: CPM × 보정 계수 (오타는 점수에 영향 없음)
-  var score = Math.round(cpm * 4.2);
+  // 점수 = 자모 기반 CPM (한컴타자연습 방식, 오타는 점수에 영향 없음)
+  var score = cpm;
   var scorePct = Math.min(100, Math.round(score / 900 * 100));
 
   // SVG ring
