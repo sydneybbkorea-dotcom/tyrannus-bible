@@ -8,12 +8,12 @@
   position:relative;
 }
 
-/* ── Header ── */
+/* ── Header (overlay detail view) ── */
 .hymns-header {
   display:flex; align-items:center; gap:8px;
   padding:8px 12px; font-size:14px; font-weight:600; color:var(--text);
   border-bottom:1px solid var(--glass-border); background:var(--glass-bg-1); flex-shrink:0;
-  flex-wrap:wrap; min-height:42px;
+  min-height:42px;
 }
 .hym-hdr-left {
   display:flex; align-items:center; gap:6px; flex-shrink:0;
@@ -393,5 +393,91 @@
 [data-theme="light"] .hym-list-item.hym-playing {
   background:hsla(var(--accent-h),60%,50%,.1);
 }
-[data-theme="light"] .hym-search-wrap:focus-within { border-color:var(--accent-color); }
+[data-theme="light"] .hym-search-wrap:focus-within, [data-theme="light"] .hym-sp-search:focus-within { border-color:var(--accent-color); }
 [data-theme="light"] .hym-player-bar { background:var(--glass-bg-2); }
+[data-theme="light"] .hym-sp-player { background:var(--glass-bg-2); }
+
+/* ═══ Side Panel Specific Styles ═══ */
+
+/* Toolbar (search + filters) */
+.hym-sp-toolbar {
+  padding:8px 10px 6px; border-bottom:1px solid var(--glass-border);
+  flex-shrink:0; display:flex; flex-direction:column; gap:6px;
+}
+.hym-sp-search {
+  display:flex; align-items:center; gap:4px;
+  background:var(--glass-bg-1); border:1px solid var(--glass-border);
+  border-radius:6px; padding:0 8px; height:28px;
+  transition:border-color .15s;
+}
+.hym-sp-search:focus-within { border-color:var(--accent-color); }
+.hym-sp-search .hym-search {
+  flex:1; background:none; border:none; outline:none;
+  font-size:12px; color:var(--text); padding:0; min-width:0;
+}
+.hym-sp-search .hym-search::placeholder { color:var(--text3); font-size:11px; }
+.hym-sp-filters {
+  display:flex; gap:2px;
+}
+.hym-sp-filters .hym-filter-btn {
+  flex:1; text-align:center;
+}
+
+/* Side panel list items — compact */
+#sp-hymns .hym-list-item {
+  padding:6px 10px; margin-bottom:2px;
+}
+#sp-hymns .hym-list-num {
+  font-size:11px; min-width:30px;
+}
+#sp-hymns .hym-list-title {
+  font-size:12px;
+}
+#sp-hymns .hym-play-btn,
+#sp-hymns .hym-add-pl-btn,
+#sp-hymns .hym-fav-btn {
+  font-size:11px; padding:3px 4px;
+}
+#sp-hymns .hym-pl-header { padding:6px 10px; }
+#sp-hymns .hym-pl-item { padding:8px 10px; }
+#sp-hymns .hym-pld-header { padding:6px 10px; }
+#sp-hymns .hym-pld-item { padding:6px 10px; }
+#sp-hymns .hym-pld-play-all { font-size:10px; padding:4px 8px; }
+#sp-hymns .hym-empty { padding:30px 15px; font-size:12px; }
+#sp-hymns .hym-view { padding:4px 6px 60px; }
+
+/* Side panel mini player (bottom of sp-body) */
+.hym-sp-player {
+  display:flex; align-items:center; gap:4px;
+  padding:6px 8px; flex-shrink:0;
+  background:var(--glass-bg-2); border-top:1px solid var(--glass-border);
+  min-height:40px;
+}
+.hym-spp-info {
+  flex:1; min-width:0; cursor:pointer;
+}
+.hym-spp-title {
+  font-size:11px; font-weight:600; color:var(--text); white-space:nowrap;
+  overflow:hidden; text-overflow:ellipsis; display:block;
+}
+.hym-spp-controls {
+  display:flex; align-items:center; gap:0; flex-shrink:0;
+}
+.hym-spp-btn {
+  background:none; border:none; color:var(--text2); font-size:11px;
+  cursor:pointer; padding:4px; border-radius:50%; transition:all .12s;
+  display:flex; align-items:center; justify-content:center;
+  width:24px; height:24px;
+}
+.hym-spp-btn:hover { color:var(--text); background:var(--glass-bg-3); }
+.hym-spp-progress {
+  width:40px; flex-shrink:0;
+}
+.hym-spp-track {
+  width:100%; height:3px; background:var(--glass-bg-3); border-radius:2px;
+  cursor:pointer; position:relative;
+}
+.hym-spp-fill {
+  height:100%; background:var(--accent-color); border-radius:2px;
+  max-width:100%;
+}

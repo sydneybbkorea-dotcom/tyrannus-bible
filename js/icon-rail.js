@@ -92,18 +92,14 @@ function toggleKnowledgeGraph(){
   }
 }
 
-/* ═══ 찬양 오버레이 토글 ═══ */
+/* ═══ 찬양 오버레이 토글 (상세뷰 열기/닫기) ═══ */
 function toggleHymnsOverlay(){
-  if(typeof _hymToggleOverlay === 'function'){ _hymToggleOverlay(); return; }
   var el = document.getElementById('hymnsOverlay');
   var scroll = document.getElementById('bibleScroll');
   if(!el) return;
   var show = el.style.display === 'none';
   el.style.display = show ? 'flex' : 'none';
   if(scroll) scroll.style.display = show ? 'none' : '';
-  var ri = document.querySelector('.rail-icon[data-rail="hymns"]');
-  if(ri) ri.classList.toggle('active', show);
-  if(show && _activeRail && !_spPinned) closeSidePanel();
 }
 
 function _initSection(name){
@@ -112,4 +108,5 @@ function _initSection(name){
   else if(name==='reading'&&typeof renderReadingPlan==='function') renderReadingPlan();
   else if(name==='bugreport'&&typeof renderBugReport==='function') renderBugReport();
   else if(name==='settings'&&typeof renderSettingsPanel==='function') renderSettingsPanel();
+  else if(name==='hymns'&&typeof _hymInitSidePanel==='function') _hymInitSidePanel();
 }

@@ -139,7 +139,7 @@
           <button class="rail-icon" data-rail="typing" onclick="toggleTypingPanel()" title="타자 연습">
             <i class="fa fa-keyboard"></i><span class="rail-label">타자</span>
           </button>
-          <button class="rail-icon" data-rail="hymns" onclick="toggleHymnsOverlay()" title="찬양">
+          <button class="rail-icon" data-rail="hymns" onclick="toggleRail('hymns')" title="찬양">
             <i class="fa fa-music"></i><span class="rail-label">찬양</span>
           </button>
         </div>
@@ -196,6 +196,40 @@
           <div class="sp-head"><i class="fa fa-cog"></i> <span data-i18n="settings.title">설정</span></div>
           <div class="sp-body" id="spSettingsBody"></div>
         </div>
+        <div class="sp-section" id="sp-hymns">
+          <div class="sp-head"><i class="fa fa-music"></i> 찬양</div>
+          <div class="sp-body" id="spHymnsBody" style="display:flex;flex-direction:column;overflow:hidden">
+            <div class="hym-sp-toolbar" id="hymToolbar">
+              <div class="hym-sp-search">
+                <i class="fa fa-search hym-search-icon"></i>
+                <input class="hym-search" id="hymSearch" placeholder="번호 검색..." oninput="_hymOnSearch(this.value)">
+              </div>
+              <div class="hym-sp-filters">
+                <button class="hym-filter-btn hym-filter-active" data-filter="all" onclick="_hymSetFilter('all')">전체</button>
+                <button class="hym-filter-btn" data-filter="fav" onclick="_hymSetFilter('fav')"><i class="fa fa-heart"></i></button>
+                <button class="hym-filter-btn" data-filter="playlists" onclick="_hymSetFilter('playlists')"><i class="fa fa-list"></i></button>
+              </div>
+            </div>
+            <div id="hymContent" style="flex:1;overflow-y:auto">
+              <div id="hymViewList"></div>
+              <div id="hymViewPlaylists" style="display:none"></div>
+              <div id="hymViewPlaylistDetail" style="display:none"></div>
+            </div>
+            <div class="hym-sp-player" id="hymSpPlayer" style="display:none">
+              <div class="hym-spp-info" onclick="_hymOpenCurrentDetail()">
+                <span class="hym-spp-title" id="hymSppTitle"></span>
+              </div>
+              <div class="hym-spp-controls">
+                <button class="hym-spp-btn" onclick="_hymPrev()"><i class="fa fa-step-backward"></i></button>
+                <button class="hym-spp-btn" id="hymSppPlayBtn" onclick="_hymTogglePlay()"><i class="fa fa-play"></i></button>
+                <button class="hym-spp-btn" onclick="_hymNext()"><i class="fa fa-step-forward"></i></button>
+              </div>
+              <div class="hym-spp-progress">
+                <div class="hym-spp-track" id="hymSppTrack" onmousedown="_hymSeekStart(event,'sp')" ontouchstart="_hymSeekStart(event,'sp')"><div class="hym-spp-fill" id="hymSppFill"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
       <!-- 성경 본문 스크롤 -->
       <div id="bibleScroll">
@@ -210,34 +244,20 @@
         <button class="chnav" onclick="nextCh()">다음 장 <i class="fa fa-chevron-right"></i></button>
       </div>
     </div><!-- /bibleScroll -->
-    <!-- 찬양 오버레이 -->
+    <!-- 찬양 오버레이 (상세뷰: 악보+플레이어) -->
     <div id="hymnsOverlay" class="hymns-overlay" style="display:none">
       <div class="hymns-header" id="hymnsHeader">
         <div class="hym-hdr-left">
-          <button class="hym-back-btn" id="hymBackBtn" onclick="_hymGoBack()" style="display:none">
+          <button class="hym-back-btn" id="hymBackBtn" onclick="_hymCloseDetail()">
             <i class="fa fa-arrow-left"></i></button>
-          <span class="hym-title" id="hymTitle"><i class="fa fa-music"></i> 찬양</span>
-        </div>
-        <div class="hym-hdr-center">
-          <div class="hym-search-wrap" id="hymSearchWrap">
-            <i class="fa fa-search hym-search-icon"></i>
-            <input class="hym-search" id="hymSearch" placeholder="번호 검색..." oninput="_hymOnSearch(this.value)">
-          </div>
+          <span class="hym-title" id="hymTitle">찬양</span>
         </div>
         <div class="hym-hdr-right">
-          <div class="hym-filter-group" id="hymFilterGroup">
-            <button class="hym-filter-btn hym-filter-active" data-filter="all" onclick="_hymSetFilter('all')">전체</button>
-            <button class="hym-filter-btn" data-filter="fav" onclick="_hymSetFilter('fav')"><i class="fa fa-heart"></i></button>
-            <button class="hym-filter-btn" data-filter="playlists" onclick="_hymSetFilter('playlists')"><i class="fa fa-list"></i></button>
-          </div>
-          <button class="hymns-close" onclick="toggleHymnsOverlay()" title="닫기"><i class="fa fa-times"></i></button>
+          <button class="hymns-close" onclick="_hymCloseDetail()" title="닫기"><i class="fa fa-times"></i></button>
         </div>
       </div>
       <div class="hymns-body" id="hymnsBody">
-        <div class="hym-view" id="hymViewList"></div>
-        <div class="hym-view" id="hymViewDetail" style="display:none"></div>
-        <div class="hym-view" id="hymViewPlaylists" style="display:none"></div>
-        <div class="hym-view" id="hymViewPlaylistDetail" style="display:none"></div>
+        <div id="hymViewDetail"></div>
       </div>
       <div class="hym-player-bar" id="hymPlayerBar" style="display:none">
         <div class="hym-pb-info" onclick="_hymOpenCurrentDetail()">

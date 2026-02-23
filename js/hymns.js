@@ -1,5 +1,7 @@
 // ═══════════════════════════════════════════════════
 // hymns.js — Hymn viewer, player, favorites, playlists
+// Side panel: list / playlists
+// Overlay (bibleScroll area): detail view (sheet + player)
 // ═══════════════════════════════════════════════════
 
 /* ── Section 1: Data Catalog ── */
@@ -20,7 +22,8 @@ function _hymnSheetUrl(id){ return 'hymns/GR8Hymns/sheet/'+id+'.png'; }
 /* ── Section 2: Runtime State ── */
 var _hym = {
   inited: false,
-  view: 'list',
+  spView: 'list',        // side panel view: 'list' | 'playlists' | 'playlist-detail'
+  detailOpen: false,      // overlay detail open?
   filter: 'all',
   search: '',
   selectedId: null,
@@ -32,10 +35,9 @@ var _hym = {
   queue: [],
   queueIdx: -1,
   queueName: '',
-  repeat: 'none',   // 'none' | 'all' | 'one'
+  repeat: 'none',
   shuffle: false,
   zoom: 1,
-  listScrollTop: 0,
   addMenuId: null,
   seeking: false,
   currentPlaylistId: null,
@@ -50,98 +52,64 @@ function _hymInit(){
   var a = _hym.audio;
   a.addEventListener('timeupdate', _hymOnTimeUpdate);
   a.addEventListener('ended', _hymOnEnded);
-  a.addEventListener('loadedmetadata', function(){ _hym.duration = a.duration; _hymUpdatePlayerBar(); _hymUpdateDetailPlayer(); });
+  a.addEventListener('loadedmetadata', function(){ _hym.duration = a.duration; _hymUpdateAllPlayers(); });
   a.addEventListener('play', function(){ _hym.playing = true; _hymUpdatePlayIcons(); });
   a.addEventListener('pause', function(){ _hym.playing = false; _hymUpdatePlayIcons(); });
-  // restore last played
   if(S.hymnLastPlayed && (HYMN_MP3_SET.has(S.hymnLastPlayed) || HYMN_SHEET_SET.has(S.hymnLastPlayed))){
     _hym.currentId = S.hymnLastPlayed;
   }
 }
 
-function _hymToggleOverlay(){
-  var el = document.getElementById('hymnsOverlay');
-  var scroll = document.getElementById('bibleScroll');
-  if(!el) return;
-  var show = el.style.display === 'none';
-  el.style.display = show ? 'flex' : 'none';
-  if(scroll) scroll.style.display = show ? 'none' : '';
-  var ri = document.querySelector('.rail-icon[data-rail="hymns"]');
-  if(ri) ri.classList.toggle('active', show);
-  if(show){
-    if(window._activeRail && !window._spPinned) closeSidePanel();
-    _hymInit();
-    if(_hym.view === 'list') _hymRenderList();
-    else _hymShowView(_hym.view);
-    _hymUpdateHeader();
-    if(_hym.currentId && _hym.playing) _hymShowPlayerBar();
-  }
-  // keyboard listener
-  if(show){
-    document.addEventListener('keydown', _hymKeyHandler);
-  } else {
-    document.removeEventListener('keydown', _hymKeyHandler);
-  }
+// Called from _initSection('hymns') in icon-rail.js
+function _hymInitSidePanel(){
+  _hymInit();
+  _hymShowSpView(_hym.spView);
+  if(_hym.currentId) _hymShowSpPlayer();
 }
 
-/* ── Section 4: View Management ── */
-function _hymShowView(name){
-  _hym.view = name;
-  ['hymViewList','hymViewDetail','hymViewPlaylists','hymViewPlaylistDetail'].forEach(function(id){
+/* ── Section 4: Side Panel View Management ── */
+function _hymShowSpView(name){
+  _hym.spView = name;
+  var toolbar = document.getElementById('hymToolbar');
+  ['hymViewList','hymViewPlaylists','hymViewPlaylistDetail'].forEach(function(id){
     var e = document.getElementById(id);
     if(e) e.style.display = 'none';
   });
-  var viewMap = {list:'hymViewList',detail:'hymViewDetail',playlists:'hymViewPlaylists','playlist-detail':'hymViewPlaylistDetail'};
+  var viewMap = {list:'hymViewList', playlists:'hymViewPlaylists', 'playlist-detail':'hymViewPlaylistDetail'};
   var v = document.getElementById(viewMap[name]);
   if(v) v.style.display = '';
+  // toolbar visibility
+  if(toolbar) toolbar.style.display = (name === 'list') ? '' : 'none';
   if(name === 'list') _hymRenderList();
-  else if(name === 'detail') _hymRenderDetail(_hym.selectedId);
   else if(name === 'playlists') _hymRenderPlaylists();
   else if(name === 'playlist-detail') _hymRenderPlaylistDetail(_hym.currentPlaylistId);
-  _hymUpdateHeader();
 }
 
-function _hymGoBack(){
-  if(_hym.view === 'detail'){ _hym.view = 'list'; _hymShowView('list'); var body=document.getElementById('hymnsBody'); if(body) body.scrollTop=_hym.listScrollTop; }
-  else if(_hym.view === 'playlist-detail'){ _hymShowView('playlists'); }
-  else if(_hym.view === 'playlists'){ _hym.filter='all'; _hymShowView('list'); }
-}
-
-function _hymUpdateHeader(){
-  var back = document.getElementById('hymBackBtn');
+/* ── Detail overlay (bibleScroll area) ── */
+function _hymOpenDetail(id){
+  _hym.selectedId = id;
+  _hym.detailOpen = true;
+  _hym.zoom = 1;
+  // show overlay, hide bibleScroll
+  var overlay = document.getElementById('hymnsOverlay');
+  var scroll = document.getElementById('bibleScroll');
+  if(overlay) overlay.style.display = 'flex';
+  if(scroll) scroll.style.display = 'none';
+  // update overlay header
   var title = document.getElementById('hymTitle');
-  var searchWrap = document.getElementById('hymSearchWrap');
-  var filterGroup = document.getElementById('hymFilterGroup');
-  if(!back) return;
-  if(_hym.view === 'list'){
-    back.style.display = 'none';
-    title.innerHTML = '<i class="fa fa-music"></i> \uCC2C\uC591';
-    if(searchWrap) searchWrap.style.display = '';
-    if(filterGroup) filterGroup.style.display = '';
-  } else if(_hym.view === 'detail'){
-    back.style.display = '';
-    title.textContent = _hymnLabel(_hym.selectedId);
-    if(searchWrap) searchWrap.style.display = 'none';
-    if(filterGroup) filterGroup.style.display = 'none';
-  } else if(_hym.view === 'playlists'){
-    back.style.display = '';
-    title.innerHTML = '<i class="fa fa-list"></i> \uC7AC\uC0DD\uBAA9\uB85D';
-    if(searchWrap) searchWrap.style.display = 'none';
-    if(filterGroup) filterGroup.style.display = 'none';
-  } else if(_hym.view === 'playlist-detail'){
-    back.style.display = '';
-    var pl = _hymGetPlaylist(_hym.currentPlaylistId);
-    title.textContent = pl ? pl.name : '\uC7AC\uC0DD\uBAA9\uB85D';
-    if(searchWrap) searchWrap.style.display = 'none';
-    if(filterGroup) filterGroup.style.display = 'none';
-  }
-  // update filter buttons
-  document.querySelectorAll('.hym-filter-btn').forEach(function(b){
-    b.classList.toggle('hym-filter-active', b.dataset.filter === _hym.filter);
-  });
+  if(title) title.textContent = _hymnLabel(id);
+  _hymRenderDetail(id);
 }
 
-/* ── Section 5: List View ── */
+function _hymCloseDetail(){
+  _hym.detailOpen = false;
+  var overlay = document.getElementById('hymnsOverlay');
+  var scroll = document.getElementById('bibleScroll');
+  if(overlay) overlay.style.display = 'none';
+  if(scroll) scroll.style.display = '';
+}
+
+/* ── Section 5: List View (side panel) ── */
 function _hymRenderList(){
   var cont = document.getElementById('hymViewList');
   if(!cont) return;
@@ -161,7 +129,6 @@ function _hymRenderList(){
     h += '<span class="hym-list-num">'+id+'</span>';
     h += '<span class="hym-list-title">'+_hymnLabel(id)+'</span>';
     h += '<div class="hym-list-icons">';
-    if(hasSheet) h += '<span class="hym-list-badge hym-badge-sheet">\uC545\uBCF4</span>';
     if(hasMp3) h += '<button class="hym-play-btn" onclick="_hymQuickPlay('+id+',event)" title="\uC7AC\uC0DD"><i class="fa fa-play"></i></button>';
     h += '<button class="hym-add-pl-btn" onclick="_hymShowAddMenu('+id+',event)" title="\uC7AC\uC0DD\uBAA9\uB85D\uC5D0 \uCD94\uAC00"><i class="fa fa-plus"></i></button>';
     h += '<button class="hym-fav-btn'+(isFav?' hym-fav-on':'')+'" onclick="_hymToggleFav('+id+',event)" title="\uC990\uACA8\uCC3E\uAE30">';
@@ -180,28 +147,29 @@ function _hymFilteredIds(){
   }
   if(_hym.search){
     var q = _hym.search.trim();
-    if(q){
-      ids = ids.filter(function(id){ return String(id).indexOf(q) !== -1; });
-    }
+    if(q) ids = ids.filter(function(id){ return String(id).indexOf(q) !== -1; });
   }
   return ids;
 }
 
 function _hymOnSearch(val){
   _hym.search = val;
-  if(_hym.view === 'list') _hymRenderList();
+  if(_hym.spView === 'list') _hymRenderList();
 }
 
 function _hymSetFilter(f){
   if(f === 'playlists'){
     _hym.filter = f;
-    _hymShowView('playlists');
+    _hymShowSpView('playlists');
     return;
   }
   _hym.filter = f;
-  if(_hym.view !== 'list') _hymShowView('list');
+  if(_hym.spView !== 'list') _hymShowSpView('list');
   else _hymRenderList();
-  _hymUpdateHeader();
+  // update filter button active states
+  document.querySelectorAll('.hym-filter-btn').forEach(function(b){
+    b.classList.toggle('hym-filter-active', b.dataset.filter === _hym.filter);
+  });
 }
 
 function _hymToggleFav(id, e){
@@ -209,9 +177,8 @@ function _hymToggleFav(id, e){
   if(S.hymnFav.has(id)) S.hymnFav.delete(id);
   else S.hymnFav.add(id);
   persist();
-  // re-render context
-  if(_hym.view === 'list') _hymRenderList();
-  else if(_hym.view === 'detail') _hymRenderDetail(_hym.selectedId);
+  if(_hym.spView === 'list') _hymRenderList();
+  if(_hym.detailOpen && _hym.selectedId === id) _hymRenderDetail(id);
 }
 
 function _hymQuickPlay(id, e){
@@ -220,16 +187,7 @@ function _hymQuickPlay(id, e){
   _hymSetQueue([id], 0);
 }
 
-function _hymOpenDetail(id){
-  var body = document.getElementById('hymnsBody');
-  if(body) _hym.listScrollTop = body.scrollTop;
-  _hym.selectedId = id;
-  _hymShowView('detail');
-  var body2 = document.getElementById('hymnsBody');
-  if(body2) body2.scrollTop = 0;
-}
-
-/* ── Section 6: Detail View ── */
+/* ── Section 6: Detail View (overlay in bibleScroll area) ── */
 function _hymRenderDetail(id){
   var cont = document.getElementById('hymViewDetail');
   if(!cont || !id) return;
@@ -265,7 +223,7 @@ function _hymRenderDetail(id){
     h += '<button class="hym-dp-btn" onclick="_hymPrev()" title="\uC774\uC804"><i class="fa fa-step-backward"></i></button>';
     h += '<button class="hym-dp-btn hym-dp-play" id="hymDpPlayBtn" onclick="_hymPlayThis('+id+')" title="\uC7AC\uC0DD"><i class="fa fa-'+(isThisPlaying?'pause':'play')+'"></i></button>';
     h += '<button class="hym-dp-btn" onclick="_hymNext()" title="\uB2E4\uC74C"><i class="fa fa-step-forward"></i></button>';
-    h += '<button class="hym-dp-btn'+ (_hym.repeat!=='none'?' hym-dp-active':'') +'" onclick="_hymToggleRepeat()" title="\uBC18\uBCF5"><i class="fa fa-'+ (_hym.repeat==='one'?'redo':'redo') +'"></i>'+ (_hym.repeat==='one'?'<small style="font-size:8px;position:absolute;margin-top:8px">1</small>':'') +'</button>';
+    h += '<button class="hym-dp-btn'+ (_hym.repeat!=='none'?' hym-dp-active':'') +'" onclick="_hymToggleRepeat()" title="\uBC18\uBCF5"><i class="fa fa-redo"></i>'+ (_hym.repeat==='one'?'<small style="font-size:8px;position:absolute;margin-top:8px">1</small>':'') +'</button>';
     h += '</div>';
     h += '<div class="hym-dp-seek">';
     h += '<span class="hym-dp-time" id="hymDpTimeCur">'+_hymFormatTime(_hym.currentId===id?_hym.currentTime:0)+'</span>';
@@ -282,18 +240,12 @@ function _hymRenderDetail(id){
 }
 
 function _hymPlayThis(id){
-  if(_hym.currentId === id){
-    _hymTogglePlay();
-  } else {
-    _hymSetQueue([id], 0);
-  }
+  if(_hym.currentId === id) _hymTogglePlay();
+  else _hymSetQueue([id], 0);
 }
 
 function _hymOpenCurrentDetail(){
-  if(_hym.currentId){
-    _hym.selectedId = _hym.currentId;
-    _hymShowView('detail');
-  }
+  if(_hym.currentId) _hymOpenDetail(_hym.currentId);
 }
 
 function _hymZoomIn(){ _hym.zoom = Math.min(_hym.zoom + 0.25, 3); _hymApplyZoom(); }
@@ -318,10 +270,11 @@ function _hymLoadAndPlay(id){
   a.play().catch(function(){});
   S.hymnLastPlayed = id;
   persist();
+  _hymShowSpPlayer();
   _hymShowPlayerBar();
-  _hymUpdatePlayerBar();
-  if(_hym.view === 'list') _hymRenderList();
-  if(_hym.view === 'detail' && _hym.selectedId === id) _hymRenderDetail(id);
+  _hymUpdateAllPlayers();
+  if(_hym.spView === 'list') _hymRenderList();
+  if(_hym.detailOpen && _hym.selectedId === id) _hymRenderDetail(id);
 }
 
 function _hymTogglePlay(){
@@ -333,10 +286,7 @@ function _hymTogglePlay(){
 
 function _hymPrev(){
   if(_hym.queue.length === 0) return;
-  if(_hym.currentTime > 3){
-    _hym.audio.currentTime = 0;
-    return;
-  }
+  if(_hym.currentTime > 3){ _hym.audio.currentTime = 0; return; }
   var idx = _hym.queueIdx - 1;
   if(idx < 0) idx = _hym.queue.length - 1;
   _hym.queueIdx = idx;
@@ -345,12 +295,8 @@ function _hymPrev(){
 
 function _hymNext(){
   var next = _hymGetNextInQueue();
-  if(next !== null){
-    _hymLoadAndPlay(next);
-  } else {
-    _hym.playing = false;
-    _hymUpdatePlayIcons();
-  }
+  if(next !== null) _hymLoadAndPlay(next);
+  else { _hym.playing = false; _hymUpdatePlayIcons(); }
 }
 
 function _hymSeekTo(fraction){
@@ -364,10 +310,7 @@ function _hymOnTimeUpdate(){
   if(!a) return;
   _hym.currentTime = a.currentTime;
   _hym.duration = a.duration || 0;
-  if(!_hym.seeking){
-    _hymUpdatePlayerBar();
-    _hymUpdateDetailPlayer();
-  }
+  if(!_hym.seeking) _hymUpdateAllPlayers();
 }
 
 function _hymOnEnded(){
@@ -377,12 +320,8 @@ function _hymOnEnded(){
     return;
   }
   var next = _hymGetNextInQueue();
-  if(next !== null){
-    _hymLoadAndPlay(next);
-  } else {
-    _hym.playing = false;
-    _hymUpdatePlayIcons();
-  }
+  if(next !== null) _hymLoadAndPlay(next);
+  else { _hym.playing = false; _hymUpdatePlayIcons(); }
 }
 
 function _hymFormatTime(s){
@@ -396,7 +335,8 @@ function _hymFormatTime(s){
 function _hymSeekStart(e, where){
   e.preventDefault(); e.stopPropagation();
   _hym.seeking = true;
-  var track = where === 'detail' ? document.getElementById('hymDpTrack') : document.getElementById('hymPbTrack');
+  var trackId = where === 'detail' ? 'hymDpTrack' : where === 'sp' ? 'hymSppTrack' : 'hymPbTrack';
+  var track = document.getElementById(trackId);
   if(!track) return;
   function doSeek(ev){
     var rect = track.getBoundingClientRect();
@@ -417,65 +357,73 @@ function _hymSeekStart(e, where){
 function _hymUpdateSeekVisual(frac, where){
   var pct = (frac*100).toFixed(1)+'%';
   if(where === 'detail'){
-    var fill = document.getElementById('hymDpFill');
-    if(fill) fill.style.width = pct;
+    var f = document.getElementById('hymDpFill'); if(f) f.style.width = pct;
+  } else if(where === 'sp'){
+    var f2 = document.getElementById('hymSppFill'); if(f2) f2.style.width = pct;
   } else {
-    var fill2 = document.getElementById('hymPbFill');
-    if(fill2) fill2.style.width = pct;
+    var f3 = document.getElementById('hymPbFill'); if(f3) f3.style.width = pct;
   }
 }
 
 function _hymUpdatePlayIcons(){
+  // overlay player bar
   var pbBtn = document.getElementById('hymPbPlayBtn');
   if(pbBtn) pbBtn.innerHTML = '<i class="fa fa-'+(_hym.playing?'pause':'play')+'"></i>';
+  // detail player
   var dpBtn = document.getElementById('hymDpPlayBtn');
   if(dpBtn) dpBtn.innerHTML = '<i class="fa fa-'+(_hym.playing?'pause':'play')+'"></i>';
-  // update list playing states
+  // side panel player
+  var sppBtn = document.getElementById('hymSppPlayBtn');
+  if(sppBtn) sppBtn.innerHTML = '<i class="fa fa-'+(_hym.playing?'pause':'play')+'"></i>';
+  // list items
   document.querySelectorAll('.hym-list-item').forEach(function(el){
-    var did = parseInt(el.dataset.id);
-    el.classList.toggle('hym-playing', did === _hym.currentId && _hym.playing);
+    el.classList.toggle('hym-playing', parseInt(el.dataset.id) === _hym.currentId && _hym.playing);
   });
   document.querySelectorAll('.hym-pld-item').forEach(function(el){
-    var did = parseInt(el.dataset.id);
-    el.classList.toggle('hym-playing', did === _hym.currentId && _hym.playing);
+    el.classList.toggle('hym-playing', parseInt(el.dataset.id) === _hym.currentId && _hym.playing);
   });
 }
 
-/* ── Section 8: Mini Player Bar ── */
+/* ── Section 8: Player bars (side panel + overlay) ── */
+function _hymShowSpPlayer(){
+  var el = document.getElementById('hymSpPlayer');
+  if(el) el.style.display = '';
+}
 function _hymShowPlayerBar(){
-  var bar = document.getElementById('hymPlayerBar');
-  if(bar) bar.style.display = '';
-}
-function _hymHidePlayerBar(){
-  var bar = document.getElementById('hymPlayerBar');
-  if(bar) bar.style.display = 'none';
-}
-function _hymUpdatePlayerBar(){
-  var titleEl = document.getElementById('hymPbTitle');
-  if(titleEl && _hym.currentId) titleEl.textContent = _hymnLabel(_hym.currentId);
-  var fill = document.getElementById('hymPbFill');
-  if(fill && _hym.duration > 0){
-    fill.style.width = (_hym.currentTime/_hym.duration*100).toFixed(1)+'%';
-  }
-  var timeEl = document.getElementById('hymPbTime');
-  if(timeEl) timeEl.textContent = _hymFormatTime(_hym.currentTime);
-  var pbBtn = document.getElementById('hymPbPlayBtn');
-  if(pbBtn) pbBtn.innerHTML = '<i class="fa fa-'+(_hym.playing?'pause':'play')+'"></i>';
+  var el = document.getElementById('hymPlayerBar');
+  if(el) el.style.display = '';
 }
 
-function _hymUpdateDetailPlayer(){
-  if(_hym.view !== 'detail') return;
-  var fill = document.getElementById('hymDpFill');
-  if(fill && _hym.duration > 0 && _hym.currentId === _hym.selectedId){
-    fill.style.width = (_hym.currentTime/_hym.duration*100).toFixed(1)+'%';
-  }
-  var cur = document.getElementById('hymDpTimeCur');
-  if(cur && _hym.currentId === _hym.selectedId) cur.textContent = _hymFormatTime(_hym.currentTime);
-  var dur = document.getElementById('hymDpTimeDur');
-  if(dur && _hym.currentId === _hym.selectedId) dur.textContent = _hymFormatTime(_hym.duration);
-  var dpBtn = document.getElementById('hymDpPlayBtn');
-  if(dpBtn && _hym.currentId === _hym.selectedId){
-    dpBtn.innerHTML = '<i class="fa fa-'+(_hym.playing?'pause':'play')+'"></i>';
+function _hymUpdateAllPlayers(){
+  var pct = (_hym.duration > 0) ? (_hym.currentTime/_hym.duration*100).toFixed(1)+'%' : '0%';
+  var time = _hymFormatTime(_hym.currentTime);
+  var label = _hym.currentId ? _hymnLabel(_hym.currentId) : '';
+  // overlay player bar
+  var pbTitle = document.getElementById('hymPbTitle');
+  if(pbTitle) pbTitle.textContent = label;
+  var pbFill = document.getElementById('hymPbFill');
+  if(pbFill) pbFill.style.width = pct;
+  var pbTime = document.getElementById('hymPbTime');
+  if(pbTime) pbTime.textContent = time;
+  var pbBtn = document.getElementById('hymPbPlayBtn');
+  if(pbBtn) pbBtn.innerHTML = '<i class="fa fa-'+(_hym.playing?'pause':'play')+'"></i>';
+  // side panel mini player
+  var sppTitle = document.getElementById('hymSppTitle');
+  if(sppTitle) sppTitle.textContent = label;
+  var sppFill = document.getElementById('hymSppFill');
+  if(sppFill) sppFill.style.width = pct;
+  var sppBtn = document.getElementById('hymSppPlayBtn');
+  if(sppBtn) sppBtn.innerHTML = '<i class="fa fa-'+(_hym.playing?'pause':'play')+'"></i>';
+  // detail player (only if detail is showing this hymn)
+  if(_hym.detailOpen && _hym.currentId === _hym.selectedId){
+    var dpFill = document.getElementById('hymDpFill');
+    if(dpFill) dpFill.style.width = pct;
+    var dpCur = document.getElementById('hymDpTimeCur');
+    if(dpCur) dpCur.textContent = time;
+    var dpDur = document.getElementById('hymDpTimeDur');
+    if(dpDur) dpDur.textContent = _hymFormatTime(_hym.duration);
+    var dpBtn = document.getElementById('hymDpPlayBtn');
+    if(dpBtn) dpBtn.innerHTML = '<i class="fa fa-'+(_hym.playing?'pause':'play')+'"></i>';
   }
 }
 
@@ -492,7 +440,7 @@ function _hymRenderPlaylists(){
   h += '<button class="hym-pl-new-btn" onclick="_hymCreatePlaylist()"><i class="fa fa-plus"></i> \uC0C8\uB85C \uB9CC\uB4E4\uAE30</button>';
   h += '</div>';
   if(S.hymnPlaylists.length === 0){
-    h += '<div class="hym-empty"><i class="fa fa-list"></i>\uC7AC\uC0DD\uBAA9\uB85D\uC774 \uC5C6\uC2B5\uB2C8\uB2E4<br><small style="margin-top:6px;display:block;font-size:11px">\uC0C8\uB85C \uB9CC\uB4E4\uAE30 \uBC84\uD2BC\uC744 \uB20C\uB7EC \uCD94\uAC00\uD558\uC138\uC694</small></div>';
+    h += '<div class="hym-empty"><i class="fa fa-list"></i>\uC7AC\uC0DD\uBAA9\uB85D\uC774 \uC5C6\uC2B5\uB2C8\uB2E4</div>';
   } else {
     for(var i=0; i<S.hymnPlaylists.length; i++){
       var pl = S.hymnPlaylists[i];
@@ -510,8 +458,7 @@ function _hymRenderPlaylists(){
 function _hymCreatePlaylist(){
   var name = prompt('\uC7AC\uC0DD\uBAA9\uB85D \uC774\uB984:');
   if(!name || !name.trim()) return;
-  var pl = {id:'pl_'+Date.now(), name:name.trim(), ids:[]};
-  S.hymnPlaylists.push(pl);
+  S.hymnPlaylists.push({id:'pl_'+Date.now(), name:name.trim(), ids:[]});
   persist();
   _hymRenderPlaylists();
 }
@@ -526,7 +473,7 @@ function _hymDeletePlaylist(plId, e){
 
 function _hymOpenPlaylist(plId){
   _hym.currentPlaylistId = plId;
-  _hymShowView('playlist-detail');
+  _hymShowSpView('playlist-detail');
 }
 
 function _hymRenderPlaylistDetail(plId){
@@ -534,13 +481,14 @@ function _hymRenderPlaylistDetail(plId){
   var pl = _hymGetPlaylist(plId);
   if(!cont || !pl) return;
   var h = '<div class="hym-pld-header">';
+  h += '<button class="hym-back-btn" onclick="_hymShowSpView(\'playlists\')" style="margin-right:4px"><i class="fa fa-arrow-left"></i></button>';
   h += '<span class="hym-pld-title">'+_escHtml(pl.name)+' <small style="color:var(--text3)">'+pl.ids.length+'\uACE1</small></span>';
   if(pl.ids.length > 0){
-    h += '<button class="hym-pld-play-all" onclick="_hymPlayPlaylist(\''+plId+'\')"><i class="fa fa-play"></i> \uC804\uCCB4 \uC7AC\uC0DD</button>';
+    h += '<button class="hym-pld-play-all" onclick="_hymPlayPlaylist(\''+plId+'\')"><i class="fa fa-play"></i> \uC804\uCCB4</button>';
   }
   h += '</div>';
   if(pl.ids.length === 0){
-    h += '<div class="hym-empty"><i class="fa fa-music"></i>\uACE1\uC774 \uC5C6\uC2B5\uB2C8\uB2E4<br><small style="margin-top:6px;display:block;font-size:11px">\uBAA9\uB85D\uC5D0\uC11C + \uBC84\uD2BC\uC73C\uB85C \uCD94\uAC00\uD558\uC138\uC694</small></div>';
+    h += '<div class="hym-empty"><i class="fa fa-music"></i>\uACE1\uC774 \uC5C6\uC2B5\uB2C8\uB2E4</div>';
   } else {
     for(var i=0; i<pl.ids.length; i++){
       var id = pl.ids[i];
@@ -548,9 +496,7 @@ function _hymRenderPlaylistDetail(plId){
       h += '<div class="hym-pld-item'+(isPlaying?' hym-playing':'')+'" data-id="'+id+'" onclick="_hymOpenDetail('+id+')">';
       h += '<span class="hym-pld-num">'+(i+1)+'</span>';
       h += '<span class="hym-pld-name">'+_hymnLabel(id)+'</span>';
-      if(_hymnHasMp3(id)){
-        h += '<button class="hym-play-btn" onclick="_hymPlayPlaylistFrom(\''+plId+'\','+i+',event)" title="\uC7AC\uC0DD"><i class="fa fa-play"></i></button>';
-      }
+      if(_hymnHasMp3(id)) h += '<button class="hym-play-btn" onclick="_hymPlayPlaylistFrom(\''+plId+'\','+i+',event)" title="\uC7AC\uC0DD"><i class="fa fa-play"></i></button>';
       h += '<button class="hym-pld-remove" onclick="_hymRemoveFromPlaylist(\''+plId+'\','+i+',event)" title="\uC81C\uAC70"><i class="fa fa-times"></i></button>';
       h += '</div>';
     }
@@ -561,10 +507,7 @@ function _hymRenderPlaylistDetail(plId){
 function _hymAddToPlaylist(hymnId, plId){
   var pl = _hymGetPlaylist(plId);
   if(!pl) return;
-  if(pl.ids.indexOf(hymnId) === -1){
-    pl.ids.push(hymnId);
-    persist();
-  }
+  if(pl.ids.indexOf(hymnId) === -1){ pl.ids.push(hymnId); persist(); }
   _hymCloseAddMenu();
   if(typeof showToast === 'function') showToast(_hymnLabel(hymnId)+' \u2192 '+pl.name);
 }
@@ -619,13 +562,10 @@ function _hymShowAddMenu(hymnId, e){
   }
   menu.innerHTML = h;
   document.body.appendChild(menu);
-  // position
   var rect = e.target.getBoundingClientRect();
   menu.style.top = Math.min(rect.bottom + 4, window.innerHeight - menu.offsetHeight - 10) + 'px';
   menu.style.left = Math.min(rect.left, window.innerWidth - menu.offsetWidth - 10) + 'px';
-  setTimeout(function(){
-    document.addEventListener('click', _hymCloseAddMenu, {once:true});
-  }, 10);
+  setTimeout(function(){ document.addEventListener('click', _hymCloseAddMenu, {once:true}); }, 10);
 }
 
 function _hymCloseAddMenu(){
@@ -655,17 +595,15 @@ function _hymSetQueue(ids, startIdx){
 function _hymToggleShuffle(){
   _hym.shuffle = !_hym.shuffle;
   if(_hym.shuffle && _hym.queue.length > 1) _hymShuffleQueue();
-  if(_hym.view === 'detail') _hymRenderDetail(_hym.selectedId);
+  if(_hym.detailOpen) _hymRenderDetail(_hym.selectedId);
 }
 
 function _hymShuffleQueue(){
   var current = _hym.queue[_hym.queueIdx];
-  // Fisher-Yates
   for(var i = _hym.queue.length - 1; i > 0; i--){
     var j = Math.floor(Math.random() * (i + 1));
     var tmp = _hym.queue[i]; _hym.queue[i] = _hym.queue[j]; _hym.queue[j] = tmp;
   }
-  // put current first
   var ci = _hym.queue.indexOf(current);
   if(ci > 0){ _hym.queue[ci] = _hym.queue[0]; _hym.queue[0] = current; }
   _hym.queueIdx = 0;
@@ -675,18 +613,15 @@ function _hymToggleRepeat(){
   if(_hym.repeat === 'none') _hym.repeat = 'all';
   else if(_hym.repeat === 'all') _hym.repeat = 'one';
   else _hym.repeat = 'none';
-  if(_hym.view === 'detail') _hymRenderDetail(_hym.selectedId);
+  if(_hym.detailOpen) _hymRenderDetail(_hym.selectedId);
 }
 
 function _hymGetNextInQueue(){
   if(_hym.queue.length === 0) return null;
   var next = _hym.queueIdx + 1;
   if(next >= _hym.queue.length){
-    if(_hym.repeat === 'all'){
-      next = 0;
-    } else {
-      return null;
-    }
+    if(_hym.repeat === 'all') next = 0;
+    else return null;
   }
   _hym.queueIdx = next;
   return _hym.queue[next];
@@ -694,32 +629,15 @@ function _hymGetNextInQueue(){
 
 /* ── Section 11: Keyboard Shortcuts ── */
 function _hymKeyHandler(e){
-  var overlay = document.getElementById('hymnsOverlay');
-  if(!overlay || overlay.style.display === 'none') return;
-  // don't intercept if typing in input
   if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-  if(e.key === 'Escape'){
-    e.preventDefault();
-    if(_hym.view !== 'list') _hymGoBack();
-    else _hymToggleOverlay();
-    return;
-  }
-  if(e.key === ' '){
-    e.preventDefault();
-    _hymTogglePlay();
-    return;
-  }
-  if(e.key === 'ArrowLeft'){
-    e.preventDefault();
-    if(_hym.audio && _hym.audio.src) _hym.audio.currentTime = Math.max(0, _hym.audio.currentTime - 5);
-    return;
-  }
-  if(e.key === 'ArrowRight'){
-    e.preventDefault();
-    if(_hym.audio && _hym.audio.src) _hym.audio.currentTime = Math.min(_hym.audio.duration||0, _hym.audio.currentTime + 5);
-    return;
-  }
+  // only when detail overlay is open
+  if(!_hym.detailOpen) return;
+  if(e.key === 'Escape'){ e.preventDefault(); _hymCloseDetail(); return; }
+  if(e.key === ' '){ e.preventDefault(); _hymTogglePlay(); return; }
+  if(e.key === 'ArrowLeft'){ e.preventDefault(); if(_hym.audio && _hym.audio.src) _hym.audio.currentTime = Math.max(0, _hym.audio.currentTime - 5); return; }
+  if(e.key === 'ArrowRight'){ e.preventDefault(); if(_hym.audio && _hym.audio.src) _hym.audio.currentTime = Math.min(_hym.audio.duration||0, _hym.audio.currentTime + 5); return; }
 }
+document.addEventListener('keydown', _hymKeyHandler);
 
 /* ── Utility ── */
 function _escHtml(s){
@@ -729,13 +647,14 @@ function _escHtml(s){
 }
 
 /* ── Expose to global ── */
-window._hymToggleOverlay = _hymToggleOverlay;
-window._hymGoBack = _hymGoBack;
+window._hymInitSidePanel = _hymInitSidePanel;
+window._hymShowSpView = _hymShowSpView;
+window._hymOpenDetail = _hymOpenDetail;
+window._hymCloseDetail = _hymCloseDetail;
 window._hymOnSearch = _hymOnSearch;
 window._hymSetFilter = _hymSetFilter;
 window._hymToggleFav = _hymToggleFav;
 window._hymQuickPlay = _hymQuickPlay;
-window._hymOpenDetail = _hymOpenDetail;
 window._hymPlayThis = _hymPlayThis;
 window._hymOpenCurrentDetail = _hymOpenCurrentDetail;
 window._hymZoomIn = _hymZoomIn;
