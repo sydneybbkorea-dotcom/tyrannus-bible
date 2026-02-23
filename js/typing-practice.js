@@ -119,6 +119,7 @@ var _tpStrings = {
     rankUpdated: '새로운 최고 기록! 랭킹이 갱신되었습니다!',
     rankNotBest: '기존 기록보다 낮아 갱신되지 않았습니다',
     rankError: '랭킹 등록 중 오류가 발생했습니다',
+    rankNeedLogin: '랭킹 등록은 로그인이 필요합니다',
     rankLoading: '랭킹을 불러오는 중...',
     rankBack: '돌아가기',
     myRank: '내 순위',
@@ -208,6 +209,7 @@ var _tpStrings = {
     rankUpdated: 'New personal best! Ranking updated!',
     rankNotBest: 'Score not updated (lower than your best)',
     rankError: 'Error submitting to ranking',
+    rankNeedLogin: 'Login required for ranking',
     rankLoading: 'Loading rankings...',
     rankBack: 'Back',
     myRank: 'My Rank',
@@ -1813,6 +1815,7 @@ function _tpSubmitScore(score, cpm, accuracy, verse){
         console.log('[Ranking] 결과:', result);
         if(result === 'new') toast(_tpT('rankSubmitted') + ' (#' + rank + ')');
         else if(result === 'updated') toast(_tpT('rankUpdated') + ' (#' + rank + ')');
+        else if(result === 'no_auth') toast(_tpT('rankNeedLogin'));
         else if(result === 'error') toast(_tpT('rankError'));
       });
   }).catch(function(e){

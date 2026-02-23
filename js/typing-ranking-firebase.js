@@ -1,18 +1,27 @@
 // typing-ranking-firebase.js — 타자연습 랭킹 Firestore CRUD (ES Module)
 // 메인 firebase.js가 먼저 로드되므로 기본 앱(인증 포함)을 재사용
 import { getApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 import { getFirestore, collection, doc, getDoc, setDoc, getDocs, query, orderBy, limit }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-const db = getFirestore(getApp());
+const app = getApp();
+const auth = getAuth(app);
+const db = getFirestore(app);
 const COL = 'typing-rankings';
 
 /**
  * Submit score — 1인 1기록, 기존보다 score 높을 때만 업데이트
- * @returns {string} 'new'|'updated'|'not_best'|'error'
+ * @returns {string} 'new'|'updated'|'not_best'|'no_auth'|'error'
  */
 async function submitScore(nickname, score, cpm, accuracy, verseRef, lang) {
   try {
+    // 로그인 확인
+    if (!auth.currentUser) {
+      console.warn('Ranking: 로그인 필요');
+      return 'no_auth';
+    }
+
     if (!nickname || nickname.length < 2 || nickname.length > 12) return 'error';
     if (score < 0 || score > 3000) return 'error';
     if (cpm < 1 || cpm > 3000) return 'error';
@@ -29,6 +38,7 @@ async function submitScore(nickname, score, cpm, accuracy, verseRef, lang) {
       accuracy: accuracy,
       verseRef: verseRef || '',
       lang: lang || 'kr',
+      uid: auth.currentUser.uid,
       timestamp: Date.now()
     };
 
@@ -50,7 +60,7 @@ async function submitScore(nickname, score, cpm, accuracy, verseRef, lang) {
 /**
  * Fetch TOP 100 rankings sorted by score desc
  * @param {string} langFilter - 'all'|'kr'|'en'
- * @returns {Array} [{nickname, score, cpm, accuracy, verseRef, lang, timestamp}, ...]
+ * @returns {Array}
  */
 async function fetchRankings(langFilter) {
   try {
