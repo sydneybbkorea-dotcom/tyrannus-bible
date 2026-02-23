@@ -233,8 +233,8 @@ function _tpBookShort(krName){
   return BOOK_SHORT[krName] || krName;
 }
 
-/* ═══ Typing Sound — 리얼 타자기 샘플 (Hermes Precisa 305) ═══ */
-var _tpBufs = { key:null, space:null, bell:null };
+/* ═══ Typing Sound ═══ */
+var _tpBufs = { keyQ:null, keyA:null, keyZ:null, space:null, enter:null, back:null, ending:null };
 var _tpSndLoaded = false;
 
 function _tpGetAudioCtx(){
@@ -254,9 +254,13 @@ function _tpLoadSounds(){
       ctx.decodeAudioData(buf, function(decoded){ _tpBufs[key] = decoded; });
     }).catch(function(){});
   }
-  load('sounds/tw-key.mp3', 'key');
-  load('sounds/tw-return.mp3', 'space');
-  load('sounds/tw-bell.mp3', 'bell');
+  load('typing%20sound/key%20q%20line.mp3', 'keyQ');
+  load('typing%20sound/key%20a%20line.mp3', 'keyA');
+  load('typing%20sound/key%20z%20line.mp3', 'keyZ');
+  load('typing%20sound/space.mp3', 'space');
+  load('typing%20sound/enter%20sound.mp3', 'enter');
+  load('typing%20sound/back%20space.mp3', 'back');
+  load('typing%20sound/ending%20sound.mp3', 'ending');
 }
 
 function _tpPlayBuf(buf, rate, vol){
@@ -285,47 +289,41 @@ var _tpKeyRow = {};
   for(var r in rows) for(var i = 0; i < rows[r].length; i++) _tpKeyRow[rows[r][i]] = r;
 })();
 
-/* 키 타격: 행별 차별화된 기계식 타자기 사운드
-   Q열(상단): 가볍고 밝은 타격 — 짧은 레버 암
-   A열(홈):   표준 무게감 — 중간 레버
-   Z열(하단): 묵직하고 깊은 타격 — 긴 레버 암 */
+/* 키 타격: 행별 개별 사운드 파일 */
 function _tpPlayKeySound(code){
   var row = _tpKeyRow[code] || 'a';
   if(row === 'q' || row === 'num'){
-    _tpPlayBuf(_tpBufs.key, 1.04 + Math.random() * 0.1, 0.6 + Math.random() * 0.15);
+    _tpPlayBuf(_tpBufs.keyQ, 0.97 + Math.random() * 0.06, 0.8);
   } else if(row === 'z'){
-    _tpPlayBuf(_tpBufs.key, 0.82 + Math.random() * 0.08, 0.85 + Math.random() * 0.15);
+    _tpPlayBuf(_tpBufs.keyZ, 0.97 + Math.random() * 0.06, 0.8);
   } else {
-    _tpPlayBuf(_tpBufs.key, 0.92 + Math.random() * 0.1, 0.75 + Math.random() * 0.15);
+    _tpPlayBuf(_tpBufs.keyA, 0.97 + Math.random() * 0.06, 0.8);
   }
 }
 
-/* 오타: 벨 딩 소리만 (타자음보다 작게) */
+/* 오타: A라인 키음 낮은 피치로 */
 function _tpPlayErrorSound(){
-  _tpPlayBuf(_tpBufs.bell, 0.7, 0.15);
+  _tpPlayBuf(_tpBufs.keyA, 0.7, 0.15);
 }
 
-/* 스페이스바: 넓은 바 타격 (return 사운드 가볍게) */
+/* 스페이스바 */
 function _tpPlaySpaceSound(){
-  _tpPlayBuf(_tpBufs.space, 1.3, 0.25);
+  _tpPlayBuf(_tpBufs.space, 1.0, 0.8);
 }
 
-/* 캐리지 리턴 레버: 레버 잡기 → 캐리지 슬라이드 → 멈춤 충격 → 벨 딩 */
+/* 백스페이스 */
+function _tpPlayBackSound(){
+  _tpPlayBuf(_tpBufs.back, 1.0, 0.8);
+}
+
+/* 엔터키 */
 function _tpPlayLeverSound(){
-  _tpPlayBuf(_tpBufs.key, 0.4, 0.6);
-  setTimeout(function(){ _tpPlayBuf(_tpBufs.space, 0.55, 1.0); }, 40);
-  setTimeout(function(){ _tpPlayBuf(_tpBufs.key, 0.35, 0.8); }, 180);
-  setTimeout(function(){ _tpPlayBuf(_tpBufs.bell, 0.9, 0.55); }, 220);
+  _tpPlayBuf(_tpBufs.enter, 1.0, 0.8);
 }
 
-/* 완성 레버: 풀 캐리지 리턴 + 종이 빼기 (드라마틱 마무리) */
+/* 완성 사운드 */
 function _tpPlayFinishSound(){
-  _tpPlayBuf(_tpBufs.key, 0.85, 1.0);
-  setTimeout(function(){ _tpPlayBuf(_tpBufs.space, 0.5, 1.0); }, 100);
-  setTimeout(function(){ _tpPlayBuf(_tpBufs.space, 0.45, 0.7); }, 200);
-  setTimeout(function(){ _tpPlayBuf(_tpBufs.key, 0.3, 0.9); }, 320);
-  setTimeout(function(){ _tpPlayBuf(_tpBufs.bell, 0.85, 0.7); }, 380);
-  setTimeout(function(){ _tpPlayBuf(_tpBufs.space, 1.2, 0.4); }, 500);
+  _tpPlayBuf(_tpBufs.ending, 1.0, 1.0);
 }
 
 /* ═══ Punctuation skip helper ═══ */
@@ -1582,6 +1580,7 @@ function _tpRenderBody(){
         return;
       }
       // 키 종류별 사운드 분기
+      if(e.key === 'Backspace'){ _tpPlayBackSound(); return; }
       var skip = ['Shift','Control','Alt','Meta','CapsLock','Tab',
                   'ArrowUp','ArrowDown','ArrowLeft','ArrowRight',
                   'Home','End','PageUp','PageDown','Insert','Delete',
