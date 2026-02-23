@@ -83,7 +83,7 @@ var _tpStrings = {
     totalTime: '총',
     nextVerse: '다음 구절',
     addToFolder: '폴더에 추가',
-    pressEnter: 'Enter 키를 눌러 다음 구절로',
+    pressEnter: 'Enter: 줄바꿈 · Ctrl+Enter: 다음 구절',
     selectFolderLabel: '폴더 선택',
     added: '추가됨',
     createFolder: '새 폴더 만들기',
@@ -172,7 +172,7 @@ var _tpStrings = {
     totalTime: 'Total',
     nextVerse: 'Next Verse',
     addToFolder: 'Add to folder',
-    pressEnter: 'Press Enter for next verse',
+    pressEnter: 'Enter: line break · Ctrl+Enter: next verse',
     selectFolderLabel: 'Select Folder',
     added: 'Added',
     createFolder: 'Create New Folder',
@@ -278,15 +278,16 @@ function _tpPlayKeySound(){
   _tpPlayBuf(_tpBufs.key, 0.94 + Math.random() * 0.12, 0.7 + Math.random() * 0.2);
 }
 
-/* 오타: 키 사운드 + 낮은 피치 변조 (걸린 느낌) */
+/* 오타: 벨 딩 + 더블 키탭 (확실한 오류 피드백) */
 function _tpPlayErrorSound(){
-  _tpPlayBuf(_tpBufs.key, 0.7 + Math.random() * 0.1, 0.9);
+  _tpPlayBuf(_tpBufs.bell, 0.7, 0.8);
+  _tpPlayBuf(_tpBufs.key, 0.55, 0.9);
+  setTimeout(function(){ _tpPlayBuf(_tpBufs.key, 0.5, 0.7); }, 60);
 }
 
-/* 스페이스: 타자기 스페이스바 + 벨 (줄바꿈 캐리지 느낌) */
+/* 스페이스: return 사운드 (가볍고 부드러운 톤) */
 function _tpPlaySpaceSound(){
-  _tpPlayBuf(_tpBufs.space, 0.96 + Math.random() * 0.08, 0.8);
-  _tpPlayBuf(_tpBufs.bell, 1.0, 0.15);
+  _tpPlayBuf(_tpBufs.space, 1.3, 0.25);
 }
 
 /* 엔터: 레버 — 스페이스 저피치 + 벨 크게 (풀 캐리지 리턴) */
@@ -317,9 +318,83 @@ var _tpNormMap = {
 function _tpNorm(ch){ return _tpNormMap[ch] || ch; }
 function _tpMatch(a, b){ return _tpNorm(a) === _tpNorm(b); }
 
-/* Build a mapping from typed position → target position, skipping punctuation */
+/* ═══ Hangul Jamo Decomposition (자모 분해) ═══ */
+var _tpCho = ['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+var _tpJung = ['ㅏ','ㅐ','ㅑ','ㅒ','ㅓ','ㅔ','ㅕ','ㅖ','ㅗ','ㅘ','ㅙ','ㅚ','ㅛ','ㅜ','ㅝ','ㅞ','ㅟ','ㅠ','ㅡ','ㅢ','ㅣ'];
+var _tpJong = ['','ㄱ','ㄲ','ㄳ','ㄴ','ㄵ','ㄶ','ㄷ','ㄹ','ㄺ','ㄻ','ㄼ','ㄽ','ㄾ','ㄿ','ㅀ','ㅁ','ㅂ','ㅄ','ㅅ','ㅆ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+
+function _tpDecompose(ch){
+  var code = ch.charCodeAt(0);
+  // 완성형 한글 (가~힣)
+  if(code >= 0xAC00 && code <= 0xD7A3){
+    var offset = code - 0xAC00;
+    var cho = Math.floor(offset / (21 * 28));
+    var jung = Math.floor((offset % (21 * 28)) / 28);
+    var jong = offset % 28;
+    var result = [_tpCho[cho], _tpJung[jung]];
+    if(jong > 0) result.push(_tpJong[jong]);
+    return result;
+  }
+  // 자모 단독 (ㄱ~ㅎ, ㅏ~ㅣ)
+  if((code >= 0x3131 && code <= 0x314E) || (code >= 0x314F && code <= 0x3163)){
+    return [ch];
+  }
+  return [ch];
+}
+
+// 복합 모음 분해 맵 (ㅘ=ㅗ+ㅏ 등)
+var _tpCompJung = {
+  'ㅘ':['ㅗ','ㅏ'], 'ㅙ':['ㅗ','ㅐ'], 'ㅚ':['ㅗ','ㅣ'],
+  'ㅝ':['ㅜ','ㅓ'], 'ㅞ':['ㅜ','ㅔ'], 'ㅟ':['ㅜ','ㅣ'],
+  'ㅢ':['ㅡ','ㅣ']
+};
+
+// 복합 종성 분해 맵 (ㄶ=ㄴ+ㅎ, ㄺ=ㄹ+ㄱ 등)
+var _tpCompJong = {
+  'ㄳ':['ㄱ','ㅅ'], 'ㄵ':['ㄴ','ㅈ'], 'ㄶ':['ㄴ','ㅎ'],
+  'ㄺ':['ㄹ','ㄱ'], 'ㄻ':['ㄹ','ㅁ'], 'ㄼ':['ㄹ','ㅂ'],
+  'ㄽ':['ㄹ','ㅅ'], 'ㄾ':['ㄹ','ㅌ'], 'ㄿ':['ㄹ','ㅍ'],
+  'ㅀ':['ㄹ','ㅎ'], 'ㅄ':['ㅂ','ㅅ']
+};
+
+// 자모 단위로 일치 여부 확인 (조합 중 부분 비교)
+// nextTarget: 다음 글자 (종성→초성 전환 판정용, 생략 가능)
+function _tpJamoMatch(typed, target, nextTarget){
+  var tj = _tpDecompose(_tpNorm(typed));
+  var gj = _tpDecompose(_tpNorm(target));
+  for(var i = 0; i < tj.length; i++){
+    if(i >= gj.length){
+      // 초과 자모 — 다음 글자 초성과 일치하면 전환 상태 (오타 아님)
+      if(nextTarget && i === gj.length && tj.length === gj.length + 1){
+        var nj = _tpDecompose(_tpNorm(nextTarget));
+        if(nj.length > 0 && tj[i] === nj[0]) return 'partial';
+      }
+      return 'wrong';
+    }
+    if(tj[i] !== gj[i]){
+      // 복합 모음 부분 입력 체크 (ㅜ → ㅟ 등)
+      if(i === 1 && _tpCompJung[gj[i]] && _tpCompJung[gj[i]][0] === tj[i] && i === tj.length - 1){
+        return 'partial';
+      }
+      // 복합 종성 전환 체크 (ㄴ→ㄶ, ㄹ→ㄺ 등 — 다음 글자 초성이 합쳐진 경우)
+      if(i >= 2 && i === tj.length - 1 && nextTarget && _tpCompJong[tj[i]]){
+        var cParts = _tpCompJong[tj[i]];
+        if(cParts[0] === gj[i]){
+          var nj3 = _tpDecompose(_tpNorm(nextTarget));
+          if(nj3.length > 0 && cParts[1] === nj3[0]) return 'partial';
+        }
+      }
+      return 'wrong';
+    }
+  }
+  return tj.length === gj.length ? 'correct' : 'partial';
+}
+
+/* Build a mapping from typed position → target position, skipping punctuation.
+   Uses lookahead to recover from insertions (extra wrong chars) so that
+   subsequent correct chars still align with their target positions. */
 function _tpBuildMapping(target, typed){
-  var map = [];         // map[typedIdx] = targetIdx
+  var map = [];         // map[typedIdx] = targetIdx (-1 = insertion/extra)
   var targetSkip = [];  // which target chars are skipped (punctuation, auto-matched)
   var ti = 0;           // target index
 
@@ -329,8 +404,33 @@ function _tpBuildMapping(target, typed){
       targetSkip.push(ti);
       ti++;
     }
-    map.push(ti < target.length ? ti : -1);
-    if(ti < target.length) ti++;
+
+    if(ti < target.length && _tpMatch(typed[pi], target[ti])){
+      // Direct match
+      map.push(ti);
+      ti++;
+    } else {
+      // Mismatch: lookahead — if a future typed char matches current target,
+      // treat this typed char as an insertion (don't consume target position)
+      var isInsertion = false;
+      if(ti < target.length){
+        for(var look = pi + 1; look < typed.length && look <= pi + 3; look++){
+          if(_tpMatch(typed[look], target[ti])){
+            isInsertion = true;
+            break;
+          }
+        }
+      }
+
+      if(isInsertion){
+        // Insertion: wrong char, target position NOT consumed
+        map.push(-1);
+      } else {
+        // Substitution: wrong char at this target position
+        map.push(ti < target.length ? ti : -1);
+        if(ti < target.length) ti++;
+      }
+    }
   }
   // Remaining target punctuation at end
   while(ti < target.length && _tpIsPunct(target[ti])){
@@ -709,16 +809,33 @@ function _tpOnInput(){
   var prev = _tp.typed;
   _tp.typed = ta.value;
 
-  // Error sound + speed tracking: check after value settles (non-composing, new char added)
+  // Error sound + speed tracking
+  var now = Date.now();
   if(!_tp.composing && _tp.typed.length > prev.length){
-    var now = Date.now();
     for(var ki = 0; ki < _tp.typed.length - prev.length; ki++) _tp.recentKeys.push(now);
     _tp.lastInputTime = now;
     var result = _tpBuildMapping(_tp.verse.text, _tp.typed);
     var lastIdx = _tp.typed.length - 1;
     var mappedTarget = result.map[lastIdx];
-    if(mappedTarget >= 0 && !_tpMatch(_tp.typed[lastIdx], _tp.verse.text[mappedTarget])){
+    // 스페이스는 자체 사운드가 있으므로 오타 사운드 제외
+    if(_tp.typed[lastIdx] !== ' ' && mappedTarget >= 0 && !_tpMatch(_tp.typed[lastIdx], _tp.verse.text[mappedTarget])){
       _tpPlayErrorSound();
+    }
+  }
+  // 조합 중에도 자모 단위 오타 감지 — 입력 변경 즉시 체크
+  if(_tp.composing && _tp.typed.length > 0 && prev !== _tp.typed){
+    _tp.lastInputTime = now;
+    if(!_tp.recentKeys.length || _tp.recentKeys[_tp.recentKeys.length-1] !== now){
+      _tp.recentKeys.push(now);
+    }
+    var evalLen = Math.max(0, _tp.typed.length - 1);
+    var cResult = _tpBuildMapping(_tp.verse.text, _tp.typed.slice(0, evalLen));
+    var cTarget = cResult.nextTarget;
+    var composingCh = _tp.typed.slice(evalLen);
+    if(cTarget < _tp.verse.text.length && composingCh && composingCh !== ' '){
+      var nextCh2 = (cTarget + 1 < _tp.verse.text.length) ? _tp.verse.text[cTarget + 1] : null;
+      var jamoState = _tpJamoMatch(composingCh, _tp.verse.text[cTarget], nextCh2);
+      if(jamoState === 'wrong') _tpPlayErrorSound();
     }
   }
 
@@ -771,6 +888,13 @@ function _tpUpdateChars(){
   // 조합 중인 글자 추출
   var composingText = (_tp.composing && typed.length > evalLen) ? typed.slice(evalLen) : '';
 
+  // 조합 중 자모 단위 일치 판정
+  var composingState = ''; // 'partial' | 'correct' | 'wrong' | ''
+  if(_tp.composing && composingText && cursorTarget < target.length){
+    var nextCh = (cursorTarget + 1 < target.length) ? target[cursorTarget + 1] : null;
+    composingState = _tpJamoMatch(composingText, target[cursorTarget], nextCh);
+  }
+
   for(var i = 0; i < spans.length; i++){
     var span = spans[i];
     var origChar = target[i] === ' ' ? '\u00a0' : target[i];
@@ -788,16 +912,51 @@ function _tpUpdateChars(){
       span.className = 'tp-char tp-correct' + (!wasSkip ? ' tp-punch' : '');
       span.textContent = origChar;
     } else if(_tp.composing && i === cursorTarget && composingText){
-      // 실시간 자음/모음 조합 표시
-      span.className = 'tp-char tp-composing';
+      // 자모 단위 실시간 표시: 맞으면 파란색, 틀리면 빨간색
       span.textContent = composingText;
-    } else if(!_tp.composing && i === cursorTarget){
-      span.className = 'tp-char tp-cursor';
-      span.textContent = origChar;
+      if(composingState === 'wrong'){
+        span.className = 'tp-char tp-composing-wrong';
+      } else {
+        span.className = 'tp-char tp-composing';
+      }
     } else {
       span.className = 'tp-char';
       span.textContent = origChar;
     }
+  }
+
+  // 커서 위치: 조합 시작 즉시 해당 글자 오른쪽으로 이동
+  var cursorPos = cursorTarget;
+  if(_tp.composing && composingText){
+    cursorPos = cursorTarget + 1;
+  }
+  _tpMoveCursor(container, spans, cursorPos);
+}
+
+function _tpMoveCursor(container, spans, cursorIdx){
+  var cursor = container.querySelector('.tp-caret');
+  if(!cursor){
+    cursor = document.createElement('div');
+    cursor.className = 'tp-caret';
+    container.appendChild(cursor);
+  }
+
+  var cRect = container.getBoundingClientRect();
+
+  if(cursorIdx > 0 && cursorIdx <= spans.length){
+    // 마지막으로 완성된 글자의 오른쪽에 커서 배치
+    var sRect = spans[cursorIdx - 1].getBoundingClientRect();
+    cursor.style.left = (sRect.right - cRect.left) + 'px';
+    cursor.style.top = (sRect.top - cRect.top) + 'px';
+    cursor.style.height = sRect.height + 'px';
+    cursor.style.opacity = '1';
+  } else if(cursorIdx === 0 && spans.length > 0){
+    // 아직 아무것도 안 친 상태: 첫 글자 왼쪽
+    var sRect2 = spans[0].getBoundingClientRect();
+    cursor.style.left = (sRect2.left - cRect.left) + 'px';
+    cursor.style.top = (sRect2.top - cRect.top) + 'px';
+    cursor.style.height = sRect2.height + 'px';
+    cursor.style.opacity = '1';
   }
 }
 
@@ -1000,9 +1159,9 @@ function _tpShowResults(){
   var skipPct = totalChars > 0 ? (skipped / totalChars * 100).toFixed(1) : 0;
   var speedPct = Math.min(100, Math.round(cpm / 600 * 100));
 
-  // Combined score: CPM × accuracy/100 (오타가 점수를 깎음)
-  var score = Math.round(cpm * accuracy / 100);
-  var scorePct = Math.min(100, Math.round(score / 600 * 100));
+  // Combined score: CPM × accuracy/100 × 1.5 (기본 보정)
+  var score = Math.round(cpm * accuracy / 100 * 1.5);
+  var scorePct = Math.min(100, Math.round(score / 900 * 100));
 
   // SVG ring
   var circ = 2 * Math.PI * 52;
@@ -1093,7 +1252,7 @@ function _tpShowResults(){
           '<div class="tp-folder-menu" id="tpFolderMenu"></div>' +
         '</div>' +
       '</div>' +
-      '<div class="tp-result-enter"><i class="fa fa-level-down-alt fa-rotate-90"></i> '+_tpT('pressEnter')+'</div>' +
+      '<div class="tp-result-enter"><i class="fa fa-level-down-alt fa-rotate-90"></i> Enter: '+ (_tp.lang==='kr'?'다음 구절':'next verse') +'</div>' +
     '</div>';
 
   // Document-level Enter key listener
@@ -1246,7 +1405,7 @@ function _tpRenderBody(){
   for(var i = 0; i < v.text.length; i++){
     var c = v.text[i];
     var display = c === ' ' ? '&nbsp;' : c.replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    charSpans += '<span class="tp-char'+(i===0?' tp-cursor':'')+'">' + display + '</span>';
+    charSpans += '<span class="tp-char">' + display + '</span>';
   }
 
   el.innerHTML =
@@ -1286,34 +1445,44 @@ function _tpRenderBody(){
       var ta = document.getElementById('tpInput');
       if(ta) ta.focus();
     });
+    // 초기 커서 위치 설정
+    requestAnimationFrame(function(){
+      var spans = charsEl.querySelectorAll('.tp-char');
+      _tpMoveCursor(charsEl, spans, 0);
+    });
   }
 
   // Attach event listeners
   var ta = document.getElementById('tpInput');
   if(ta){
-    ta.addEventListener('input', _tpOnInput);
+    ta.addEventListener('input', function(e){
+      // isComposing으로 정확한 조합 상태 판별 (이벤트 순서에 무관)
+      if(e && typeof e.isComposing !== 'undefined'){
+        _tp.composing = e.isComposing;
+      }
+      _tpOnInput();
+    });
     ta.addEventListener('compositionstart', function(){ _tp.composing = true; });
     ta.addEventListener('compositionend', function(){
       _tp.composing = false;
-      // 조합 완성 후 오타 검사
-      var val = ta.value;
-      if(val.length > 0 && _tp.verse){
-        var r = _tpBuildMapping(_tp.verse.text, val);
-        var idx = val.length - 1;
-        if(r.map[idx] >= 0 && !_tpMatch(val[idx], _tp.verse.text[r.map[idx]])){
-          _tpPlayErrorSound();
-        }
-      }
-      _tpOnInput();
+      setTimeout(_tpUpdateChars, 0);
     });
     ta.addEventListener('paste', function(e){ e.preventDefault(); });
     ta.addEventListener('keydown', function(e){
       if(e.key === 'Escape'){ toggleTypingPanel(); e.preventDefault(); return; }
       if(e.key === 'Enter'){
         e.preventDefault();
-        _tpPlayEnterSound();
-        _tpStopTimer();
-        _tpNextVerse();
+        if(e.ctrlKey || e.metaKey){
+          // Ctrl+Enter → 구절 스킵
+          _tpPlayEnterSound();
+          _tpStopTimer();
+          _tpNextVerse();
+        } else {
+          // Enter → 줄바꿈 (공백으로 처리)
+          _tpPlayEnterSound();
+          ta.value += ' ';
+          _tpOnInput();
+        }
         return;
       }
       // 키 종류별 사운드 분기

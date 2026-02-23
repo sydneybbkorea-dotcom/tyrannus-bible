@@ -33,6 +33,15 @@ var PDFDragToNote = (function(){
       return;
     }
 
+    // 어노테이션 편집 중이면 메뉴 표시 안 함
+    var ancestor = range.commonAncestorContainer;
+    if(ancestor.nodeType === 3) ancestor = ancestor.parentNode;
+    if(ancestor && (ancestor.closest('.pdf-annot-inline-text.editing')
+        || ancestor.closest('.pdf-inline-editor')
+        || ancestor.closest('.pdf-memo-editor'))){
+      return;
+    }
+
     _selectedText = text;
     _selectedPageNum = PDFViewer.getCurrentPage();
 

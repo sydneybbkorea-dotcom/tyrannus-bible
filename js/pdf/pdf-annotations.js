@@ -189,6 +189,14 @@ var PDFAnnotations = (function(){
         el.className = 'pdf-annot pdf-annot-underline';
         _positionRect(el, annot.rect, viewport);
         if(annot.color) el.style.borderBottomColor = annot.color;
+
+        // 클릭 → 삭제 버튼
+        (function(annotRef, elRef, vp){
+          elRef.addEventListener('click', function(e){
+            e.stopPropagation();
+            _showAnnotDeleteBtn(elRef, annotRef, vp);
+          });
+        })(annot, el, viewport);
         break;
 
       case 'freehand':
@@ -227,12 +235,17 @@ var PDFAnnotations = (function(){
           el.style.color = annot.color || '#000';
           el.textContent = annot.text;
 
-          // 드래그 이동 + 더블클릭 편집
+          // 드래그 이동 + 클릭 인라인 편집
           (function(elRef, annotRef, vp){
             var DRAG_THRESHOLD = 5;
             var drag = { active:false, moved:false, sx:0, sy:0, ox:0, oy:0, pid:null };
 
             elRef.addEventListener('pointerdown', function(e){
+              // 편집 모드일 때는 텍스트 선택/커서 이동 허용
+              if(elRef.contentEditable === 'true') {
+                e.stopPropagation();
+                return;
+              }
               e.stopPropagation();
               e.preventDefault();
               drag.pid = e.pointerId;
@@ -250,6 +263,7 @@ var PDFAnnotations = (function(){
               elRef.style.top  = (drag.oy + dy) + 'px';
             });
             elRef.addEventListener('pointerup', function(e){
+              if(elRef.contentEditable === 'true') return;
               if(!drag.active || e.pointerId !== drag.pid) return;
               drag.active = false;
               try { elRef.releasePointerCapture(e.pointerId); } catch(err){}
@@ -260,31 +274,12 @@ var PDFAnnotations = (function(){
                 PDFAnnotations.save(annotRef);
               }
             });
-            elRef.addEventListener('click', function(e){ e.stopPropagation(); });
-
-            // 더블클릭 → 인라인 편집
-            elRef.addEventListener('dblclick', function(e){
+            elRef.addEventListener('click', function(e){
               e.stopPropagation();
-              elRef.contentEditable = 'true';
-              elRef.style.outline = '2px solid var(--accent-color, #bd8a00)';
-              elRef.focus();
-              // blur 시 저장
-              elRef.addEventListener('blur', function handler(){
-                elRef.contentEditable = 'false';
-                elRef.style.outline = '';
-                var newText = (elRef.innerText || '').trim();
-                if(newText){
-                  annotRef.text = newText;
-                  annotRef.rect.width = elRef.offsetWidth / (vp.scale||1);
-                  annotRef.rect.height = elRef.offsetHeight / (vp.scale||1);
-                  PDFAnnotations.save(annotRef);
-                } else {
-                  PDFAnnotations.remove(annotRef.id, annotRef.pdfId, annotRef.pageNum);
-                  var layer = elRef.closest('.pdf-annot-layer');
-                  if(layer) PDFAnnotations.renderPage(annotRef.pageNum, layer, vp);
-                }
-                elRef.removeEventListener('blur', handler);
-              });
+              if(elRef.contentEditable === 'true') return;
+              if(!drag.moved){
+                _startInlineEdit(elRef, annotRef, vp);
+              }
             });
           })(el, annot, viewport);
           break;
@@ -395,6 +390,22 @@ var PDFAnnotations = (function(){
           el.onclick = function(){ NavigationRouter.navigateTo(annot.linkedUri); };
           el.style.cursor = 'pointer';
         }
+
+        // hover 시 보이는 X 삭제 배지
+        (function(annotRef, elRef, vp){
+          var xBtn = document.createElement('button');
+          xBtn.className = 'pdf-area-link-del';
+          xBtn.innerHTML = '&times;';
+          xBtn.title = '삭제';
+          xBtn.addEventListener('click', function(e){
+            e.stopPropagation();
+            e.preventDefault();
+            PDFAnnotations.remove(annotRef.id, annotRef.pdfId, annotRef.pageNum);
+            var layer = elRef.closest('.pdf-annot-layer');
+            if(layer) PDFAnnotations.renderPage(annotRef.pageNum, layer, vp);
+          });
+          elRef.appendChild(xBtn);
+        })(annot, el, viewport);
         break;
 
       default:
@@ -444,6 +455,124 @@ var PDFAnnotations = (function(){
       tags: opts.tags || [],
       createdAt: Date.now()
     };
+  }
+
+  // ── Inline text edit (클릭 → 바로 편집 + 삭제 버튼) ──
+  function _startInlineEdit(elRef, annotRef, vp){
+    // 기존 삭제 버튼 제거
+    document.querySelectorAll('.pdf-annot-del-btn').forEach(function(b){ b.remove(); });
+
+    var layer = elRef.closest('.pdf-annot-layer');
+
+    // 편집 모드 진입
+    elRef.contentEditable = 'true';
+    elRef.classList.add('editing');
+    elRef.focus();
+
+    // 커서를 텍스트 끝으로 이동
+    var range = document.createRange();
+    var sel = window.getSelection();
+    range.selectNodeContents(elRef);
+    range.collapse(false);
+    sel.removeAllRanges();
+    sel.addRange(range);
+
+    // 삭제 버튼 표시
+    var delBtn = document.createElement('button');
+    delBtn.className = 'pdf-annot-del-btn';
+    delBtn.innerHTML = '<i class="fa fa-trash-can"></i>';
+    delBtn.title = '삭제';
+
+    var elRect = elRef.getBoundingClientRect();
+    var layerRect = layer.getBoundingClientRect();
+    delBtn.style.left = (elRect.right - layerRect.left + 4) + 'px';
+    delBtn.style.top = (elRect.top - layerRect.top) + 'px';
+
+    delBtn.addEventListener('pointerdown', function(e){ e.stopPropagation(); });
+    delBtn.addEventListener('click', function(e){
+      e.stopPropagation();
+      delBtn.remove();
+      elRef.contentEditable = 'false';
+      elRef.classList.remove('editing');
+      PDFAnnotations.remove(annotRef.id, annotRef.pdfId, annotRef.pageNum);
+      if(layer) PDFAnnotations.renderPage(annotRef.pageNum, layer, vp);
+    });
+    layer.appendChild(delBtn);
+
+    // blur 시 저장
+    function onBlur(){
+      // 삭제 버튼 클릭으로 인한 blur는 무시 (delBtn이 이미 처리)
+      setTimeout(function(){
+        if(!elRef.parentNode) return; // 이미 삭제됨
+        elRef.contentEditable = 'false';
+        elRef.classList.remove('editing');
+        delBtn.remove();
+
+        var newText = (elRef.innerText || '').trim();
+        if(newText){
+          annotRef.text = newText;
+          annotRef.rect.width = elRef.offsetWidth / (vp.scale || 1);
+          annotRef.rect.height = elRef.offsetHeight / (vp.scale || 1);
+          PDFAnnotations.save(annotRef);
+        } else {
+          PDFAnnotations.remove(annotRef.id, annotRef.pdfId, annotRef.pageNum);
+          if(layer) PDFAnnotations.renderPage(annotRef.pageNum, layer, vp);
+        }
+      }, 150);
+    }
+
+    elRef.addEventListener('blur', onBlur, { once: true });
+
+    // Escape → 취소 (원래 텍스트 복원)
+    elRef.addEventListener('keydown', function handler(e){
+      if(e.key === 'Escape'){
+        elRef.removeEventListener('blur', onBlur);
+        elRef.contentEditable = 'false';
+        elRef.classList.remove('editing');
+        elRef.textContent = annotRef.text;
+        delBtn.remove();
+        elRef.removeEventListener('keydown', handler);
+      }
+    });
+  }
+
+  // ── Floating delete button for annotations ──
+  function _showAnnotDeleteBtn(targetEl, annot, viewport){
+    // Remove any existing delete button
+    document.querySelectorAll('.pdf-annot-del-btn').forEach(function(b){ b.remove(); });
+
+    var layer = targetEl.closest('.pdf-annot-layer');
+    if(!layer) return;
+
+    var btn = document.createElement('button');
+    btn.className = 'pdf-annot-del-btn';
+    btn.innerHTML = '&#128465;';
+    btn.title = '삭제';
+
+    // Position at top-right of the annotation element
+    var elRect = targetEl.getBoundingClientRect();
+    var layerRect = layer.getBoundingClientRect();
+    btn.style.left = (elRect.right - layerRect.left - 2) + 'px';
+    btn.style.top = (elRect.top - layerRect.top - 18) + 'px';
+
+    btn.addEventListener('click', function(e){
+      e.stopPropagation();
+      PDFAnnotations.remove(annot.id, annot.pdfId, annot.pageNum);
+      btn.remove();
+      PDFAnnotations.renderPage(annot.pageNum, layer, viewport);
+    });
+
+    layer.appendChild(btn);
+
+    // Close on outside click
+    setTimeout(function(){
+      document.addEventListener('pointerdown', function handler(e){
+        if(!btn.contains(e.target) && !targetEl.contains(e.target)){
+          btn.remove();
+          document.removeEventListener('pointerdown', handler);
+        }
+      });
+    }, 50);
   }
 
   // ── Tag Popup UI ──
@@ -503,6 +632,22 @@ var PDFAnnotations = (function(){
     inputRow.innerHTML = '<input class="pdf-tag-input" placeholder="태그 추가..." />'
       + '<button class="pdf-tag-add-btn"><i class="fa fa-plus"></i></button>';
     popup.appendChild(inputRow);
+
+    // ── 삭제 버튼 행 ──
+    var delRow = document.createElement('div');
+    delRow.className = 'pdf-tag-delete-row';
+    var delBtn = document.createElement('button');
+    delBtn.className = 'pdf-tag-delete-btn';
+    delBtn.innerHTML = '<i class="fa fa-trash-can"></i> 하이라이트 삭제';
+    delBtn.addEventListener('click', function(e){
+      e.stopPropagation();
+      PDFAnnotations.remove(annot.id, annot.pdfId, annot.pageNum);
+      popup.remove();
+      var layer2 = targetEl.closest('.pdf-annot-layer');
+      if(layer2) PDFAnnotations.renderPage(annot.pageNum, layer2, viewport);
+    });
+    delRow.appendChild(delBtn);
+    popup.appendChild(delRow);
 
     layer.appendChild(popup);
 

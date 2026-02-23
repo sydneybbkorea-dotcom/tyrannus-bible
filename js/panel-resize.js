@@ -2,10 +2,10 @@
 (function(){
   'use strict';
 
-  var MIN_PDF   = 250;
-  var MIN_RIGHT = 280;
-  var DEFAULT_PDF   = 420;
-  var DEFAULT_RIGHT = 640;
+  var MIN_PDF   = 300;
+  var MIN_RIGHT = 240;
+  var DEFAULT_PDF   = 600;
+  var DEFAULT_RIGHT = 320;
 
   var handles = [];       // [{el, leftId, rightId}]
   var dragging = null;    // {handle, startX, startWidth, target, side}

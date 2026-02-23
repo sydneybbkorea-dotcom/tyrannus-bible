@@ -47,9 +47,9 @@
   #sidePanel.open { width: 280px; }
   #rightPanel:not(.rp-hide) { width: 380px; max-width: 500px; }
   .rte-row { flex-wrap: nowrap; }
-  /* PDF 3-pane: bible + pdf(420) + notes(380) */
-  #pdfPanel:not(.pdf-panel-hide) { width: 420px; }
-  body.pdf-open #rightPanel:not(.rp-hide) { width: 380px; }
+  /* PDF 3-pane: pdf 넓게, 본문/노트 축소 */
+  #pdfPanel:not(.pdf-panel-hide) { width: 55%; }
+  body.pdf-open #rightPanel:not(.rp-hide) { width: 320px; }
 }
 
 /* ── Tablet (600px - 1023px) ── */
@@ -66,8 +66,8 @@
   .vb-right .vb-sep:nth-of-type(2) ~ .vb-btn { display: none; }
 
   /* PDF panel tablet size */
-  #pdfPanel:not(.pdf-panel-hide) { width: 320px; }
-  body.pdf-open #rightPanel:not(.rp-hide) { width: 300px; }
+  #pdfPanel:not(.pdf-panel-hide) { width: 50%; }
+  body.pdf-open #rightPanel:not(.rp-hide) { width: 260px; }
 }
 
 /* ── Mobile (~599px) ── */

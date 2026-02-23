@@ -50,6 +50,20 @@
   margin: 0 4px;
 }
 
+/* ── Tool Groups ── */
+.pdf-tool-group {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 4px;
+  border-radius: 8px;
+  background: rgba(255,255,255,.03);
+}
+.pdf-tool-group-primary {
+  background: rgba(255,255,255,.06);
+  border: 1px solid var(--glass-border);
+}
+
 .pdf-page-info {
   font-size: 11px; color: var(--text-secondary, var(--text2));
   font-family: 'JetBrains Mono', monospace;
@@ -115,6 +129,133 @@
   outline: 1px dashed var(--accent-color, #bd8a00);
   outline-offset: 2px;
 }
+.pdf-annot-inline-text.editing {
+  background: var(--bg2, #1a1c24);
+  outline: 2px solid var(--accent-color, #bd8a00);
+  outline-offset: 2px;
+  border-radius: 4px;
+  padding: 4px 6px;
+  min-width: 40px;
+}
+
+/* ── 텍스트/메모 입력 지점 커서 ── */
+.pdf-text-cursor {
+  position: absolute;
+  pointer-events: none;
+  z-index: 20;
+  width: 2px;
+  height: 16px;
+  background: var(--accent-color, #bd8a00);
+  border-radius: 1px;
+  transform: translate(-1px, -2px);
+  box-shadow: 0 0 6px rgba(189,138,0,.5);
+  animation: pdf-cursor-blink 1s step-end infinite;
+}
+.pdf-text-cursor::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  width: 8px;
+  height: 8px;
+  border-left: 2px solid var(--accent-color, #bd8a00);
+  border-top: 2px solid var(--accent-color, #bd8a00);
+  border-radius: 2px 0 0 0;
+}
+.pdf-text-cursor::after {
+  content: attr(data-label);
+  position: absolute;
+  left: 10px;
+  top: -2px;
+  font-size: 9px;
+  color: var(--accent-color, #bd8a00);
+  white-space: nowrap;
+  font-family: 'JetBrains Mono', monospace;
+  opacity: .7;
+}
+@keyframes pdf-cursor-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .3; }
+}
+
+/* ── Memo editor popup ── */
+.pdf-memo-editor {
+  position: absolute;
+  z-index: 15;
+  width: 220px;
+  background: var(--bg2, #1a1c24);
+  border: 1px solid var(--glass-border, #2a2c34);
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.35);
+  overflow: hidden;
+}
+.pdf-memo-editor-header {
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text, #e8e8e8);
+  border-bottom: 1px solid var(--border, #2a2c34);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.pdf-memo-editor-header i {
+  color: var(--accent-color, #bd8a00);
+  font-size: 12px;
+}
+.pdf-memo-editor-textarea {
+  width: 100%;
+  border: none;
+  background: var(--bg3, #22242e);
+  color: var(--text, #e8e8e8);
+  font-size: 12px;
+  line-height: 1.55;
+  padding: 10px 12px;
+  resize: vertical;
+  outline: none;
+  font-family: inherit;
+  min-height: 60px;
+  max-height: 160px;
+  box-sizing: border-box;
+}
+.pdf-memo-editor-textarea::placeholder {
+  color: var(--text3, #666);
+}
+.pdf-memo-editor-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+  padding: 6px 10px;
+  border-top: 1px solid var(--border, #2a2c34);
+}
+.pdf-memo-editor-cancel {
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 11px;
+  cursor: pointer;
+  border: 1px solid var(--border, #2a2c34);
+  background: none;
+  color: var(--text3, #666);
+  transition: all .12s;
+}
+.pdf-memo-editor-cancel:hover {
+  background: var(--bg3, #22242e);
+  color: var(--text, #e8e8e8);
+}
+.pdf-memo-editor-save {
+  padding: 4px 14px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  background: var(--accent-color, #bd8a00);
+  color: #fff;
+  transition: all .12s;
+}
+.pdf-memo-editor-save:hover {
+  filter: brightness(1.15);
+}
 
 /* Inline text editor */
 .pdf-inline-editor {
@@ -122,16 +263,16 @@
   z-index: 15;
   min-width: 60px;
   min-height: 24px;
-  padding: 2px 4px;
-  border: 2px solid var(--accent-color, #bd8a00);
-  border-radius: 3px;
-  background: rgba(255,255,255,.9);
-  color: #000;
+  padding: 10px 12px;
+  border: 1px solid var(--glass-border, #2a2c34);
+  border-radius: 10px;
+  background: var(--bg2, #1a1c24);
+  color: var(--text, #e8e8e8);
   outline: none;
   line-height: 1.4;
   word-break: break-word;
   white-space: pre-wrap;
-  box-shadow: 0 2px 8px rgba(0,0,0,.2);
+  box-shadow: 0 4px 16px rgba(0,0,0,.35);
 }
 
 /* ── Tag popup color row ── */
@@ -205,8 +346,7 @@
   cursor: pointer;
 }
 .pdf-annot-highlight {
-  background: rgba(250, 204, 21, 0.35);
-  mix-blend-mode: multiply;
+  background: rgba(250, 204, 21, 0.25);
   border-radius: 2px;
 }
 .pdf-annot-underline {
@@ -620,9 +760,10 @@
 
 /* ── Tag popup ── */
 .pdf-tag-popup { position:absolute; z-index:15; min-width:180px; max-width:260px;
-  background:var(--glass-bg-2); backdrop-filter:var(--glass-blur-2); -webkit-backdrop-filter:var(--glass-blur-2);
-  border:1px solid var(--glass-border);
-  border-radius:8px; box-shadow:var(--glass-shadow); padding:8px; }
+  background:var(--bg2, #1a1c24);
+  border:1px solid var(--glass-border, #2a2c34);
+  border-radius:10px; box-shadow:0 4px 16px rgba(0,0,0,.35); padding:8px;
+  pointer-events:auto; }
 .pdf-tag-chips { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:6px; }
 .pdf-tag-chip { display:inline-flex; align-items:center; gap:2px; padding:2px 8px;
   background:var(--accent-dim,rgba(189,138,0,.15)); color:var(--accent-color,#bd8a00);
@@ -644,6 +785,78 @@
   border:1px solid var(--border,#2a2c34); border-radius:8px; padding:1px 6px;
   white-space:nowrap; pointer-events:none; opacity:.85; }
 
+/* ── Highlight tag popup: delete button row ── */
+.pdf-tag-delete-row {
+  border-top: 1px solid var(--border, #2a2c34);
+  margin-top: 6px;
+  padding-top: 6px;
+}
+.pdf-tag-delete-btn {
+  width: 100%;
+  color: var(--text3, #666);
+  font-size: 11px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  border-radius: 4px;
+  padding: 5px 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.pdf-tag-delete-btn:hover {
+  background: rgba(239,68,68,.1);
+  color: #ef4444;
+}
+
+/* ── Annotation floating delete button ── */
+.pdf-annot-del-btn {
+  position: absolute;
+  z-index: 16;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--bg2, #1a1c24);
+  border: 1px solid var(--border, #2a2c34);
+  color: var(--text3, #666);
+  cursor: pointer;
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,.3);
+  pointer-events: auto;
+}
+.pdf-annot-del-btn:hover {
+  color: #ef4444;
+  border-color: #ef4444;
+}
+
+/* ── Area-link delete badge ── */
+.pdf-area-link-del {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: rgba(0,0,0,.5);
+  border: none;
+  color: #fff;
+  font-size: 8px;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  pointer-events: auto;
+}
+.pdf-annot-area-link:hover .pdf-area-link-del {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* ── Responsive: Mobile fullscreen ── */
 @media (max-width: 599px) {
   .pdf-panel {
@@ -653,4 +866,6 @@
   }
   .pdf-viewport { padding: 8px; }
   .pdf-toolbar { padding: 4px 6px; }
+  .pdf-page-info, .pdf-zoom-info { display: none; }
+  .pdf-tool-group { padding: 1px 2px; }
 }

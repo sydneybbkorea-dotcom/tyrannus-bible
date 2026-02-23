@@ -4,7 +4,7 @@
 
 /* ── Panel Container ── */
 #pdfPanel {
-  width: 420px;
+  width: 55%;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -21,7 +21,7 @@
 
 /* When PDF panel is open, shrink right panel slightly */
 body.pdf-open #rightPanel:not(.rp-hide) {
-  width: 380px;
+  width: 320px;
 }
 
 /* ── Panel Header ── */

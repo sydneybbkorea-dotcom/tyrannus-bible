@@ -137,22 +137,32 @@ var PDFViewer = (function(){
 
     host.innerHTML =
       '<div class="pdf-toolbar" id="pdfToolbar">'
+      // Nav 그룹
+      + '<div class="pdf-tool-group">'
       + '<button class="pdf-tool-btn" onclick="PDFViewer.prevPage()"><i class="fa fa-chevron-left"></i></button>'
       + '<span class="pdf-page-info" id="pdfPageInfo">1 / 1</span>'
       + '<button class="pdf-tool-btn" onclick="PDFViewer.nextPage()"><i class="fa fa-chevron-right"></i></button>'
-      + '<div class="pdf-tool-sep"></div>'
+      + '</div>'
+      // Zoom 그룹
+      + '<div class="pdf-tool-group">'
       + '<button class="pdf-tool-btn" onclick="PDFViewer.zoomOut()"><i class="fa fa-search-minus"></i></button>'
       + '<span class="pdf-zoom-info" id="pdfZoomInfo">100%</span>'
       + '<button class="pdf-tool-btn" onclick="PDFViewer.zoomIn()"><i class="fa fa-search-plus"></i></button>'
-      + '<div class="pdf-tool-sep"></div>'
+      + '</div>'
+      // 도구 그룹
+      + '<div class="pdf-tool-group pdf-tool-group-primary">'
       + '<button class="pdf-tool-btn" id="pdfToolSelect" onclick="PDFTools.setTool(\'select\')" title="선택"><i class="fa fa-mouse-pointer"></i></button>'
       + '<button class="pdf-tool-btn" id="pdfToolHL" onclick="PDFTools.setTool(\'highlight\')" title="하이라이트"><i class="fa fa-highlighter"></i></button>'
       + '<button class="pdf-tool-btn" id="pdfToolDraw" onclick="PDFTools.setTool(\'draw\')" title="그리기"><i class="fa fa-pen-fancy"></i></button>'
       + '<button class="pdf-tool-btn" id="pdfToolText" onclick="PDFTools.setTool(\'text\')" title="텍스트"><i class="fa fa-font"></i></button>'
-      + '<button class="pdf-tool-btn" id="pdfToolEraser" onclick="PDFTools.setTool(\'eraser\')" title="지우기"><i class="fa fa-eraser"></i></button>'
-      + '<div class="pdf-tool-sep"></div>'
+      + '<button class="pdf-tool-btn" id="pdfToolMemo" onclick="PDFTools.setTool(\'memo\')" title="메모"><i class="fa fa-sticky-note"></i></button>'
+      + '<button class="pdf-tool-btn" id="pdfToolEraser" onclick="PDFTools.setTool(\'eraser\')" title="펜 지우기"><i class="fa fa-eraser"></i></button>'
+      + '</div>'
+      // 이력 그룹
+      + '<div class="pdf-tool-group">'
       + '<button class="pdf-tool-btn" onclick="PDFTools.undo()" title="실행 취소"><i class="fa fa-rotate-left"></i></button>'
       + '<button class="pdf-tool-btn" onclick="PDFTools.redo()" title="다시 실행"><i class="fa fa-rotate-right"></i></button>'
+      + '</div>'
       + '</div>'
       + '<div class="pdf-tool-options" id="pdfToolOptions"></div>'
       + '<div class="pdf-viewport" id="pdfViewerContainer"></div>';
