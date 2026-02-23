@@ -2,7 +2,7 @@
 // 메인 firebase.js가 먼저 로드되므로 기본 앱(인증 포함)을 재사용
 import { getApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getAuth } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { getFirestore, collection, doc, getDoc, setDoc, getDocs, query, orderBy, limit }
+import { getFirestore, collection, doc, getDoc, setDoc, getDocs, deleteDoc, query, orderBy, limit }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const app = getApp();
@@ -105,9 +105,28 @@ async function getUserRank(nickname) {
   }
 }
 
+// 랭킹 전체 삭제 (관리용)
+async function clearAllRankings() {
+  try {
+    if (!auth.currentUser) { console.error('로그인 필요'); return 'no_auth'; }
+    var snap = await getDocs(collection(db, COL));
+    var count = 0;
+    for (var i = 0; i < snap.docs.length; i++) {
+      await deleteDoc(doc(db, COL, snap.docs[i].id));
+      count++;
+    }
+    console.log('랭킹 ' + count + '개 삭제 완료');
+    return count;
+  } catch(e) {
+    console.error('랭킹 삭제 오류:', e);
+    return 'error';
+  }
+}
+
 // Expose to window for non-module scripts
 window._tpRanking = {
   submitScore: submitScore,
   fetchRankings: fetchRankings,
-  getUserRank: getUserRank
+  getUserRank: getUserRank,
+  clearAll: clearAllRankings
 };
