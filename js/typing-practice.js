@@ -1577,10 +1577,15 @@ function _tpRenderBody(){
     });
     ta.addEventListener('paste', function(e){ e.preventDefault(); });
     ta.addEventListener('keydown', function(e){
-      // 테스트: Ctrl+Shift+7 → 속도 700 토글
+      // 테스트: Ctrl+Shift+7 → 전체 정답 입력 + 속도 700
       if(e.ctrlKey && e.shiftKey && e.key === '&'){
-        _tp.speedGauge = _tp.speedGauge >= 700 ? 0 : 750;
-        _tpTickSpeedGauge();
+        if(_tp.verse){
+          _tp.speedGauge = 750;
+          if(!_tp.startTime){ _tp.startTime = Date.now() - 3000; _tpStartTimer(); _tp.speedInterval = setInterval(_tpTickSpeedGauge, 80); }
+          ta.value = _tp.verse.text;
+          _tp.typed = _tp.verse.text;
+          _tpOnInput();
+        }
         e.preventDefault(); return;
       }
       if(e.key === 'Escape'){ toggleTypingPanel(); e.preventDefault(); return; }
