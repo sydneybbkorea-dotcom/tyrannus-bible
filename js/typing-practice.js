@@ -339,6 +339,19 @@ function _tpCountJamo(text){
   for(var i = 0; i < text.length; i++) count += _tpDecompose(text[i]).length;
   return count;
 }
+// 스킵된 글자를 제외한 자모 수
+function _tpCountJamoExcludeSkips(typed){
+  if(!_tp.wordSkips || !_tp.verse) return _tpCountJamo(typed);
+  var result = _tpBuildMapping(_tp.verse.text, typed);
+  var count = 0;
+  for(var i = 0; i < result.map.length; i++){
+    var ti = result.map[i];
+    if(ti >= 0 && !_tp.wordSkips[ti]){
+      count += _tpDecompose(typed[i]).length;
+    }
+  }
+  return count;
+}
 
 /* ═══ Character normalization (curly quotes → straight, etc.) ═══ */
 var _tpNormMap = {
@@ -1110,7 +1123,7 @@ function _tpTickSpeedGauge(){
   if(_tp.startTime && _tp.typed.length > 0 && _tp.verse){
     var elapsed = (now - _tp.startTime) / 60000; // minutes
     if(elapsed > 0){
-      var jamoCount = _tpCountJamo(_tp.typed);
+      var jamoCount = _tpCountJamoExcludeSkips(_tp.typed);
       target = Math.round(jamoCount / elapsed);
     }
   }
@@ -1294,7 +1307,7 @@ function _tpRenderStats(){
   }
 
   var accuracy = typed.length > 0 ? Math.round(correct / typed.length * 100) : 100;
-  var jamoCount = _tpCountJamo(typed);
+  var jamoCount = _tpCountJamoExcludeSkips(typed);
   var cpm = minutes > 0 ? Math.round(jamoCount / minutes) : 0;
   var progress = Math.min(100, Math.round(result.nextTarget / target.length * 100));
   var m = Math.floor(elapsed/60);
@@ -1330,7 +1343,7 @@ function _tpShowResults(){
   var skipped = result.skipped.length;
   var totalChars = target.length;
   var accuracy = typed.length > 0 ? Math.round(correct / typed.length * 100) : 100;
-  var jamoCount = _tpCountJamo(typed);
+  var jamoCount = _tpCountJamoExcludeSkips(typed);
   var cpm = minutes > 0 ? Math.round(jamoCount / minutes) : 0;
   var wpm = minutes > 0 ? Math.round((jamoCount / 5) / minutes) : 0;
 
