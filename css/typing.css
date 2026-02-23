@@ -141,7 +141,7 @@
 .tp-body {
   flex:1; overflow-y:auto; display:flex;
   flex-direction:column; align-items:center;
-  justify-content:center; padding:40px 40px;
+  justify-content:center; padding:20px 32px;
 }
 
 /* Start Screen */
@@ -320,47 +320,49 @@
   margin-top:10px; flex-wrap:wrap;
 }
 .tp-hint span {
-  font-size:11px; color:var(--text3); opacity:0.5;
+  font-size:14px; color:var(--text3); opacity:0.6;
 }
 
-/* ═══ Result Screen ═══ */
+/* ═══ Result Screen — Compact Dashboard ═══ */
 .tp-result {
   width:100%; max-width:960px;
-  display:flex; flex-direction:column; align-items:center; gap:28px;
-  animation:tp-fadeUp .45s ease;
+  display:flex; flex-direction:column; align-items:center; gap:12px;
+  animation:tp-fadeUp .4s ease;
 }
 @keyframes tp-fadeUp {
-  from { opacity:0; transform:translateY(24px); }
+  from { opacity:0; transform:translateY(16px); }
   to { opacity:1; transform:translateY(0); }
 }
+
+/* Header — single row */
 .tp-result-head {
-  text-align:center; display:flex; flex-direction:column;
-  align-items:center; gap:6px;
+  display:flex; align-items:center; gap:10px;
+  flex-wrap:wrap; justify-content:center;
 }
-.tp-result-icon { font-size:52px; color:var(--gold); }
+.tp-result-icon { font-size:22px; color:var(--gold); line-height:1; }
 .tp-result-title {
-  font-size:28px; font-weight:800; color:var(--text);
+  font-size:20px; font-weight:800; color:var(--text);
 }
 .tp-result-ref {
-  font-size:15px; color:var(--text3);
+  font-size:13px; color:var(--text3);
   font-family:'JetBrains Mono',monospace;
 }
 
-/* Stat cards — glass */
+/* Stat cards — compact glass */
 .tp-result-cards {
-  display:flex; gap:20px; justify-content:center;
-  flex-wrap:wrap; width:100%;
+  display:flex; gap:10px; justify-content:center;
+  width:100%;
 }
 .tp-rcard {
-  flex:1; min-width:160px; max-width:230px;
+  flex:1; min-width:0; max-width:220px;
   background: rgba(255,255,255,0.06);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border:1px solid rgba(255,255,255,0.10);
-  border-radius:16px; padding:24px 20px;
+  border-radius:12px; padding:14px 12px;
   display:flex; flex-direction:column; align-items:center;
-  gap:8px; text-align:center; position:relative;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.18),
+  gap:4px; text-align:center; position:relative;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.15),
               inset 0 1px 0 rgba(255,255,255,0.06);
   transition: background .2s, border-color .2s;
 }
@@ -369,12 +371,12 @@
   border-color: rgba(255,255,255,0.15);
 }
 
-/* SVG accuracy ring */
+/* SVG accuracy ring — compact */
 .tp-ring-wrap {
-  position:relative; width:120px; height:120px;
+  position:relative; width:80px; height:80px;
 }
 .tp-ring-svg {
-  width:120px; height:120px; transform:rotate(-90deg);
+  width:80px; height:80px; transform:rotate(-90deg);
 }
 .tp-ring-bg {
   fill:none; stroke:var(--bg3); stroke-width:8;
@@ -394,69 +396,63 @@
   pointer-events:none;
 }
 .tp-ring-num {
-  font-size:30px; font-weight:800; color:var(--text);
+  font-size:22px; font-weight:800; color:var(--text);
   font-family:'JetBrains Mono',monospace;
 }
-.tp-ring-num small { font-size:16px; font-weight:600; }
+.tp-ring-num small { font-size:12px; font-weight:600; }
 .tp-ring-lbl {
-  font-size:12px; color:var(--gold); font-weight:700;
-  margin-top:2px;
+  font-size:10px; color:var(--gold); font-weight:700;
+  margin-top:1px;
 }
 .tp-rcard-title {
-  font-size:13px; color:var(--text3); font-weight:600;
+  font-size:11px; color:var(--text3); font-weight:600;
 }
 .tp-rcard-big {
-  font-size:40px; font-weight:800; color:var(--text);
+  font-size:30px; font-weight:800; color:var(--text);
   font-family:'JetBrains Mono',monospace; line-height:1.1;
 }
 .tp-rcard-unit {
-  font-size:13px; color:var(--text3); font-weight:500;
+  font-size:11px; color:var(--text3); font-weight:500;
 }
 .tp-rcard-wpm {
-  font-size:15px; font-weight:700;
+  font-size:13px; font-weight:700;
   color:var(--accent-color,#60a5fa);
-  margin-top:6px;
+  margin-top:4px;
 }
 
 /* Speed bar */
 .tp-rcard-bar-wrap {
-  width:100%; height:6px;
+  width:100%; height:4px;
   background: rgba(255,255,255,0.06);
-  border-radius:3px; overflow:hidden; margin-top:8px;
+  border-radius:2px; overflow:hidden; margin-top:4px;
 }
 .tp-rcard-bar {
-  height:100%; border-radius:3px; background:var(--gold);
+  height:100%; border-radius:2px; background:var(--gold);
   animation:tp-barGrow .8s ease; transform-origin:left;
 }
 @keyframes tp-barGrow {
   from { transform:scaleX(0); }
   to { transform:scaleX(1); }
 }
-.tp-rcard-tag { font-size:12px; font-weight:700; margin-top:2px; }
+.tp-rcard-tag { font-size:11px; font-weight:700; margin-top:1px; }
 .tp-spd-fast { color:var(--gold); }
 .tp-spd-good { color:#4ade80; }
 .tp-spd-normal { color:var(--text2); }
 .tp-spd-slow { color:var(--text3); }
 
-/* Character breakdown chart — glass */
+/* Character breakdown chart — inline compact */
 .tp-result-chart {
-  width:100%; max-width:540px;
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border:1px solid rgba(255,255,255,0.08);
-  border-radius:16px; padding:20px 28px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.15),
-              inset 0 1px 0 rgba(255,255,255,0.04);
+  width:100%; max-width:700px;
+  padding:0 8px;
 }
 .tp-chart-title {
-  font-size:14px; font-weight:700; color:var(--text);
-  margin-bottom:12px; display:flex; align-items:center; gap:8px;
+  font-size:12px; font-weight:700; color:var(--text);
+  margin-bottom:6px; display:flex; align-items:center; gap:6px;
 }
-.tp-chart-title i { color:var(--gold); font-size:13px; }
+.tp-chart-title i { color:var(--gold); font-size:11px; }
 .tp-chart-bar {
-  display:flex; width:100%; height:16px;
-  border-radius:8px; overflow:hidden;
+  display:flex; width:100%; height:10px;
+  border-radius:5px; overflow:hidden;
   background: rgba(255,255,255,0.04);
 }
 .tp-cbar-ok {
@@ -472,29 +468,42 @@
   animation:tp-barGrow .8s ease .2s both; transform-origin:left;
 }
 .tp-chart-legend {
-  display:flex; gap:18px; flex-wrap:wrap; margin-top:12px;
+  display:flex; gap:12px; flex-wrap:wrap; margin-top:5px;
 }
 .tp-chart-legend span {
-  font-size:13px; color:var(--text2); display:flex; align-items:center; gap:6px;
+  font-size:11px; color:var(--text2); display:flex; align-items:center; gap:4px;
 }
 .tp-dot {
-  width:10px; height:10px; border-radius:50%; display:inline-block; flex-shrink:0;
+  width:8px; height:8px; border-radius:50%; display:inline-block; flex-shrink:0;
 }
 
-/* Result actions */
+/* Bottom 2-column layout */
+.tp-result-bottom {
+  width:100%; max-width:700px;
+  display:flex; gap:14px; align-items:flex-start;
+}
+.tp-result-left {
+  flex:0 0 auto; min-width:220px;
+  display:flex; flex-direction:column; align-items:center; gap:10px;
+}
+.tp-result-right {
+  flex:1; min-width:0;
+}
+
+/* Result actions — compact */
 .tp-result-acts {
-  display:flex; gap:12px; align-items:center;
+  display:flex; gap:8px; align-items:center;
   flex-wrap:wrap; justify-content:center;
 }
 .tp-next-btn {
-  padding:14px 32px; border-radius:12px; font-size:16px; font-weight:700;
+  padding:10px 24px; border-radius:10px; font-size:14px; font-weight:700;
   background:var(--gold); color:var(--bg); border:none; cursor:pointer;
-  transition:all .15s; display:flex; align-items:center; gap:8px;
-  box-shadow: 0 0 20px rgba(212,160,23,0.35), 0 4px 12px rgba(0,0,0,0.2);
+  transition:all .15s; display:flex; align-items:center; gap:6px;
+  box-shadow: 0 0 16px rgba(212,160,23,0.30), 0 3px 10px rgba(0,0,0,0.18);
 }
 .tp-next-btn:hover {
   filter:brightness(1.1); transform:translateY(-1px);
-  box-shadow: 0 0 28px rgba(212,160,23,0.45), 0 6px 16px rgba(0,0,0,0.25);
+  box-shadow: 0 0 24px rgba(212,160,23,0.40), 0 5px 14px rgba(0,0,0,0.22);
 }
 
 /* Folder button & dropdown menu */
@@ -553,8 +562,9 @@
 .tp-fm-create:hover { background:rgba(212,160,23,0.10); }
 
 .tp-result-enter {
-  font-size:12px; color:var(--text3); opacity:.5;
-  display:flex; align-items:center; gap:6px;
+  font-size:11px; color:var(--text3); opacity:.4;
+  display:flex; align-items:center; gap:5px;
+  margin-top:2px;
 }
 
 /* ═══ Real-time Speed Gauge ═══ */
@@ -585,13 +595,13 @@
 
 /* ═══ Previous vs Current CPM Delta ═══ */
 .tp-rcard-delta {
-  font-size:13px; font-weight:700; margin-top:6px;
-  display:flex; align-items:center; gap:5px;
+  font-size:11px; font-weight:700; margin-top:2px;
+  display:flex; align-items:center; gap:4px;
 }
 .tp-delta-up { color:#4ade80; }
 .tp-delta-down { color:#ff4757; }
 .tp-delta-same { color:#a0a5b8; }
-.tp-delta-prev { font-size:11px; font-weight:500; opacity:0.55; }
+.tp-delta-prev { font-size:10px; font-weight:500; opacity:0.55; }
 
 /* ═══ Theme Toggle Button ═══ */
 .tp-theme-btn {
@@ -604,28 +614,28 @@
 
 /* ═══ Best CPM in speed card ═══ */
 .tp-rcard-best {
-  font-size:12px; font-weight:600; color:var(--gold);
-  display:flex; align-items:center; gap:5px;
-  margin-top:4px; opacity:0.75;
+  font-size:10px; font-weight:600; color:var(--gold);
+  display:flex; align-items:center; gap:4px;
+  margin-top:2px; opacity:0.75;
 }
-.tp-rcard-best i { font-size:11px; }
+.tp-rcard-best i { font-size:9px; }
 
-/* ═══ Session Summary Bar — glass ═══ */
+/* ═══ Session Summary Bar — compact glass ═══ */
 .tp-session-bar {
-  width:100%; max-width:640px;
-  display:flex; gap:20px; justify-content:center; flex-wrap:wrap;
-  padding:12px 20px; border-radius:12px;
+  width:100%;
+  display:flex; gap:8px 14px; justify-content:center; flex-wrap:wrap;
+  padding:8px 14px; border-radius:10px;
   background: rgba(255,255,255,0.04);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border:1px solid var(--glass-border);
-  box-shadow: 0 2px 16px rgba(0,0,0,0.12);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.10);
 }
 .tp-session-bar span {
-  font-size:13px; font-weight:600; color:var(--text2);
-  display:flex; align-items:center; gap:6px;
+  font-size:11px; font-weight:600; color:var(--text2);
+  display:flex; align-items:center; gap:4px;
 }
-.tp-session-bar i { color:var(--gold); font-size:12px; }
+.tp-session-bar i { color:var(--gold); font-size:10px; }
 
 /* ═══ 900+ Light Aura on Speed Gauge ═══ */
 .tp-speed-wrap { position:relative; }
@@ -790,12 +800,7 @@
   border-color: rgba(180,80,90,0.20);
 }
 .tp-overlay.tp-light .tp-result-chart {
-  background: rgba(255,255,255,0.50);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border:1px solid rgba(180,80,90,0.12);
-  box-shadow: 0 4px 20px rgba(140,30,40,0.06),
-              inset 0 1px 0 rgba(255,255,255,0.5);
+  background:transparent;
 }
 .tp-overlay.tp-light .tp-session-bar {
   background: rgba(255,255,255,0.45);
@@ -887,7 +892,7 @@
 /* ═══ Score Card ═══ */
 .tp-score-glow { color:var(--gold) !important; }
 .tp-score-formula {
-  font-size:11px; color:var(--text3); margin-top:6px;
+  font-size:10px; color:var(--text3); margin-top:2px;
   font-family:'JetBrains Mono',monospace;
   opacity:0.7;
 }
@@ -1110,52 +1115,202 @@
   background:rgba(214,48,64,0.06);
 }
 
+/* ═══ Tier Badge (계급 엠블럼) ═══ */
+.tp-tier-badge {
+  font-size:13px;
+  margin-right:1px;
+  vertical-align:middle;
+}
+.tp-rcard-tier {
+  font-size:12px; font-weight:700;
+  margin-top:2px;
+  display:flex; align-items:center; gap:3px;
+  justify-content:center;
+}
+.tp-rcard-myrank {
+  font-size:14px; font-weight:800;
+  color:var(--gold);
+  font-family:'JetBrains Mono',monospace;
+  min-height:18px;
+}
+
+/* ═══ Result Mini Ranking ═══ */
+.tp-result-ranking {
+  width:100%;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border:1px solid rgba(255,255,255,0.10);
+  border-radius:12px;
+  padding:10px 12px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.12),
+              inset 0 1px 0 rgba(255,255,255,0.04);
+  animation:tp-fadeUp .4s ease;
+  max-height:340px; overflow-y:auto;
+}
+.tp-mini-rank-header {
+  font-size:13px; font-weight:700; color:var(--text);
+  margin-bottom:6px;
+  display:flex; align-items:center; gap:6px;
+  position:sticky; top:0;
+  background:inherit; padding-bottom:4px;
+}
+.tp-mini-rank-header i { color:var(--gold); font-size:12px; }
+.tp-mini-rank-table {
+  width:100%; border-collapse:collapse; font-size:12px;
+}
+.tp-mini-rank-table th {
+  padding:4px 6px; font-size:10px; font-weight:700;
+  color:var(--text3); text-transform:uppercase; letter-spacing:.3px;
+  text-align:left; border-bottom:1px solid rgba(255,255,255,0.08);
+}
+.tp-mini-rank-table td {
+  padding:3px 6px; border-bottom:1px solid rgba(255,255,255,0.04);
+  color:var(--text2); white-space:nowrap;
+}
+.tp-mini-rank-table .tp-rank-pos { text-align:center; width:28px; font-size:12px; }
+.tp-mini-rank-table .tp-rank-cpm {
+  font-weight:700; color:var(--gold);
+  font-family:'JetBrains Mono',monospace; font-size:12px;
+}
+.tp-mini-rank-table .tp-rank-score {
+  font-weight:700; color:var(--gold);
+  font-family:'JetBrains Mono',monospace; font-size:12px;
+}
+.tp-mini-rank-table .tp-rank-nick { font-weight:600; color:var(--text); font-size:12px; }
+.tp-mini-rank-table .tp-rank-num {
+  width:20px; height:20px; font-size:10px;
+}
+.tp-mini-rank-me td {
+  background:rgba(212,160,23,0.10) !important;
+}
+.tp-mini-rank-me .tp-rank-nick { color:var(--gold); }
+
+/* ═══ Light Theme — Tier & Mini Ranking ═══ */
+.tp-overlay.tp-light .tp-result-ranking {
+  background: rgba(255,255,255,0.50);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border:1px solid rgba(180,80,90,0.12);
+  box-shadow: 0 2px 16px rgba(140,30,40,0.05),
+              inset 0 1px 0 rgba(255,255,255,0.5);
+}
+.tp-overlay.tp-light .tp-mini-rank-table th {
+  border-bottom:1px solid rgba(180,80,90,0.10);
+}
+.tp-overlay.tp-light .tp-mini-rank-table td {
+  border-bottom:1px solid rgba(180,80,90,0.06);
+}
+.tp-overlay.tp-light .tp-mini-rank-me td {
+  background:rgba(214,48,64,0.08) !important;
+}
+.tp-overlay.tp-light .tp-mini-rank-me .tp-rank-nick { color:#d63040; }
+
 /* ═══ backdrop-filter fallback ═══ */
 @supports not (backdrop-filter: blur(1px)) {
   .tp-header { background: rgba(16,18,24,0.95); }
   .tp-settings { background: rgba(16,18,24,0.92); }
   .tp-chars { background: rgba(16,18,24,0.94); }
   .tp-rcard { background: rgba(16,18,24,0.92); }
-  .tp-result-chart { background: rgba(16,18,24,0.92); }
   .tp-session-bar { background: rgba(16,18,24,0.90); }
   .tp-folder-menu { background: rgba(16,18,24,0.95); }
   .tp-overlay.tp-light .tp-header { background: rgba(255,255,255,0.92); }
   .tp-overlay.tp-light .tp-settings { background: rgba(255,255,255,0.90); }
   .tp-overlay.tp-light .tp-chars { background: rgba(255,255,255,0.94); }
   .tp-overlay.tp-light .tp-rcard { background: rgba(255,255,255,0.92); }
-  .tp-overlay.tp-light .tp-result-chart { background: rgba(255,255,255,0.92); }
   .tp-overlay.tp-light .tp-session-bar { background: rgba(255,255,255,0.90); }
   .tp-overlay.tp-light .tp-folder-menu { background: rgba(255,255,255,0.95); }
+  .tp-result-ranking { background: rgba(16,18,24,0.92); }
+  .tp-overlay.tp-light .tp-result-ranking { background: rgba(255,255,255,0.92); }
+}
+
+/* ═══ Admin Row ═══ */
+.tp-admin-row {
+  margin-top:10px;
+  padding-top:10px;
+  border-top:1px solid rgba(255,255,255,0.08);
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.tp-admin-label {
+  font-size:11px;
+  font-weight:700;
+  color:var(--text3);
+  text-transform:uppercase;
+  letter-spacing:.5px;
+}
+.tp-admin-del {
+  font-size:11px !important;
+  color:var(--red) !important;
+  border-color:rgba(255,71,87,0.25) !important;
+}
+.tp-admin-del:hover {
+  background:rgba(255,71,87,0.10) !important;
+  border-color:var(--red) !important;
+}
+.tp-overlay.tp-light .tp-admin-row {
+  border-top:1px solid rgba(180,80,90,0.12);
+}
+.tp-overlay.tp-light .tp-admin-del {
+  color:var(--red) !important;
+  border-color:rgba(184,28,44,0.20) !important;
+}
+.tp-overlay.tp-light .tp-admin-del:hover {
+  background:rgba(184,28,44,0.08) !important;
+  border-color:var(--red) !important;
 }
 
 /* ═══ Responsive ═══ */
 @media(max-width:600px){
   .tp-header { padding:10px 14px; }
   .tp-settings { padding:10px 14px; }
-  .tp-body { padding:20px 14px; }
+  .tp-body { padding:14px 10px; }
   .tp-chars { font-size:18px; padding:18px 16px; min-height:80px; border-radius:12px; }
   .tp-source-row { gap:5px; }
   .tp-src-btn { padding:5px 10px; font-size:11px; }
   .tp-ref-book { font-size:20px; }
   .tp-ref-chv { font-size:16px; }
   .tp-stats span { font-size:12px; }
-  .tp-result-cards { gap:10px; }
-  .tp-rcard { min-width:120px; padding:16px 12px; border-radius:12px; }
-  .tp-ring-wrap { width:96px; height:96px; }
-  .tp-ring-svg { width:96px; height:96px; }
-  .tp-ring-num { font-size:24px; }
-  .tp-rcard-big { font-size:30px; }
-  .tp-result-title { font-size:22px; }
-  .tp-result-icon { font-size:40px; }
-  .tp-result-chart { padding:14px 16px; border-radius:12px; }
-  .tp-chart-legend { gap:10px; }
-  .tp-chart-legend span { font-size:11px; }
+  /* Result screen mobile */
+  .tp-result { gap:8px; }
+  .tp-result-head { gap:6px; }
+  .tp-result-title { font-size:16px; }
+  .tp-result-icon { font-size:18px; }
+  .tp-result-cards { gap:6px; }
+  .tp-rcard { padding:10px 8px; border-radius:10px; gap:2px; }
+  .tp-ring-wrap { width:60px; height:60px; }
+  .tp-ring-svg { width:60px; height:60px; }
+  .tp-ring-num { font-size:16px; }
+  .tp-ring-num small { font-size:10px; }
+  .tp-ring-lbl { font-size:9px; }
+  .tp-rcard-big { font-size:22px; }
+  .tp-rcard-unit { font-size:10px; }
+  .tp-rcard-title { font-size:10px; }
+  .tp-result-chart { padding:0 4px; }
+  .tp-chart-bar { height:8px; }
+  .tp-chart-legend { gap:6px; margin-top:4px; }
+  .tp-chart-legend span { font-size:10px; }
+  .tp-dot { width:6px; height:6px; }
+  .tp-result-bottom { flex-direction:column; gap:8px; }
+  .tp-result-left { width:100%; min-width:0; }
+  .tp-result-right { width:100%; }
+  .tp-session-bar { gap:6px 10px; padding:6px 10px; border-radius:8px; }
+  .tp-session-bar span { font-size:10px; }
+  .tp-next-btn { padding:8px 18px; font-size:13px; border-radius:8px; }
+  .tp-result-ranking { padding:8px 8px; border-radius:10px; max-height:200px; }
+  .tp-mini-rank-header { font-size:12px; margin-bottom:4px; }
+  .tp-mini-rank-table { font-size:10px; }
+  .tp-mini-rank-table th { padding:3px 4px; font-size:9px; }
+  .tp-mini-rank-table td { padding:2px 4px; }
+  .tp-mini-rank-table .tp-rank-pos { width:22px; }
+  .tp-tier-badge { font-size:11px; }
+  .tp-rcard-tier { font-size:10px; }
+  .tp-rcard-myrank { font-size:12px; }
+  .tp-rcard-delta { font-size:10px; }
+  .tp-rcard-best { font-size:9px; }
   .tp-speed-num { font-size:36px; }
-  .tp-rcard-delta { font-size:11px; }
-  .tp-session-bar { gap:12px; padding:10px 14px; border-radius:10px; }
-  .tp-session-bar span { font-size:11px; }
-  .tp-rcard-best { font-size:11px; }
-  /* Ranking responsive */
+  /* Ranking view responsive */
   .tp-ranking-title { font-size:18px; }
   .tp-rank-filter { padding:6px 12px; font-size:12px; }
   .tp-rank-table { font-size:12px; }

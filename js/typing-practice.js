@@ -2,6 +2,29 @@
    typing-practice.js — 성경 타자 연습
    ═══════════════════════════════════════════ */
 
+// ── Admin ──
+var _TP_ADMIN_UID = 'jOT7IJ7okMRb9dUP3COD124xnPq1';
+
+function _tpIsAdmin(){
+  return _TP_ADMIN_UID && window._firebaseUid === _TP_ADMIN_UID;
+}
+
+// ── Tier (계급) System ──
+var _tpTiers = [
+  { name:'Diamond',  icon:'💎', color:'#b9f2ff', minScore:800 },
+  { name:'Platinum', icon:'⚜️', color:'#e5e4e2', minScore:600 },
+  { name:'Gold',     icon:'👑', color:'#ffd700', minScore:450 },
+  { name:'Silver',   icon:'🛡️', color:'#c0c0c0', minScore:300 },
+  { name:'Bronze',   icon:'⚔️', color:'#cd7f32', minScore:150 },
+  { name:'Iron',     icon:'🔰', color:'#8a8a8a', minScore:0 }
+];
+function _tpGetTier(score){
+  for(var i = 0; i < _tpTiers.length; i++){
+    if(score >= _tpTiers[i].minScore) return _tpTiers[i];
+  }
+  return _tpTiers[_tpTiers.length - 1];
+}
+
 // ── State ──
 var _tp = {
   lang: 'kr',
@@ -692,14 +715,35 @@ function _tpRenderSettings(){
     }
   }
 
-  // 테스트 메뉴: 이펙트 강제 토글
-  h += '<div class="tp-test-row" style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">';
-  h += '<button class="tp-small-btn" onclick="_tpTestEffect(0)" style="font-size:10px;opacity:0.6">🔥 Off</button>';
-  h += '<button class="tp-small-btn" onclick="_tpTestEffect(700)" style="font-size:10px;opacity:0.6">🔥 700</button>';
-  h += '<button class="tp-small-btn" onclick="_tpTestEffect(900)" style="font-size:10px;opacity:0.6">🔥 900</button>';
-  h += '</div>';
+  // 관리자 메뉴 (관리자 UID만 표시)
+  if(_tpIsAdmin()){
+    h += '<div class="tp-admin-row">';
+    h += '<span class="tp-admin-label">관리</span>';
+    h += '<button class="tp-small-btn" onclick="_tpTestEffect(0)" style="font-size:10px">🔥 Off</button>';
+    h += '<button class="tp-small-btn" onclick="_tpTestEffect(700)" style="font-size:10px">🔥 700</button>';
+    h += '<button class="tp-small-btn" onclick="_tpTestEffect(900)" style="font-size:10px">🔥 900</button>';
+    h += '<button class="tp-small-btn tp-admin-del" onclick="_tpAdminClearRankings()">🗑 랭킹 초기화</button>';
+    h += '</div>';
+  }
 
   el.innerHTML = h;
+}
+
+/* ═══ Admin: Clear Rankings ═══ */
+function _tpAdminClearRankings(){
+  if(!confirm('랭킹 데이터를 모두 삭제합니다. 계속하시겠습니까?')) return;
+  if(!confirm('정말로 삭제합니다. 되돌릴 수 없습니다!')) return;
+  if(!window._tpRanking || !window._tpRanking.clearAll){
+    toast('랭킹 모듈이 로드되지 않았습니다.');
+    return;
+  }
+  window._tpRanking.clearAll().then(function(result){
+    if(result === 'no_auth') toast('로그인이 필요합니다.');
+    else if(result === 'error') toast('삭제 중 오류가 발생했습니다.');
+    else toast('랭킹 ' + result + '개 삭제 완료');
+    // 랭킹 뷰가 열려있으면 새로고침
+    if(_tp.rankingView) _tpLoadRankings();
+  });
 }
 
 function _tpTestEffect(speed){
@@ -1402,14 +1446,31 @@ function _tpShowResults(){
   // Folder button (항상 표시)
   var fnames = Object.keys(_tp.folders);
 
+  // Delta HTML
+  var deltaHtml = '';
+  if(prevCpm !== null){
+    var delta = cpm - prevCpm;
+    var sign = delta > 0 ? '+' : '';
+    var cls = delta > 0 ? 'tp-delta-up' : (delta < 0 ? 'tp-delta-down' : 'tp-delta-same');
+    var dIcon = delta > 0 ? 'fa-arrow-up' : (delta < 0 ? 'fa-arrow-down' : 'fa-equals');
+    deltaHtml = '<div class="tp-rcard-delta ' + cls + '">' +
+      '<i class="fa ' + dIcon + '"></i> ' + sign + delta +
+      ' <span class="tp-delta-prev">('+_tpT('prev')+': ' + prevCpm + ')</span></div>';
+  }
+
+  var tier = _tpGetTier(score);
+
   el.innerHTML =
     '<div class="tp-result">' +
+
+      /* ── Row 1: Compact header ── */
       '<div class="tp-result-head">' +
-        '<div class="tp-result-icon"><i class="fa fa-check-circle"></i></div>' +
-        '<div class="tp-result-title">'+_tpT('typingComplete')+'</div>' +
-        '<div class="tp-result-ref">' + (v.fullBook || v.book) + ' ' + v.ch + ':' + v.v + '</div>' +
+        '<span class="tp-result-icon"><i class="fa fa-check-circle"></i></span>' +
+        '<span class="tp-result-title">'+_tpT('typingComplete')+'</span>' +
+        '<span class="tp-result-ref">' + (v.fullBook || v.book) + ' ' + v.ch + ':' + v.v + '</span>' +
       '</div>' +
 
+      /* ── Row 2: Stat cards (compact) ── */
       '<div class="tp-result-cards">' +
         '<div class="tp-rcard">' +
           '<div class="tp-ring-wrap">' +
@@ -1430,15 +1491,7 @@ function _tpShowResults(){
           '<div class="tp-rcard-unit">'+_tpT('cpmUnit')+'</div>' +
           '<div class="tp-rcard-bar-wrap"><div class="tp-rcard-bar" style="width:' + speedPct + '%"></div></div>' +
           '<div class="tp-rcard-tag ' + speedClass + '">' + speedLabel + '</div>' +
-          (prevCpm !== null ? (function(){
-            var delta = cpm - prevCpm;
-            var sign = delta > 0 ? '+' : '';
-            var cls = delta > 0 ? 'tp-delta-up' : (delta < 0 ? 'tp-delta-down' : 'tp-delta-same');
-            var icon = delta > 0 ? 'fa-arrow-up' : (delta < 0 ? 'fa-arrow-down' : 'fa-equals');
-            return '<div class="tp-rcard-delta ' + cls + '">' +
-              '<i class="fa ' + icon + '"></i> ' + sign + delta +
-              ' <span class="tp-delta-prev">('+_tpT('prev')+': ' + prevCpm + ')</span></div>';
-          })() : '') +
+          deltaHtml +
           '<div class="tp-rcard-best"><i class="fa fa-trophy"></i> '+_tpT('bestLabel')+': ' + bestCpm + '</div>' +
         '</div>' +
 
@@ -1446,12 +1499,13 @@ function _tpShowResults(){
           '<div class="tp-rcard-big tp-score-glow">' + score + '</div>' +
           '<div class="tp-rcard-unit">'+_tpT('score')+'</div>' +
           '<div class="tp-rcard-bar-wrap"><div class="tp-rcard-bar" style="width:' + scorePct + '%"></div></div>' +
-          '<div class="tp-score-formula">' + _tpT('scoreFormula')(cpm, accuracy, score) + '</div>' +
+          '<div class="tp-rcard-tier" style="color:' + tier.color + '">' + tier.icon + ' ' + tier.name + '</div>' +
+          '<div class="tp-rcard-myrank" id="tpMyRankBadge"></div>' +
         '</div>' +
       '</div>' +
 
+      /* ── Row 3: Char analysis bar (inline, no card) ── */
       '<div class="tp-result-chart">' +
-        '<div class="tp-chart-title"><i class="fa fa-chart-bar"></i> '+_tpT('charAnalysis')+'</div>' +
         '<div class="tp-chart-bar">' +
           (correct > 0 ? '<div class="tp-cbar-ok" style="width:' + correctPct + '%"></div>' : '') +
           (wrong > 0 ? '<div class="tp-cbar-err" style="width:' + wrongPct + '%"></div>' : '') +
@@ -1465,26 +1519,32 @@ function _tpShowResults(){
         '</div>' +
       '</div>' +
 
-      '<div class="tp-session-bar">' +
-        '<span><i class="fa fa-file-alt"></i> ' + _tp.sessionVerses + ' '+_tpT('verses')+'</span>' +
-        '<span><i class="fa fa-bullseye"></i> '+_tpT('average')+' ' + sessionAvgAcc + '%</span>' +
-        '<span><i class="fa fa-trophy"></i> '+_tpT('best')+' ' + bestCpm + ' '+_tpT('cpmUnit')+'</span>' +
-        '<span><i class="fa fa-clock"></i> '+_tpT('totalTime')+' ' + sessionTimeStr + '</span>' +
+      /* ── Row 4: Bottom 2-column (left: session+actions, right: ranking) ── */
+      '<div class="tp-result-bottom">' +
+        '<div class="tp-result-left">' +
+          '<div class="tp-session-bar">' +
+            '<span><i class="fa fa-file-alt"></i> ' + _tp.sessionVerses + ' '+_tpT('verses')+'</span>' +
+            '<span><i class="fa fa-bullseye"></i> '+_tpT('average')+' ' + sessionAvgAcc + '%</span>' +
+            '<span><i class="fa fa-trophy"></i> '+_tpT('best')+' ' + bestCpm + ' '+_tpT('cpmUnit')+'</span>' +
+            '<span><i class="fa fa-clock"></i> '+_tpT('totalTime')+' ' + sessionTimeStr + '</span>' +
+          '</div>' +
+          '<div class="tp-result-acts">' +
+            '<button class="tp-next-btn" onclick="_tpNextVerse()"><i class="fa fa-arrow-right"></i> '+_tpT('nextVerse')+'</button>' +
+            '<button class="tp-heart-btn' + (isHearted ? ' tp-hearted' : '') + '" id="tpHeartBtn" onclick="_tpToggleHeart()">' +
+              '<i class="fa' + (isHearted ? 's' : 'r') + ' fa-heart"></i>' +
+            '</button>' +
+            '<div class="tp-folder-wrap">' +
+              '<button class="tp-folder-btn" id="tpFolderBtn" onclick="_tpToggleFolderMenu()" title="'+_tpT('addToFolder')+'">' +
+                '<i class="fa fa-folder-plus"></i>' +
+              '</button>' +
+              '<div class="tp-folder-menu" id="tpFolderMenu"></div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="tp-result-enter"><i class="fa fa-level-down-alt fa-rotate-90"></i> Enter: '+ (_tp.lang==='kr'?'다음 구절':'next verse') +'</div>' +
+        '</div>' +
+        '<div class="tp-result-right" id="tpMiniRanking"></div>' +
       '</div>' +
 
-      '<div class="tp-result-acts">' +
-        '<button class="tp-next-btn" onclick="_tpNextVerse()"><i class="fa fa-arrow-right"></i> '+_tpT('nextVerse')+'</button>' +
-        '<button class="tp-heart-btn' + (isHearted ? ' tp-hearted' : '') + '" id="tpHeartBtn" onclick="_tpToggleHeart()">' +
-          '<i class="fa' + (isHearted ? 's' : 'r') + ' fa-heart"></i>' +
-        '</button>' +
-        '<div class="tp-folder-wrap">' +
-          '<button class="tp-folder-btn" id="tpFolderBtn" onclick="_tpToggleFolderMenu()" title="'+_tpT('addToFolder')+'">' +
-            '<i class="fa fa-folder-plus"></i>' +
-          '</button>' +
-          '<div class="tp-folder-menu" id="tpFolderMenu"></div>' +
-        '</div>' +
-      '</div>' +
-      '<div class="tp-result-enter"><i class="fa fa-level-down-alt fa-rotate-90"></i> Enter: '+ (_tp.lang==='kr'?'다음 구절':'next verse') +'</div>' +
     '</div>';
 
   // Document-level Enter key listener
@@ -1496,6 +1556,9 @@ function _tpShowResults(){
 
   // Submit score to ranking (async, non-blocking)
   _tpSubmitScore(score, cpm, accuracy, v);
+
+  // Load mini ranking (async)
+  _tpLoadMiniRanking(score);
 }
 
 /* ═══ Folder Menu (결과 화면) ═══ */
@@ -1837,6 +1900,53 @@ function _tpSubmitScore(score, cpm, accuracy, verse){
   });
 }
 
+/* ═══ Mini Ranking (결과 화면) ═══ */
+function _tpLoadMiniRanking(myScore){
+  if(!window._tpRanking) return;
+  window._tpRanking.fetchRankings(_tp.rankingFilter || 'all')
+    .then(function(data){
+      _tp.rankingData = data;
+      var container = document.getElementById('tpMiniRanking');
+      if(!container) return;
+      var top20 = data.slice(0, 20);
+      if(top20.length === 0){ container.innerHTML = ''; return; }
+      var myNick = (_tp.nickname || '').toLowerCase();
+      var h = '<div class="tp-result-ranking">' +
+        '<div class="tp-mini-rank-header"><i class="fa fa-trophy"></i> TOP 20 '+_tpT('ranking')+'</div>' +
+        '<table class="tp-mini-rank-table"><thead><tr>' +
+          '<th>'+_tpT('rankCol')+'</th>' +
+          '<th>'+_tpT('rankColNickname')+'</th>' +
+          '<th>'+_tpT('rankColScore')+'</th>' +
+          '<th>'+_tpT('rankColCpm')+'</th>' +
+        '</tr></thead><tbody>';
+      var myRank = -1;
+      for(var i = 0; i < top20.length; i++){
+        var r = top20[i];
+        var rank = i + 1;
+        var isMe = myNick && r.nickname && r.nickname.toLowerCase() === myNick;
+        if(isMe) myRank = rank;
+        var tier = _tpGetTier(r.score || 0);
+        var medal = '';
+        if(rank === 1) medal = '🥇';
+        else if(rank === 2) medal = '🥈';
+        else if(rank === 3) medal = '🥉';
+        else medal = '<span class="tp-rank-num">' + rank + '</span>';
+        h += '<tr class="' + (isMe ? 'tp-mini-rank-me' : '') + '">' +
+          '<td class="tp-rank-pos">' + medal + '</td>' +
+          '<td class="tp-rank-nick"><span class="tp-tier-badge" style="color:' + tier.color + '">' + tier.icon + '</span> ' + _tpEscHtml(r.nickname || '?') + '</td>' +
+          '<td class="tp-rank-score">' + (r.score || 0) + '</td>' +
+          '<td class="tp-rank-cpm">' + (r.cpm || 0) + '</td>' +
+        '</tr>';
+      }
+      h += '</tbody></table></div>';
+      container.innerHTML = h;
+      // Update my rank badge on score card
+      var badge = document.getElementById('tpMyRankBadge');
+      if(badge && myRank > 0) badge.textContent = '#' + myRank;
+    })
+    .catch(function(){});
+}
+
 /* ═══ Ranking Toggle ═══ */
 function _tpShowRanking(){
   _tp.rankingView = true;
@@ -1851,7 +1961,12 @@ function _tpShowRanking(){
 
 function _tpHideRanking(){
   _tp.rankingView = false;
-  _tpRenderBody();
+  if(_tp.finished && _tp.verse){
+    // 결과 화면 복귀
+    _tpShowResults();
+  } else {
+    _tpRenderBody();
+  }
 }
 
 /* ═══ Ranking UI ═══ */
@@ -1950,7 +2065,7 @@ function _tpRenderRankTable(data){
 
     h += '<tr class="' + (isMe ? 'tp-rank-me' : '') + (rank <= 3 ? ' tp-rank-top3' : '') + '">' +
       '<td class="tp-rank-pos">' + medal + '</td>' +
-      '<td class="tp-rank-nick">' + _tpEscHtml(r.nickname || '?') + (isMe ? ' <span class="tp-rank-me-badge">'+_tpT('myRank')+'</span>' : '') + '</td>' +
+      '<td class="tp-rank-nick"><span class="tp-tier-badge" style="color:' + _tpGetTier(r.score||0).color + '">' + _tpGetTier(r.score||0).icon + '</span> ' + _tpEscHtml(r.nickname || '?') + (isMe ? ' <span class="tp-rank-me-badge">'+_tpT('myRank')+'</span>' : '') + '</td>' +
       '<td class="tp-rank-score">' + (r.score || 0) + '</td>' +
       '<td class="tp-rank-cpm">' + (r.cpm || 0) + '</td>' +
       '<td class="tp-rank-acc">' + (r.accuracy || 0) + '%</td>' +
