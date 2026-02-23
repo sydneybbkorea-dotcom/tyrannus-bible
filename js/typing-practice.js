@@ -300,10 +300,9 @@ function _tpPlayKeySound(code){
   }
 }
 
-/* 오타: 벨 딩 + 키탭 (타자음과 비슷한 볼륨) */
+/* 오타: 벨 딩 소리만 (타자음보다 작게) */
 function _tpPlayErrorSound(){
-  _tpPlayBuf(_tpBufs.bell, 0.7, 0.2);
-  _tpPlayBuf(_tpBufs.key, 0.55, 0.3);
+  _tpPlayBuf(_tpBufs.bell, 0.7, 0.15);
 }
 
 /* 스페이스바: 넓은 바 타격 (return 사운드 가볍게) */
@@ -840,6 +839,15 @@ function _tpOnInput(){
   var prev = _tp.typed;
   _tp.typed = ta.value;
 
+  // 기호 입력 무시: 오타로 인식하지 않고 자동 제거
+  if(!_tp.composing){
+    var cleaned = _tp.typed.replace(/[\[\]{};':"<>,\.\/\?]/g, '');
+    if(cleaned !== _tp.typed){
+      _tp.typed = cleaned;
+      ta.value = cleaned;
+    }
+  }
+
   // Error sound + speed tracking
   var now = Date.now();
   if(!_tp.composing && _tp.typed.length > prev.length){
@@ -1324,7 +1332,7 @@ function _tpShowResults(){
 
   // Document-level Enter key listener
   _tp._resultKeyHandler = function(e){
-    if(e.key === 'Enter'){ e.preventDefault(); _tpPlayEnterSound(); _tpNextVerse(); }
+    if(e.key === 'Enter'){ e.preventDefault(); _tpPlayLeverSound(); _tpNextVerse(); }
     else if(e.key === 'Escape'){ e.preventDefault(); toggleTypingPanel(); }
   };
   document.addEventListener('keydown', _tp._resultKeyHandler);
