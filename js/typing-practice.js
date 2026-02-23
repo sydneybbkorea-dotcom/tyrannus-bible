@@ -304,7 +304,7 @@ function _tpPlayKeySound(code){
 
 /* 오타: 벨 사운드 */
 function _tpPlayErrorSound(){
-  _tpPlayBuf(_tpBufs.bell, 0.7, 0.125);
+  _tpPlayBuf(_tpBufs.bell, 0.7, 0.06);
 }
 
 /* 스페이스바 */
@@ -519,7 +519,8 @@ function _tpLoadStorage(){
     if(f) _tp.folders = JSON.parse(f);
     // 테스트 폴더 자동 생성
     if(!_tp.folders['테스트']){
-      _tp.folders['테스트'] = ['custom_7'];
+      var s7 = ''; for(var ii=0;ii<200;ii++) s7+='7';
+      _tp.folders['테스트'] = ['custom_'+encodeURIComponent(s7)];
       _tpSaveFolders();
     }
     var bc = localStorage.getItem('tp_bestCpm');
