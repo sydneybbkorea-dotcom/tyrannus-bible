@@ -677,7 +677,20 @@ function _tpRenderSettings(){
     }
   }
 
+  // 테스트 메뉴: 이펙트 강제 토글
+  h += '<div class="tp-test-row" style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">';
+  h += '<button class="tp-small-btn" onclick="_tpTestEffect(0)" style="font-size:10px;opacity:0.6">🔥 Off</button>';
+  h += '<button class="tp-small-btn" onclick="_tpTestEffect(700)" style="font-size:10px;opacity:0.6">🔥 700</button>';
+  h += '<button class="tp-small-btn" onclick="_tpTestEffect(900)" style="font-size:10px;opacity:0.6">🔥 900</button>';
+  h += '</div>';
+
   el.innerHTML = h;
+}
+
+function _tpTestEffect(speed){
+  _tp.speedGauge = speed;
+  _tp._testEffect = speed > 0;
+  _tpTickSpeedGauge();
 }
 
 /* ═══ Folder CRUD ═══ */
@@ -1079,6 +1092,7 @@ function _tpStopTimer(){
 
 /* ═══ Real-time Speed Gauge ═══ */
 function _tpTickSpeedGauge(){
+  if(_tp._testEffect) { _tpUpdateFireAura(); _tpUpdateGaugeVisual(); return; }
   if(!_tp.started || _tp.finished) return;
   var now = Date.now();
   // 자모 기반 CPM (최종 점수와 동일)
@@ -1093,14 +1107,17 @@ function _tpTickSpeedGauge(){
   // Smooth interpolation
   _tp.speedGauge += (target - _tp.speedGauge) * 0.15;
   if(Math.abs(_tp.speedGauge - target) < 1) _tp.speedGauge = target;
-  // 700+ 불꽃 오라 이펙트
+  _tpUpdateFireAura();
+  _tpUpdateGaugeVisual();
+}
+
+function _tpUpdateFireAura(){
   var wrap = document.querySelector('.tp-speed-wrap');
   var aura = document.getElementById('tpFireAura');
   if(!aura && wrap){
     aura = document.createElement('div');
     aura.id = 'tpFireAura';
     aura.className = 'tp-fire-aura';
-    // 불꽃 파티클 20개 생성
     for(var fi = 0; fi < 20; fi++){
       var flame = document.createElement('div');
       flame.className = 'tp-flame';
@@ -1110,7 +1127,6 @@ function _tpTickSpeedGauge(){
       flame.style.left = (5 + Math.random() * 90) + '%';
       flame.style.animationDuration = (0.6 + Math.random() * 1.0) + 's';
       flame.style.animationDelay = (Math.random() * 1.5) + 's';
-      // 불꽃 색상: 빨강/주황/노랑 랜덤
       var colors = [
         'radial-gradient(circle, rgba(255,220,50,0.9), rgba(255,120,0,0.7), rgba(255,40,0,0.3))',
         'radial-gradient(circle, rgba(255,255,100,0.9), rgba(255,160,0,0.7), rgba(255,60,0,0.3))',
@@ -1126,8 +1142,9 @@ function _tpTickSpeedGauge(){
     if(_tp.speedGauge >= 700) aura.classList.add('active');
     else aura.classList.remove('active');
   }
+}
 
-  // Update visual
+function _tpUpdateGaugeVisual(){
   var bar = document.getElementById('tpSpeedBar');
   var num = document.getElementById('tpSpeedNum');
   if(bar){
@@ -1150,7 +1167,6 @@ function _tpTickSpeedGauge(){
   if(num){
     var spd = Math.round(_tp.speedGauge);
     num.textContent = spd;
-    // Dynamic scale: 1.0 at 0 → 3.0 at 600+
     var ratio = Math.min(_tp.speedGauge, 600) / 600;
     var scale = 1 + ratio * 2.0;
     num.style.transform = 'scale(' + scale.toFixed(2) + ')';
