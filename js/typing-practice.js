@@ -904,12 +904,18 @@ function _tpUpdateChars(){
 
   var result = _tpBuildMapping(target, typed.slice(0, evalLen));
   var matchedSet = {};  // targetIdx → 'correct' | 'wrong'
+  var wrongChars = {};  // targetIdx → 실제 입력한 글자 (오타 표시용)
   var skippedSet = {};  // targetIdx → true (auto-skipped punctuation)
 
   for(var p = 0; p < result.map.length; p++){
     var ti = result.map[p];
     if(ti >= 0){
-      matchedSet[ti] = _tpMatch(typed[p], target[ti]) ? 'correct' : 'wrong';
+      if(_tpMatch(typed[p], target[ti])){
+        matchedSet[ti] = 'correct';
+      } else {
+        matchedSet[ti] = 'wrong';
+        wrongChars[ti] = typed[p];
+      }
     }
   }
   for(var s = 0; s < result.skipped.length; s++){
@@ -939,7 +945,7 @@ function _tpUpdateChars(){
     } else if(matchedSet[i] === 'wrong'){
       var wasWrong = span.classList.contains('tp-wrong');
       span.className = 'tp-char tp-wrong' + (!wasWrong ? ' tp-punch-err' : '');
-      span.textContent = origChar;
+      span.textContent = wrongChars[i] || origChar;
     } else if(skippedSet[i]){
       var wasSkip = span.classList.contains('tp-correct');
       span.className = 'tp-char tp-correct' + (!wasSkip ? ' tp-punch' : '');
@@ -963,10 +969,10 @@ function _tpUpdateChars(){
   if(_tp.composing && composingText){
     cursorPos = cursorTarget + 1;
   }
-  _tpMoveCursor(container, spans, cursorPos);
+  _tpMoveCursor(container, spans, cursorPos, target);
 }
 
-function _tpMoveCursor(container, spans, cursorIdx){
+function _tpMoveCursor(container, spans, cursorIdx, target){
   var cursor = container.querySelector('.tp-caret');
   if(!cursor){
     cursor = document.createElement('div');
@@ -976,17 +982,29 @@ function _tpMoveCursor(container, spans, cursorIdx){
 
   var cRect = container.getBoundingClientRect();
 
+  // 커서 굵기: 첫 글자 또는 공백 다음 → 굵게, 그 외 → 가늘게
+  var isThick = cursorIdx === 0 ||
+    (target && cursorIdx > 0 && cursorIdx <= target.length && target[cursorIdx - 1] === ' ');
+  var cursorW = isThick ? 4 : 2.5;
+  cursor.style.width = cursorW + 'px';
+
   if(cursorIdx > 0 && cursorIdx <= spans.length){
-    // 마지막으로 완성된 글자의 오른쪽에 커서 배치
-    var sRect = spans[cursorIdx - 1].getBoundingClientRect();
-    cursor.style.left = (sRect.right - cRect.left) + 'px';
-    cursor.style.top = (sRect.top - cRect.top) + 'px';
-    cursor.style.height = sRect.height + 'px';
+    var prevRect = spans[cursorIdx - 1].getBoundingClientRect();
+    var posX;
+    if(cursorIdx < spans.length){
+      // 두 글자 사이: 정확한 중간점에 커서 배치
+      var nextRect = spans[cursorIdx].getBoundingClientRect();
+      posX = (prevRect.right + nextRect.left) / 2;
+    } else {
+      posX = prevRect.right;
+    }
+    cursor.style.left = (posX - cRect.left - cursorW / 2) + 'px';
+    cursor.style.top = (prevRect.top - cRect.top) + 'px';
+    cursor.style.height = prevRect.height + 'px';
     cursor.style.opacity = '1';
   } else if(cursorIdx === 0 && spans.length > 0){
-    // 아직 아무것도 안 친 상태: 첫 글자 왼쪽
     var sRect2 = spans[0].getBoundingClientRect();
-    cursor.style.left = (sRect2.left - cRect.left) + 'px';
+    cursor.style.left = (sRect2.left - cRect.left - cursorW / 2) + 'px';
     cursor.style.top = (sRect2.top - cRect.top) + 'px';
     cursor.style.height = sRect2.height + 'px';
     cursor.style.opacity = '1';
