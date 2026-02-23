@@ -303,7 +303,7 @@ function _tpPlayKeySound(code){
 
 /* 오타: A라인 키음 낮은 피치로 */
 function _tpPlayErrorSound(){
-  _tpPlayBuf(_tpBufs.keyA, 0.7, 0.15);
+  _tpPlayBuf(_tpBufs.keyA, 0.7, 0.5);
 }
 
 /* 스페이스바 */
