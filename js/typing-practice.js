@@ -1122,20 +1122,21 @@ function _tpUpdateFireAura(){
     aura = document.createElement('div');
     aura.id = 'tpFireAura';
     aura.className = 'tp-fire-aura';
-    for(var fi = 0; fi < 20; fi++){
+    for(var fi = 0; fi < 35; fi++){
       var flame = document.createElement('div');
       flame.className = 'tp-flame';
-      var sz = 8 + Math.random() * 18;
+      var sz = 6 + Math.random() * 22;
       flame.style.width = sz + 'px';
-      flame.style.height = sz * (1.2 + Math.random() * 0.6) + 'px';
-      flame.style.left = (5 + Math.random() * 90) + '%';
-      flame.style.animationDuration = (0.6 + Math.random() * 1.0) + 's';
-      flame.style.animationDelay = (Math.random() * 1.5) + 's';
+      flame.style.height = sz * (1.3 + Math.random() * 0.8) + 'px';
+      flame.style.left = (2 + Math.random() * 96) + '%';
+      flame.style.animationDuration = (0.5 + Math.random() * 0.9) + 's';
+      flame.style.animationDelay = (Math.random() * 1.2) + 's';
       var colors = [
-        'radial-gradient(circle, rgba(255,220,50,0.9), rgba(255,120,0,0.7), rgba(255,40,0,0.3))',
-        'radial-gradient(circle, rgba(255,255,100,0.9), rgba(255,160,0,0.7), rgba(255,60,0,0.3))',
-        'radial-gradient(circle, rgba(255,180,30,0.9), rgba(255,80,0,0.7), rgba(200,20,0,0.3))',
-        'radial-gradient(circle, rgba(255,100,0,0.8), rgba(220,40,0,0.6), rgba(150,0,0,0.2))'
+        'radial-gradient(circle, rgba(255,255,255,1), rgba(200,230,255,0.8), rgba(100,180,255,0.3))',
+        'radial-gradient(circle, rgba(255,255,240,1), rgba(255,240,150,0.8), rgba(255,200,50,0.3))',
+        'radial-gradient(circle, rgba(220,240,255,1), rgba(150,200,255,0.8), rgba(80,140,255,0.3))',
+        'radial-gradient(circle, rgba(255,230,255,1), rgba(220,180,255,0.8), rgba(160,100,255,0.3))',
+        'radial-gradient(circle, rgba(255,255,255,1), rgba(180,255,220,0.8), rgba(50,220,150,0.3))'
       ];
       flame.style.background = colors[Math.floor(Math.random() * colors.length)];
       aura.appendChild(flame);
@@ -1143,7 +1144,7 @@ function _tpUpdateFireAura(){
     wrap.appendChild(aura);
   }
   if(aura){
-    if(_tp.speedGauge >= 700) aura.classList.add('active');
+    if(_tp.speedGauge >= 900) aura.classList.add('active');
     else aura.classList.remove('active');
   }
 }

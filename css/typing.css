@@ -613,47 +613,58 @@
 }
 .tp-session-bar i { color:var(--gold); font-size:12px; }
 
-/* ═══ 700+ Fire Aura on Speed Gauge ═══ */
+/* ═══ 900+ Light Aura on Speed Gauge ═══ */
 .tp-speed-wrap { position:relative; }
 
 .tp-fire-aura {
   pointer-events:none;
   position:absolute;
-  left:50%; bottom:0;
-  width:120%; height:180px;
+  left:50%; bottom:-10px;
+  width:160%; height:240px;
   transform:translateX(-50%);
-  opacity:0; transition:opacity 0.4s;
+  opacity:0; transition:opacity 0.5s;
   z-index:-1;
 }
 .tp-fire-aura.active { opacity:1; }
 
-/* 불꽃 파티클들 */
+/* 빛 파티클들 */
 .tp-flame {
   position:absolute; bottom:0;
   border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
-  filter:blur(6px);
+  filter:blur(4px);
   animation: tp-flame-rise linear infinite;
   opacity:0;
+  mix-blend-mode:screen;
 }
 @keyframes tp-flame-rise {
   0%   { transform:translateY(0) scaleX(1) scaleY(1); opacity:0; }
-  10%  { opacity:0.9; }
-  50%  { transform:translateY(-80px) scaleX(0.8) scaleY(1.3); opacity:0.6; }
-  100% { transform:translateY(-170px) scaleX(0.3) scaleY(0.5); opacity:0; }
+  8%   { opacity:1; }
+  30%  { transform:translateY(-60px) scaleX(1.1) scaleY(1.4); opacity:0.9; }
+  60%  { transform:translateY(-130px) scaleX(0.7) scaleY(1.2); opacity:0.5; }
+  100% { transform:translateY(-220px) scaleX(0.2) scaleY(0.4); opacity:0; }
 }
 
-/* 바닥 글로우 */
+/* 바닥 밝은 글로우 */
 .tp-fire-aura::before {
   content:''; position:absolute;
-  bottom:-5px; left:10%; right:10%; height:20px;
-  background:radial-gradient(ellipse, rgba(255,100,0,0.6) 0%, rgba(255,50,0,0.3) 40%, transparent 70%);
+  bottom:-8px; left:5%; right:5%; height:30px;
+  background:radial-gradient(ellipse, rgba(200,220,255,0.8) 0%, rgba(150,180,255,0.4) 40%, transparent 70%);
   border-radius:50%;
-  filter:blur(8px);
-  animation: tp-fire-glow 1.5s ease-in-out infinite alternate;
+  filter:blur(12px);
+  animation: tp-fire-glow 1.2s ease-in-out infinite alternate;
+}
+/* 상단 빛 번짐 */
+.tp-fire-aura::after {
+  content:''; position:absolute;
+  top:20%; left:20%; right:20%; height:60px;
+  background:radial-gradient(ellipse, rgba(255,255,255,0.3) 0%, rgba(180,200,255,0.15) 50%, transparent 80%);
+  border-radius:50%;
+  filter:blur(20px);
+  animation: tp-fire-glow 1.8s ease-in-out infinite alternate-reverse;
 }
 @keyframes tp-fire-glow {
-  0%   { opacity:0.6; transform:scaleX(0.9); }
-  100% { opacity:1;   transform:scaleX(1.1); }
+  0%   { opacity:0.5; transform:scaleX(0.85); }
+  100% { opacity:1;   transform:scaleX(1.15); }
 }
 
 /* ═══ Light Theme (Red Accent) — Glassmorphism ═══ */
