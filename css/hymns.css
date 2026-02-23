@@ -422,6 +422,14 @@
 .hym-sp-filters .hym-filter-btn {
   flex:1; text-align:center;
 }
+.hym-lang-btn {
+  background:var(--glass-bg-2); border:1px solid var(--glass-border);
+  color:var(--accent-color); font-size:10px; font-weight:700;
+  padding:2px 7px; border-radius:4px; cursor:pointer;
+  transition:all .12s; white-space:nowrap; min-width:26px;
+  flex:0 0 auto;
+}
+.hym-lang-btn:hover { background:var(--accent-dim); }
 
 /* Side panel list items — compact */
 #sp-hymns .hym-list-item {
