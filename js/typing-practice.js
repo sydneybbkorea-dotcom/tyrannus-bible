@@ -1227,7 +1227,7 @@ function _tpShowResults(){
   var speedPct = Math.min(100, Math.round(cpm / 600 * 100));
 
   // Combined score: CPM × 보정 계수 (오타는 점수에 영향 없음)
-  var score = Math.round(cpm * 2.8);
+  var score = Math.round(cpm * 4.2);
   var scorePct = Math.min(100, Math.round(score / 900 * 100));
 
   // SVG ring
