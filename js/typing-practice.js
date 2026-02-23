@@ -273,9 +273,31 @@ function _tpPlayBuf(buf, rate, vol){
   } catch(e){}
 }
 
-/* 키 타격: 리얼 타자기 활자 사운드 (랜덤 피치/볼륨) */
-function _tpPlayKeySound(){
-  _tpPlayBuf(_tpBufs.key, 0.94 + Math.random() * 0.12, 0.7 + Math.random() * 0.2);
+/* ── 키보드 행 감지 (물리적 위치 기반) ── */
+var _tpKeyRow = {};
+(function(){
+  var rows = {
+    num: ['Digit1','Digit2','Digit3','Digit4','Digit5','Digit6','Digit7','Digit8','Digit9','Digit0','Minus','Equal','Backquote'],
+    q: ['KeyQ','KeyW','KeyE','KeyR','KeyT','KeyY','KeyU','KeyI','KeyO','KeyP','BracketLeft','BracketRight','Backslash'],
+    a: ['KeyA','KeyS','KeyD','KeyF','KeyG','KeyH','KeyJ','KeyK','KeyL','Semicolon','Quote'],
+    z: ['KeyZ','KeyX','KeyC','KeyV','KeyB','KeyN','KeyM','Comma','Period','Slash']
+  };
+  for(var r in rows) for(var i = 0; i < rows[r].length; i++) _tpKeyRow[rows[r][i]] = r;
+})();
+
+/* 키 타격: 행별 차별화된 기계식 타자기 사운드
+   Q열(상단): 가볍고 밝은 타격 — 짧은 레버 암
+   A열(홈):   표준 무게감 — 중간 레버
+   Z열(하단): 묵직하고 깊은 타격 — 긴 레버 암 */
+function _tpPlayKeySound(code){
+  var row = _tpKeyRow[code] || 'a';
+  if(row === 'q' || row === 'num'){
+    _tpPlayBuf(_tpBufs.key, 1.04 + Math.random() * 0.1, 0.6 + Math.random() * 0.15);
+  } else if(row === 'z'){
+    _tpPlayBuf(_tpBufs.key, 0.82 + Math.random() * 0.08, 0.85 + Math.random() * 0.15);
+  } else {
+    _tpPlayBuf(_tpBufs.key, 0.92 + Math.random() * 0.1, 0.75 + Math.random() * 0.15);
+  }
 }
 
 /* 오타: 벨 딩 + 더블 키탭 (확실한 오류 피드백) */
@@ -285,17 +307,27 @@ function _tpPlayErrorSound(){
   setTimeout(function(){ _tpPlayBuf(_tpBufs.key, 0.5, 0.7); }, 60);
 }
 
-/* 스페이스: return 사운드 (가볍고 부드러운 톤) */
+/* 스페이스바: 넓은 바 타격 (return 사운드 가볍게) */
 function _tpPlaySpaceSound(){
   _tpPlayBuf(_tpBufs.space, 1.3, 0.25);
 }
 
-/* 엔터: 레버 — 스페이스 저피치 + 벨 크게 (풀 캐리지 리턴) */
-function _tpPlayEnterSound(){
-  _tpPlayBuf(_tpBufs.space, 0.65 + Math.random() * 0.08, 1.0);
-  setTimeout(function(){
-    _tpPlayBuf(_tpBufs.bell, 0.95 + Math.random() * 0.1, 0.45);
-  }, 60);
+/* 캐리지 리턴 레버: 레버 잡기 → 캐리지 슬라이드 → 멈춤 충격 → 벨 딩 */
+function _tpPlayLeverSound(){
+  _tpPlayBuf(_tpBufs.key, 0.4, 0.6);
+  setTimeout(function(){ _tpPlayBuf(_tpBufs.space, 0.55, 1.0); }, 40);
+  setTimeout(function(){ _tpPlayBuf(_tpBufs.key, 0.35, 0.8); }, 180);
+  setTimeout(function(){ _tpPlayBuf(_tpBufs.bell, 0.9, 0.55); }, 220);
+}
+
+/* 완성 레버: 풀 캐리지 리턴 + 종이 빼기 (드라마틱 마무리) */
+function _tpPlayFinishSound(){
+  _tpPlayBuf(_tpBufs.key, 0.85, 1.0);
+  setTimeout(function(){ _tpPlayBuf(_tpBufs.space, 0.5, 1.0); }, 100);
+  setTimeout(function(){ _tpPlayBuf(_tpBufs.space, 0.45, 0.7); }, 200);
+  setTimeout(function(){ _tpPlayBuf(_tpBufs.key, 0.3, 0.9); }, 320);
+  setTimeout(function(){ _tpPlayBuf(_tpBufs.bell, 0.85, 0.7); }, 380);
+  setTimeout(function(){ _tpPlayBuf(_tpBufs.space, 1.2, 0.4); }, 500);
 }
 
 /* ═══ Punctuation skip helper ═══ */
@@ -855,6 +887,7 @@ function _tpOnInput(){
       _tp.finished = true;
       _tp.composing = false;
       _tpStopTimer();
+      _tpPlayFinishSound();
       _tpShowResults();
     }
   }
@@ -1474,12 +1507,12 @@ function _tpRenderBody(){
         e.preventDefault();
         if(e.ctrlKey || e.metaKey){
           // Ctrl+Enter → 구절 스킵
-          _tpPlayEnterSound();
+          _tpPlayLeverSound();
           _tpStopTimer();
           _tpNextVerse();
         } else {
           // Enter → 줄바꿈 (공백으로 처리)
-          _tpPlayEnterSound();
+          _tpPlayLeverSound();
           ta.value += ' ';
           _tpOnInput();
         }
@@ -1493,7 +1526,7 @@ function _tpRenderBody(){
                   'NumLock','ScrollLock','ContextMenu','PrintScreen','Pause'];
       if(skip.indexOf(e.key) === -1 && !e.ctrlKey && !e.metaKey){
         if(e.key === ' ') _tpPlaySpaceSound();
-        else _tpPlayKeySound();
+        else _tpPlayKeySound(e.code);
       }
     });
   }
