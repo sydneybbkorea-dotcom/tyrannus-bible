@@ -613,6 +613,52 @@
 }
 .tp-session-bar i { color:var(--gold); font-size:12px; }
 
+/* ═══ 700+ Aura Effect ═══ */
+.tp-aura {
+  pointer-events:none;
+  position:fixed; inset:0; z-index:799;
+  opacity:0; transition:opacity 0.5s;
+}
+.tp-aura.active { opacity:1; }
+
+.tp-aura::before,
+.tp-aura::after {
+  content:''; position:absolute; inset:-40px;
+  border-radius:50%;
+  filter:blur(60px);
+  animation: tp-aura-spin 4s linear infinite;
+}
+.tp-aura::before {
+  background: conic-gradient(
+    from 0deg,
+    rgba(255,0,100,0.35),
+    rgba(100,50,255,0.3),
+    rgba(0,200,255,0.3),
+    rgba(0,255,100,0.25),
+    rgba(255,230,0,0.3),
+    rgba(255,100,0,0.35),
+    rgba(255,0,100,0.35)
+  );
+}
+.tp-aura::after {
+  background: conic-gradient(
+    from 180deg,
+    rgba(130,0,255,0.3),
+    rgba(0,180,255,0.25),
+    rgba(0,255,180,0.2),
+    rgba(255,200,0,0.25),
+    rgba(255,50,50,0.3),
+    rgba(200,0,255,0.3),
+    rgba(130,0,255,0.3)
+  );
+  animation-direction: reverse;
+  animation-duration: 3s;
+}
+
+@keyframes tp-aura-spin {
+  to { transform: rotate(360deg); }
+}
+
 /* ═══ Light Theme (Red Accent) — Glassmorphism ═══ */
 .tp-overlay.tp-light {
   --bg: #fdf5f5;

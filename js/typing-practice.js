@@ -1062,6 +1062,8 @@ function _tpStartTimer(){ _tp.timerInterval = setInterval(_tpRenderStats, 500); 
 function _tpStopTimer(){
   if(_tp.timerInterval){ clearInterval(_tp.timerInterval); _tp.timerInterval = null; }
   if(_tp.speedInterval){ clearInterval(_tp.speedInterval); _tp.speedInterval = null; }
+  var aura = document.getElementById('tpAura');
+  if(aura) aura.classList.remove('active');
 }
 
 /* ═══ Real-time Speed Gauge ═══ */
@@ -1080,6 +1082,17 @@ function _tpTickSpeedGauge(){
   // Smooth interpolation
   _tp.speedGauge += (target - _tp.speedGauge) * 0.15;
   if(Math.abs(_tp.speedGauge - target) < 1) _tp.speedGauge = target;
+  // 700+ 오라 이펙트
+  var aura = document.getElementById('tpAura');
+  if(!aura){
+    aura = document.createElement('div');
+    aura.id = 'tpAura';
+    aura.className = 'tp-aura';
+    document.body.appendChild(aura);
+  }
+  if(_tp.speedGauge >= 700) aura.classList.add('active');
+  else aura.classList.remove('active');
+
   // Update visual
   var bar = document.getElementById('tpSpeedBar');
   var num = document.getElementById('tpSpeedNum');
