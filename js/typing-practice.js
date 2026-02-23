@@ -1577,6 +1577,12 @@ function _tpRenderBody(){
     });
     ta.addEventListener('paste', function(e){ e.preventDefault(); });
     ta.addEventListener('keydown', function(e){
+      // 테스트: Ctrl+Shift+7 → 속도 700 토글
+      if(e.ctrlKey && e.shiftKey && e.key === '&'){
+        _tp.speedGauge = _tp.speedGauge >= 700 ? 0 : 750;
+        _tpTickSpeedGauge();
+        e.preventDefault(); return;
+      }
       if(e.key === 'Escape'){ toggleTypingPanel(); e.preventDefault(); return; }
       if(e.key === 'Enter'){
         e.preventDefault();
