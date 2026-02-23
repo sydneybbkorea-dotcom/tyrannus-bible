@@ -1021,17 +1021,29 @@ function _tpMoveCursor(container, spans, cursorIdx, target){
 
   if(cursorIdx > 0 && cursorIdx <= spans.length){
     var prevRect = spans[cursorIdx - 1].getBoundingClientRect();
-    var posX;
+    var posX, posY, posH;
     if(cursorIdx < spans.length){
-      // 두 글자 사이: 정확한 중간점에 커서 배치
       var nextRect = spans[cursorIdx].getBoundingClientRect();
-      posX = (prevRect.right + nextRect.left) / 2;
+      // 줄바꿈 감지: 다음 글자의 top이 이전 글자보다 아래면 줄이 바뀐 것
+      if(nextRect.top > prevRect.top + prevRect.height * 0.5){
+        // 다음 줄 첫 글자 왼쪽에 커서 배치
+        posX = nextRect.left;
+        posY = nextRect.top;
+        posH = nextRect.height;
+      } else {
+        // 같은 줄: 두 글자 사이 중간점
+        posX = (prevRect.right + nextRect.left) / 2;
+        posY = prevRect.top;
+        posH = prevRect.height;
+      }
     } else {
       posX = prevRect.right;
+      posY = prevRect.top;
+      posH = prevRect.height;
     }
     cursor.style.left = (posX - cRect.left - cursorW / 2) + 'px';
-    cursor.style.top = (prevRect.top - cRect.top) + 'px';
-    cursor.style.height = prevRect.height + 'px';
+    cursor.style.top = (posY - cRect.top) + 'px';
+    cursor.style.height = posH + 'px';
     cursor.style.opacity = '1';
   } else if(cursorIdx === 0 && spans.length > 0){
     var sRect2 = spans[0].getBoundingClientRect();
