@@ -613,50 +613,47 @@
 }
 .tp-session-bar i { color:var(--gold); font-size:12px; }
 
-/* ═══ 700+ Aura Effect ═══ */
-.tp-aura {
+/* ═══ 700+ Fire Aura on Speed Gauge ═══ */
+.tp-speed-wrap { position:relative; }
+
+.tp-fire-aura {
   pointer-events:none;
-  position:fixed; inset:0; z-index:799;
-  opacity:0; transition:opacity 0.5s;
+  position:absolute;
+  left:50%; bottom:0;
+  width:120%; height:180px;
+  transform:translateX(-50%);
+  opacity:0; transition:opacity 0.4s;
+  z-index:-1;
 }
-.tp-aura.active { opacity:1; }
+.tp-fire-aura.active { opacity:1; }
 
-.tp-aura::before,
-.tp-aura::after {
-  content:''; position:absolute; inset:-40px;
+/* 불꽃 파티클들 */
+.tp-flame {
+  position:absolute; bottom:0;
+  border-radius:50% 50% 50% 50% / 60% 60% 40% 40%;
+  filter:blur(6px);
+  animation: tp-flame-rise linear infinite;
+  opacity:0;
+}
+@keyframes tp-flame-rise {
+  0%   { transform:translateY(0) scaleX(1) scaleY(1); opacity:0; }
+  10%  { opacity:0.9; }
+  50%  { transform:translateY(-80px) scaleX(0.8) scaleY(1.3); opacity:0.6; }
+  100% { transform:translateY(-170px) scaleX(0.3) scaleY(0.5); opacity:0; }
+}
+
+/* 바닥 글로우 */
+.tp-fire-aura::before {
+  content:''; position:absolute;
+  bottom:-5px; left:10%; right:10%; height:20px;
+  background:radial-gradient(ellipse, rgba(255,100,0,0.6) 0%, rgba(255,50,0,0.3) 40%, transparent 70%);
   border-radius:50%;
-  filter:blur(60px);
-  animation: tp-aura-spin 4s linear infinite;
+  filter:blur(8px);
+  animation: tp-fire-glow 1.5s ease-in-out infinite alternate;
 }
-.tp-aura::before {
-  background: conic-gradient(
-    from 0deg,
-    rgba(255,0,100,0.35),
-    rgba(100,50,255,0.3),
-    rgba(0,200,255,0.3),
-    rgba(0,255,100,0.25),
-    rgba(255,230,0,0.3),
-    rgba(255,100,0,0.35),
-    rgba(255,0,100,0.35)
-  );
-}
-.tp-aura::after {
-  background: conic-gradient(
-    from 180deg,
-    rgba(130,0,255,0.3),
-    rgba(0,180,255,0.25),
-    rgba(0,255,180,0.2),
-    rgba(255,200,0,0.25),
-    rgba(255,50,50,0.3),
-    rgba(200,0,255,0.3),
-    rgba(130,0,255,0.3)
-  );
-  animation-direction: reverse;
-  animation-duration: 3s;
-}
-
-@keyframes tp-aura-spin {
-  to { transform: rotate(360deg); }
+@keyframes tp-fire-glow {
+  0%   { opacity:0.6; transform:scaleX(0.9); }
+  100% { opacity:1;   transform:scaleX(1.1); }
 }
 
 /* ═══ Light Theme (Red Accent) — Glassmorphism ═══ */

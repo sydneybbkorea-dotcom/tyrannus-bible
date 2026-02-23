@@ -1073,7 +1073,7 @@ function _tpStartTimer(){ _tp.timerInterval = setInterval(_tpRenderStats, 500); 
 function _tpStopTimer(){
   if(_tp.timerInterval){ clearInterval(_tp.timerInterval); _tp.timerInterval = null; }
   if(_tp.speedInterval){ clearInterval(_tp.speedInterval); _tp.speedInterval = null; }
-  var aura = document.getElementById('tpAura');
+  var aura = document.getElementById('tpFireAura');
   if(aura) aura.classList.remove('active');
 }
 
@@ -1093,16 +1093,39 @@ function _tpTickSpeedGauge(){
   // Smooth interpolation
   _tp.speedGauge += (target - _tp.speedGauge) * 0.15;
   if(Math.abs(_tp.speedGauge - target) < 1) _tp.speedGauge = target;
-  // 700+ 오라 이펙트
-  var aura = document.getElementById('tpAura');
-  if(!aura){
+  // 700+ 불꽃 오라 이펙트
+  var wrap = document.querySelector('.tp-speed-wrap');
+  var aura = document.getElementById('tpFireAura');
+  if(!aura && wrap){
     aura = document.createElement('div');
-    aura.id = 'tpAura';
-    aura.className = 'tp-aura';
-    document.body.appendChild(aura);
+    aura.id = 'tpFireAura';
+    aura.className = 'tp-fire-aura';
+    // 불꽃 파티클 20개 생성
+    for(var fi = 0; fi < 20; fi++){
+      var flame = document.createElement('div');
+      flame.className = 'tp-flame';
+      var sz = 8 + Math.random() * 18;
+      flame.style.width = sz + 'px';
+      flame.style.height = sz * (1.2 + Math.random() * 0.6) + 'px';
+      flame.style.left = (5 + Math.random() * 90) + '%';
+      flame.style.animationDuration = (0.6 + Math.random() * 1.0) + 's';
+      flame.style.animationDelay = (Math.random() * 1.5) + 's';
+      // 불꽃 색상: 빨강/주황/노랑 랜덤
+      var colors = [
+        'radial-gradient(circle, rgba(255,220,50,0.9), rgba(255,120,0,0.7), rgba(255,40,0,0.3))',
+        'radial-gradient(circle, rgba(255,255,100,0.9), rgba(255,160,0,0.7), rgba(255,60,0,0.3))',
+        'radial-gradient(circle, rgba(255,180,30,0.9), rgba(255,80,0,0.7), rgba(200,20,0,0.3))',
+        'radial-gradient(circle, rgba(255,100,0,0.8), rgba(220,40,0,0.6), rgba(150,0,0,0.2))'
+      ];
+      flame.style.background = colors[Math.floor(Math.random() * colors.length)];
+      aura.appendChild(flame);
+    }
+    wrap.appendChild(aura);
   }
-  if(_tp.speedGauge >= 700) aura.classList.add('active');
-  else aura.classList.remove('active');
+  if(aura){
+    if(_tp.speedGauge >= 700) aura.classList.add('active');
+    else aura.classList.remove('active');
+  }
 
   // Update visual
   var bar = document.getElementById('tpSpeedBar');
