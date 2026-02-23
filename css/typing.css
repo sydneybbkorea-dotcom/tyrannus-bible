@@ -228,31 +228,34 @@
   transition:opacity .1s, color .1s;
   display:inline-block;
 }
-/* 정확하게 친 글자: 골드 색상으로 강조 */
+/* 정확하게 친 글자: 블로어(glow) 효과 + 밝은 색 */
 .tp-char.tp-correct {
-  color:#d4a017; opacity:1; font-weight:600;
+  color:#5eead4; opacity:1; font-weight:600;
+  text-shadow:0 0 6px rgba(94,234,212,.45), 0 0 14px rgba(94,234,212,.2);
 }
-/* 오타: 빨간 잉크 + 물결 밑줄 (취소선 대신 오류 표시) */
+/* 오타: 붉은색 강조 */
 .tp-char.tp-wrong {
   color:#ff4757; opacity:1;
-  background:rgba(255,71,87,.15);
-  text-decoration:underline wavy;
-  text-decoration-color:rgba(255,71,87,.6);
-  text-underline-offset:2px;
+  background:rgba(255,71,87,.12);
+  text-decoration:none;
 }
-/* 타격 펀치 — 정확 */
+/* 타격 펀치 — 정확: glow burst */
 @keyframes tp-punch {
-  0%   { transform:scale(1.45); text-shadow:0 0 8px rgba(212,160,23,.6); }
-  100% { transform:scale(1);    text-shadow:none; }
+  0%   { transform:scale(1.35); text-shadow:0 0 16px rgba(94,234,212,.8), 0 0 30px rgba(94,234,212,.4); }
+  100% { transform:scale(1);    text-shadow:0 0 6px rgba(94,234,212,.45), 0 0 14px rgba(94,234,212,.2); }
 }
-.tp-char.tp-punch { animation:tp-punch .18s ease-out; }
-/* 타격 펀치 — 오타 */
+.tp-char.tp-punch { animation:tp-punch .22s ease-out; }
+/* 타격 펀치 — 오타: 좌우 흔들림 */
 @keyframes tp-punch-err {
-  0%   { transform:scale(1.3); text-shadow:0 0 8px rgba(255,71,87,.6); }
-  50%  { transform:translateX(-2px); }
-  100% { transform:translateX(0) scale(1); text-shadow:none; }
+  0%   { transform:translateX(0); text-shadow:0 0 10px rgba(255,71,87,.7); }
+  15%  { transform:translateX(-3px); }
+  30%  { transform:translateX(3px); }
+  45%  { transform:translateX(-2px); }
+  60%  { transform:translateX(2px); }
+  75%  { transform:translateX(-1px); }
+  100% { transform:translateX(0); text-shadow:none; }
 }
-.tp-char.tp-punch-err { animation:tp-punch-err .2s ease-out; }
+.tp-char.tp-punch-err { animation:tp-punch-err .35s ease-out; }
 /* 한글 조합 중 — 자모 일치 (파란색) */
 .tp-char.tp-composing {
   color:#60a5fa; opacity:1;
@@ -639,12 +642,12 @@
   color:#4a2830; opacity:0.38;
 }
 .tp-overlay.tp-light .tp-char.tp-correct {
-  color:#d63040; opacity:1; font-weight:700;
+  color:#0d9488; opacity:1; font-weight:700;
+  text-shadow:0 0 6px rgba(13,148,136,.35), 0 0 12px rgba(13,148,136,.15);
 }
 .tp-overlay.tp-light .tp-char.tp-wrong {
-  color:#8b1a1a; opacity:1;
-  background:rgba(139,26,26,.12);
-  text-decoration-color:rgba(139,26,26,.6);
+  color:#dc2626; opacity:1;
+  background:rgba(220,38,38,.1);
 }
 .tp-overlay.tp-light .tp-char.tp-composing {
   color:#2563eb;
