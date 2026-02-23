@@ -446,12 +446,16 @@ function _tpBuildMapping(target, typed){
       // Direct match
       map.push(ti);
       ti++;
+    } else if(typed[pi] === ' ' && ti < target.length && target[ti] !== ' '){
+      // 스페이스가 비공백 타겟에 대응 → 삽입 처리 (타겟 소비 안 함)
+      map.push(-1);
     } else {
       // Mismatch: lookahead — if a future typed char matches current target,
       // treat this typed char as an insertion (don't consume target position)
       var isInsertion = false;
       if(ti < target.length){
         for(var look = pi + 1; look < typed.length && look <= pi + 3; look++){
+          if(typed[look] === ' ') continue; // 스페이스는 lookahead 대상에서 제외
           if(_tpMatch(typed[look], target[ti])){
             isInsertion = true;
             break;
