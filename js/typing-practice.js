@@ -234,7 +234,7 @@ function _tpBookShort(krName){
 }
 
 /* ═══ Typing Sound ═══ */
-var _tpBufs = { keyQ:null, keyA:null, keyZ:null, space:null, enter:null, back:null, ending:null };
+var _tpBufs = { keyQ:null, keyA:null, keyZ:null, space:null, enter:null, back:null, ending:null, bell:null };
 var _tpSndLoaded = false;
 
 function _tpGetAudioCtx(){
@@ -261,6 +261,7 @@ function _tpLoadSounds(){
   load('typing%20sound/enter%20sound.mp3', 'enter');
   load('typing%20sound/back%20space.mp3', 'back');
   load('typing%20sound/ending%20sound.mp3', 'ending');
+  load('sounds/tw-bell.mp3', 'bell');
 }
 
 function _tpPlayBuf(buf, rate, vol){
@@ -301,9 +302,9 @@ function _tpPlayKeySound(code){
   }
 }
 
-/* 오타: A라인 키음 낮은 피치로 */
+/* 오타: 벨 사운드 */
 function _tpPlayErrorSound(){
-  _tpPlayBuf(_tpBufs.keyA, 0.7, 0.5);
+  _tpPlayBuf(_tpBufs.bell, 0.7, 0.5);
 }
 
 /* 스페이스바 */
