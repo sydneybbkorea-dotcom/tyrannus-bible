@@ -304,7 +304,7 @@ function _tpPlayKeySound(code){
 
 /* 오타: 벨 사운드 */
 function _tpPlayErrorSound(){
-  _tpPlayBuf(_tpBufs.bell, 0.7, 0.5);
+  _tpPlayBuf(_tpBufs.bell, 0.7, 0.25);
 }
 
 /* 스페이스바 */
