@@ -1185,25 +1185,44 @@ function _tpUpdateGaugeVisual(){
     scale += pulseBoost;
     num.style.transition = pulse > 0.5 ? 'transform 0.05s' : 'transform 0.15s ease-out';
     num.style.transform = 'scale(' + scale.toFixed(2) + ')';
-    if(_tp.speedGauge >= 700){
-      // 천둥 번개: 펄스에 맞춰 확장 + 번쩍임
+    if(_tp.speedGauge >= 900){
+      // 900+ 천둥 번개: 최대 펄스 확장 + 강한 번쩍임
       scale = 3.0 + pulse * 2.5 + Math.random() * 0.3;
       num.style.transform = 'scale(' + scale.toFixed(2) + ')';
-      var colors700 = [
+      var colors900 = [
         'linear-gradient(90deg, #ffffff, #ffe066, #ffaa00, #ff6600)',
         'linear-gradient(90deg, #ffffff, #88ddff, #4488ff, #aa44ff)',
         'linear-gradient(90deg, #ffffff, #ff88cc, #ff2266, #ff8800)'
+      ];
+      num.style.background = colors900[Math.floor(Math.random() * colors900.length)];
+      num.style.webkitBackgroundClip = 'text';
+      num.style.webkitTextFillColor = 'transparent';
+      num.style.backgroundClip = 'text';
+      if(pulse > 0.5){
+        var bright = 1.0 + pulse * 0.8;
+        num.style.filter = 'drop-shadow(0 0 '+(30+pulse*40)+'px rgba(255,255,255,0.9)) drop-shadow(0 0 80px rgba(255,200,50,0.6)) brightness('+bright.toFixed(1)+')';
+      } else {
+        num.style.filter = 'drop-shadow(0 0 24px rgba(255,200,50,0.7)) drop-shadow(0 0 48px rgba(255,100,0,0.4))';
+      }
+      num.style.textShadow = 'none';
+    } else if(_tp.speedGauge >= 700){
+      // 700대: 중간 천둥 (600대보다 크고 900보다 작게)
+      scale = 2.2 + pulse * 1.5 + Math.random() * 0.2;
+      num.style.transform = 'scale(' + scale.toFixed(2) + ')';
+      var colors700 = [
+        'linear-gradient(90deg, #ffe066, #ffaa00, #ff6600, #ff3300)',
+        'linear-gradient(90deg, #88ddff, #4488ff, #6644ee, #aa44ff)',
+        'linear-gradient(90deg, #ff88cc, #ff4488, #ff2266, #cc0044)'
       ];
       num.style.background = colors700[Math.floor(Math.random() * colors700.length)];
       num.style.webkitBackgroundClip = 'text';
       num.style.webkitTextFillColor = 'transparent';
       num.style.backgroundClip = 'text';
       if(pulse > 0.5){
-        // 키 입력 순간: 강한 백색 플래시
-        var bright = 1.0 + pulse * 0.8;
-        num.style.filter = 'drop-shadow(0 0 '+(30+pulse*40)+'px rgba(255,255,255,0.9)) drop-shadow(0 0 80px rgba(255,200,50,0.6)) brightness('+bright.toFixed(1)+')';
+        var bright7 = 1.0 + pulse * 0.5;
+        num.style.filter = 'drop-shadow(0 0 '+(15+pulse*25)+'px rgba(255,200,50,0.7)) drop-shadow(0 0 40px rgba(255,100,0,0.4)) brightness('+bright7.toFixed(1)+')';
       } else {
-        num.style.filter = 'drop-shadow(0 0 24px rgba(255,200,50,0.7)) drop-shadow(0 0 48px rgba(255,100,0,0.4))';
+        num.style.filter = 'drop-shadow(0 0 16px rgba(255,180,50,0.5)) drop-shadow(0 0 32px rgba(255,80,0,0.3))';
       }
       num.style.textShadow = 'none';
     } else if(_tp.speedGauge >= 600){
