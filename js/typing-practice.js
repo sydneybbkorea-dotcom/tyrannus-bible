@@ -300,11 +300,10 @@ function _tpPlayKeySound(code){
   }
 }
 
-/* 오타: 벨 딩 + 더블 키탭 (타자음보다 약간 큰 정도) */
+/* 오타: 벨 딩 + 키탭 (타자음과 비슷한 볼륨) */
 function _tpPlayErrorSound(){
-  _tpPlayBuf(_tpBufs.bell, 0.7, 0.4);
-  _tpPlayBuf(_tpBufs.key, 0.55, 0.5);
-  setTimeout(function(){ _tpPlayBuf(_tpBufs.key, 0.5, 0.35); }, 60);
+  _tpPlayBuf(_tpBufs.bell, 0.7, 0.2);
+  _tpPlayBuf(_tpBufs.key, 0.55, 0.3);
 }
 
 /* 스페이스바: 넓은 바 타격 (return 사운드 가볍게) */
@@ -871,6 +870,23 @@ function _tpOnInput(){
     }
   }
 
+  // 연속 오타 6자 제한: 더 이상 앞으로 진행 불가 (백스페이스로 수정 필요)
+  if(!_tp.composing && _tp.typed.length > prev.length){
+    var chkResult = _tpBuildMapping(_tp.verse.text, _tp.typed);
+    var wrongRun = 0;
+    for(var w = chkResult.map.length - 1; w >= 0; w--){
+      var wti = chkResult.map[w];
+      if(wti === -1 || (wti >= 0 && !_tpMatch(_tp.typed[w], _tp.verse.text[wti]))){
+        wrongRun++;
+      } else { break; }
+    }
+    if(wrongRun >= 6){
+      _tp.typed = prev;
+      ta.value = prev;
+      return;
+    }
+  }
+
   // Start timer on first keystroke
   if(!_tp.startTime && _tp.typed.length > 0){
     _tp.startTime = Date.now();
@@ -1210,8 +1226,8 @@ function _tpShowResults(){
   var skipPct = totalChars > 0 ? (skipped / totalChars * 100).toFixed(1) : 0;
   var speedPct = Math.min(100, Math.round(cpm / 600 * 100));
 
-  // Combined score: CPM × accuracy/100 × 2.8 (보정 계수)
-  var score = Math.round(cpm * accuracy / 100 * 2.8);
+  // Combined score: CPM × 보정 계수 (오타는 점수에 영향 없음)
+  var score = Math.round(cpm * 2.8);
   var scorePct = Math.min(100, Math.round(score / 900 * 100));
 
   // SVG ring
