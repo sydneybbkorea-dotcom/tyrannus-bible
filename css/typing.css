@@ -232,12 +232,13 @@
 .tp-char.tp-correct {
   color:#d4a017; opacity:1; font-weight:600;
 }
-/* 오타: 빨간 잉크 */
+/* 오타: 빨간 잉크 + 물결 밑줄 (취소선 대신 오류 표시) */
 .tp-char.tp-wrong {
   color:#ff4757; opacity:1;
-  background:rgba(255,71,87,.12);
-  text-decoration:line-through;
-  text-decoration-color:rgba(255,71,87,.5);
+  background:rgba(255,71,87,.15);
+  text-decoration:underline wavy;
+  text-decoration-color:rgba(255,71,87,.6);
+  text-underline-offset:2px;
 }
 /* 타격 펀치 — 정확 */
 @keyframes tp-punch {
@@ -643,7 +644,7 @@
 .tp-overlay.tp-light .tp-char.tp-wrong {
   color:#8b1a1a; opacity:1;
   background:rgba(139,26,26,.12);
-  text-decoration-color:rgba(139,26,26,.5);
+  text-decoration-color:rgba(139,26,26,.6);
 }
 .tp-overlay.tp-light .tp-char.tp-composing {
   color:#2563eb;
