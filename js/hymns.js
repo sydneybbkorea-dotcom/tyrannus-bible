@@ -436,6 +436,7 @@ function _hymRenderPlaylists(){
   var cont = document.getElementById('hymViewPlaylists');
   if(!cont) return;
   var h = '<div class="hym-pl-header">';
+  h += '<button class="hym-back-btn" onclick="_hymSetFilter(\'all\')" title="\uB4A4\uB85C"><i class="fa fa-arrow-left"></i></button>';
   h += '<span class="hym-pl-title"><i class="fa fa-list"></i> \uC7AC\uC0DD\uBAA9\uB85D</span>';
   h += '<button class="hym-pl-new-btn" onclick="_hymCreatePlaylist()"><i class="fa fa-plus"></i> \uC0C8\uB85C \uB9CC\uB4E4\uAE30</button>';
   h += '</div>';
