@@ -1173,8 +1173,31 @@ function _tpUpdateGaugeVisual(){
     num.textContent = spd;
     var ratio = Math.min(_tp.speedGauge, 600) / 600;
     var scale = 1 + ratio * 2.0;
+    num.style.transition = _tp.speedGauge >= 700 ? 'transform 0.08s' : 'transform 0.12s ease-out';
     num.style.transform = 'scale(' + scale.toFixed(2) + ')';
-    if(_tp.speedGauge >= 600){
+    if(_tp.speedGauge >= 700){
+      // 천둥 번개 효과: 랜덤 스케일 + 번쩍임
+      var thunder = 1 + Math.random() * 0.4;
+      scale = (2.5 + Math.random() * 1.5) * thunder;
+      num.style.transform = 'scale(' + scale.toFixed(2) + ')';
+      var flash = Math.random();
+      var colors700 = [
+        'linear-gradient(90deg, #ffffff, #ffe066, #ffaa00, #ff6600)',
+        'linear-gradient(90deg, #ffffff, #88ddff, #4488ff, #aa44ff)',
+        'linear-gradient(90deg, #ffffff, #ff88cc, #ff2266, #ff8800)'
+      ];
+      num.style.background = colors700[Math.floor(Math.random() * colors700.length)];
+      num.style.webkitBackgroundClip = 'text';
+      num.style.webkitTextFillColor = 'transparent';
+      num.style.backgroundClip = 'text';
+      if(flash > 0.7){
+        // 번개 순간: 강한 백색 플래시
+        num.style.filter = 'drop-shadow(0 0 40px rgba(255,255,255,0.9)) drop-shadow(0 0 80px rgba(255,200,50,0.6)) brightness(1.5)';
+      } else {
+        num.style.filter = 'drop-shadow(0 0 24px rgba(255,200,50,0.7)) drop-shadow(0 0 48px rgba(255,100,0,0.4))';
+      }
+      num.style.textShadow = 'none';
+    } else if(_tp.speedGauge >= 600){
       num.style.background = 'linear-gradient(90deg, #ff0000, #ff8800, #ffe600, #00ff44, #00ccff, #8844ff, #ff00cc)';
       num.style.webkitBackgroundClip = 'text';
       num.style.webkitTextFillColor = 'transparent';
