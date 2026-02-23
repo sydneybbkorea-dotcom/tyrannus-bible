@@ -862,6 +862,7 @@ function _tpBeginTyping(){
   _tp.recentKeys = [];
   _tp.lastInputTime = 0;
   _tp.speedGauge = 0;
+  _tp.wordSkips = {};
   _tpStopTimer();
   _tpRenderBody();
   setTimeout(function(){
@@ -1000,7 +1001,10 @@ function _tpUpdateChars(){
     var span = spans[i];
     var origChar = target[i] === ' ' ? '\u00a0' : target[i];
 
-    if(matchedSet[i] === 'correct'){
+    if(_tp.wordSkips && _tp.wordSkips[i] && (matchedSet[i] === 'correct' || skippedSet[i])){
+      span.className = 'tp-char tp-word-skip';
+      span.textContent = origChar;
+    } else if(matchedSet[i] === 'correct'){
       var wasCorrect = span.classList.contains('tp-correct');
       span.className = 'tp-char tp-correct' + (!wasCorrect ? ' tp-punch' : '');
       span.textContent = origChar;
@@ -1649,6 +1653,10 @@ function _tpRenderBody(){
       '<span><i class="fa fa-tachometer-alt"></i> 0 '+_tpT('cpmUnit')+'</span>' +
       '<span><i class="fa fa-bullseye"></i> 100%</span>' +
       '<span><i class="fa fa-tasks"></i> 0%</span>' +
+    '</div>' +
+    '<div class="tp-hint">' +
+      '<span>Space: '+(_tp.lang==='en'?'Skip word':'단어 스킵')+'</span>' +
+      '<span>Ctrl+Enter: '+_tpT('nextVerse')+'</span>' +
     '</div>';
 
   // tp-chars 클릭 시 숨겨진 입력창에 포커스
@@ -1711,14 +1719,37 @@ function _tpRenderBody(){
       }
       // 키 종류별 사운드 분기
       if(e.key === 'Backspace'){ _tpPlayBackSound(); return; }
+      // Space → 단어 스킵
+      if(e.key === ' '){
+        e.preventDefault();
+        _tpPlaySpaceSound();
+        _tp.keyPulse = 1.0;
+        if(_tp.verse && !_tp.finished){
+          var mapping = _tpBuildMapping(_tp.verse.text, _tp.typed);
+          var cur = mapping.nextTarget;
+          if(cur < _tp.verse.text.length){
+            // 현재 단어 끝까지 찾기
+            var wEnd = cur;
+            while(wEnd < _tp.verse.text.length && _tp.verse.text[wEnd] !== ' ') wEnd++;
+            // 공백도 포함
+            if(wEnd < _tp.verse.text.length && _tp.verse.text[wEnd] === ' ') wEnd++;
+            // 스킵 인덱스 기록
+            if(!_tp.wordSkips) _tp.wordSkips = {};
+            for(var ws = cur; ws < wEnd; ws++) _tp.wordSkips[ws] = true;
+            // 정답 텍스트 자동 입력
+            ta.value += _tp.verse.text.slice(cur, wEnd);
+            _tpOnInput();
+          }
+        }
+        return;
+      }
       var skip = ['Shift','Control','Alt','Meta','CapsLock','Tab',
                   'ArrowUp','ArrowDown','ArrowLeft','ArrowRight',
                   'Home','End','PageUp','PageDown','Insert','Delete',
                   'F1','F2','F3','F4','F5','F6','F7','F8','F9','F10','F11','F12',
                   'NumLock','ScrollLock','ContextMenu','PrintScreen','Pause'];
       if(skip.indexOf(e.key) === -1 && !e.ctrlKey && !e.metaKey){
-        if(e.key === ' ') _tpPlaySpaceSound();
-        else _tpPlayKeySound(e.code);
+        _tpPlayKeySound(e.code);
         // 타이핑 펄스 (키 입력마다 확장)
         _tp.keyPulse = 1.0;
       }

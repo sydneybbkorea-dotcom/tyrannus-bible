@@ -233,6 +233,11 @@
   color:#5eead4; opacity:1; font-weight:600;
   text-shadow:0 0 6px rgba(94,234,212,.45), 0 0 14px rgba(94,234,212,.2);
 }
+/* 스킵된 단어: 회색 */
+.tp-char.tp-word-skip {
+  color:#666; opacity:0.5; font-weight:400;
+  text-shadow:none;
+}
 /* 오타: 붉은색 강조 */
 .tp-char.tp-wrong {
   color:#ff4757; opacity:1;
@@ -308,6 +313,15 @@
   display:flex; align-items:center; gap:6px;
 }
 .tp-stats i { color:var(--gold); font-size:13px; }
+
+/* 하단 안내 */
+.tp-hint {
+  display:flex; gap:20px; justify-content:center;
+  margin-top:10px; flex-wrap:wrap;
+}
+.tp-hint span {
+  font-size:11px; color:var(--text3); opacity:0.5;
+}
 
 /* ═══ Result Screen ═══ */
 .tp-result {
@@ -702,6 +716,9 @@
 .tp-overlay.tp-light .tp-char.tp-wrong {
   color:#dc2626; opacity:1;
   background:rgba(220,38,38,.1);
+}
+.tp-overlay.tp-light .tp-char.tp-word-skip {
+  color:#999; opacity:0.45;
 }
 .tp-overlay.tp-light .tp-char.tp-composing {
   color:#2563eb;
