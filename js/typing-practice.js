@@ -811,7 +811,9 @@ function _tpNextVerse(){
 
     if(_tp.history.indexOf(key) >= 0 && attempt < 25) continue;
 
-    var text = vs[vIdx].replace(/<[^>]+>/g, '').replace(/¶\s*/g, '').trim();
+    var text = vs[vIdx].replace(/<[^>]+>/g, '').replace(/¶\s*/g, '')
+      .replace(/[\u0022\u0027\u0060\u2018\u2019\u201A\u201B\u201C\u201D\u201E\u201F\u00AB\u00BB\u2039\u203A\u301D\u301E\u301F\uFF02\uFF07]/g, '')
+      .replace(/\s{2,}/g, ' ').trim();
     if(!text || text.length < 3) continue;
 
     _tp.history.push(key);
