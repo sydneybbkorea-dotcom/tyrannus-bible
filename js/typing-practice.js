@@ -517,6 +517,11 @@ function _tpLoadStorage(){
     if(h) _tp.hearts = JSON.parse(h);
     var f = localStorage.getItem('tp_folders');
     if(f) _tp.folders = JSON.parse(f);
+    // 테스트 폴더 자동 생성
+    if(!_tp.folders['테스트']){
+      _tp.folders['테스트'] = ['custom_7'];
+      _tpSaveFolders();
+    }
     var bc = localStorage.getItem('tp_bestCpm');
     if(bc) _tp.bestCpm = parseInt(bc) || 0;
     var tt = localStorage.getItem('tp_theme');
@@ -808,6 +813,11 @@ function _tpNextVerse(){
 }
 
 function _tpVerseFromKey(key){
+  // 커스텀 구절: custom_텍스트
+  if(key.indexOf('custom_') === 0){
+    var ctext = decodeURIComponent(key.slice(7));
+    return { book:'custom', ch:'1', v:1, text:ctext, key:key, ref:'Test', fullBook:'Test' };
+  }
   var p = key.split('_');
   if(p.length < 3) return null;
   var book = p[0], ch = p[1], v = parseInt(p[2]);
