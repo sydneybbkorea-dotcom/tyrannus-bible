@@ -25,6 +25,217 @@ function _tpGetTier(score){
   return _tpTiers[_tpTiers.length - 1];
 }
 
+// ── Hand Position Practice Data ──
+// 8-zone finger mapping (matches Ratatype):
+// 0=L pinky, 1=L ring, 2=L middle, 3=L index,
+// 4=R index, 5=R middle, 6=R ring, 7=R pinky
+var _tpKbLayout = [
+  // Row 0: top (qwertyuiop)
+  [{en:'q',kr:'ㅂ',finger:0},{en:'w',kr:'ㅈ',finger:1},{en:'e',kr:'ㄷ',finger:2},{en:'r',kr:'ㄱ',finger:3},{en:'t',kr:'ㅅ',finger:3},{en:'y',kr:'ㅛ',finger:4},{en:'u',kr:'ㅕ',finger:4},{en:'i',kr:'ㅑ',finger:5},{en:'o',kr:'ㅐ',finger:6},{en:'p',kr:'ㅔ',finger:7}],
+  // Row 1: home (asdfghjkl)
+  [{en:'a',kr:'ㅁ',finger:0},{en:'s',kr:'ㄴ',finger:1},{en:'d',kr:'ㅇ',finger:2},{en:'f',kr:'ㄹ',finger:3},{en:'g',kr:'ㅎ',finger:3},{en:'h',kr:'ㅗ',finger:4},{en:'j',kr:'ㅓ',finger:4},{en:'k',kr:'ㅏ',finger:5},{en:'l',kr:'ㅣ',finger:6}],
+  // Row 2: bottom (zxcvbnm)
+  [{en:'z',kr:'ㅋ',finger:0},{en:'x',kr:'ㅌ',finger:1},{en:'c',kr:'ㅊ',finger:2},{en:'v',kr:'ㅍ',finger:3},{en:'b',kr:'ㅠ',finger:3},{en:'n',kr:'ㅜ',finger:4},{en:'m',kr:'ㅡ',finger:4}]
+];
+
+// Reverse lookup: jamo/letter → keyboard position
+var _tpCharToKey = {};
+(function(){
+  for(var r=0;r<_tpKbLayout.length;r++)
+    for(var c=0;c<_tpKbLayout[r].length;c++){
+      var k=_tpKbLayout[r][c];
+      _tpCharToKey[k.en]={row:r,col:c};
+      _tpCharToKey[k.kr]={row:r,col:c};
+    }
+})();
+
+var _tpHandLessons = [
+  {id:'home',        kr:'홈 키',     en:'Home Keys'},
+  {id:'top',         kr:'윗줄',      en:'Top Row'},
+  {id:'bottom',      kr:'아랫줄',    en:'Bottom Row'},
+  {id:'home_top',    kr:'홈+윗줄',   en:'Home+Top'},
+  {id:'home_bottom', kr:'홈+아랫줄', en:'Home+Bottom'},
+  {id:'all',         kr:'전체',      en:'All Keys'}
+];
+
+var _tpLessonRows = {
+  home:[1], top:[0], bottom:[2],
+  home_top:[1,0], home_bottom:[1,2], all:[0,1,2]
+};
+
+var _tpHandWords = {
+  home:{
+    kr:['나라','머리','하나','어머니','놀이','논','몸','말','힘','한','할','함',
+        '혼','홈','님','만','먼','알','안','온','일','인','허리','오리',
+        '이마','나이','모임','노인','아님','모험','놀','올','얼','민',
+        '이리','어미','마님','나','너','오','이','하','마','모','호'],
+    en:['ash','dash','flash','glad','half','hall','hash','lad','lass','sad',
+        'flag','glass','flask','gash','lash','shall','salad','shag','slag',
+        'slash','fall','all','ask','add','fad','gal','gas','had','hag',
+        'jag','lag','sag','dad','as','flags','halls','lads','dads','asks',
+        'gals','flak','falls','lass','glad','dash','flash','shall','flag']
+  },
+  top:{
+    kr:['개','게','대','배','새','세','제','재','벼','색','백','벽','격','겹',
+        '세계','베개','제대','재배','새벽','대세','세대','재개','교대','교제',
+        '대대','배색','교배','제게','세배','개벽','겹겹','대게','배게','색'],
+    en:['type','rip','tip','top','yet','try','quit','pet','pot','pie',
+        'put','rye','wit','wet','you','write','quite','query','equip',
+        'tower','quote','trip','wipe','pipe','tire','wire','pour','tour',
+        'typo','poetry','pretty','puppy','equity','your','riot','pure']
+  },
+  bottom:{
+    kr:['큰','품','춤','풍','충','출','풀','틈','틀','층','츤','춘',
+        '큼','쿵','쭉','쯤','쪽','춤춤','큼큼','풍풍','충충','출출'],
+    en:['ban','van','can','man','bun','cub','cab','cut','vim','mix',
+        'box','numb','comb','zinc','verb','exam','next','civic','bench',
+        'bunch','munch','crumb','cancel','combat','convex','canvas']
+  },
+  home_top:{
+    kr:['사람','나라','바다','기대','사이','시대','미래','다시','사랑','세상',
+        '여행','노래','이야기','거리','여기','고대','매일','결혼','비밀','대답',
+        '시선','가리','도시','기억','어디','내일','바람','모양','세월','아이',
+        '개미','다리','어린이','대한','어머니','나이','머리','놀이','노인','오리'],
+    en:['the','his','her','what','your','just','like','right','where',
+        'would','their','will','great','still','after','life','first',
+        'write','large','while','start','please','eight','light','fight',
+        'sight','quite','power','world','this','with','said','that',
+        'they','also','people','other','years','state','right','which']
+  },
+  home_bottom:{
+    kr:['하늘','마음','오늘','마을','이름','눈물','물론','흐름','흔히','울림',
+        '흐린','논문','나를','아름','칼','탈','콩','통','침','칠','탄','친',
+        '풀','품','춤','풍','큰','틈','틀','홈런','온몸','한풀','물음','늘'],
+    en:['blank','chunk','flame','black','clash','clunk','flung','bunch','lunch',
+        'flash','knack','flunk','drunk','shall','skull','valve','thumb','slang',
+        'bland','clang','blush','flush','shank','clam','slam','hang','bank']
+  },
+  all:{
+    kr:['대한민국','컴퓨터','인터넷','사랑','감사','학교','선생님','도서관','행복',
+        '여름','겨울','음악','가족','친구','생각','그리고','하지만','그래서',
+        '아름다운','자연','건강','평화','세계','미래','현재','과거','연습','타자',
+        '키보드','시작','우리','나라','역사','문화','경제','사회','교육','과학',
+        '기술','예술','스포츠','꿈','희망','사랑','프로그램','네트워크'],
+    en:['the','quick','brown','fox','jumps','over','lazy','dog','practice',
+        'typing','keyboard','finger','position','exercise','language','computer',
+        'programming','beautiful','wonderful','knowledge','education','important',
+        'development','experience','technology','understand','different',
+        'everything','beginning','adventure','challenge','discovery','excellent',
+        'fantastic','happiness','imagine','journey','original','powerful',
+        'question','remember','surprise','together','valuable','something']
+  }
+};
+
+// ── Bible Word Extraction for Hand Position ──
+var _tpBibleWordCache = null;   // { kr:[...], en:[...] }
+var _tpHandWordFilterCache = {}; // "lessonId_lang" → [words]
+
+/* 성경 전체에서 고유 단어 추출 (2~8자) */
+function _tpBuildBibleWordList(lang){
+  var key = lang === 'en' ? 'en' : 'kr';
+  if(_tpBibleWordCache && _tpBibleWordCache[key] && _tpBibleWordCache[key].length > 0)
+    return _tpBibleWordCache[key];
+  if(!_tpBibleWordCache) _tpBibleWordCache = {};
+
+  var data = lang === 'en' ? (typeof KJV !== 'undefined' ? KJV : null)
+                           : (typeof BIBLE !== 'undefined' ? BIBLE : null);
+  if(!data){ return []; }
+
+  var seen = {};
+  var result = [];
+  var books = BOOKS.OT.concat(BOOKS.NT);
+  for(var bi = 0; bi < books.length; bi++){
+    var bd = data[books[bi]];
+    if(!bd) continue;
+    for(var ch in bd){
+      if(!bd.hasOwnProperty(ch)) continue;
+      var vs = bd[ch];
+      if(!vs) continue;
+      for(var vi = 0; vi < vs.length; vi++){
+        var raw = vs[vi].replace(/<[^>]+>/g,'').replace(/¶\s*/g,'');
+        var tokens = raw.split(/\s+/);
+        for(var ti = 0; ti < tokens.length; ti++){
+          var w;
+          if(lang === 'en'){
+            w = tokens[ti].replace(/[^a-zA-Z]/g,'').toLowerCase();
+          } else {
+            w = tokens[ti].replace(/[^가-힣]/g,'');
+          }
+          if(w.length >= 2 && w.length <= 8 && !seen[w]){
+            seen[w] = true;
+            result.push(w);
+          }
+        }
+      }
+    }
+  }
+  _tpBibleWordCache[key] = result;
+  return result;
+}
+
+/* 단어가 해당 구간의 키만으로 타이핑 가능한지 판정 */
+function _tpWordFitsKeys(word, lang, available){
+  var shiftMap = {'ㄲ':'ㄱ','ㄸ':'ㄷ','ㅃ':'ㅂ','ㅆ':'ㅅ','ㅉ':'ㅈ','ㅒ':'ㅐ','ㅖ':'ㅔ'};
+  if(lang === 'en'){
+    for(var i = 0; i < word.length; i++){
+      if(!available[word[i]]) return false;
+    }
+    return true;
+  }
+  for(var i = 0; i < word.length; i++){
+    var code = word.charCodeAt(i);
+    if(code < 0xAC00 || code > 0xD7A3) return false;
+    var jamos = _tpFullDecompose(word[i]);
+    for(var j = 0; j < jamos.length; j++){
+      var jm = jamos[j];
+      if(!available[jm] && !(shiftMap[jm] && available[shiftMap[jm]])) return false;
+    }
+  }
+  return true;
+}
+
+/* 구간별 필터링된 성경 단어 목록 (캐시) */
+function _tpGetHandPosWords(lessonId, lang){
+  var cacheKey = lessonId + '_' + (lang === 'en' ? 'en' : 'kr');
+  if(_tpHandWordFilterCache[cacheKey]) return _tpHandWordFilterCache[cacheKey];
+
+  var allWords = _tpBuildBibleWordList(lang);
+  if(allWords.length === 0){
+    // 성경 미로드 → 하드코딩 폴백
+    var fk = lang === 'en' ? 'en' : 'kr';
+    return _tpHandWords[lessonId] ? _tpHandWords[lessonId][fk] || [] : [];
+  }
+
+  // 구간에 해당하는 자모/글자 집합 생성
+  var rows = _tpLessonRows[lessonId] || [1];
+  var available = {};
+  for(var ri = 0; ri < rows.length; ri++){
+    var row = _tpKbLayout[rows[ri]];
+    for(var ci = 0; ci < row.length; ci++){
+      available[row[ci][lang === 'en' ? 'en' : 'kr']] = true;
+    }
+  }
+
+  var result = [];
+  for(var i = 0; i < allWords.length; i++){
+    if(_tpWordFitsKeys(allWords[i], lang, available)){
+      result.push(allWords[i]);
+    }
+  }
+
+  // 너무 적으면 하드코딩 폴백 병합
+  if(result.length < 10 && _tpHandWords[lessonId]){
+    var fk2 = lang === 'en' ? 'en' : 'kr';
+    var fallback = _tpHandWords[lessonId][fk2] || [];
+    for(var fi = 0; fi < fallback.length; fi++){
+      if(result.indexOf(fallback[fi]) < 0) result.push(fallback[fi]);
+    }
+  }
+
+  _tpHandWordFilterCache[cacheKey] = result;
+  return result;
+}
+
 // ── State ──
 var _tp = {
   lang: 'kr',
@@ -56,7 +267,8 @@ var _tp = {
   nickname: '',
   rankingView: false,
   rankingData: [],
-  rankingFilter: 'all'
+  rankingFilter: 'all',
+  handLesson: 'home'
 };
 
 /* ═══ i18n — 타자연습 내부 번역 ═══ */
@@ -149,7 +361,10 @@ var _tpStrings = {
     noNickname: '닉네임을 입력해주세요',
     score: '점수',
     rankColScore: '점수',
-    scoreFormula: function(cpm, acc, sc){ return cpm + ' 타/분 × ' + acc + '% = ' + sc; }
+    scoreFormula: function(cpm, acc, sc){ return cpm + ' 타/분 × ' + acc + '% = ' + sc; },
+    handPos: '손 자리',
+    handPosTitle: '손 자리 연습',
+    selectLesson: '연습 구간'
   },
   en: {
     title: 'Typing Practice',
@@ -239,7 +454,10 @@ var _tpStrings = {
     noNickname: 'Please enter a nickname',
     score: 'Score',
     rankColScore: 'Score',
-    scoreFormula: function(cpm, acc, sc){ return cpm + ' CPM × ' + acc + '% = ' + sc; }
+    scoreFormula: function(cpm, acc, sc){ return cpm + ' CPM × ' + acc + '% = ' + sc; },
+    handPos: 'Hand Pos.',
+    handPosTitle: 'Hand Position',
+    selectLesson: 'Lesson'
   }
 };
 function _tpT(key){ var v = _tpStrings[_tp.lang][key]; return v !== undefined ? v : (_tpStrings.kr[key] !== undefined ? _tpStrings.kr[key] : key); }
@@ -646,6 +864,9 @@ function _tpOnFolderChange(){
   _tp.folderName = document.getElementById('tpFolderSel')?.value || null;
   _tpRenderSettings();
 }
+function _tpOnLessonChange(){
+  _tp.handLesson = document.getElementById('tpLessonSel')?.value || 'home';
+}
 
 /* ═══ Settings Render ═══ */
 function _tpRenderSettings(){
@@ -657,7 +878,8 @@ function _tpRenderSettings(){
     {id:'book',    label:_tpT('book'),     icon:'fa-book'},
     {id:'chapter', label:_tpT('chapter'),  icon:'fa-file-alt'},
     {id:'hearts',  label:_tpT('favorites'),icon:'fa-heart'},
-    {id:'folder',  label:_tpT('folder'),   icon:'fa-folder'}
+    {id:'folder',  label:_tpT('folder'),   icon:'fa-folder'},
+    {id:'handpos', label:_tpT('handPos'), icon:'fa-hand-paper'}
   ];
   var h = '<div class="tp-source-row">';
   sources.forEach(function(s){
@@ -713,6 +935,19 @@ function _tpRenderSettings(){
       });
       h += '</div>';
     }
+  }
+
+  // Hand position lesson selector
+  if(_tp.source === 'handpos'){
+    h += '<div class="tp-sel-row">';
+    h += '<label style="font-size:12px;color:var(--text2);font-weight:600">' + _tpT('selectLesson') + '</label>';
+    h += '<select class="tp-select" id="tpLessonSel" onchange="_tpOnLessonChange()">';
+    _tpHandLessons.forEach(function(les){
+      var name = _tp.lang === 'en' ? les.en : les.kr;
+      h += '<option value="'+les.id+'"'+(_tp.handLesson===les.id?' selected':'')+'>'+name+'</option>';
+    });
+    h += '</select>';
+    h += '</div>';
   }
 
   // 관리자 메뉴 (관리자 UID만 표시)
@@ -787,8 +1022,44 @@ function _tpRemoveFromFolder(idx){
   _tpRenderSettings();
 }
 
+/* ═══ Hand Position Verse ═══ */
+function _tpNextHandPosVerse(){
+  var lessonId = _tp.handLesson || 'home';
+  var lang = _tp.lang;
+  var rows = _tpLessonRows[lessonId] || [1];
+  // Collect jamo/letters available in this lesson
+  var chars = [];
+  for(var ri = 0; ri < rows.length; ri++){
+    var row = _tpKbLayout[rows[ri]];
+    for(var ci = 0; ci < row.length; ci++){
+      chars.push(lang === 'en' ? row[ci].en : row[ci].kr);
+    }
+  }
+  // Generate 15~25 random individual characters (no spaces)
+  var count = 15 + Math.floor(Math.random() * 11);
+  var picked = [];
+  for(var i = 0; i < count; i++){
+    picked.push(chars[Math.floor(Math.random() * chars.length)]);
+  }
+  var text = picked.join('');
+  var lessonName = '';
+  for(var li = 0; li < _tpHandLessons.length; li++){
+    if(_tpHandLessons[li].id === lessonId){
+      lessonName = lang === 'en' ? _tpHandLessons[li].en : _tpHandLessons[li].kr;
+      break;
+    }
+  }
+  _tp.verse = {
+    book:'handpos', ch:lessonId, v:1,
+    text:text, key:'handpos_'+lessonId+'_1',
+    ref:lessonName, fullBook:_tpT('handPosTitle')
+  };
+  _tpBeginTyping();
+}
+
 /* ═══ Verse Selection ═══ */
 function _tpNextVerse(){
+  if(_tp.source === 'handpos'){ _tpNextHandPosVerse(); return; }
   var data = _tp.lang === 'en' ? KJV : BIBLE;
   if(!data){
     if(_tp.lang === 'en' && typeof loadBibleEN === 'function'){
@@ -922,6 +1193,9 @@ function _tpBeginTyping(){
   _tp.lastInputTime = 0;
   _tp.speedGauge = 0;
   _tp.wordSkips = {};
+  _tp.hpCursor = 0;
+  _tp.hpCorrect = 0;
+  _tp.hpWrong = 0;
   _tpStopTimer();
   _tpRenderBody();
   setTimeout(function(){
@@ -933,6 +1207,8 @@ function _tpBeginTyping(){
 function _tpOnInput(){
   var ta = document.getElementById('tpInput');
   if(!ta || !_tp.verse) return;
+  // Handpos uses keydown handler, skip normal input processing
+  if(_tp.source === 'handpos'){ ta.value = ''; return; }
 
   var prev = _tp.typed;
   _tp.typed = ta.value;
@@ -1010,7 +1286,25 @@ function _tpOnInput(){
       _tp.composing = false;
       _tpStopTimer();
       _tpPlayFinishSound();
-      _tpShowResults();
+      if(_tp.source === 'handpos'){
+        // Quick stats flash then auto-next
+        var _hpElapsed = _tp.startTime ? (Date.now() - _tp.startTime) / 1000 : 0;
+        var _hpMin = _hpElapsed / 60;
+        var _hpJamo = _tpCountJamoExcludeSkips(_tp.typed);
+        var _hpCpm = _hpMin > 0 ? Math.round(_hpJamo / _hpMin) : 0;
+        var _hpRes = _tpBuildMapping(_tp.verse.text, _tp.typed);
+        var _hpOk = 0;
+        for(var _hi = 0; _hi < _hpRes.map.length; _hi++){ if(_hpRes.map[_hi] >= 0 && _tpMatch(_tp.typed[_hi], _tp.verse.text[_hpRes.map[_hi]])) _hpOk++; }
+        var _hpAcc = _tp.typed.length > 0 ? Math.round(_hpOk / _tp.typed.length * 100) : 100;
+        _tp.sessionVerses++;
+        _tp.sessionAccSum += _hpAcc;
+        _tp.sessionTime += _hpElapsed;
+        if(_hpCpm > _tp.bestCpm){ _tp.bestCpm = _hpCpm; _tpSaveBestCpm(); }
+        toast(_hpCpm + ' ' + _tpT('cpmUnit') + ' · ' + _hpAcc + '% ' + _tpT('accuracy'), 1500);
+        setTimeout(function(){ _tpNextHandPosVerse(); }, 800);
+      } else {
+        _tpShowResults();
+      }
     }
   }
 }
@@ -1025,6 +1319,16 @@ function _tpUpdateChars(){
   var evalLen = _tp.composing ? Math.max(0, typed.length - 1) : typed.length;
 
   var result = _tpBuildMapping(target, typed.slice(0, evalLen));
+
+  // 커서가 뒤로 돌아가면 해당 위치 이후의 스킵 기록 삭제
+  // → 다시 쳐서 맞추면 초록색(correct)으로 표시됨
+  if(_tp.wordSkips){
+    var cursor = result.nextTarget;
+    for(var wsi in _tp.wordSkips){
+      if(parseInt(wsi) >= cursor) delete _tp.wordSkips[wsi];
+    }
+  }
+
   var matchedSet = {};  // targetIdx → 'correct' | 'wrong'
   var wrongChars = {};  // targetIdx → 실제 입력한 글자 (오타 표시용)
   var skippedSet = {};  // targetIdx → true (auto-skipped punctuation)
@@ -1089,12 +1393,35 @@ function _tpUpdateChars(){
     }
   }
 
+  // Handpos: mark current char with tp-hp-current for single-char display
+  if(_tp.source === 'handpos'){
+    for(var hi = 0; hi < spans.length; hi++){
+      spans[hi].classList.remove('tp-hp-current');
+    }
+    // Find the real current char (skip spaces for display)
+    var hpCur = cursorTarget;
+    if(hpCur < target.length && target[hpCur] === ' ') hpCur++; // peek ahead past space
+    if(hpCur < spans.length && !matchedSet[hpCur] && !skippedSet[hpCur]){
+      // Only if it's not composing (composing already shown)
+      if(!(_tp.composing && hpCur === cursorTarget && composingText)){
+        spans[hpCur].classList.add('tp-hp-current');
+      }
+    }
+    // Also mark composing char as current for visibility
+    if(_tp.composing && cursorTarget < spans.length && composingText){
+      spans[cursorTarget].classList.add('tp-hp-current');
+    }
+  }
+
   // 커서 위치: 조합 시작 즉시 해당 글자 오른쪽으로 이동
   var cursorPos = cursorTarget;
   if(_tp.composing && composingText){
     cursorPos = cursorTarget + 1;
   }
   _tpMoveCursor(container, spans, cursorPos, target);
+
+  // Hand position: highlight next key on keyboard
+  if(_tp.source === 'handpos') _tpHighlightNextKey(cursorTarget);
 }
 
 function _tpMoveCursor(container, spans, cursorIdx, target){
@@ -1170,9 +1497,19 @@ function _tpTickSpeedGauge(){
       var jamoCount = _tpCountJamoExcludeSkips(_tp.typed);
       target = Math.round(jamoCount / elapsed);
     }
+    // ── Warm-up ramp: 처음 5초간 서서히 올라가는 느낌 ──
+    // 시작 직후 한두 단어만 빨리 쳐도 600+ 뜨는 현상 방지
+    var sec = (now - _tp.startTime) / 1000;
+    if(sec < 5){
+      var ramp = sec / 5;          // 0→1 over 5 seconds (linear)
+      ramp = ramp * (2 - ramp);    // ease-out: 빠르게 오르되 초반 억제
+      target = Math.round(target * ramp);
+    }
   }
-  // Smooth interpolation
-  _tp.speedGauge += (target - _tp.speedGauge) * 0.15;
+  // Smooth interpolation (초반에는 더 부드럽게)
+  var sec2 = _tp.startTime ? (now - _tp.startTime) / 1000 : 0;
+  var lerp = sec2 < 3 ? 0.06 : 0.15;
+  _tp.speedGauge += (target - _tp.speedGauge) * lerp;
   if(Math.abs(_tp.speedGauge - target) < 1) _tp.speedGauge = target;
   _tpUpdateFireAura();
   _tpUpdateGaugeVisual();
@@ -1467,7 +1804,7 @@ function _tpShowResults(){
       '<div class="tp-result-head">' +
         '<span class="tp-result-icon"><i class="fa fa-check-circle"></i></span>' +
         '<span class="tp-result-title">'+_tpT('typingComplete')+'</span>' +
-        '<span class="tp-result-ref">' + (v.fullBook || v.book) + ' ' + v.ch + ':' + v.v + '</span>' +
+        '<span class="tp-result-ref">' + (_tp.source === 'handpos' ? '\u270b ' + v.ref : (v.fullBook || v.book) + ' ' + v.ch + ':' + v.v) + '</span>' +
       '</div>' +
 
       /* ── Row 2: Stat cards (compact) ── */
@@ -1530,19 +1867,21 @@ function _tpShowResults(){
           '</div>' +
           '<div class="tp-result-acts">' +
             '<button class="tp-next-btn" onclick="_tpNextVerse()"><i class="fa fa-arrow-right"></i> '+_tpT('nextVerse')+'</button>' +
-            '<button class="tp-heart-btn' + (isHearted ? ' tp-hearted' : '') + '" id="tpHeartBtn" onclick="_tpToggleHeart()">' +
-              '<i class="fa' + (isHearted ? 's' : 'r') + ' fa-heart"></i>' +
-            '</button>' +
-            '<div class="tp-folder-wrap">' +
-              '<button class="tp-folder-btn" id="tpFolderBtn" onclick="_tpToggleFolderMenu()" title="'+_tpT('addToFolder')+'">' +
-                '<i class="fa fa-folder-plus"></i>' +
+            (_tp.source !== 'handpos' ?
+              '<button class="tp-heart-btn' + (isHearted ? ' tp-hearted' : '') + '" id="tpHeartBtn" onclick="_tpToggleHeart()">' +
+                '<i class="fa' + (isHearted ? 's' : 'r') + ' fa-heart"></i>' +
               '</button>' +
-              '<div class="tp-folder-menu" id="tpFolderMenu"></div>' +
-            '</div>' +
+              '<div class="tp-folder-wrap">' +
+                '<button class="tp-folder-btn" id="tpFolderBtn" onclick="_tpToggleFolderMenu()" title="'+_tpT('addToFolder')+'">' +
+                  '<i class="fa fa-folder-plus"></i>' +
+                '</button>' +
+                '<div class="tp-folder-menu" id="tpFolderMenu"></div>' +
+              '</div>'
+            : '') +
           '</div>' +
           '<div class="tp-result-enter"><i class="fa fa-level-down-alt fa-rotate-90"></i> Enter: '+ (_tp.lang==='kr'?'다음 구절':'next verse') +'</div>' +
         '</div>' +
-        '<div class="tp-result-right" id="tpMiniRanking"></div>' +
+        (_tp.source !== 'handpos' ? '<div class="tp-result-right" id="tpMiniRanking"></div>' : '') +
       '</div>' +
 
     '</div>';
@@ -1554,11 +1893,11 @@ function _tpShowResults(){
   };
   document.addEventListener('keydown', _tp._resultKeyHandler);
 
-  // Submit score to ranking (async, non-blocking)
-  _tpSubmitScore(score, cpm, accuracy, v);
-
-  // Load mini ranking (async)
-  _tpLoadMiniRanking(score);
+  // Submit score to ranking & load mini ranking (skip for handpos)
+  if(_tp.source !== 'handpos'){
+    _tpSubmitScore(score, cpm, accuracy, v);
+    _tpLoadMiniRanking(score);
+  }
 }
 
 /* ═══ Folder Menu (결과 화면) ═══ */
@@ -1653,6 +1992,253 @@ function _tpToggleHeart(){
   }
 }
 
+/* ═══ Hand Position Keyboard ═══ */
+function _tpFullDecompose(ch){
+  var jamos = _tpDecompose(ch);
+  var result = [];
+  for(var i = 0; i < jamos.length; i++){
+    if(i === 1 && _tpCompJung[jamos[i]]){
+      result = result.concat(_tpCompJung[jamos[i]]);
+    } else if(i >= 2 && _tpCompJong[jamos[i]]){
+      result = result.concat(_tpCompJong[jamos[i]]);
+    } else {
+      result.push(jamos[i]);
+    }
+  }
+  return result;
+}
+
+/* Map physical key code → character for current language */
+function _tpCodeToChar(code){
+  if(!code) return null;
+  if(!code.startsWith('Key')) return null;
+  var letter = code.charAt(3).toLowerCase();
+  for(var r = 0; r < _tpKbLayout.length; r++){
+    for(var c = 0; c < _tpKbLayout[r].length; c++){
+      if(_tpKbLayout[r][c].en === letter){
+        return _tp.lang === 'en' ? _tpKbLayout[r][c].en : _tpKbLayout[r][c].kr;
+      }
+    }
+  }
+  return null;
+}
+
+/* Handpos keydown handler — bypasses IME, matches physical keys */
+function _tpHpKeydown(e){
+  if(_tp.finished || !_tp.verse) return;
+  if(e.key === 'Escape'){ toggleTypingPanel(); e.preventDefault(); return; }
+  if((e.ctrlKey || e.metaKey) && e.key === 'Enter'){ _tpStopTimer(); _tpNextVerse(); e.preventDefault(); return; }
+  if(e.ctrlKey || e.altKey || e.metaKey) return;
+
+  var ch = _tpCodeToChar(e.code);
+  if(ch === null) return;
+  e.preventDefault();
+
+  // Clear IME buffer
+  var ta = document.getElementById('tpInput');
+  if(ta) ta.value = '';
+
+  // Start timer on first key
+  if(!_tp.startTime){
+    _tp.startTime = Date.now();
+    _tpStartTimer();
+  }
+
+  var target = _tp.verse.text;
+  var cursor = _tp.hpCursor || 0;
+  if(cursor >= target.length) return;
+
+  var expected = target[cursor];
+  var container = document.getElementById('tpChars');
+  var spans = container ? container.querySelectorAll('.tp-char') : [];
+
+  if(ch === expected){
+    // ── Correct ──
+    _tpPlayKeySound(e.code);
+    _tp.hpCorrect++;
+    _tp.typed += ch;
+    if(spans[cursor]){
+      spans[cursor].classList.remove('tp-hp-current');
+      spans[cursor].className = 'tp-char tp-correct tp-punch';
+    }
+    _tp.hpCursor = cursor + 1;
+
+    // Show next char
+    _tpHpShowNext(spans, target);
+    _tpHighlightNextKey(_tp.hpCursor);
+
+    // Check completion
+    if(_tp.hpCursor >= target.length){
+      _tp.finished = true;
+      _tpStopTimer();
+      _tpPlayFinishSound();
+      var elapsed = (Date.now() - _tp.startTime) / 1000;
+      var minutes = elapsed / 60;
+      var total = _tp.hpCorrect + _tp.hpWrong;
+      var cpm = minutes > 0 ? Math.round(_tp.hpCorrect / minutes) : 0;
+      var acc = total > 0 ? Math.round(_tp.hpCorrect / total * 100) : 100;
+      _tp.sessionVerses++;
+      _tp.sessionAccSum += acc;
+      _tp.sessionTime += elapsed;
+      if(cpm > _tp.bestCpm){ _tp.bestCpm = cpm; _tpSaveBestCpm(); }
+      toast(cpm + ' ' + _tpT('cpmUnit') + ' · ' + acc + '% ' + _tpT('accuracy'), 1500);
+      setTimeout(function(){ _tpNextHandPosVerse(); }, 800);
+    }
+  } else {
+    // ── Wrong ──
+    _tp.hpWrong++;
+    _tpPlayErrorSound();
+    if(spans[cursor]){
+      var origText = expected;
+      spans[cursor].textContent = ch;
+      spans[cursor].className = 'tp-char tp-wrong tp-punch-err tp-hp-current';
+      // Reset back to expected after shake animation
+      (function(s, txt){
+        setTimeout(function(){
+          if(!s.classList.contains('tp-correct')){
+            s.className = 'tp-char tp-hp-current';
+            s.textContent = txt;
+          }
+        }, 400);
+      })(spans[cursor], origText);
+    }
+  }
+}
+
+function _tpHpShowNext(spans, target){
+  for(var i = 0; i < spans.length; i++) spans[i].classList.remove('tp-hp-current');
+  var c = _tp.hpCursor || 0;
+  if(c < spans.length && c < target.length){
+    spans[c].classList.add('tp-hp-current');
+    spans[c].textContent = target[c];
+  }
+}
+
+function _tpRenderKeyboard(){
+  var lessonId = _tp.handLesson || 'home';
+  var lessonLayoutRows = _tpLessonRows[lessonId] || [1];
+  var activeKeys = {};
+  for(var ri = 0; ri < lessonLayoutRows.length; ri++){
+    var row = _tpKbLayout[lessonLayoutRows[ri]];
+    for(var ci = 0; ci < row.length; ci++) activeKeys[row[ci].en] = true;
+  }
+  var lang = _tp.lang;
+
+  // Helper: render a single key
+  // letterKey: {en,kr,finger} from _tpKbLayout
+  // extraKey:  {lbl,f}  (punctuation/number with finger zone)
+  // modKey:    {mod:true,lbl}  (modifier, gray)
+  // flex: width multiplier (default 1)
+  function k(obj, flex){
+    var cls = 'tp-kb-key';
+    var sty = flex ? ' style="flex:'+flex+'"' : '';
+    var da = '';
+    var main, sub = '';
+    if(obj.en){ // letter key
+      cls += ' tp-kb-f' + obj.finger;
+      cls += activeKeys[obj.en] ? ' tp-kb-active' : ' tp-kb-inactive';
+      da = ' data-en="'+obj.en+'" data-kr="'+obj.kr+'"';
+      main = lang === 'en' ? obj.en : obj.kr;
+      sub = lang === 'en' ? obj.kr : obj.en;
+    } else if(obj.mod){ // modifier
+      cls += ' tp-kb-mod';
+      main = obj.lbl;
+    } else { // extra key (number/punctuation)
+      cls += ' tp-kb-f' + obj.f + ' tp-kb-inactive';
+      main = obj.lbl;
+      if(obj.sub) sub = obj.sub;
+    }
+    return '<div class="'+cls+'"'+da+sty+'><span class="tp-kb-main">'+main+'</span>'+(sub?'<span class="tp-kb-sub">'+sub+'</span>':'')+'</div>';
+  }
+
+  var h = '<div class="tp-keyboard" id="tpKeyboard">';
+
+  // ── Number row (15 flex units) ──
+  h += '<div class="tp-kb-row">';
+  var nums = [{lbl:'`',f:0},{lbl:'1',f:0},{lbl:'2',f:0},{lbl:'3',f:0},{lbl:'4',f:1},{lbl:'5',f:2},{lbl:'6',f:3},{lbl:'7',f:4},{lbl:'8',f:5},{lbl:'9',f:6},{lbl:'0',f:6},{lbl:'-',f:7},{lbl:'=',f:7}];
+  for(var i=0;i<nums.length;i++) h+=k(nums[i]);
+  h+=k({mod:true,lbl:'⌫'},2);
+  h+='</div>';
+
+  // ── Top row: Tab + QWERTY + [ ] \ (15 units) ──
+  h+='<div class="tp-kb-row">';
+  h+=k({mod:true,lbl:'Tab'},1.5);
+  for(var c=0;c<_tpKbLayout[0].length;c++) h+=k(_tpKbLayout[0][c]);
+  h+=k({lbl:'[',f:7}); h+=k({lbl:']',f:7});
+  h+=k({mod:true,lbl:'\\'},1.5);
+  h+='</div>';
+
+  // ── Home row: Caps + ASDF + ; ' Enter (15 units) ──
+  h+='<div class="tp-kb-row">';
+  h+=k({mod:true,lbl:'Caps'},1.75);
+  for(var c=0;c<_tpKbLayout[1].length;c++) h+=k(_tpKbLayout[1][c]);
+  h+=k({lbl:';',f:7}); h+=k({lbl:"'",f:7});
+  h+=k({mod:true,lbl:'Enter'},2.25);
+  h+='</div>';
+
+  // ── Bottom row: Shift + ZXCV + , . / Shift (15 units) ──
+  h+='<div class="tp-kb-row">';
+  h+=k({mod:true,lbl:'Shift'},2.25);
+  for(var c=0;c<_tpKbLayout[2].length;c++) h+=k(_tpKbLayout[2][c]);
+  h+=k({lbl:',',f:5}); h+=k({lbl:'.',f:6}); h+=k({lbl:'/',f:7});
+  h+=k({mod:true,lbl:'Shift'},2.75);
+  h+='</div>';
+
+  // ── Space bar ──
+  h+='<div class="tp-kb-row tp-kb-row-space"><div class="tp-kb-key tp-kb-space" data-en=" " data-kr=" "><span class="tp-kb-main">Space</span></div></div>';
+  h+='</div>';
+  return h;
+}
+
+function _tpHighlightNextKey(cursorIdx){
+  var kbEl = document.getElementById('tpKeyboard');
+  if(!kbEl) return;
+  var old = kbEl.querySelectorAll('.tp-kb-next');
+  for(var i = 0; i < old.length; i++) old[i].classList.remove('tp-kb-next');
+  if(!_tp.verse || cursorIdx >= _tp.verse.text.length) return;
+  var nextChar = _tp.verse.text[cursorIdx];
+  if(nextChar === ' '){
+    var sp = kbEl.querySelector('.tp-kb-space');
+    if(sp){ sp.classList.add('tp-kb-next'); }
+    return;
+  }
+
+  // Handpos: each char is already a single jamo — direct match
+  if(_tp.source === 'handpos'){
+    var sel = _tp.lang === 'kr' ? 'kr' : 'en';
+    var el = kbEl.querySelector('[data-'+sel+'="'+nextChar+'"]');
+    if(!el) el = kbEl.querySelector('[data-kr="'+nextChar+'"]') || kbEl.querySelector('[data-en="'+nextChar+'"]');
+    if(el){
+      void el.offsetWidth; // force reflow to restart animation
+      el.classList.add('tp-kb-next');
+    }
+    return;
+  }
+
+  // Normal mode: decompose for composed Korean syllables
+  var targetJamo;
+  if(_tp.lang === 'kr'){
+    var jamos = _tpFullDecompose(nextChar);
+    var typedJamoCount = 0;
+    if(_tp.composing && _tp.typed.length > 0){
+      var evalLen = Math.max(0, _tp.typed.length - 1);
+      var composingText = _tp.typed.slice(evalLen);
+      if(composingText){
+        var composedJamos = _tpFullDecompose(composingText);
+        typedJamoCount = composedJamos.length;
+      }
+    }
+    targetJamo = typedJamoCount < jamos.length ? jamos[typedJamoCount] : null;
+  } else {
+    targetJamo = nextChar.toLowerCase();
+  }
+  if(!targetJamo) return;
+  var sel2 = _tp.lang === 'kr' ? 'kr' : 'en';
+  var keyEl = kbEl.querySelector('[data-'+sel2+'="'+targetJamo+'"]');
+  if(!keyEl) keyEl = kbEl.querySelector('[data-kr="'+targetJamo+'"]') || kbEl.querySelector('[data-en="'+targetJamo+'"]');
+  if(keyEl) keyEl.classList.add('tp-kb-next');
+}
+
 /* ═══ Render Body ═══ */
 function _tpRenderBody(){
   var el = document.getElementById('tpBody');
@@ -1694,6 +2280,7 @@ function _tpRenderBody(){
 
   var v = _tp.verse;
   var isHearted = !!_tp.hearts[v.key];
+  var _isHP = _tp.source === 'handpos';
 
   // Character spans
   var charSpans = '';
@@ -1703,27 +2290,47 @@ function _tpRenderBody(){
     charSpans += '<span class="tp-char">' + display + '</span>';
   }
 
+  // Build header & actions conditionally
+  var _hpRefHtml, _hpActsHtml, _hpKbHtml;
+  if(_isHP){
+    var _hpLName = '';
+    for(var _hpI = 0; _hpI < _tpHandLessons.length; _hpI++){
+      if(_tpHandLessons[_hpI].id === _tp.handLesson){
+        _hpLName = _tp.lang === 'en' ? _tpHandLessons[_hpI].en : _tpHandLessons[_hpI].kr;
+        break;
+      }
+    }
+    _hpRefHtml = '<div class="tp-verse-ref"><span class="tp-ref-book">\u270b ' + _tpT('handPosTitle') + '</span> <span class="tp-ref-chv">' + _hpLName + '</span></div>';
+    _hpActsHtml = '';
+    _hpKbHtml = _tpRenderKeyboard();
+  } else {
+    _hpRefHtml = '<div class="tp-verse-ref"><span class="tp-ref-book">' + (v.fullBook || v.book) + '</span> <span class="tp-ref-chv">' + v.ch + ':' + v.v + '</span></div>';
+    _hpActsHtml = '<div class="tp-verse-acts">' +
+      '<button class="tp-heart-btn'+(isHearted?' tp-hearted':'')+'" id="tpHeartBtn" onclick="_tpToggleHeart()">' +
+        '<i class="fa'+(isHearted?'s':'r')+' fa-heart"></i>' +
+      '</button>' +
+      '<div class="tp-folder-wrap">' +
+        '<button class="tp-folder-btn" id="tpFolderBtn" onclick="_tpToggleFolderMenu()" title="'+_tpT('addToFolder')+'">' +
+          '<i class="fa fa-bookmark"></i>' +
+        '</button>' +
+        '<div class="tp-folder-menu" id="tpFolderMenu"></div>' +
+      '</div>' +
+    '</div>';
+    _hpKbHtml = '';
+  }
+
   el.innerHTML =
     '<div class="tp-verse-area">' +
       '<div class="tp-verse-header">' +
-        '<div class="tp-verse-ref"><span class="tp-ref-book">' + (v.fullBook || v.book) + '</span> <span class="tp-ref-chv">' + v.ch + ':' + v.v + '</span></div>' +
-        '<div class="tp-verse-acts">' +
-          '<button class="tp-heart-btn'+(isHearted?' tp-hearted':'')+'" id="tpHeartBtn" onclick="_tpToggleHeart()">' +
-            '<i class="fa'+(isHearted?'s':'r')+' fa-heart"></i>' +
-          '</button>' +
-          '<div class="tp-folder-wrap">' +
-            '<button class="tp-folder-btn" id="tpFolderBtn" onclick="_tpToggleFolderMenu()" title="'+_tpT('addToFolder')+'">' +
-              '<i class="fa fa-bookmark"></i>' +
-            '</button>' +
-            '<div class="tp-folder-menu" id="tpFolderMenu"></div>' +
-          '</div>' +
-        '</div>' +
+        _hpRefHtml + _hpActsHtml +
       '</div>' +
+      (_isHP ? '' :
       '<div class="tp-speed-wrap">' +
         '<div class="tp-speed-num" id="tpSpeedNum">0</div>' +
         '<div class="tp-speed-gauge"><div class="tp-speed-bar" id="tpSpeedBar"></div></div>' +
-      '</div>' +
-      '<div class="tp-chars" id="tpChars">' + charSpans + '</div>' +
+      '</div>') +
+      '<div class="tp-chars' + (_isHP ? ' tp-hp-chars' : '') + '" id="tpChars">' + charSpans + '</div>' +
+      _hpKbHtml +
       '<textarea id="tpInput" class="tp-ghost-input" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off"></textarea>' +
     '</div>' +
     '<div class="tp-stats" id="tpStats">' +
@@ -1748,6 +2355,11 @@ function _tpRenderBody(){
     requestAnimationFrame(function(){
       var spans = charsEl.querySelectorAll('.tp-char');
       _tpMoveCursor(charsEl, spans, 0);
+      // Initial keyboard highlight + first char display
+      if(_tp.source === 'handpos'){
+        _tpHighlightNextKey(0);
+        if(spans.length > 0) spans[0].classList.add('tp-hp-current');
+      }
     });
   }
 
@@ -1768,6 +2380,8 @@ function _tpRenderBody(){
     });
     ta.addEventListener('paste', function(e){ e.preventDefault(); });
     ta.addEventListener('keydown', function(e){
+      // Handpos: use physical key matching, bypass IME
+      if(_tp.source === 'handpos'){ _tpHpKeydown(e); return; }
       // 테스트: Ctrl+Shift+7 → 전체 정답 입력 + 속도 700
       if(e.ctrlKey && e.shiftKey && e.key === '&'){
         if(_tp.verse){

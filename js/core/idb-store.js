@@ -114,17 +114,26 @@ var IDBStore = (function(){
   }
 
   // Save a file (Blob) with metadata
+  // Safari/iOS IndexedDB doesn't reliably store Blob/File objects,
+  // so convert to ArrayBuffer first for cross-browser compatibility.
   function saveFile(blob, metadata){
     var id = metadata.id || 'file_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
-    var record = {
-      id: id,
-      name: metadata.name || 'unknown',
-      type: metadata.type || blob.type || 'application/octet-stream',
-      size: blob.size,
-      data: blob,
-      createdAt: Date.now()
-    };
-    return put('files', record).then(function(){ return id; });
+    return new Promise(function(resolve, reject){
+      var reader = new FileReader();
+      reader.onload = function(){
+        var record = {
+          id: id,
+          name: metadata.name || 'unknown',
+          type: metadata.type || blob.type || 'application/octet-stream',
+          size: blob.size,
+          data: reader.result,   // ArrayBuffer — safe on all browsers
+          createdAt: Date.now()
+        };
+        put('files', record).then(function(){ resolve(id); }).catch(reject);
+      };
+      reader.onerror = function(){ reject(reader.error || new Error('FileReader failed')); };
+      reader.readAsArrayBuffer(blob);
+    });
   }
 
   // Load file blob
