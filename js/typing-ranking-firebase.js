@@ -1,27 +1,21 @@
 // typing-ranking-firebase.js — 타자연습 랭킹 Firestore CRUD (ES Module)
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+// 메인 firebase.js가 먼저 로드되므로 기본 앱(인증 포함)을 재사용
+import { getApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getFirestore, collection, doc, getDoc, setDoc, getDocs, query, orderBy, limit }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
-const app = initializeApp({
-  apiKey:"AIzaSyDMeWQk6o39IcctkLERX7b6uWWXXTJST30", authDomain:"tyrannus-kjb1611.firebaseapp.com",
-  projectId:"tyrannus-kjb1611", storageBucket:"tyrannus-kjb1611.firebasestorage.app",
-  messagingSenderId:"86251720686", appId:"1:86251720686:web:bac7cde382e99dcfe588ff"
-}, 'typing-ranking');
-
-const db = getFirestore(app);
+const db = getFirestore(getApp());
 const COL = 'typing-rankings';
 
 /**
  * Submit score — 1인 1기록, 기존보다 score 높을 때만 업데이트
- * score = CPM × (accuracy / 100)
  * @returns {string} 'new'|'updated'|'not_best'|'error'
  */
 async function submitScore(nickname, score, cpm, accuracy, verseRef, lang) {
   try {
     if (!nickname || nickname.length < 2 || nickname.length > 12) return 'error';
-    if (score < 0 || score > 1500) return 'error';
-    if (cpm < 1 || cpm > 1500) return 'error';
+    if (score < 0 || score > 3000) return 'error';
+    if (cpm < 1 || cpm > 3000) return 'error';
     if (accuracy < 0 || accuracy > 100) return 'error';
 
     var docId = nickname.toLowerCase().replace(/\s+/g, '_');
