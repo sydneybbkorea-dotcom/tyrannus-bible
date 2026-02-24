@@ -81,9 +81,10 @@
 /* ── List View ── */
 .hym-list-item {
   display:flex; align-items:center; gap:8px;
-  padding:9px 12px; border-radius:var(--radius);
+  padding:0 12px; border-radius:var(--radius);
   background:var(--glass-bg-1); border:1px solid transparent;
-  cursor:pointer; transition:all .12s; margin-bottom:4px;
+  cursor:pointer; transition:background .12s, border-color .12s;
+  box-sizing:border-box;
 }
 .hym-list-item:hover {
   background:var(--glass-bg-2); border-color:var(--glass-border);
@@ -432,7 +433,7 @@
 
 /* Side panel list items — compact */
 #sp-hymns .hym-list-item {
-  padding:6px 10px; margin-bottom:2px;
+  padding:0 10px;
 }
 #sp-hymns .hym-list-num {
   font-size:11px; min-width:30px;

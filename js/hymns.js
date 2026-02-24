@@ -48,6 +48,12 @@ var _hym = {
   addMenuId: null,
   seeking: false,
   currentPlaylistId: null,
+  // virtual scroll state
+  _vsIds: [],          // current filtered id list
+  _vsItemH: 38,        // item height in px
+  _vsBuffer: 10,       // extra items above/below viewport
+  _vsScrollBound: false,
+  _vsDebounce: null,
 };
 
 /* ── Section 3: Init ── */
@@ -141,23 +147,55 @@ function _hymCloseDetail(){
   _hymShowGlobalPlayer();
 }
 
-/* ── Section 5: List View (side panel) ── */
+/* ── Section 5: List View (side panel) — virtual scroll ── */
 function _hymRenderList(){
   var cont = document.getElementById('hymViewList');
   if(!cont) return;
-  var ids = _hymFilteredIds();
-  if(ids.length === 0){
+  _hym._vsIds = _hymFilteredIds();
+  if(_hym._vsIds.length === 0){
     cont.innerHTML = '<div class="hym-empty"><i class="fa fa-'+ (_hym.filter==='fav'?'heart':'search') +'"></i>'+(_hym.filter==='fav'?'\uC990\uACA8\uCC3E\uAE30\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4':'\uAC80\uC0C9 \uACB0\uACFC\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4')+'</div>';
     return;
   }
+  var totalH = _hym._vsIds.length * _hym._vsItemH;
+  cont.innerHTML = '<div id="hymVsPad" style="height:'+totalH+'px;position:relative"><div id="hymVsSlice" style="position:absolute;left:0;right:0"></div></div>';
+  // bind scroll once
+  if(!_hym._vsScrollBound){
+    var scroller = document.getElementById('hymContent');
+    if(scroller){
+      scroller.addEventListener('scroll', _hymVsOnScroll, {passive:true});
+      _hym._vsScrollBound = true;
+    }
+  }
+  _hymVsPaint();
+}
+
+function _hymVsOnScroll(){
+  if(_hym._vsDebounce) return;
+  _hym._vsDebounce = requestAnimationFrame(function(){
+    _hym._vsDebounce = null;
+    _hymVsPaint();
+  });
+}
+
+function _hymVsPaint(){
+  var slice = document.getElementById('hymVsSlice');
+  if(!slice) return;
+  var scroller = document.getElementById('hymContent');
+  if(!scroller) return;
+  var ids = _hym._vsIds;
+  var ih = _hym._vsItemH;
+  var buf = _hym._vsBuffer;
+  var scrollTop = scroller.scrollTop;
+  var viewH = scroller.clientHeight;
+  var first = Math.max(0, Math.floor(scrollTop / ih) - buf);
+  var last = Math.min(ids.length - 1, Math.ceil((scrollTop + viewH) / ih) + buf);
   var h = '';
-  for(var i=0; i<ids.length; i++){
+  for(var i = first; i <= last; i++){
     var id = ids[i];
     var isFav = S.hymnFav.has(id);
     var hasMp3 = _hymnHasMp3(id);
-    var hasSheet = _hymnHasSheet(id);
     var isPlaying = _hym.currentId === id && _hym.playing;
-    h += '<div class="hym-list-item'+(isPlaying?' hym-playing':'')+'" data-id="'+id+'" onclick="_hymOpenDetail('+id+')">';
+    h += '<div class="hym-list-item'+(isPlaying?' hym-playing':'')+'" data-id="'+id+'" onclick="_hymOpenDetail('+id+')" style="position:absolute;top:'+(i*ih)+'px;left:0;right:0;height:'+ih+'px">';
     h += '<span class="hym-list-num">'+id+'</span>';
     h += '<span class="hym-list-title">'+_hymnTitle(id)+'</span>';
     h += '<div class="hym-list-icons">';
@@ -167,7 +205,7 @@ function _hymRenderList(){
     h += '<i class="fa'+(isFav?'s':'r')+' fa-heart"></i></button>';
     h += '</div></div>';
   }
-  cont.innerHTML = h;
+  slice.innerHTML = h;
 }
 
 function _hymFilteredIds(){
@@ -190,9 +228,15 @@ function _hymFilteredIds(){
   return ids;
 }
 
+var _hymSearchTimer = null;
 function _hymOnSearch(val){
   _hym.search = val;
-  if(_hym.spView === 'list') _hymRenderList();
+  if(_hymSearchTimer) clearTimeout(_hymSearchTimer);
+  _hymSearchTimer = setTimeout(function(){
+    var scroller = document.getElementById('hymContent');
+    if(scroller) scroller.scrollTop = 0;
+    if(_hym.spView === 'list') _hymRenderList();
+  }, 150);
 }
 
 function _hymSetFilter(f){
@@ -202,6 +246,8 @@ function _hymSetFilter(f){
     return;
   }
   _hym.filter = f;
+  var scroller = document.getElementById('hymContent');
+  if(scroller) scroller.scrollTop = 0;
   if(_hym.spView !== 'list') _hymShowSpView('list');
   else _hymRenderList();
   // update filter button active states
@@ -215,7 +261,10 @@ function _hymToggleFav(id, e){
   if(S.hymnFav.has(id)) S.hymnFav.delete(id);
   else S.hymnFav.add(id);
   persist();
-  if(_hym.spView === 'list') _hymRenderList();
+  if(_hym.spView === 'list'){
+    if(_hym.filter === 'fav') _hymRenderList(); // list changes — rebuild
+    else _hymVsPaint(); // just repaint visible slice
+  }
   if(_hym.detailOpen && _hym.selectedId === id) _hymUpdateHdrFav(id);
 }
 
@@ -418,10 +467,15 @@ function _hymUpdatePlayIcons(){
   // global mini player
   var gpBtn = document.getElementById('hymGpPlayBtn');
   if(gpBtn) gpBtn.innerHTML = '<i class="fa fa-'+(_hym.playing?'pause':'play')+'"></i>';
-  // list items
-  document.querySelectorAll('.hym-list-item').forEach(function(el){
-    el.classList.toggle('hym-playing', parseInt(el.dataset.id) === _hym.currentId && _hym.playing);
-  });
+  // list items — only update the few visible items (virtual scroll)
+  var slice = document.getElementById('hymVsSlice');
+  if(slice){
+    var items = slice.children;
+    for(var i = 0; i < items.length; i++){
+      items[i].classList.toggle('hym-playing', parseInt(items[i].dataset.id) === _hym.currentId && _hym.playing);
+    }
+  }
+  // playlist detail items (few items, safe to query all)
   document.querySelectorAll('.hym-pld-item').forEach(function(el){
     el.classList.toggle('hym-playing', parseInt(el.dataset.id) === _hym.currentId && _hym.playing);
   });
