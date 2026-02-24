@@ -124,12 +124,14 @@ function _stpApplyBgImage(dataUrl, opacity, overlay){
   if(!dataUrl){
     el.style.opacity = '0';
     el.style.backgroundImage = '';
+    document.documentElement.classList.remove('has-bg-image');
     document.body.classList.remove('has-bg-image');
     document.documentElement.style.removeProperty('--bg-overlay-opacity');
     return;
   }
   el.style.backgroundImage = 'url(' + dataUrl + ')';
   el.style.opacity = String(opacity);
+  document.documentElement.classList.add('has-bg-image');
   document.body.classList.add('has-bg-image');
   document.documentElement.style.setProperty('--bg-overlay-opacity', String(overlay));
 }
