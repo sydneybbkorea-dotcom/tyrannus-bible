@@ -17,7 +17,10 @@ var PDFLive = (function(){
   //  발표자 흐름
   // ═══════════════════════════════════════════
   async function startPresenting(){
-    if(_role) return;
+    if(_role){
+      if(typeof toast === 'function') toast('이미 세션이 활성화되어 있습니다.');
+      return;
+    }
     if(typeof PDFViewer === 'undefined' || !PDFViewer.isViewerActive()){
       if(typeof toast === 'function') toast('먼저 PDF를 열어주세요.');
       return;
@@ -148,7 +151,15 @@ var PDFLive = (function(){
   //  시청자 흐름
   // ═══════════════════════════════════════════
   async function joinSession(code){
-    if(_role) return;
+    if(_role){
+      if(typeof toast === 'function'){
+        var msg = _role === 'presenter' ? '현재 발표 중입니다. 먼저 강의를 종료하세요.'
+                : _role === 'viewer' ? '이미 강의에 참가 중입니다. 먼저 나가세요.'
+                : '이미 세션이 활성화되어 있습니다.';
+        toast(msg);
+      }
+      return;
+    }
     if(!code || code.length < 4){
       if(typeof toast === 'function') toast('유효한 코드를 입력해주세요.');
       return;
