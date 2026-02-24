@@ -96,10 +96,14 @@ function toggleKnowledgeGraph(){
 function toggleHymnsOverlay(){
   var el = document.getElementById('hymnsOverlay');
   var scroll = document.getElementById('bibleScroll');
+  var tabBar = document.getElementById('bibleTabBar');
+  var viewBar = document.getElementById('bibleViewBar');
   if(!el) return;
   var show = el.style.display === 'none';
   el.style.display = show ? 'flex' : 'none';
   if(scroll) scroll.style.display = show ? 'none' : '';
+  if(tabBar) tabBar.style.display = show ? 'none' : '';
+  if(viewBar) viewBar.style.display = show ? 'none' : '';
   if(typeof _hymShowGlobalPlayer==='function') _hymShowGlobalPlayer();
 }
 
