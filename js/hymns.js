@@ -21,8 +21,9 @@ function _hymnTitle(id){ var m=(_hym.titleLang==='en')?HYMN_TITLES_EN:HYMN_TITLE
 function _hymnLabel(id){ return _hymnTitle(id) ? id+'. '+_hymnTitle(id) : 'Hymn '+id; }
 function _hymnHasMp3(id){ return HYMN_MP3_SET.has(id); }
 function _hymnHasSheet(id){ return HYMN_SHEET_SET.has(id); }
-function _hymnMp3Url(id){ return 'hymns/GR8Hymns/mp3/'+id+'.mp3'; }
-function _hymnSheetUrl(id){ return 'hymns/GR8Hymns/sheet/'+id+'.png'; }
+var _HYMN_STORAGE_BASE = 'https://firebasestorage.googleapis.com/v0/b/tyrannus-kjb1611.firebasestorage.app/o/';
+function _hymnMp3Url(id){ return _HYMN_STORAGE_BASE + 'hymns%2Fmp3%2F'+id+'.mp3?alt=media'; }
+function _hymnSheetUrl(id){ return _HYMN_STORAGE_BASE + 'hymns%2Fsheet%2F'+id+'.png?alt=media'; }
 
 /* ── Section 2: Runtime State ── */
 var _hym = {
@@ -109,23 +110,35 @@ function _hymOpenDetail(id){
   _hym.selectedId = id;
   _hym.detailOpen = true;
   _hym.zoom = 1;
-  // show overlay, hide bibleScroll
+  // show overlay, hide bibleScroll + top bars for full-height
   var overlay = document.getElementById('hymnsOverlay');
   var scroll = document.getElementById('bibleScroll');
+  var tabBar = document.getElementById('bibleTabBar');
+  var viewBar = document.getElementById('bibleViewBar');
   if(overlay) overlay.style.display = 'flex';
   if(scroll) scroll.style.display = 'none';
+  if(tabBar) tabBar.style.display = 'none';
+  if(viewBar) viewBar.style.display = 'none';
   // update overlay header
   var title = document.getElementById('hymTitle');
   if(title) title.textContent = _hymnLabel(id);
   _hymRenderDetail(id);
+  _hymShowGlobalPlayer();
+  // update fav button in header
+  _hymUpdateHdrFav(id);
 }
 
 function _hymCloseDetail(){
   _hym.detailOpen = false;
   var overlay = document.getElementById('hymnsOverlay');
   var scroll = document.getElementById('bibleScroll');
+  var tabBar = document.getElementById('bibleTabBar');
+  var viewBar = document.getElementById('bibleViewBar');
   if(overlay) overlay.style.display = 'none';
   if(scroll) scroll.style.display = '';
+  if(tabBar) tabBar.style.display = '';
+  if(viewBar) viewBar.style.display = '';
+  _hymShowGlobalPlayer();
 }
 
 /* ── Section 5: List View (side panel) ── */
@@ -203,7 +216,7 @@ function _hymToggleFav(id, e){
   else S.hymnFav.add(id);
   persist();
   if(_hym.spView === 'list') _hymRenderList();
-  if(_hym.detailOpen && _hym.selectedId === id) _hymRenderDetail(id);
+  if(_hym.detailOpen && _hym.selectedId === id) _hymUpdateHdrFav(id);
 }
 
 function _hymQuickPlay(id, e){
@@ -216,23 +229,11 @@ function _hymQuickPlay(id, e){
 function _hymRenderDetail(id){
   var cont = document.getElementById('hymViewDetail');
   if(!cont || !id) return;
-  var isFav = S.hymnFav.has(id);
   var hasSheet = _hymnHasSheet(id);
   var hasMp3 = _hymnHasMp3(id);
   var h = '';
-  // header
-  h += '<div class="hym-detail-header">';
-  h += '<span class="hym-detail-title">'+_hymnLabel(id)+'</span>';
-  h += '<button class="hym-detail-fav'+(isFav?' hym-fav-on':'')+'" onclick="_hymToggleFav('+id+')">';
-  h += '<i class="fa'+(isFav?'s':'r')+' fa-heart"></i></button>';
-  h += '</div>';
-  // sheet
+  // sheet (no header/zoom — title+fav are in the overlay header)
   if(hasSheet){
-    h += '<div class="hym-zoom-bar">';
-    h += '<button class="hym-zoom-btn" onclick="_hymZoomOut()"><i class="fa fa-search-minus"></i></button>';
-    h += '<button class="hym-zoom-btn" onclick="_hymZoomReset()">100%</button>';
-    h += '<button class="hym-zoom-btn" onclick="_hymZoomIn()"><i class="fa fa-search-plus"></i></button>';
-    h += '</div>';
     h += '<div class="hym-sheet-wrap">';
     h += '<img class="hym-sheet-img" id="hymSheetImg" src="'+_hymnSheetUrl(id)+'" alt="'+_hymnLabel(id)+' \uC545\uBCF4" style="transform:scale('+_hym.zoom+')" onerror="this.parentNode.innerHTML=\'<div class=hym-no-sheet><i class=&quot;fa fa-image&quot;></i>\uC545\uBCF4\uB97C \uBD88\uB7EC\uC62C \uC218 \uC5C6\uC2B5\uB2C8\uB2E4</div>\'">';
     h += '</div>';
@@ -272,6 +273,19 @@ function _hymPlayThis(id){
 function _hymOpenCurrentDetail(){
   if(_hym.currentId) _hymOpenDetail(_hym.currentId);
 }
+function _hymToggleFavCurrent(){
+  if(_hym.selectedId) _hymToggleFav(_hym.selectedId);
+}
+function _hymUpdateHdrFav(id){
+  var btn = document.getElementById('hymHdrFavBtn');
+  if(!btn) return;
+  btn.style.display = id ? '' : 'none';
+  if(id){
+    var on = S.hymnFav.has(id);
+    btn.className = 'hym-fav-btn' + (on ? ' hym-fav-on' : '');
+    btn.innerHTML = '<i class="fa'+(on?'s':'r')+' fa-heart"></i>';
+  }
+}
 
 function _hymZoomIn(){ _hym.zoom = Math.min(_hym.zoom + 0.25, 3); _hymApplyZoom(); }
 function _hymZoomOut(){ _hym.zoom = Math.max(_hym.zoom - 0.25, 0.5); _hymApplyZoom(); }
@@ -297,6 +311,7 @@ function _hymLoadAndPlay(id){
   persist();
   _hymShowSpPlayer();
   _hymShowPlayerBar();
+  _hymShowGlobalPlayer();
   _hymUpdateAllPlayers();
   if(_hym.spView === 'list') _hymRenderList();
   if(_hym.detailOpen && _hym.selectedId === id) _hymRenderDetail(id);
@@ -400,6 +415,9 @@ function _hymUpdatePlayIcons(){
   // side panel player
   var sppBtn = document.getElementById('hymSppPlayBtn');
   if(sppBtn) sppBtn.innerHTML = '<i class="fa fa-'+(_hym.playing?'pause':'play')+'"></i>';
+  // global mini player
+  var gpBtn = document.getElementById('hymGpPlayBtn');
+  if(gpBtn) gpBtn.innerHTML = '<i class="fa fa-'+(_hym.playing?'pause':'play')+'"></i>';
   // list items
   document.querySelectorAll('.hym-list-item').forEach(function(el){
     el.classList.toggle('hym-playing', parseInt(el.dataset.id) === _hym.currentId && _hym.playing);
@@ -417,6 +435,18 @@ function _hymShowSpPlayer(){
 function _hymShowPlayerBar(){
   var el = document.getElementById('hymPlayerBar');
   if(el) el.style.display = '';
+}
+function _hymShowGlobalPlayer(){
+  var el = document.getElementById('hymGlobalPlayer');
+  if(!el) return;
+  // Show only when there's a current hymn AND the hymns overlay is NOT open
+  var overlay = document.getElementById('hymnsOverlay');
+  var overlayVisible = overlay && overlay.style.display !== 'none';
+  if(_hym.currentId && !overlayVisible){
+    el.style.display = '';
+  } else {
+    el.style.display = 'none';
+  }
 }
 
 function _hymUpdateAllPlayers(){
@@ -439,6 +469,11 @@ function _hymUpdateAllPlayers(){
   if(sppFill) sppFill.style.width = pct;
   var sppBtn = document.getElementById('hymSppPlayBtn');
   if(sppBtn) sppBtn.innerHTML = '<i class="fa fa-'+(_hym.playing?'pause':'play')+'"></i>';
+  // global mini player
+  var gpTitle = document.getElementById('hymGpTitle');
+  if(gpTitle) gpTitle.textContent = label;
+  var gpBtn = document.getElementById('hymGpPlayBtn');
+  if(gpBtn) gpBtn.innerHTML = '<i class="fa fa-'+(_hym.playing?'pause':'play')+'"></i>';
   // detail player (only if detail is showing this hymn)
   if(_hym.detailOpen && _hym.currentId === _hym.selectedId){
     var dpFill = document.getElementById('hymDpFill');

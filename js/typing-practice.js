@@ -742,18 +742,39 @@ function toggleTypingPanel(){
   if(!el) return;
   var show = !el.classList.contains('tp-show');
   el.classList.toggle('tp-show', show);
+  el.style.display = show ? 'flex' : 'none';
   var ri = document.querySelector('.rail-icon[data-rail="typing"]');
   if(ri) ri.classList.toggle('active', show);
+  // hide/show bible content areas
+  var scroll = document.getElementById('bibleScroll');
+  var hymOvl = document.getElementById('hymnsOverlay');
+  var tabBar = document.getElementById('bibleTabBar');
+  var viewBar = document.getElementById('bibleViewBar');
   if(show){
-    if(_activeRail && !_spPinned) closeSidePanel();
+    if(scroll) scroll.style.display = 'none';
+    if(hymOvl) hymOvl.style.display = 'none';
+    if(tabBar) tabBar.style.display = 'none';
+    if(viewBar) viewBar.style.display = 'none';
     _tpInit();
+    setTimeout(function(){ var inp = document.getElementById('tpInput'); if(inp) inp.focus(); }, 100);
   } else {
+    // restore hymns overlay if it was open, otherwise restore bible scroll
+    if(typeof _hym !== 'undefined' && _hym.detailOpen){
+      if(hymOvl) hymOvl.style.display = 'flex';
+      // keep tab/view bars hidden when hymns overlay is open
+    } else {
+      if(scroll) scroll.style.display = '';
+      if(tabBar) tabBar.style.display = '';
+      if(viewBar) viewBar.style.display = '';
+    }
     _tpStopTimer();
     if(_tp._resultKeyHandler){
       document.removeEventListener('keydown', _tp._resultKeyHandler);
       _tp._resultKeyHandler = null;
     }
   }
+  // update global hymn player visibility
+  if(typeof _hymShowGlobalPlayer === 'function') _hymShowGlobalPlayer();
 }
 
 /* ═══ Init ═══ */

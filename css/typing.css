@@ -27,13 +27,14 @@
   --glass-border: rgba(255,255,255,0.08);
   --glass-highlight: rgba(255,255,255,0.06);
 
-  visibility:hidden; opacity:0;
-  position:fixed; inset:0; z-index:800;
+  display:none; /* toggled via JS: display:flex */
+  flex:1; min-width:0;
+  flex-direction:column;
+  position:relative; z-index:50;
   background: linear-gradient(135deg, #0a0a1a 0%, #0d1025 30%, #151030 60%, #0a0a1a 100%);
-  display:flex; flex-direction:column;
-  transition:opacity .25s, visibility .25s;
+  overflow:hidden;
 }
-.tp-overlay.tp-show { visibility:visible; opacity:1; }
+.tp-overlay.tp-show { display:flex; }
 
 /* ═══ Header — glass ═══ */
 .tp-header {

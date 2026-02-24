@@ -151,8 +151,7 @@
 /* Sheet image viewer */
 .hym-sheet-wrap {
   position:relative; text-align:center; margin-bottom:12px;
-  background:var(--glass-bg-1); border:1px solid var(--glass-border);
-  border-radius:var(--radius-md); overflow:hidden; min-height:200px;
+  background:var(--glass-bg-1); overflow:hidden; min-height:200px;
   display:flex; align-items:center; justify-content:center;
 }
 .hym-sheet-img {
@@ -489,3 +488,31 @@
   height:100%; background:var(--accent-color); border-radius:2px;
   max-width:100%;
 }
+
+/* ═══ Global Mini Player (fixed bottom bar) ═══ */
+.hym-global-player {
+  position:fixed; bottom:0; left:0; right:0; z-index:900;
+  display:flex; align-items:center; gap:8px;
+  padding:6px 14px; height:42px;
+  background:var(--glass-bg-2); border-top:1px solid var(--glass-border);
+  backdrop-filter:var(--glass-blur-2); -webkit-backdrop-filter:var(--glass-blur-2);
+  box-shadow:0 -2px 12px rgba(0,0,0,.15);
+}
+.hym-gp-info {
+  flex:1; min-width:0; cursor:pointer; display:flex; align-items:center; gap:8px;
+}
+.hym-gp-icon {
+  font-size:12px; color:var(--accent-color); flex-shrink:0;
+}
+.hym-gp-title {
+  font-size:12px; font-weight:600; color:var(--text); white-space:nowrap;
+  overflow:hidden; text-overflow:ellipsis;
+}
+.hym-gp-btn {
+  background:none; border:none; color:var(--text2); font-size:15px;
+  cursor:pointer; padding:6px; border-radius:50%; transition:all .12s;
+  display:flex; align-items:center; justify-content:center;
+  width:32px; height:32px; flex-shrink:0;
+}
+.hym-gp-btn:hover { color:var(--text); background:var(--glass-bg-3); }
+[data-theme="light"] .hym-global-player { background:var(--glass-bg-2); }

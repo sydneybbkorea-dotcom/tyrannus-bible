@@ -100,6 +100,7 @@ function toggleHymnsOverlay(){
   var show = el.style.display === 'none';
   el.style.display = show ? 'flex' : 'none';
   if(scroll) scroll.style.display = show ? 'none' : '';
+  if(typeof _hymShowGlobalPlayer==='function') _hymShowGlobalPlayer();
 }
 
 function _initSection(name){
