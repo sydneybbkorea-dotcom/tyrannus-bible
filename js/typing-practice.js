@@ -748,24 +748,17 @@ function toggleTypingPanel(){
   // hide/show bible content areas
   var scroll = document.getElementById('bibleScroll');
   var hymOvl = document.getElementById('hymnsOverlay');
-  var tabBar = document.getElementById('bibleTabBar');
-  var viewBar = document.getElementById('bibleViewBar');
   if(show){
     if(scroll) scroll.style.display = 'none';
     if(hymOvl) hymOvl.style.display = 'none';
-    if(tabBar) tabBar.style.display = 'none';
-    if(viewBar) viewBar.style.display = 'none';
     _tpInit();
     setTimeout(function(){ var inp = document.getElementById('tpInput'); if(inp) inp.focus(); }, 100);
   } else {
     // restore hymns overlay if it was open, otherwise restore bible scroll
     if(typeof _hym !== 'undefined' && _hym.detailOpen){
       if(hymOvl) hymOvl.style.display = 'flex';
-      // keep tab/view bars hidden when hymns overlay is open
     } else {
       if(scroll) scroll.style.display = '';
-      if(tabBar) tabBar.style.display = '';
-      if(viewBar) viewBar.style.display = '';
     }
     _tpStopTimer();
     if(_tp._resultKeyHandler){
@@ -773,6 +766,7 @@ function toggleTypingPanel(){
       _tp._resultKeyHandler = null;
     }
   }
+  if(typeof _updateBibleBars==='function') _updateBibleBars();
   // update global hymn player visibility
   if(typeof _hymShowGlobalPlayer === 'function') _hymShowGlobalPlayer();
 }

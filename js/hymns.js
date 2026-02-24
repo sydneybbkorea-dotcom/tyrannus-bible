@@ -116,15 +116,12 @@ function _hymOpenDetail(id){
   _hym.selectedId = id;
   _hym.detailOpen = true;
   _hym.zoom = 1;
-  // show overlay, hide bibleScroll + top bars for full-height
+  // show overlay, hide bibleScroll
   var overlay = document.getElementById('hymnsOverlay');
   var scroll = document.getElementById('bibleScroll');
-  var tabBar = document.getElementById('bibleTabBar');
-  var viewBar = document.getElementById('bibleViewBar');
   if(overlay) overlay.style.display = 'flex';
   if(scroll) scroll.style.display = 'none';
-  if(tabBar) tabBar.style.display = 'none';
-  if(viewBar) viewBar.style.display = 'none';
+  if(typeof _updateBibleBars==='function') _updateBibleBars();
   // update overlay header
   var title = document.getElementById('hymTitle');
   if(title) title.textContent = _hymnLabel(id);
@@ -138,12 +135,9 @@ function _hymCloseDetail(){
   _hym.detailOpen = false;
   var overlay = document.getElementById('hymnsOverlay');
   var scroll = document.getElementById('bibleScroll');
-  var tabBar = document.getElementById('bibleTabBar');
-  var viewBar = document.getElementById('bibleViewBar');
   if(overlay) overlay.style.display = 'none';
   if(scroll) scroll.style.display = '';
-  if(tabBar) tabBar.style.display = '';
-  if(viewBar) viewBar.style.display = '';
+  if(typeof _updateBibleBars==='function') _updateBibleBars();
   _hymShowGlobalPlayer();
 }
 

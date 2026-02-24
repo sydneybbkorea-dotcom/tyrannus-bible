@@ -29,6 +29,8 @@ function openSidePanel(name){
   const sec = document.getElementById('sp-'+name);
   if(sec) sec.classList.add('active');
   _initSection(name);
+  // hymns: hide bible top bars for full height
+  _updateBibleBars();
 }
 
 function closeSidePanel(){
@@ -37,6 +39,22 @@ function closeSidePanel(){
   document.querySelectorAll('.rail-icon').forEach(b=>b.classList.remove('active'));
   const sp = document.getElementById('sidePanel');
   if(sp) sp.classList.remove('open');
+  _updateBibleBars();
+}
+
+// Show/hide bible tab & view bars depending on active section
+function _updateBibleBars(){
+  var tabBar = document.getElementById('bibleTabBar');
+  var viewBar = document.getElementById('bibleViewBar');
+  // hide when hymns panel is active, hymns overlay is open, or typing panel is open
+  var hymnsActive = _activeRail === 'hymns';
+  var hymOvl = document.getElementById('hymnsOverlay');
+  var overlayOpen = hymOvl && hymOvl.style.display !== 'none';
+  var tpEl = document.getElementById('typingOverlay');
+  var typingOpen = tpEl && tpEl.style.display !== 'none';
+  var hide = hymnsActive || overlayOpen || typingOpen;
+  if(tabBar) tabBar.style.display = hide ? 'none' : '';
+  if(viewBar) viewBar.style.display = hide ? 'none' : '';
 }
 
 // 노트 아이콘: 사이드 카테고리 없이 오른쪽 패널 직접 토글
@@ -96,14 +114,11 @@ function toggleKnowledgeGraph(){
 function toggleHymnsOverlay(){
   var el = document.getElementById('hymnsOverlay');
   var scroll = document.getElementById('bibleScroll');
-  var tabBar = document.getElementById('bibleTabBar');
-  var viewBar = document.getElementById('bibleViewBar');
   if(!el) return;
   var show = el.style.display === 'none';
   el.style.display = show ? 'flex' : 'none';
   if(scroll) scroll.style.display = show ? 'none' : '';
-  if(tabBar) tabBar.style.display = show ? 'none' : '';
-  if(viewBar) viewBar.style.display = show ? 'none' : '';
+  _updateBibleBars();
   if(typeof _hymShowGlobalPlayer==='function') _hymShowGlobalPlayer();
 }
 
