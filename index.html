@@ -38,6 +38,7 @@
 <link rel="stylesheet" href="css/dict.css?v=19">
 <link rel="stylesheet" href="css/sync.css?v=15">
 <link rel="stylesheet" href="css/settings-panel.css?v=21">
+<link rel="stylesheet" href="css/highlight-topics.css?v=1">
 <link rel="stylesheet" href="css/typing.css?v=10">
 <link rel="stylesheet" href="css/hymns.css?v=1">
 <link rel="stylesheet" href="css/responsive.css?v=2">
@@ -252,6 +253,10 @@
           <button class="hym-back-btn" id="hymBackBtn" onclick="_hymCloseDetail()">
             <i class="fa fa-arrow-left"></i></button>
           <span class="hym-title" id="hymTitle">찬양</span>
+        </div>
+        <div class="hym-hdr-tabs" id="hymHdrTabs">
+          <button class="hym-ht-btn active" data-tab="lyrics" onclick="_hymSwitchTab('lyrics')">가사</button>
+          <button class="hym-ht-btn" data-tab="sheet" onclick="_hymSwitchTab('sheet')">악보</button>
         </div>
         <div class="hym-hdr-right">
           <button class="hym-fav-btn" id="hymHdrFavBtn" onclick="_hymToggleFavCurrent()" title="즐겨찾기" style="display:none"><i class="far fa-heart"></i></button>
@@ -632,13 +637,21 @@
 <!-- Hymn Audio -->
 <audio id="hymAudio" preload="none"></audio>
 
-<!-- Global Mini Player (visible across all sections) -->
-<div id="hymGlobalPlayer" class="hym-global-player" style="display:none">
-  <div class="hym-gp-info" onclick="_hymOpenCurrentDetail()">
-    <i class="fa fa-music hym-gp-icon"></i>
-    <span class="hym-gp-title" id="hymGpTitle"></span>
+<!-- Global Mini Player (floating circle, expands on hover) -->
+<div id="hymGlobalPlayer" class="hym-gp-fab" style="display:none">
+  <div class="hym-gp-fab-circle" onclick="_hymTogglePlay()">
+    <i class="fa fa-music" id="hymGpFabIcon"></i>
+    <svg class="hym-gp-fab-ring" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" id="hymGpRing"/></svg>
   </div>
-  <button class="hym-gp-btn hym-gp-play" id="hymGpPlayBtn" onclick="_hymTogglePlay()"><i class="fa fa-play"></i></button>
+  <div class="hym-gp-fab-panel">
+    <span class="hym-gp-fab-title" id="hymGpTitle" onclick="_hymOpenCurrentDetail()"></span>
+    <div class="hym-gp-fab-btns">
+      <button class="hym-gp-fab-btn" onclick="_hymPrev()" title="이전"><i class="fa fa-backward-step"></i></button>
+      <button class="hym-gp-fab-btn hym-gp-fab-play" id="hymGpPlayBtn" onclick="_hymTogglePlay()"><i class="fa fa-play"></i></button>
+      <button class="hym-gp-fab-btn" onclick="_hymNext()" title="다음"><i class="fa fa-forward-step"></i></button>
+      <button class="hym-gp-fab-btn" onclick="_hymOpenCurrentDetail()" title="열기"><i class="fa fa-up-right-from-square"></i></button>
+    </div>
+  </div>
 </div>
 
 <!-- ═══════════════════════════════════════════════
@@ -704,6 +717,7 @@
 <script src="js/highlight-memo-filter.js"></script>
 <script src="js/highlight-memo-tags.js"></script>
 <script src="js/highlight-memo-save.js"></script>
+<script src="js/highlight-topics.js"></script>
 <script src="js/verse-select.js?v=5"></script>
 
 <!-- 주석 & 사전 -->

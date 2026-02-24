@@ -71,6 +71,7 @@ function showHLPicker(rect, vn){
         <div class="hlc-dot" style="background:#C084FC" onclick="applyDragHL('P')" title="보라"></div>
         <div class="hlc-dot hlc-erase" onclick="applyDragHL('E')" title="지우기">✕</div>
       </div>
+      <div id="hlTopicArea" style="position:absolute;left:0;top:100%;"></div>
     `;
     document.body.appendChild(p);
 
@@ -135,6 +136,12 @@ function showHLPicker(rect, vn){
   p.style.left = lx + 'px';
   p.style.top = ly + 'px';
   p.style.display = 'block';
+
+  // 주제 칩 업데이트
+  const topicArea = p.querySelector('#hlTopicArea');
+  if(topicArea && typeof _htRenderTopicPicker === 'function'){
+    topicArea.innerHTML = _htRenderTopicPicker();
+  }
 
   clearTimeout(p._t);
   p._t = setTimeout(hideHLPicker, _isTouchDevice ? 8000 : 5000);

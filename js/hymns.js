@@ -45,6 +45,7 @@ var _hym = {
   repeat: 'none',
   shuffle: false,
   zoom: 1,
+  detailView: 'lyrics',  // 'lyrics' | 'sheet'
   addMenuId: null,
   seeking: false,
   currentPlaylistId: null,
@@ -116,6 +117,7 @@ function _hymOpenDetail(id){
   _hym.selectedId = id;
   _hym.detailOpen = true;
   _hym.zoom = 1;
+  _hym.detailView = 'lyrics';
   // show overlay, hide bibleScroll
   var overlay = document.getElementById('hymnsOverlay');
   var scroll = document.getElementById('bibleScroll');
@@ -129,6 +131,8 @@ function _hymOpenDetail(id){
   _hymShowGlobalPlayer();
   // update fav button in header
   _hymUpdateHdrFav(id);
+  // show compact player bar for this hymn
+  _hymSetupDetailBar(id);
 }
 
 function _hymCloseDetail(){
@@ -139,6 +143,58 @@ function _hymCloseDetail(){
   if(scroll) scroll.style.display = '';
   if(typeof _updateBibleBars==='function') _updateBibleBars();
   _hymShowGlobalPlayer();
+  // remove dynamic full player
+  var fp = document.getElementById('hymFullPlayer');
+  if(fp) fp.remove();
+}
+
+function _hymSetupDetailBar(id){
+  var overlay = document.getElementById('hymnsOverlay');
+  if(!overlay) return;
+  // hide original mini bar
+  var miniBar = document.getElementById('hymPlayerBar');
+  if(miniBar) miniBar.style.display = 'none';
+  // clean up existing full player
+  var oldFp = document.getElementById('hymFullPlayer');
+  if(oldFp) oldFp.remove();
+  // sync header tab buttons
+  var tab = _hym.detailView;
+  var htBtns = document.querySelectorAll('.hym-ht-btn');
+  for(var i=0; i<htBtns.length; i++) htBtns[i].classList.toggle('active', htBtns[i].dataset.tab === tab);
+  var hasMp3 = _hymnHasMp3(id);
+  if(!hasMp3) return;
+  // full player island
+  var isPlaying = _hym.currentId === id && _hym.playing;
+  var pct = (_hym.currentId===id && _hym.duration>0) ? (_hym.currentTime/_hym.duration*100).toFixed(1) : 0;
+  var fp = document.createElement('div');
+  fp.id = 'hymFullPlayer';
+  fp.className = 'hym-full-player';
+  var h = '';
+  // title row
+  h += '<div class="hym-fp-title-row">';
+  h += '<i class="fa fa-music hym-fp-icon"></i>';
+  h += '<span class="hym-fp-title" id="hymFpTitle">' + _hymnLabel(id) + '</span>';
+  var fon = S.hymnFav.has(id);
+  h += '<button class="hym-fav-btn'+(fon?' hym-fav-on':'')+'" id="hymFpFavBtn" onclick="_hymToggleFavCurrent()"><i class="fa'+(fon?'s':'r')+' fa-heart"></i></button>';
+  h += '</div>';
+  // seek bar
+  h += '<div class="hym-fp-seek">';
+  h += '<span class="hym-fp-time" id="hymFpTimeCur">' + _hymFormatTime(_hym.currentId===id?_hym.currentTime:0) + '</span>';
+  h += '<div class="hym-fp-track" id="hymFpTrack" onmousedown="_hymSeekStart(event,\'fp\')" ontouchstart="_hymSeekStart(event,\'fp\')">';
+  h += '<div class="hym-fp-fill" id="hymFpFill" style="width:'+pct+'%"></div>';
+  h += '</div>';
+  h += '<span class="hym-fp-time" id="hymFpTimeDur">' + _hymFormatTime(_hym.currentId===id?_hym.duration:0) + '</span>';
+  h += '</div>';
+  // controls
+  h += '<div class="hym-fp-controls">';
+  h += '<button class="hym-fp-btn'+(_hym.shuffle?' hym-fp-active':'')+'" onclick="_hymToggleShuffle()"><i class="fa fa-random"></i></button>';
+  h += '<button class="hym-fp-btn" onclick="_hymPrev()"><i class="fa fa-step-backward"></i></button>';
+  h += '<button class="hym-fp-btn hym-fp-play" id="hymFpPlayBtn" onclick="_hymPlayThis('+id+')"><i class="fa fa-'+(isPlaying?'pause':'play')+'"></i></button>';
+  h += '<button class="hym-fp-btn" onclick="_hymNext()"><i class="fa fa-step-forward"></i></button>';
+  h += '<button class="hym-fp-btn'+(_hym.repeat!=='none'?' hym-fp-active':'')+'" onclick="_hymToggleRepeat()"><i class="fa fa-redo"></i>'+(_hym.repeat==='one'?'<small class="hym-fp-rep1">1</small>':'')+'</button>';
+  h += '</div>';
+  fp.innerHTML = h;
+  overlay.appendChild(fp);
 }
 
 /* ── Section 5: List View (side panel) — virtual scroll ── */
@@ -259,7 +315,15 @@ function _hymToggleFav(id, e){
     if(_hym.filter === 'fav') _hymRenderList(); // list changes — rebuild
     else _hymVsPaint(); // just repaint visible slice
   }
-  if(_hym.detailOpen && _hym.selectedId === id) _hymUpdateHdrFav(id);
+  if(_hym.detailOpen && _hym.selectedId === id){
+    _hymUpdateHdrFav(id);
+    var fpFav = document.getElementById('hymFpFavBtn');
+    if(fpFav){
+      var on2 = S.hymnFav.has(id);
+      fpFav.className = 'hym-fav-btn' + (on2 ? ' hym-fav-on' : '');
+      fpFav.innerHTML = '<i class="fa'+(on2?'s':'r')+' fa-heart"></i>';
+    }
+  }
 }
 
 function _hymQuickPlay(id, e){
@@ -273,39 +337,43 @@ function _hymRenderDetail(id){
   var cont = document.getElementById('hymViewDetail');
   if(!cont || !id) return;
   var hasSheet = _hymnHasSheet(id);
-  var hasMp3 = _hymnHasMp3(id);
+  var tab = _hym.detailView;
   var h = '';
-  // sheet (no header/zoom — title+fav are in the overlay header)
+  // lyrics area
+  h += '<div class="hym-lyrics-wrap" id="hymLyricsWrap" style="display:'+(tab==='lyrics'?'flex':'none')+'">';
+  h += '<div class="hym-lyrics-title">'+_hymnLabel(id)+'</div>';
+  h += '<div class="hym-lyrics-text">\uAC00\uC0AC\uAC00 \uC900\uBE44 \uC911\uC785\uB2C8\uB2E4</div>';
+  h += '</div>';
+  // sheet area
+  h += '<div class="hym-sheet-wrap" id="hymSheetWrap" style="display:'+(tab==='sheet'?'block':'none')+'">';
   if(hasSheet){
-    h += '<div class="hym-sheet-wrap">';
+    h += '<div class="hym-zoom-bar">';
+    h += '<button class="hym-zoom-btn" onclick="_hymZoomOut()"><i class="fa fa-search-minus"></i></button>';
+    h += '<button class="hym-zoom-btn" onclick="_hymZoomReset()"><i class="fa fa-undo"></i></button>';
+    h += '<button class="hym-zoom-btn" onclick="_hymZoomIn()"><i class="fa fa-search-plus"></i></button>';
+    h += '</div>';
+    h += '<div class="hym-sheet-scroll">';
     h += '<img class="hym-sheet-img" id="hymSheetImg" src="'+_hymnSheetUrl(id)+'" alt="'+_hymnLabel(id)+' \uC545\uBCF4" style="transform:scale('+_hym.zoom+')" onerror="this.parentNode.innerHTML=\'<div class=hym-no-sheet><i class=&quot;fa fa-image&quot;></i>\uC545\uBCF4\uB97C \uBD88\uB7EC\uC62C \uC218 \uC5C6\uC2B5\uB2C8\uB2E4</div>\'">';
     h += '</div>';
   } else {
-    h += '<div class="hym-sheet-wrap"><div class="hym-no-sheet"><i class="fa fa-image"></i>\uC545\uBCF4\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4</div></div>';
+    h += '<div class="hym-no-sheet"><i class="fa fa-image"></i>\uC545\uBCF4\uAC00 \uC5C6\uC2B5\uB2C8\uB2E4</div>';
   }
-  // player
-  if(hasMp3){
-    var isThisPlaying = _hym.currentId === id && _hym.playing;
-    h += '<div class="hym-detail-player" id="hymDetailPlayer">';
-    h += '<div class="hym-dp-controls">';
-    h += '<button class="hym-dp-btn'+ (_hym.shuffle?' hym-dp-active':'') +'" onclick="_hymToggleShuffle()" title="\uC154\uD50C"><i class="fa fa-random"></i></button>';
-    h += '<button class="hym-dp-btn" onclick="_hymPrev()" title="\uC774\uC804"><i class="fa fa-step-backward"></i></button>';
-    h += '<button class="hym-dp-btn hym-dp-play" id="hymDpPlayBtn" onclick="_hymPlayThis('+id+')" title="\uC7AC\uC0DD"><i class="fa fa-'+(isThisPlaying?'pause':'play')+'"></i></button>';
-    h += '<button class="hym-dp-btn" onclick="_hymNext()" title="\uB2E4\uC74C"><i class="fa fa-step-forward"></i></button>';
-    h += '<button class="hym-dp-btn'+ (_hym.repeat!=='none'?' hym-dp-active':'') +'" onclick="_hymToggleRepeat()" title="\uBC18\uBCF5"><i class="fa fa-redo"></i>'+ (_hym.repeat==='one'?'<small style="font-size:8px;position:absolute;margin-top:8px">1</small>':'') +'</button>';
-    h += '</div>';
-    h += '<div class="hym-dp-seek">';
-    h += '<span class="hym-dp-time" id="hymDpTimeCur">'+_hymFormatTime(_hym.currentId===id?_hym.currentTime:0)+'</span>';
-    h += '<div class="hym-dp-track" id="hymDpTrack" onmousedown="_hymSeekStart(event,\'detail\')" ontouchstart="_hymSeekStart(event,\'detail\')">';
-    var pct = (_hym.currentId===id && _hym.duration>0) ? (_hym.currentTime/_hym.duration*100) : 0;
-    h += '<div class="hym-dp-fill" id="hymDpFill" style="width:'+pct+'%"></div>';
-    h += '</div>';
-    h += '<span class="hym-dp-time" id="hymDpTimeDur">'+_hymFormatTime(_hym.currentId===id?_hym.duration:0)+'</span>';
-    h += '</div></div>';
-  } else {
-    h += '<div class="hym-no-audio"><i class="fa fa-volume-mute"></i> \uC74C\uC6D0\uC774 \uC5C6\uC2B5\uB2C8\uB2E4</div>';
-  }
+  h += '</div>';
   cont.innerHTML = h;
+}
+
+function _hymSwitchTab(tab){
+  _hym.detailView = tab;
+  // toggle header tab buttons
+  var btns = document.querySelectorAll('.hym-ht-btn');
+  for(var i=0; i<btns.length; i++){
+    btns[i].classList.toggle('active', btns[i].dataset.tab === tab);
+  }
+  // toggle content areas
+  var lyrics = document.getElementById('hymLyricsWrap');
+  var sheet = document.getElementById('hymSheetWrap');
+  if(lyrics) lyrics.style.display = tab==='lyrics'?'flex':'none';
+  if(sheet) sheet.style.display = tab==='sheet'?'block':'none';
 }
 
 function _hymPlayThis(id){
@@ -357,7 +425,10 @@ function _hymLoadAndPlay(id){
   _hymShowGlobalPlayer();
   _hymUpdateAllPlayers();
   if(_hym.spView === 'list') _hymRenderList();
-  if(_hym.detailOpen && _hym.selectedId === id) _hymRenderDetail(id);
+  if(_hym.detailOpen){
+    if(_hym.selectedId === id) _hymRenderDetail(id);
+    _hymSetupDetailBar(_hym.selectedId);
+  }
 }
 
 function _hymTogglePlay(){
@@ -418,7 +489,7 @@ function _hymFormatTime(s){
 function _hymSeekStart(e, where){
   e.preventDefault(); e.stopPropagation();
   _hym.seeking = true;
-  var trackId = where === 'detail' ? 'hymDpTrack' : where === 'sp' ? 'hymSppTrack' : 'hymPbTrack';
+  var trackId = where === 'fp' ? 'hymFpTrack' : where === 'sp' ? 'hymSppTrack' : 'hymPbTrack';
   var track = document.getElementById(trackId);
   if(!track) return;
   function doSeek(ev){
@@ -439,8 +510,8 @@ function _hymSeekStart(e, where){
 
 function _hymUpdateSeekVisual(frac, where){
   var pct = (frac*100).toFixed(1)+'%';
-  if(where === 'detail'){
-    var f = document.getElementById('hymDpFill'); if(f) f.style.width = pct;
+  if(where === 'fp'){
+    var f = document.getElementById('hymFpFill'); if(f) f.style.width = pct;
   } else if(where === 'sp'){
     var f2 = document.getElementById('hymSppFill'); if(f2) f2.style.width = pct;
   } else {
@@ -449,12 +520,15 @@ function _hymUpdateSeekVisual(frac, where){
 }
 
 function _hymUpdatePlayIcons(){
-  // overlay player bar
+  // full player (detail view)
+  var fpBtn = document.getElementById('hymFpPlayBtn');
+  if(fpBtn){
+    var selPlaying = _hym.currentId === _hym.selectedId && _hym.playing;
+    fpBtn.innerHTML = '<i class="fa fa-'+(selPlaying?'pause':'play')+'"></i>';
+  }
+  // overlay mini player bar
   var pbBtn = document.getElementById('hymPbPlayBtn');
   if(pbBtn) pbBtn.innerHTML = '<i class="fa fa-'+(_hym.playing?'pause':'play')+'"></i>';
-  // detail player
-  var dpBtn = document.getElementById('hymDpPlayBtn');
-  if(dpBtn) dpBtn.innerHTML = '<i class="fa fa-'+(_hym.playing?'pause':'play')+'"></i>';
   // side panel player
   var sppBtn = document.getElementById('hymSppPlayBtn');
   if(sppBtn) sppBtn.innerHTML = '<i class="fa fa-'+(_hym.playing?'pause':'play')+'"></i>';
@@ -481,6 +555,7 @@ function _hymShowSpPlayer(){
   if(el) el.style.display = '';
 }
 function _hymShowPlayerBar(){
+  if(_hym.detailOpen) return; // full player handles this
   var el = document.getElementById('hymPlayerBar');
   if(el) el.style.display = '';
 }
@@ -501,7 +576,28 @@ function _hymUpdateAllPlayers(){
   var pct = (_hym.duration > 0) ? (_hym.currentTime/_hym.duration*100).toFixed(1)+'%' : '0%';
   var time = _hymFormatTime(_hym.currentTime);
   var label = _hym.currentId ? _hymnLabel(_hym.currentId) : '';
-  // overlay player bar
+  // full player (detail view) — show selected hymn info
+  if(_hym.detailOpen){
+    var selId = _hym.selectedId;
+    var fpTitle = document.getElementById('hymFpTitle');
+    if(fpTitle) fpTitle.textContent = selId ? _hymnLabel(selId) : '';
+    var fpFill = document.getElementById('hymFpFill');
+    var fpCur = document.getElementById('hymFpTimeCur');
+    var fpDur = document.getElementById('hymFpTimeDur');
+    var fpBtn = document.getElementById('hymFpPlayBtn');
+    if(_hym.currentId === selId){
+      if(fpFill) fpFill.style.width = pct;
+      if(fpCur) fpCur.textContent = time;
+      if(fpDur) fpDur.textContent = _hymFormatTime(_hym.duration);
+      if(fpBtn) fpBtn.innerHTML = '<i class="fa fa-'+(_hym.playing?'pause':'play')+'"></i>';
+    } else {
+      if(fpFill) fpFill.style.width = '0%';
+      if(fpCur) fpCur.textContent = '0:00';
+      if(fpDur) fpDur.textContent = '0:00';
+      if(fpBtn) fpBtn.innerHTML = '<i class="fa fa-play"></i>';
+    }
+  }
+  // overlay mini player bar (when not in detail)
   var pbTitle = document.getElementById('hymPbTitle');
   if(pbTitle) pbTitle.textContent = label;
   var pbFill = document.getElementById('hymPbFill');
@@ -517,21 +613,22 @@ function _hymUpdateAllPlayers(){
   if(sppFill) sppFill.style.width = pct;
   var sppBtn = document.getElementById('hymSppPlayBtn');
   if(sppBtn) sppBtn.innerHTML = '<i class="fa fa-'+(_hym.playing?'pause':'play')+'"></i>';
-  // global mini player
+  // global floating FAB player
   var gpTitle = document.getElementById('hymGpTitle');
   if(gpTitle) gpTitle.textContent = label;
   var gpBtn = document.getElementById('hymGpPlayBtn');
   if(gpBtn) gpBtn.innerHTML = '<i class="fa fa-'+(_hym.playing?'pause':'play')+'"></i>';
-  // detail player (only if detail is showing this hymn)
-  if(_hym.detailOpen && _hym.currentId === _hym.selectedId){
-    var dpFill = document.getElementById('hymDpFill');
-    if(dpFill) dpFill.style.width = pct;
-    var dpCur = document.getElementById('hymDpTimeCur');
-    if(dpCur) dpCur.textContent = time;
-    var dpDur = document.getElementById('hymDpTimeDur');
-    if(dpDur) dpDur.textContent = _hymFormatTime(_hym.duration);
-    var dpBtn = document.getElementById('hymDpPlayBtn');
-    if(dpBtn) dpBtn.innerHTML = '<i class="fa fa-'+(_hym.playing?'pause':'play')+'"></i>';
+  // FAB icon: show pause when playing
+  var gpFabIcon = document.getElementById('hymGpFabIcon');
+  if(gpFabIcon) gpFabIcon.className = 'fa fa-' + (_hym.playing ? 'pause' : 'music');
+  // playing class for pulse animation
+  var gpFab = document.getElementById('hymGlobalPlayer');
+  if(gpFab) gpFab.classList.toggle('is-playing', !!_hym.playing);
+  // progress ring
+  var gpRing = document.getElementById('hymGpRing');
+  if(gpRing && _hym.duration > 0){
+    var circumference = 2 * Math.PI * 18; // r=18
+    gpRing.style.strokeDashoffset = circumference * (1 - _hym.currentTime / _hym.duration);
   }
 }
 
@@ -704,7 +801,7 @@ function _hymSetQueue(ids, startIdx){
 function _hymToggleShuffle(){
   _hym.shuffle = !_hym.shuffle;
   if(_hym.shuffle && _hym.queue.length > 1) _hymShuffleQueue();
-  if(_hym.detailOpen) _hymRenderDetail(_hym.selectedId);
+  if(_hym.detailOpen) _hymSetupDetailBar(_hym.selectedId);
 }
 
 function _hymShuffleQueue(){
@@ -722,7 +819,7 @@ function _hymToggleRepeat(){
   if(_hym.repeat === 'none') _hym.repeat = 'all';
   else if(_hym.repeat === 'all') _hym.repeat = 'one';
   else _hym.repeat = 'none';
-  if(_hym.detailOpen) _hymRenderDetail(_hym.selectedId);
+  if(_hym.detailOpen) _hymSetupDetailBar(_hym.selectedId);
 }
 
 function _hymGetNextInQueue(){
@@ -799,3 +896,27 @@ window._hymPlayPlaylistFrom = _hymPlayPlaylistFrom;
 window._hymShowAddMenu = _hymShowAddMenu;
 window._hymCloseAddMenu = _hymCloseAddMenu;
 window._hymCreateAndAdd = _hymCreateAndAdd;
+window._hymSwitchTab = _hymSwitchTab;
+
+/* ── Global FAB: 모바일 터치 시 패널 확장/축소 ── */
+(function(){
+  var fab = document.getElementById('hymGlobalPlayer');
+  if(!fab) return;
+  var circle = fab.querySelector('.hym-gp-fab-circle');
+  if(!circle) return;
+  var _fabTimer = null;
+  circle.addEventListener('touchstart', function(e){
+    if(!fab.classList.contains('is-expanded')){
+      e.preventDefault();
+      fab.classList.add('is-expanded');
+      clearTimeout(_fabTimer);
+      _fabTimer = setTimeout(function(){ fab.classList.remove('is-expanded'); }, 6000);
+    }
+  }, {passive:false});
+  // 패널 터치 시 타이머 리셋
+  var panel = fab.querySelector('.hym-gp-fab-panel');
+  if(panel) panel.addEventListener('touchstart', function(){
+    clearTimeout(_fabTimer);
+    _fabTimer = setTimeout(function(){ fab.classList.remove('is-expanded'); }, 6000);
+  }, {passive:true});
+})();

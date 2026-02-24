@@ -11,7 +11,10 @@ function restoreHL(){
     if(!vtxtEl) return;
     // 한 절에 여러 range: start 역순으로 적용해야 offset 불변
     const sorted = [...ranges].sort((a,b)=>b.start - a.start);
-    sorted.forEach(({gid, color, start, end})=>{
+    sorted.forEach(({gid, color, start, end, topicId})=>{
+      const tid = topicId || 'default';
+      const topic = (S.hlTopics||[]).find(t=>t.id===tid);
+      if(topic && topic.visible === false) return;
       const cls = {Y:'hl-y',O:'hl-o',G:'hl-g',B:'hl-b',P:'hl-p'}[color]||'hl-y';
       applyRangeToEl(vtxtEl, start, end, cls, gid);
       // 메모 복원

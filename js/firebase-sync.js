@@ -13,7 +13,8 @@ async function _saveMain(){
   try {
     await setDoc(doc(_db,'users',_uid,'data','main'),{
       hl:S.hl||{}, hlMemo:S.hlMemo||{}, hlRanges:S.hlRanges||{}, verseMemo:S.verseMemo||{},
-      bk:[...(S.bk||[])], folders:S.folders||[], openFolders:[...(S.openFolders||[])], updatedAt:Date.now()
+      bk:[...(S.bk||[])], folders:S.folders||[], openFolders:[...(S.openFolders||[])],
+      hlTopics:S.hlTopics||[], activeHlTopic:S.activeHlTopic||'default', updatedAt:Date.now()
     });
     window._setSyncStatus?.('synced');
     window._updateQuotaAfterSave?.();

@@ -12,6 +12,8 @@ Object.assign(S, {
   showRedLetter:false,
   readPlan:null,
   hl:{}, hlMemo:{}, hlRanges:{}, verseMemo:{}, bk:new Set(),
+  hlTopics:[{id:'default',name:'기본',visible:true}],
+  activeHlTopic:'default',
   notes:[], folders:[
     {id:'default',name:'기본 폴더'},
     {id:'sermon',name:'설교 노트'},

@@ -70,7 +70,7 @@ function applyDragHL(color){
       if(rangeStart >= 0 && rangeEnd > rangeStart){
         if(!S.hlRanges[key]) S.hlRanges[key] = [];
         S.hlRanges[key] = S.hlRanges[key].filter(r=>r.gid!==gid);
-        S.hlRanges[key].push({gid, color, start:rangeStart, end:rangeEnd});
+        S.hlRanges[key].push({gid, color, start:rangeStart, end:rangeEnd, topicId: S.activeHlTopic||'default'});
       }
     } catch(err){
       // 실패 시 vrow 전체 배경 fallback

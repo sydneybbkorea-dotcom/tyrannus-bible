@@ -1,6 +1,7 @@
 // settings-panel.js — 설정 패널 렌더링 (메뉴 + 서브페이지)
 var _stpView = 'main';
 function _stpGoTheme(){ _stpView='theme'; renderSettingsPanel(); }
+function _stpGoTopics(){ _stpView='topics'; renderSettingsPanel(); }
 function _stpGoMain(){ _stpView='main'; renderSettingsPanel(); }
 
 function renderSettingsPanel(){
@@ -9,7 +10,17 @@ function renderSettingsPanel(){
   var v = _getSettingsValues();
   var h = '<div class="stp-wrap">';
 
-  if(_stpView === 'theme'){
+  if(_stpView === 'topics'){
+    // ━━━━━━ 주제별 하이라이트 서브페이지 ━━━━━━
+    h += '<div class="stp-subpage-header" onclick="_stpGoMain()">';
+    h += '<i class="fa fa-arrow-left"></i>';
+    h += '<span>주제별 하이라이트</span>';
+    h += '</div>';
+    h += '<div class="stp-section">';
+    h += typeof _htRenderManager === 'function' ? _htRenderManager() : '';
+    h += '</div>';
+
+  } else if(_stpView === 'theme'){
     // ━━━━━━ 테마 서브페이지 ━━━━━━
     h += '<div class="stp-subpage-header" onclick="_stpGoMain()">';
     h += '<i class="fa fa-arrow-left"></i>';
@@ -172,6 +183,16 @@ function renderSettingsPanel(){
     h += '<div class="stp-menu-text">';
     h += '<div class="stp-menu-title">테마</div>';
     h += '<div class="stp-menu-desc">색상, 글꼴, 배경 설정</div>';
+    h += '</div>';
+    h += '<i class="fa fa-chevron-right stp-menu-arrow"></i>';
+    h += '</div>';
+
+    // 메뉴 카드: 주제별 하이라이트
+    h += '<div class="stp-menu-item" onclick="_stpGoTopics()">';
+    h += '<div class="stp-menu-icon"><i class="fa fa-highlighter"></i></div>';
+    h += '<div class="stp-menu-text">';
+    h += '<div class="stp-menu-title">주제별 하이라이트</div>';
+    h += '<div class="stp-menu-desc">주제 생성, 표시/숨김 관리</div>';
     h += '</div>';
     h += '<i class="fa fa-chevron-right stp-menu-arrow"></i>';
     h += '</div>';

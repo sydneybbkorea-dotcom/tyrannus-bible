@@ -13,6 +13,7 @@ export function startRealtimeSync(db, uid){
     if(d.hlRanges) S.hlRanges=d.hlRanges; if(d.verseMemo) S.verseMemo=d.verseMemo;
     if(d.bk) S.bk=new Set(d.bk); if(d.folders) S.folders=d.folders;
     if(d.openFolders) S.openFolders=new Set(d.openFolders);
+    if(d.hlTopics) S.hlTopics=d.hlTopics; if(d.activeHlTopic) S.activeHlTopic=d.activeHlTopic;
     window.renderAll?.(); window._setSyncStatus?.('synced');
   });
   _unsub2 = onSnapshot(doc(db,'users',uid,'data','notes'), snap=>{

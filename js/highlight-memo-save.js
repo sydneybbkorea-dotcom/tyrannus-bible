@@ -38,7 +38,7 @@ function saveMarkMemo(){
     if(!S.hlMemo) S.hlMemo = {};
     if(gid){
       if(text || _memoTags.length || name){
-        S.hlMemo[gid] = { key, text, html, gid, tags:[..._memoTags], name };
+        S.hlMemo[gid] = { key, text, html, gid, tags:[..._memoTags], name, topicId: S.hlMemo[gid]?.topicId || S.activeHlTopic || 'default' };
       } else {
         delete S.hlMemo[gid];
       }

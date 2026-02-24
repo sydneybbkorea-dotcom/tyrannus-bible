@@ -1,6 +1,6 @@
 function persist(){
   // localStorage (오프라인 백업)
-  try { localStorage.setItem('kjb2',JSON.stringify({hl:S.hl,hlMemo:S.hlMemo||{},hlRanges:S.hlRanges||{},verseMemo:S.verseMemo||{},bk:[...S.bk],notes:S.notes,folders:S.folders,openFolders:[...S.openFolders],showRedLetter:S.showRedLetter||false,readPlan:S.readPlan||null,hymnFav:[...S.hymnFav],hymnPlaylists:S.hymnPlaylists,hymnLastPlayed:S.hymnLastPlayed})); } catch(e){}
+  try { localStorage.setItem('kjb2',JSON.stringify({hl:S.hl,hlMemo:S.hlMemo||{},hlRanges:S.hlRanges||{},verseMemo:S.verseMemo||{},bk:[...S.bk],notes:S.notes,folders:S.folders,openFolders:[...S.openFolders],showRedLetter:S.showRedLetter||false,readPlan:S.readPlan||null,hymnFav:[...S.hymnFav],hymnPlaylists:S.hymnPlaylists,hymnLastPlayed:S.hymnLastPlayed,hlTopics:S.hlTopics||[],activeHlTopic:S.activeHlTopic||'default'})); } catch(e){}
 
   // IndexedDB dual-write (async, non-blocking)
   if(typeof StorageAdapter !== 'undefined' && StorageAdapter.isReady()){
@@ -32,5 +32,7 @@ window.restore = function restore(){
     if(d.hymnFav) S.hymnFav=new Set(d.hymnFav);
     if(d.hymnPlaylists) S.hymnPlaylists=d.hymnPlaylists;
     if(d.hymnLastPlayed) S.hymnLastPlayed=d.hymnLastPlayed;
+    if(d.hlTopics) S.hlTopics=d.hlTopics;
+    if(d.activeHlTopic) S.activeHlTopic=d.activeHlTopic;
   } catch(e){}
 }

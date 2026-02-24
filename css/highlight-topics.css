@@ -1,0 +1,82 @@
+/* highlight-topics.css — 주제별 하이라이트 관리 UI */
+
+/* ── 주제 목록 ── */
+.ht-list {
+  display:flex; flex-direction:column; gap:2px;
+  margin-bottom:12px;
+}
+.ht-item {
+  display:flex; align-items:center; gap:6px;
+  padding:8px 10px; border-radius:8px;
+  background:var(--bg2); transition:opacity .2s;
+}
+.ht-item-hidden { opacity:.45; }
+.ht-item-active { box-shadow:inset 0 0 0 1.5px var(--accent); }
+.ht-item-name {
+  flex:1; font-size:13px; color:var(--text);
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.ht-eye-btn, .ht-edit-btn, .ht-del-btn {
+  background:none; border:none; color:var(--text2);
+  cursor:pointer; padding:4px 6px; font-size:12px;
+  border-radius:4px; transition:color .15s, background .15s;
+}
+.ht-eye-btn:hover, .ht-edit-btn:hover { color:var(--accent); background:var(--bg3); }
+.ht-del-btn:hover { color:#e53e3e; background:var(--bg3); }
+
+/* ── 추가 버튼 ── */
+.ht-add-btn {
+  display:flex; align-items:center; gap:6px;
+  width:100%; padding:10px; border:1.5px dashed var(--border2);
+  border-radius:8px; background:none; color:var(--accent);
+  font-size:13px; cursor:pointer; justify-content:center;
+  transition:background .15s, border-color .15s;
+}
+.ht-add-btn:hover { background:var(--bg2); border-color:var(--accent); }
+
+/* ── 활성 주제 선택 ── */
+.ht-active-section {
+  margin-top:16px; padding:12px; border-radius:8px;
+  background:var(--bg2);
+}
+.ht-active-label {
+  font-size:11px; color:var(--text2); margin-bottom:6px;
+  text-transform:uppercase; letter-spacing:.5px;
+}
+.ht-active-select {
+  width:100%; padding:6px 8px; border-radius:6px;
+  border:1px solid var(--border2); background:var(--bg3);
+  color:var(--text); font-size:13px; cursor:pointer;
+}
+
+/* ── 피커 내 주제 드롭다운 ── */
+.ht-topic-picker {
+  display:flex; align-items:center;
+  padding:3px 8px; border-radius:12px;
+  background:var(--bg2); border:1px solid var(--border2);
+  font-size:11px; color:var(--text2); cursor:pointer;
+  margin-top:6px; width:fit-content;
+  transition:background .15s;
+}
+.ht-topic-picker:hover { background:var(--bg3); }
+
+.ht-picker-dropdown {
+  position:absolute; left:0; bottom:100%;
+  display:flex; flex-wrap:wrap; gap:4px;
+  padding:6px 8px; margin-bottom:4px;
+  background:var(--bg3); border:1px solid var(--border2);
+  border-radius:10px; box-shadow:var(--shadow);
+  z-index:10;
+}
+.ht-topic-chip {
+  padding:3px 10px; border-radius:10px;
+  font-size:11px; cursor:pointer;
+  background:var(--bg2); color:var(--text2);
+  border:1px solid transparent;
+  transition:all .15s;
+}
+.ht-topic-chip:hover { border-color:var(--accent); color:var(--text); }
+.ht-topic-chip-active {
+  background:var(--accent); color:#fff;
+  border-color:var(--accent);
+}
