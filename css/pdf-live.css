@@ -208,3 +208,86 @@
   0%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
   50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.3); }
 }
+
+/* ── 강의 기록 목록 ── */
+.live-history-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.live-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+.live-history-item {
+  padding: 10px;
+  border-radius: 8px;
+  background: var(--bg-2, #1a1a1a);
+  border: 1px solid var(--border, #333);
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+.live-history-item:hover {
+  border-color: var(--accent, #6366f1);
+}
+.live-history-top {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+.live-history-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 6px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+}
+.live-history-live {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}
+.live-history-ended {
+  background: var(--bg-3, #2a2a2a);
+  color: var(--text-2, #888);
+}
+.live-history-date {
+  font-size: 12px;
+  color: var(--text-2, #888);
+}
+.live-history-del {
+  margin-left: auto;
+  background: none;
+  border: none;
+  color: var(--text-3, #555);
+  cursor: pointer;
+  font-size: 11px;
+  padding: 2px 4px;
+  border-radius: 4px;
+  opacity: 0;
+  transition: opacity 0.15s, color 0.15s;
+}
+.live-history-item:hover .live-history-del {
+  opacity: 1;
+}
+.live-history-del:hover {
+  color: #ef4444;
+}
+.live-history-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 12px;
+  color: var(--text-1, #eee);
+}
+.live-history-info i {
+  margin-right: 3px;
+  opacity: 0.6;
+}
+.live-history-meta {
+  font-size: 11px;
+  color: var(--text-2, #888);
+}

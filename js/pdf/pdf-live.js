@@ -1,6 +1,6 @@
 // pdf-live.js — 라이브 강의 UI + 코디네이션 (IIFE)
 var PDFLive = (function(){
-  var _role = null;           // 'presenter' | 'viewer' | null
+  var _role = null;           // 'presenter' | 'viewer' | 'replay' | null
   var _sessionCode = null;
   var _unsubscribe = null;    // onSnapshot unsubscribe
   var _liveIndicator = null;
@@ -27,7 +27,6 @@ var PDFLive = (function(){
     var pdfName = PDFViewer.getCurrentPdfId() || 'slide';
     var totalPages = PDFViewer.getTotalPages() || 1;
 
-    // 세션 생성
     if(typeof _liveCreateSession !== 'function'){
       toast('Firebase 모듈이 로드되지 않았습니다.');
       _role = null;
@@ -37,8 +36,9 @@ var PDFLive = (function(){
     if(!code){ _role = null; return; }
     _sessionCode = code;
 
-    // PDF blob을 Storage에 업로드
-    _uploadCurrentPdf(code);
+    // PDF blob을 Storage에 업로드 (await로 완료 대기)
+    if(typeof toast === 'function') toast('PDF 업로드 중...');
+    await _uploadCurrentPdf(code);
 
     // 현재 페이지 전송
     var curPage = PDFViewer.getCurrentPage() || 1;
@@ -52,7 +52,7 @@ var PDFLive = (function(){
 
     // 패널 갱신
     renderPanel();
-
+    if(typeof toast === 'function') toast('라이브 시작! 코드: ' + code);
     console.log('[PDFLive] 발표 시작, 코드:', code);
   }
 
@@ -60,7 +60,6 @@ var PDFLive = (function(){
     try {
       var pdfId = PDFViewer.getCurrentPdfId();
       if(!pdfId) return;
-      // IDBStore에서 blob 조회
       if(typeof IDBStore === 'undefined') return;
       await IDBStore.open();
       var rec = await IDBStore.loadFile(pdfId);
@@ -157,7 +156,8 @@ var PDFLive = (function(){
       return;
     }
     if(data.status === 'ended'){
-      if(typeof toast === 'function') toast('이미 종료된 강의입니다.');
+      // 종료된 세션 → 재생 모드로 열기
+      _openReplay(code, data);
       return;
     }
 
@@ -165,7 +165,11 @@ var PDFLive = (function(){
     _sessionCode = code;
 
     // PDF 다운로드 및 열기
-    await _downloadAndOpenPdf(code, data.pdfName);
+    var opened = await _downloadAndOpenPdf(code, data.pdfName);
+    if(!opened){
+      _role = null; _sessionCode = null;
+      return;
+    }
 
     // 시청자 수 증가
     _liveIncrementViewerCount(code);
@@ -177,36 +181,66 @@ var PDFLive = (function(){
     _showLiveIndicator();
 
     renderPanel();
-    if(typeof toast === 'function') toast(data.ownerName + '님의 강의에 참가합니다.');
+    if(typeof toast === 'function') toast((data.ownerName || '발표자') + '님의 강의에 참가합니다.');
   }
 
   async function _downloadAndOpenPdf(code, pdfName){
     try {
       if(typeof toast === 'function') toast('PDF 다운로드 중...');
-      var url = await _liveGetSessionPdfUrl(code);
-      if(!url){
-        toast('PDF를 다운로드할 수 없습니다.');
-        return;
+
+      // PDF URL 대기 (업로드 진행 중일 수 있음)
+      var url = null;
+      for(var attempt = 0; attempt < 10; attempt++){
+        url = await _liveGetSessionPdfUrl(code);
+        if(url) break;
+        await new Promise(function(r){ setTimeout(r, 1500); });
       }
-      // fetch로 blob 다운로드
+      if(!url){
+        if(typeof toast === 'function') toast('PDF를 다운로드할 수 없습니다.');
+        return false;
+      }
+
+      // fetch → blob
       var resp = await fetch(url);
       var blob = await resp.blob();
-      // IDB에 저장 후 열기
+
+      // IDB 저장
       var pdfId = 'live-' + code;
       if(typeof IDBStore !== 'undefined'){
         await IDBStore.open();
         await IDBStore.saveFile(blob, { id: pdfId, name: pdfName || 'slide.pdf', type: 'application/pdf' });
       }
-      if(typeof PDFViewer !== 'undefined'){
-        // 먼저 PDF 패널 보이기
-        if(typeof PDFPanel !== 'undefined' && typeof PDFPanel.show === 'function'){
-          PDFPanel.show();
-        }
-        await PDFViewer.open(pdfId);
-      }
+
+      // PDF 패널 열기 + 뷰어에 표시
+      _showPdfInPanel(pdfId, pdfName || 'LIVE');
+      return true;
     } catch(e){
       console.error('[PDFLive] PDF 다운로드 실패:', e);
       if(typeof toast === 'function') toast('PDF 다운로드 실패');
+      return false;
+    }
+  }
+
+  // PDF 패널을 열고 뷰어에 PDF 표시
+  function _showPdfInPanel(pdfId, displayName){
+    // 1) PDF 패널 열기
+    if(typeof PDFPanel !== 'undefined'){
+      PDFPanel.open();
+      // 2) 뷰어 뷰 직접 활성화
+      var libView = document.getElementById('pdfLibraryView');
+      var viewerView = document.getElementById('pdfViewerView');
+      if(libView) libView.classList.add('pdf-view-hide');
+      if(viewerView) viewerView.classList.add('pdf-view-active');
+      // 탭바 숨김 (라이브용 단독 뷰)
+      var tabBar = document.getElementById('pdfTabBar');
+      if(tabBar) tabBar.style.display = 'none';
+      // 제목 변경
+      var title = document.querySelector('.pdf-panel-title');
+      if(title) title.textContent = displayName;
+    }
+    // 3) PDFViewer로 열기
+    if(typeof PDFViewer !== 'undefined'){
+      PDFViewer.open(pdfId);
     }
   }
 
@@ -215,7 +249,6 @@ var PDFLive = (function(){
     _unsubscribe = _liveListenSession(code, {
       onPageChange: function(page){
         if(_role !== 'viewer') return;
-        // 원본 goToPage 사용 (훅 없는 버전)
         if(typeof PDFViewer !== 'undefined') PDFViewer.goToPage(page);
       },
       onStrokesUpdate: function(strokes){
@@ -241,15 +274,14 @@ var PDFLive = (function(){
     if(_unsubscribe){ _unsubscribe(); _unsubscribe = null; }
     _hideLiveIndicator();
     _removeLaserPointer();
-    _clearAllLiveLayers();
     if(_role === 'viewer' && _sessionCode){
       _liveDecrementViewerCount(_sessionCode);
     }
+    // 스트로크는 유지 (종료 후에도 계속 보임)
     _role = null;
     _sessionCode = null;
-    _viewerStrokes = {};
     renderPanel();
-    if(typeof toast === 'function') toast('강의가 종료되었습니다.');
+    if(typeof toast === 'function') toast('강의가 종료되었습니다. 필기 내용은 유지됩니다.');
   }
 
   async function leaveSession(){
@@ -267,7 +299,51 @@ var PDFLive = (function(){
   }
 
   // ═══════════════════════════════════════════
-  //  라이브 스트로크 렌더링 (시청자)
+  //  세션 재생 (종료된 세션 열기)
+  // ═══════════════════════════════════════════
+  async function _openReplay(code, data){
+    _role = 'replay';
+    _sessionCode = code;
+    _viewerStrokes = data.strokes || {};
+
+    // PDF 다운로드
+    var opened = await _downloadAndOpenPdf(code, data.pdfName || 'slide');
+    if(!opened){
+      _role = null; _sessionCode = null;
+      return;
+    }
+
+    // 스트로크 렌더링 (페이지 이동 시마다)
+    _renderViewerStrokes();
+
+    // 페이지 이동 시 스트로크 다시 렌더
+    if(typeof EventBus !== 'undefined'){
+      EventBus.on('pdf:pageChanged', _onReplayPageChange);
+    }
+
+    renderPanel();
+    var dateStr = _formatDate(data.createdAt);
+    if(typeof toast === 'function') toast(dateStr + ' 강의 기록을 불러왔습니다.');
+  }
+
+  function _onReplayPageChange(){
+    if(_role === 'replay') _renderViewerStrokes();
+  }
+
+  function closeReplay(){
+    if(_role !== 'replay') return;
+    _clearAllLiveLayers();
+    if(typeof EventBus !== 'undefined'){
+      EventBus.off('pdf:pageChanged', _onReplayPageChange);
+    }
+    _role = null;
+    _sessionCode = null;
+    _viewerStrokes = {};
+    renderPanel();
+  }
+
+  // ═══════════════════════════════════════════
+  //  라이브 스트로크 렌더링 (시청자 + 재생)
   // ═══════════════════════════════════════════
   function _getOrCreateLiveLayer(pageNum){
     var wrap = document.getElementById('pdf-page-' + pageNum);
@@ -283,7 +359,6 @@ var PDFLive = (function(){
   }
 
   function _renderViewerStrokes(){
-    // 현재 보이는 페이지들에 대해 스트로크 렌더
     var curPage = (typeof PDFViewer !== 'undefined') ? PDFViewer.getCurrentPage() : 1;
     var pages = [curPage];
     if(curPage > 1) pages.push(curPage - 1);
@@ -310,7 +385,6 @@ var PDFLive = (function(){
   }
 
   function _renderLiveStrokePreview(data){
-    // 이전 프리뷰 제거
     document.querySelectorAll('.pdf-live-preview-path').forEach(function(el){ el.remove(); });
     if(!data || !data.points || data.points.length < 2) return;
 
@@ -339,15 +413,9 @@ var PDFLive = (function(){
   //  레이저 포인터
   // ═══════════════════════════════════════════
   function _renderLaserPointer(pos){
-    if(!pos){
-      _removeLaserPointer();
-      return;
-    }
+    if(!pos){ _removeLaserPointer(); return; }
     var wrap = document.getElementById('pdf-page-' + pos.pageNum);
-    if(!wrap){
-      _removeLaserPointer();
-      return;
-    }
+    if(!wrap){ _removeLaserPointer(); return; }
     if(!_laserEl){
       _laserEl = document.createElement('div');
       _laserEl.className = 'pdf-laser-pointer';
@@ -359,9 +427,7 @@ var PDFLive = (function(){
   }
 
   function _removeLaserPointer(){
-    if(_laserEl && _laserEl.parentElement){
-      _laserEl.remove();
-    }
+    if(_laserEl && _laserEl.parentElement) _laserEl.remove();
     _laserEl = null;
   }
 
@@ -379,15 +445,11 @@ var PDFLive = (function(){
     _liveIndicator.className = 'live-indicator';
     _liveIndicator.innerHTML = '<span class="live-dot"></span> LIVE';
     var toolbar = document.getElementById('pdfToolbar');
-    if(toolbar){
-      toolbar.appendChild(_liveIndicator);
-    }
+    if(toolbar) toolbar.appendChild(_liveIndicator);
   }
 
   function _hideLiveIndicator(){
-    if(_liveIndicator && _liveIndicator.parentElement){
-      _liveIndicator.remove();
-    }
+    if(_liveIndicator && _liveIndicator.parentElement) _liveIndicator.remove();
     _liveIndicator = null;
   }
 
@@ -397,24 +459,19 @@ var PDFLive = (function(){
   function renderPanel(){
     var body = document.getElementById('liveSpBody');
     if(!body) return;
-
     body.innerHTML = '';
     body.className = 'live-panel-body';
 
-    // 세션 활성 상태
-    if(_role === 'presenter'){
-      _renderPresenterPanel(body);
-    } else if(_role === 'viewer'){
-      _renderViewerPanel(body);
-    } else {
-      _renderIdlePanel(body);
-    }
+    if(_role === 'presenter') _renderPresenterPanel(body);
+    else if(_role === 'viewer') _renderViewerPanel(body);
+    else if(_role === 'replay') _renderReplayPanel(body);
+    else _renderIdlePanel(body);
   }
 
   function _renderIdlePanel(body){
     var html = '';
 
-    // 라이브 시작 버튼 (PDF 열려있을 때만)
+    // 라이브 시작 버튼
     var pdfActive = (typeof PDFViewer !== 'undefined' && PDFViewer.isViewerActive());
     if(pdfActive){
       html += '<button class="live-btn live-btn-start" onclick="PDFLive.startPresenting()">'
@@ -427,7 +484,7 @@ var PDFLive = (function(){
 
     // 코드 입력 참가
     html += '<div class="live-join-section">'
-      + '<label class="live-label">코드 입력</label>'
+      + '<label class="live-label">코드로 참가</label>'
       + '<div class="live-join-row">'
       + '<input class="live-code-input" id="liveCodeInput" placeholder="ABC123" maxlength="6" '
       + 'onkeydown="if(event.key===\'Enter\')PDFLive.joinFromInput()">'
@@ -435,48 +492,129 @@ var PDFLive = (function(){
       + '<i class="fa fa-sign-in-alt"></i> 참가</button>'
       + '</div></div>';
 
+    html += '<div class="live-divider"></div>';
+
+    // 지난 강의 기록 섹션
+    html += '<div class="live-history-section">'
+      + '<label class="live-label"><i class="fa fa-clock-rotate-left"></i> 지난 강의 기록</label>'
+      + '<div id="liveHistoryList" class="live-history-list">'
+      + '<div class="live-hint"><i class="fa fa-spinner fa-spin"></i> 불러오는 중...</div>'
+      + '</div></div>';
+
     body.innerHTML = html;
+
+    // 비동기 세션 목록 로드
+    _loadSessionHistory();
   }
 
   function _renderPresenterPanel(body){
-    var html = '';
-    html += '<div class="live-status">'
-      + '<span class="live-dot"></span>'
-      + '<span class="live-status-text">라이브 중</span>'
-      + '</div>';
-
-    html += '<div class="live-code-display">' + _sessionCode + '</div>';
-
-    html += '<div class="live-actions">'
+    var html = '<div class="live-status"><span class="live-dot"></span>'
+      + '<span class="live-status-text">라이브 중</span></div>'
+      + '<div class="live-code-display">' + _sessionCode + '</div>'
+      + '<div class="live-actions">'
       + '<button class="live-btn live-btn-copy" onclick="PDFLive.copyCode()">'
       + '<i class="fa fa-copy"></i> 코드 복사</button>'
       + '<button class="live-btn live-btn-link" onclick="PDFLive.copyLink()">'
-      + '<i class="fa fa-link"></i> 링크 복사</button>'
-      + '</div>';
-
-    html += '<div class="live-divider"></div>';
-
-    html += '<button class="live-btn live-btn-end" onclick="PDFLive.endPresenting()">'
+      + '<i class="fa fa-link"></i> 링크 복사</button></div>'
+      + '<div class="live-divider"></div>'
+      + '<button class="live-btn live-btn-end" onclick="PDFLive.endPresenting()">'
       + '<i class="fa fa-stop"></i> 강의 종료</button>';
-
     body.innerHTML = html;
   }
 
   function _renderViewerPanel(body){
-    var html = '';
-    html += '<div class="live-status">'
-      + '<span class="live-dot"></span>'
-      + '<span class="live-status-text">시청 중</span>'
-      + '</div>';
-
-    html += '<div class="live-code-display">' + _sessionCode + '</div>';
-
-    html += '<div class="live-divider"></div>';
-
-    html += '<button class="live-btn live-btn-leave" onclick="PDFLive.leaveSession()">'
+    var html = '<div class="live-status"><span class="live-dot"></span>'
+      + '<span class="live-status-text">시청 중</span></div>'
+      + '<div class="live-code-display">' + _sessionCode + '</div>'
+      + '<div class="live-divider"></div>'
+      + '<button class="live-btn live-btn-leave" onclick="PDFLive.leaveSession()">'
       + '<i class="fa fa-sign-out-alt"></i> 나가기</button>';
-
     body.innerHTML = html;
+  }
+
+  function _renderReplayPanel(body){
+    var html = '<div class="live-status">'
+      + '<i class="fa fa-play-circle" style="color:var(--accent,#6366f1)"></i>'
+      + '<span class="live-status-text" style="color:var(--text-1,#eee)">기록 재생 중</span></div>'
+      + '<div class="live-divider"></div>'
+      + '<button class="live-btn live-btn-leave" onclick="PDFLive.closeReplay()">'
+      + '<i class="fa fa-times"></i> 닫기</button>';
+    body.innerHTML = html;
+  }
+
+  // ── 세션 히스토리 로드 ──
+  async function _loadSessionHistory(){
+    var listEl = document.getElementById('liveHistoryList');
+    if(!listEl) return;
+
+    if(typeof _liveListSessions !== 'function'){
+      listEl.innerHTML = '<div class="live-hint">로그인 후 이용 가능합니다.</div>';
+      return;
+    }
+
+    try {
+      var sessions = await _liveListSessions();
+      if(!sessions || sessions.length === 0){
+        listEl.innerHTML = '<div class="live-hint">저장된 강의가 없습니다.</div>';
+        return;
+      }
+
+      var html = '';
+      sessions.forEach(function(s){
+        var dateStr = _formatDate(s.createdAt);
+        var statusBadge = s.status === 'live'
+          ? '<span class="live-history-badge live-history-live">LIVE</span>'
+          : '<span class="live-history-badge live-history-ended">종료</span>';
+        var pages = s.totalPages || 0;
+        var strokeCount = 0;
+        if(s.strokes){
+          Object.keys(s.strokes).forEach(function(k){
+            strokeCount += (s.strokes[k] || []).length;
+          });
+        }
+
+        html += '<div class="live-history-item" onclick="PDFLive.openSession(\'' + s.code + '\')">'
+          + '<div class="live-history-top">'
+          + statusBadge
+          + '<span class="live-history-date">' + dateStr + '</span>'
+          + '<button class="live-history-del" onclick="event.stopPropagation();PDFLive.deleteSession(\'' + s.code + '\')" title="삭제">'
+          + '<i class="fa fa-trash"></i></button>'
+          + '</div>'
+          + '<div class="live-history-info">'
+          + '<span><i class="fa fa-file-pdf"></i> ' + (s.pdfName || 'PDF') + '</span>'
+          + '<span class="live-history-meta">' + pages + '페이지'
+          + (strokeCount > 0 ? ' · 필기 ' + strokeCount + '개' : '') + '</span>'
+          + '</div></div>';
+      });
+      listEl.innerHTML = html;
+    } catch(e){
+      console.error('[PDFLive] 세션 목록 로드 실패:', e);
+      listEl.innerHTML = '<div class="live-hint">목록 로드 실패</div>';
+    }
+  }
+
+  // ── 세션 열기 (live → 참가, ended → 재생) ──
+  async function openSession(code){
+    if(_role) return;
+    var data = await _liveJoinSession(code);
+    if(!data){
+      if(typeof toast === 'function') toast('세션을 찾을 수 없습니다.');
+      return;
+    }
+    if(data.status === 'live'){
+      joinSession(code);
+    } else {
+      _openReplay(code, data);
+    }
+  }
+
+  // ── 세션 삭제 ──
+  async function deleteSessionItem(code){
+    if(!confirm('이 강의 기록을 삭제하시겠습니까?')) return;
+    await _liveDeleteSession(code);
+    // 리스트 갱신
+    _loadSessionHistory();
+    if(typeof toast === 'function') toast('삭제됨');
   }
 
   // ── 헬퍼 ──
@@ -502,16 +640,25 @@ var PDFLive = (function(){
     });
   }
 
+  function _formatDate(ts){
+    if(!ts) return '';
+    var d = new Date(ts);
+    var mm = d.getMonth() + 1;
+    var dd = d.getDate();
+    var hh = d.getHours();
+    var mi = String(d.getMinutes()).padStart(2, '0');
+    return mm + '/' + dd + ' ' + hh + ':' + mi;
+  }
+
   // URL 파라미터로 직접 참가
   function handleLiveParam(code){
     if(!code) return;
-    // 로그인 후 Firebase 모듈 준비 대기
     var attempts = 0;
     var timer = setInterval(function(){
       attempts++;
       if(typeof _liveJoinSession === 'function'){
         clearInterval(timer);
-        joinSession(code);
+        openSession(code);
       } else if(attempts > 20){
         clearInterval(timer);
         if(typeof toast === 'function') toast('라이브 모듈 로딩 실패');
@@ -527,6 +674,9 @@ var PDFLive = (function(){
     endPresenting: endPresenting,
     joinSession: joinSession,
     leaveSession: leaveSession,
+    closeReplay: closeReplay,
+    openSession: openSession,
+    deleteSession: deleteSessionItem,
     onStrokeComplete: onStrokeComplete,
     onStrokeProgress: onStrokeProgress,
     onPointerMove: onPointerMove,

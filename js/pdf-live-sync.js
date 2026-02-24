@@ -1,5 +1,6 @@
 // pdf-live-sync.js — ES module: Firestore/Storage 라이브 강의 세션 동기화
-import { doc, getDoc, setDoc, updateDoc, deleteDoc, onSnapshot, increment }
+import { doc, getDoc, setDoc, updateDoc, deleteDoc, onSnapshot, increment,
+  collection, query, where, orderBy, getDocs, limit }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 import { ref, uploadBytes, getDownloadURL }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js';
@@ -245,6 +246,36 @@ export async function decrementViewerCount(code){
   } catch(e){ console.error('[LiveSync] decrementViewerCount:', e); }
 }
 
+// ── 종료된 세션 목록 조회 (내가 만든 세션 + 내가 참여한 세션) ──
+export async function listSessions(){
+  if(!_db || !_uid) return [];
+  try {
+    const q = query(
+      collection(_db, 'sessions'),
+      where('ownerUid', '==', _uid),
+      orderBy('createdAt', 'desc'),
+      limit(50)
+    );
+    const snap = await getDocs(q);
+    const results = [];
+    snap.forEach(function(d){
+      results.push({ code: d.id, ...d.data() });
+    });
+    return results;
+  } catch(e){
+    console.error('[LiveSync] listSessions:', e);
+    return [];
+  }
+}
+
+// ── 세션 삭제 ──
+export async function deleteSession(code){
+  if(!_db || !_uid) return;
+  try {
+    await deleteDoc(doc(_db, 'sessions', code));
+  } catch(e){ console.error('[LiveSync] deleteSession:', e); }
+}
+
 // ── window에 노출 (IIFE pdf-live.js에서 호출) ──
 window._liveCreateSession       = createSession;
 window._liveJoinSession         = joinSession;
@@ -261,3 +292,5 @@ window._liveEndSession          = endSession;
 window._liveListenSession       = listenSession;
 window._liveIncrementViewerCount = incrementViewerCount;
 window._liveDecrementViewerCount = decrementViewerCount;
+window._liveListSessions         = listSessions;
+window._liveDeleteSession        = deleteSession;
