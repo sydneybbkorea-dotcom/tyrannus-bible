@@ -117,17 +117,26 @@ function _stpReset(){
   _stpResetText();
 }
 
-// ── 배경 이미지 적용 (body.style.background 인라인) ──
-function _stpApplyBgImage(dataUrl){
+// ── 배경 이미지 적용 (body.style 인라인) ──
+function _stpApplyBgImage(imgUrl){
   var body = document.body;
-  if(!dataUrl){
-    body.style.background = '';   // 인라인 제거 → CSS var(--body-gradient) 복원
+  if(!imgUrl){
+    body.style.backgroundImage = '';
+    body.style.backgroundSize = '';
+    body.style.backgroundPosition = '';
+    body.style.backgroundRepeat = '';
+    body.style.backgroundAttachment = '';
     body.classList.remove('has-bg-image');
+    console.log('[BG] 배경 제거됨');
     return;
   }
-  // 인라인 background로 직접 설정 — CSS 변수/클래스 우선순위 문제 없음
-  body.style.background = 'url("' + dataUrl + '") center / cover no-repeat fixed';
+  body.style.backgroundImage = 'url("' + imgUrl + '")';
+  body.style.backgroundSize = 'cover';
+  body.style.backgroundPosition = 'center';
+  body.style.backgroundRepeat = 'no-repeat';
+  body.style.backgroundAttachment = 'fixed';
   body.classList.add('has-bg-image');
+  console.log('[BG] 배경 적용됨, URL 길이:', imgUrl.length);
 }
 
 function _stpRestoreOnLoad(){

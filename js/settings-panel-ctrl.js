@@ -34,7 +34,7 @@ function _stpChange(id, val, unit){
 }
 
 // ── 배경 이미지 핸들러 ──
-var _stpBgPending = null; // 선택 후 적용 전 임시 dataUrl
+var _stpBgPending = null;
 
 function _stpPickBgImage(){
   var inp = document.createElement('input');
@@ -46,46 +46,52 @@ function _stpPickBgImage(){
       alert('이미지 크기는 10MB 이하로 선택해주세요.');
       return;
     }
-    var reader = new FileReader();
-    reader.onload = function(){
-      _stpBgPending = reader.result;
-      // 미리보기 표시
-      var prev = document.getElementById('stpBgPreview');
-      if(prev){ prev.style.display = ''; prev.style.backgroundImage = 'url("' + _stpBgPending + '")'; }
-      // 적용 버튼 표시
-      var btn = document.getElementById('stpBgApplyBtn');
-      if(btn) btn.style.display = '';
-    };
-    reader.readAsDataURL(file);
+    // Blob URL 생성 (base64 변환 없이 즉시 사용 가능)
+    _stpBgPending = URL.createObjectURL(file);
+    _stpBgPendingFile = file;
+    // 미리보기 표시
+    var prev = document.getElementById('stpBgPreview');
+    if(prev){ prev.style.display = ''; prev.style.backgroundImage = 'url("' + _stpBgPending + '")'; }
+    // 적용 버튼 표시
+    var btn = document.getElementById('stpBgApplyBtn');
+    if(btn) btn.style.display = '';
   };
   inp.click();
 }
 
 function _stpApplyBgImageBtn(){
-  var dataUrl = _stpBgPending;
-  if(!dataUrl) return;
-  IDBStore.open().then(function(){
-    return IDBStore.put('settings', { key: 'bg-image-data', value: dataUrl });
-  }).then(function(){
-    localStorage.setItem('kjb2-bg-image-enabled', '1');
-    _stpApplyBgImage(dataUrl);
-    _stpBgPending = null;
-    renderSettingsPanel();
-  });
+  if(!_stpBgPending) return;
+  // 1) 바로 Blob URL로 적용 (즉시 표시)
+  _stpApplyBgImage(_stpBgPending);
+  localStorage.setItem('kjb2-bg-image-enabled', '1');
+
+  // 2) 백그라운드로 base64 변환 + IDB 저장 (새로고침 시 복원용)
+  var file = _stpBgPendingFile;
+  if(file){
+    var reader = new FileReader();
+    reader.onload = function(){
+      IDBStore.open().then(function(){
+        return IDBStore.put('settings', { key: 'bg-image-data', value: reader.result });
+      }).catch(function(e){ console.warn('[BG] IDB save failed:', e); });
+    };
+    reader.readAsDataURL(file);
+  }
+  _stpBgPending = null;
+  _stpBgPendingFile = null;
+  renderSettingsPanel();
 }
 
 function _stpRemoveBgImage(){
   _stpBgPending = null;
+  _stpBgPendingFile = null;
+  _stpApplyBgImage(null);
+  localStorage.removeItem('kjb2-bg-image-enabled');
   IDBStore.open().then(function(){
     return IDBStore.del('settings', 'bg-image-data');
-  }).then(function(){
-    localStorage.removeItem('kjb2-bg-image-enabled');
-    _stpApplyBgImage(null);
-    renderSettingsPanel();
-  });
+  }).catch(function(e){ console.warn('[BG] IDB delete failed:', e); });
+  renderSettingsPanel();
 }
 
-// 미리보기 썸네일 로드
 function _stpLoadBgPreview(){
   var previewEl = document.getElementById('stpBgPreview');
   if(!previewEl) return;
