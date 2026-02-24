@@ -1,7 +1,7 @@
 // sw.js — Service Worker for offline support
-var CACHE_NAME = 'tyrannus-v8';
-var SHELL_CACHE = 'tyrannus-shell-v8';
-var DATA_CACHE = 'tyrannus-data-v8';
+var CACHE_NAME = 'tyrannus-v9';
+var SHELL_CACHE = 'tyrannus-shell-v9';
+var DATA_CACHE = 'tyrannus-data-v9';
 
 // App shell files — cache on install (상대 경로 — GitHub Pages 호환)
 var SHELL_FILES = [
