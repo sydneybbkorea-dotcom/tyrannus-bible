@@ -14,7 +14,7 @@ var PDFTools = (function(){
   var _fontSize = 16;
   var _strokeWidth = 3;       // 펜 굵기 (1-10)
   var _opacity = 1.0;          // 불투명도 (0.1-1.0)
-  var _penType = 'ballpen';    // 'ballpen' | 'highlighter' | 'pencil'
+  var _penType = 'ballpen';    // 'ballpen' | 'pencil'
   var _penFlyoutExpanded = false; // 고급 옵션 확장 여부
   var _penFlyoutPos = null;    // 드래그 후 저장된 위치 {left, top}
 
@@ -145,7 +145,6 @@ var PDFTools = (function(){
 
     var penTypes = [
       { id: 'ballpen',      icon: 'fa-pen',        label: '볼펜' },
-      { id: 'highlighter',  icon: 'fa-highlighter', label: '형광펜' },
       { id: 'pencil',       icon: 'fa-pencil',     label: '연필' }
     ];
     penTypes.forEach(function(pt){
@@ -156,8 +155,7 @@ var PDFTools = (function(){
       btn.addEventListener('click', function(e){
         e.stopPropagation();
         _penType = pt.id;
-        if(pt.id === 'highlighter'){ _opacity = 0.35; }
-        else if(pt.id === 'pencil'){ _opacity = 0.7; }
+        if(pt.id === 'pencil'){ _opacity = 0.7; }
         else { _opacity = 1.0; }
         // 현재 위치 저장 후 리빌드
         _penFlyoutPos = { left: parseInt(flyout.style.left), top: parseInt(flyout.style.top) };
