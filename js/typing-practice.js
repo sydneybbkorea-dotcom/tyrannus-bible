@@ -537,37 +537,37 @@ var _tpKeyRow = {};
 function _tpPlayKeySound(code){
   var row = _tpKeyRow[code] || 'a';
   if(row === 'q' || row === 'num'){
-    _tpPlayBuf(_tpBufs.keyQ, 0.97 + Math.random() * 0.06, 0.8);
+    _tpPlayBuf(_tpBufs.keyQ, 0.97 + Math.random() * 0.06, 2.4);
   } else if(row === 'z'){
-    _tpPlayBuf(_tpBufs.keyZ, 0.97 + Math.random() * 0.06, 0.8);
+    _tpPlayBuf(_tpBufs.keyZ, 0.97 + Math.random() * 0.06, 2.4);
   } else {
-    _tpPlayBuf(_tpBufs.keyA, 0.97 + Math.random() * 0.06, 0.8);
+    _tpPlayBuf(_tpBufs.keyA, 0.97 + Math.random() * 0.06, 2.4);
   }
 }
 
 /* 오타: 벨 사운드 */
 function _tpPlayErrorSound(){
-  _tpPlayBuf(_tpBufs.bell, 0.7, 0.06);
+  _tpPlayBuf(_tpBufs.bell, 0.7, 0.12);
 }
 
 /* 스페이스바 */
 function _tpPlaySpaceSound(){
-  _tpPlayBuf(_tpBufs.space, 1.0, 0.8);
+  _tpPlayBuf(_tpBufs.space, 1.0, 2.4);
 }
 
 /* 백스페이스 */
 function _tpPlayBackSound(){
-  _tpPlayBuf(_tpBufs.back, 1.0, 0.8);
+  _tpPlayBuf(_tpBufs.back, 1.0, 2.4);
 }
 
 /* 엔터키 */
 function _tpPlayLeverSound(){
-  _tpPlayBuf(_tpBufs.enter, 1.0, 0.8);
+  _tpPlayBuf(_tpBufs.enter, 1.0, 1.6);
 }
 
 /* 완성 사운드 */
 function _tpPlayFinishSound(){
-  _tpPlayBuf(_tpBufs.ending, 1.0, 1.0);
+  _tpPlayBuf(_tpBufs.ending, 1.0, 2.0);
 }
 
 /* ═══ Punctuation skip helper ═══ */
@@ -2373,13 +2373,17 @@ function _tpRenderBody(){
       '<span>Ctrl+Enter: '+_tpT('nextVerse')+'</span>' +
     '</div>';
 
-  // tp-chars 클릭 시 숨겨진 입력창에 포커스
-  var charsEl = document.getElementById('tpChars');
-  if(charsEl){
-    charsEl.addEventListener('click', function(){
+  // 타자연습 화면 아무 데나 클릭해도 입력창 포커스
+  var tpOverlay = document.getElementById('typingOverlay');
+  if(tpOverlay){
+    tpOverlay.addEventListener('click', function(ev){
+      if(ev.target.tagName==='BUTTON'||ev.target.tagName==='SELECT'||ev.target.tagName==='INPUT') return;
       var ta = document.getElementById('tpInput');
       if(ta) ta.focus();
     });
+  }
+  var charsEl = document.getElementById('tpChars');
+  if(charsEl){
     // 초기 커서 위치 설정
     requestAnimationFrame(function(){
       var spans = charsEl.querySelectorAll('.tp-char');

@@ -14,6 +14,7 @@ export function startRealtimeSync(db, uid){
     if(d.bk) S.bk=new Set(d.bk); if(d.folders) S.folders=d.folders;
     if(d.openFolders) S.openFolders=new Set(d.openFolders);
     if(d.hlTopics) S.hlTopics=d.hlTopics; if(d.activeHlTopic) S.activeHlTopic=d.activeHlTopic;
+    if(d.sharedByMe) S.sharedByMe=d.sharedByMe; if(d.sharedWithMe) S.sharedWithMe=d.sharedWithMe;
     window.renderAll?.(); window._setSyncStatus?.('synced');
   });
   _unsub2 = onSnapshot(doc(db,'users',uid,'data','notes'), snap=>{

@@ -1,0 +1,19 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // 찬양 파일 (mp3, sheet) — 누구나 읽기 가능
+    match /hymns/{allPaths=**} {
+      allow read;
+      allow write: if request.auth != null;
+    }
+    // 라이브 세션 PDF — 인증된 사용자 읽기/쓰기
+    match /sessions/{code}/{allPaths=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null;
+    }
+    // 기타 파일 — 인증된 사용자만
+    match /{allPaths=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}

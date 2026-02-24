@@ -2,6 +2,7 @@
 var _stpView = 'main';
 function _stpGoTheme(){ _stpView='theme'; renderSettingsPanel(); }
 function _stpGoTopics(){ _stpView='topics'; renderSettingsPanel(); }
+function _stpGoSharing(){ _stpView='sharing'; renderSettingsPanel(); }
 function _stpGoMain(){ _stpView='main'; renderSettingsPanel(); }
 
 function renderSettingsPanel(){
@@ -10,7 +11,21 @@ function renderSettingsPanel(){
   var v = _getSettingsValues();
   var h = '<div class="stp-wrap">';
 
-  if(_stpView === 'topics'){
+  if(_stpView === 'sharing'){
+    // ━━━━━━ 공유 관리 서브페이지 ━━━━━━
+    h += '<div class="stp-subpage-header" onclick="_stpGoMain()">';
+    h += '<i class="fa fa-arrow-left"></i>';
+    h += '<span>공유 관리</span>';
+    h += '</div>';
+    h += '<div class="stp-section">';
+    h += '<div class="share-section-title"><i class="fa fa-upload"></i> 내가 공유 중</div>';
+    h += typeof _shareRenderMyShares === 'function' ? _shareRenderMyShares() : '<div class="share-empty">로딩 중...</div>';
+    h += '<hr class="share-divider">';
+    h += '<div class="share-section-title"><i class="fa fa-download"></i> 나에게 공유된</div>';
+    h += typeof _shareRenderSharedWithMe === 'function' ? _shareRenderSharedWithMe() : '<div class="share-empty">로딩 중...</div>';
+    h += '</div>';
+
+  } else if(_stpView === 'topics'){
     // ━━━━━━ 주제별 하이라이트 서브페이지 ━━━━━━
     h += '<div class="stp-subpage-header" onclick="_stpGoMain()">';
     h += '<i class="fa fa-arrow-left"></i>';
@@ -196,6 +211,18 @@ function renderSettingsPanel(){
     h += '</div>';
     h += '<i class="fa fa-chevron-right stp-menu-arrow"></i>';
     h += '</div>';
+
+    // 메뉴 카드: 공유 관리 (로그인 시만)
+    if(window._firebaseUid){
+      h += '<div class="stp-menu-item" onclick="_stpGoSharing()">';
+      h += '<div class="stp-menu-icon"><i class="fa fa-share-alt"></i></div>';
+      h += '<div class="stp-menu-text">';
+      h += '<div class="stp-menu-title">공유 관리</div>';
+      h += '<div class="stp-menu-desc">폴더·하이라이트 공유, 수신 관리</div>';
+      h += '</div>';
+      h += '<i class="fa fa-chevron-right stp-menu-arrow"></i>';
+      h += '</div>';
+    }
 
 
     // ━━━━━━ 섹션 3: 일반 ━━━━━━

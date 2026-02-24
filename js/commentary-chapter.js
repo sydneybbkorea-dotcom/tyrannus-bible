@@ -1,4 +1,4 @@
-// commentary-chapter.js — chapter-level commentary rendering (updateChapterCommentary)
+// commentary-chapter.js — chapter-level commentary rendering (card layout)
 function updateChapterCommentary(){
   var el = document.getElementById('commentaryContent');
   if(!el) return;
@@ -7,7 +7,7 @@ function updateChapterCommentary(){
   if(!verses){ el.innerHTML='<div class="comm-empty"><div class="comm-empty-icon"><i class="fa fa-scroll"></i></div><div class="comm-empty-msg">이 장에 대한 데이터가 없습니다</div></div>'; return; }
 
   var h = '<div class="cc-wrap">';
-  h += '<div class="cc-title"><i class="fa fa-book-open"></i> '+S.book+' '+S.ch+'장</div>';
+  h += '<div class="cc-title-bar"><i class="fa fa-book-open"></i> '+S.book+' '+S.ch+'장</div>';
 
   var totalVerses = Object.keys(verses).length;
   var hasAny = false;
@@ -43,14 +43,14 @@ function updateChapterCommentary(){
     var plainText = verseText.replace(/<[^>]+>/g, '');
     var isSel = S.selV === vn;
 
-    h += '<div class="cc-verse'+(isSel?' cc-verse-sel':'')+'" data-v="'+vn+'">';
+    h += '<div class="cc-card'+(isSel?' cc-card-sel':'')+'" data-v="'+vn+'">';
+    h += '<div class="cc-card-bar"></div>';
 
-    // 구절 헤더 (클릭으로 구절 선택 + 접힘 토글)
+    // 구절 헤더
     h += '<div class="cc-vhead" onclick="selVerse('+vn+')">';
     h += '<span class="cc-vnum">'+vn+'</span>';
     h += '<span class="cc-vtxt">'+(plainText.length > 70 ? plainText.slice(0,70)+'…' : plainText)+'</span>';
 
-    // 인라인 배지
     var badges = '';
     if(comm) badges += '<span class="cc-badge" title="주석"><i class="fa fa-scroll"></i></span>';
     if(refs.length) badges += '<span class="cc-badge" title="참조"><i class="fa fa-link"></i>'+refs.length+'</span>';
@@ -62,12 +62,10 @@ function updateChapterCommentary(){
     // 내용 영역
     h += '<div class="cc-vbody">';
 
-    // 주석
     if(comm){
       h += '<div class="cc-item cc-item-comm">'+comm+'</div>';
     }
 
-    // 교차 참조
     if(refs.length){
       h += '<div class="cc-item cc-item-refs"><div class="cv-refs">';
       refs.forEach(function(r){
@@ -76,7 +74,6 @@ function updateChapterCommentary(){
       h += '</div></div>';
     }
 
-    // 연결된 노트
     if(linked.length){
       h += '<div class="cc-item cc-item-notes">';
       linked.forEach(function(n){
@@ -85,7 +82,6 @@ function updateChapterCommentary(){
       h += '</div>';
     }
 
-    // 하이라이트 메모
     if(memoList.length){
       memoList.forEach(function(item){
         var cls = item.color.split(' ').find(function(c){return c.startsWith('hl-')})||'hl-y';
@@ -100,7 +96,7 @@ function updateChapterCommentary(){
     }
 
     h += '</div>'; // cc-vbody
-    h += '</div>'; // cc-verse
+    h += '</div>'; // cc-card
   }
 
   if(!hasAny){

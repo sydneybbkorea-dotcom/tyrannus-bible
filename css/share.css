@@ -1,0 +1,366 @@
+/* share.css — 공유 기능 스타일 */
+
+/* ── 공유 다이얼로그 모달 ─────────────────────── */
+#mShare .modal-box,
+#mShareJoin .modal-box {
+  max-width: 380px;
+  text-align: center;
+}
+.share-dlg-label {
+  font-size: 14px;
+  color: var(--text2);
+  margin-bottom: 14px;
+}
+.share-url-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+.share-url-input {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg2);
+  color: var(--text1);
+  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  outline: none;
+}
+.share-url-input:focus {
+  border-color: var(--accent);
+}
+.share-copy-btn {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  font-size: 14px;
+  transition: opacity .15s;
+}
+.share-copy-btn:hover { opacity: .85; }
+.share-info {
+  font-size: 11px;
+  color: var(--text3);
+  margin-bottom: 14px;
+}
+.share-code-label {
+  font-size: 11px;
+  color: var(--text3);
+  margin-bottom: 6px;
+}
+.share-revoke-btn {
+  padding: 8px 16px;
+  border: 1px solid #e74c3c;
+  border-radius: 8px;
+  background: transparent;
+  color: #e74c3c;
+  cursor: pointer;
+  font-size: 13px;
+  transition: all .15s;
+}
+.share-revoke-btn:hover {
+  background: #e74c3c;
+  color: #fff;
+}
+
+/* ── 가입 프롬프트 모달 ──────────────────────── */
+.msj-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--text1);
+}
+.msj-info {
+  font-size: 14px;
+  color: var(--text2);
+  margin-bottom: 6px;
+}
+.msj-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 16px;
+}
+.msj-btns {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+/* ── 설정 → 공유 관리 ────────────────────────── */
+.share-section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text2);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.share-section-title i {
+  font-size: 14px;
+  color: var(--accent);
+}
+.share-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: var(--bg2);
+  margin-bottom: 6px;
+  transition: background .15s;
+}
+.share-item:hover { background: var(--bg3); }
+.share-item-icon {
+  font-size: 14px;
+  color: var(--accent);
+  width: 20px;
+  text-align: center;
+}
+.share-item-name {
+  flex: 1;
+  font-size: 13px;
+  color: var(--text1);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.share-owner {
+  font-size: 11px;
+  color: var(--text3);
+}
+.share-item-btn {
+  padding: 4px 8px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text3);
+  cursor: pointer;
+  font-size: 13px;
+  transition: all .15s;
+}
+.share-item-btn:hover {
+  background: var(--bg3);
+  color: var(--accent);
+}
+.share-item-del:hover { color: #e74c3c; }
+.share-item-leave:hover { color: #e67e22; }
+.share-empty {
+  font-size: 12px;
+  color: var(--text3);
+  text-align: center;
+  padding: 16px 0;
+}
+.share-divider {
+  margin: 16px 0;
+  border: none;
+  border-top: 1px solid var(--border);
+}
+
+/* ── 폴더 트리: 공유 폴더 ────────────────────── */
+.sv-separator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 8px;
+  padding: 0 4px;
+}
+.sv-sep-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+.sv-sep-label {
+  font-size: 10px;
+  color: var(--text3);
+  white-space: nowrap;
+  letter-spacing: .5px;
+}
+.sv-shared-head {
+  position: relative;
+}
+.sv-folder-icon {
+  font-size: 15px;
+  color: #4fc3f7;
+  margin-right: 4px;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 3px rgba(79,195,247,.35));
+}
+[data-theme="light"] .sv-folder-icon { color: #0288d1; filter: none; }
+[data-theme="sepia"] .sv-folder-icon { color: #0277bd; filter: none; }
+.sv-owner-badge {
+  font-size: 10px;
+  color: var(--text3);
+  background: var(--bg3);
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-left: auto;
+}
+.sv-shared-note {
+  cursor: pointer;
+  transition: background .12s;
+}
+.sv-shared-note:hover { background: var(--bg3); }
+.sv-note-icon {
+  font-size: 12px;
+  color: var(--text3);
+  margin-right: 6px;
+}
+.sv-lock-icon {
+  font-size: 9px;
+  color: var(--text3);
+  margin-left: auto;
+  opacity: .5;
+}
+.sv-empty-note {
+  font-size: 11px;
+  color: var(--text3);
+  padding: 4px 0;
+}
+
+/* ── 읽기 전용 배너 ─────────────────────────── */
+.sv-readonly-banner {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+.sv-readonly-banner i { font-size: 11px; }
+
+/* ── 공유 하이라이트 오버레이 ─────────────────── */
+.sv-hl-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-bottom: 2px dashed var(--accent);
+  opacity: .4;
+  border-radius: 3px;
+}
+.sv-hl-overlay[data-color="y"] { background: rgba(255,235,59,.1); border-color: #ffeb3b; }
+.sv-hl-overlay[data-color="g"] { background: rgba(76,175,80,.1); border-color: #4caf50; }
+.sv-hl-overlay[data-color="b"] { background: rgba(33,150,243,.1); border-color: #2196f3; }
+.sv-hl-overlay[data-color="p"] { background: rgba(156,39,176,.1); border-color: #9c27b0; }
+.sv-hl-overlay[data-color="r"] { background: rgba(244,67,54,.1); border-color: #f44336; }
+.sv-hl-overlay[data-color="o"] { background: rgba(255,152,0,.1); border-color: #ff9800; }
+
+/* ── 공유 버튼 (주제 관리) ───────────────────── */
+.ht-share-btn {
+  padding: 2px 6px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text3);
+  cursor: pointer;
+  font-size: 12px;
+  transition: color .15s;
+}
+.ht-share-btn:hover { color: var(--accent); }
+
+/* ── 허용 이메일 관리 섹션 ───────────────────── */
+.share-email-section {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  text-align: left;
+}
+.share-email-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text2);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.share-email-title i {
+  font-size: 13px;
+  color: var(--accent);
+}
+.share-email-list {
+  max-height: 140px;
+  overflow-y: auto;
+  margin-bottom: 8px;
+}
+.share-email-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 8px;
+  background: var(--bg2);
+  border-radius: 6px;
+  margin-bottom: 4px;
+}
+.share-email-text {
+  flex: 1;
+  font-size: 12px;
+  color: var(--text1);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-family: 'JetBrains Mono', monospace;
+}
+.share-email-del {
+  padding: 2px 4px;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text3);
+  cursor: pointer;
+  font-size: 11px;
+  transition: color .15s;
+  flex-shrink: 0;
+}
+.share-email-del:hover { color: #e74c3c; }
+.share-email-empty {
+  font-size: 11px;
+  color: var(--text3);
+  padding: 6px 0;
+  text-align: center;
+}
+.share-email-row {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 6px;
+}
+.share-email-input {
+  flex: 1;
+  padding: 7px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg2);
+  color: var(--text1);
+  font-size: 12px;
+  outline: none;
+}
+.share-email-input:focus { border-color: var(--accent); }
+.share-email-add-btn {
+  padding: 7px 14px;
+  border: none;
+  border-radius: 8px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity .15s;
+}
+.share-email-add-btn:hover { opacity: .85; }
+.share-email-hint {
+  font-size: 10px;
+  color: var(--text3);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}

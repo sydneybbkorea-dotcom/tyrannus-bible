@@ -45,6 +45,8 @@
 <link rel="stylesheet" href="css/pdf-panel.css?v=2">
 <link rel="stylesheet" href="css/pdf-viewer.css?v=5">
 <link rel="stylesheet" href="css/knowledge-graph.css?v=4">
+<link rel="stylesheet" href="css/share.css?v=1">
+<link rel="stylesheet" href="css/pdf-live.css?v=1">
 
 <!-- PDF.js (UMD — sets window.pdfjsLib) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -53,6 +55,8 @@
 <script type="module" src="js/firebase.js"></script>
 <!-- 타자 연습 랭킹 (ES module) -->
 <script type="module" src="js/typing-ranking-firebase.js"></script>
+<!-- 라이브 강의 동기화 (ES module) -->
+<script type="module" src="js/pdf-live-sync.js"></script>
 </head>
 
 <body data-input="mouse">
@@ -143,6 +147,9 @@
           <button class="rail-icon" data-rail="hymns" onclick="toggleRail('hymns')" title="찬양">
             <i class="fa fa-music"></i><span class="rail-label">찬양</span>
           </button>
+          <button class="rail-icon" data-rail="live" onclick="toggleRail('live')" title="라이브 강의">
+            <i class="fa-solid fa-tower-broadcast"></i><span class="rail-label">라이브</span>
+          </button>
         </div>
         <div class="rail-bottom">
           <button class="rail-icon" data-rail="bugreport" onclick="toggleRail('bugreport')" title="버그 리포트">
@@ -231,6 +238,10 @@
               </div>
             </div>
           </div>
+        </div>
+        <div class="sp-section" id="sp-live">
+          <div class="sp-head"><i class="fa fa-tower-broadcast"></i> 라이브 강의</div>
+          <div class="sp-body" id="liveSpBody"></div>
         </div>
       </div>
       <!-- 성경 본문 스크롤 -->
@@ -630,6 +641,50 @@
 </div>
 
 
+<!-- ── 공유 다이얼로그 모달 ── -->
+<div class="modal-bg" id="mShare">
+  <div class="modal-box">
+    <div class="modal-title"><i class="fa fa-link"></i> 공유 링크</div>
+    <div class="share-dlg-label" id="mShareLabel"></div>
+    <div class="share-url-row">
+      <input type="text" class="share-url-input" id="mShareUrl" readonly>
+      <button class="share-copy-btn" onclick="_shareCopyLink()" title="복사"><i class="fa fa-copy"></i></button>
+    </div>
+    <div class="share-info"><i class="fa fa-info-circle"></i> 링크를 아는 로그인 사용자만 열람 가능</div>
+    <div class="share-code-label">코드: <span id="mShareCode"></span></div>
+
+    <!-- 허용 이메일 관리 -->
+    <div class="share-email-section">
+      <div class="share-email-title"><i class="fa fa-user-shield"></i> 허용된 사용자</div>
+      <div class="share-email-list" id="shareEmailList"></div>
+      <div class="share-email-row">
+        <input type="email" class="share-email-input" id="shareEmailInput"
+               placeholder="이메일 입력..." onkeydown="if(event.key==='Enter')_shareAddEmail()">
+        <button class="share-email-add-btn" onclick="_shareAddEmail()">추가</button>
+      </div>
+      <div class="share-email-hint"><i class="fa fa-info-circle"></i> 비어있으면 링크를 아는 모든 로그인 사용자가 접근 가능</div>
+    </div>
+
+    <div class="modal-btns">
+      <button class="share-revoke-btn" onclick="_shareRevokeConfirm(document.getElementById('mShare').dataset.code)"><i class="fa fa-lock-open"></i> 공유 해제</button>
+      <button class="mbtn mbtn-cancel" onclick="closeM('mShare')">닫기</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── 공유 가입 프롬프트 모달 ── -->
+<div class="modal-bg" id="mShareJoin">
+  <div class="modal-box">
+    <div class="msj-title"><i class="fa fa-user-plus"></i> 공유 초대</div>
+    <div class="msj-info"><span id="msjOwner"></span>님이 공유한</div>
+    <div class="msj-info"><span id="msjType"></span>: <span id="msjName" class="msj-name"></span></div>
+    <div class="msj-btns">
+      <button class="mbtn mbtn-cancel" onclick="closeM('mShareJoin')">거절</button>
+      <button class="mbtn mbtn-ok" onclick="_shareAcceptJoin()">수락</button>
+    </div>
+  </div>
+</div>
+
 <!-- Verse Tooltip -->
 <div id="vtip"><div id="vtip-ref"></div><div id="vtip-txt"></div></div>
 <!-- Toast -->
@@ -796,10 +851,14 @@
 <script src="js/side-search.js"></script>
 
 <!-- 설정 패널 -->
-<script src="js/settings-panel.js?v=7"></script>
+<script src="js/settings-panel.js?v=8"></script>
 <script src="js/settings-panel-ctrl.js"></script>
 <script src="js/settings-panel-apply.js?v=6"></script>
 <script src="js/settings-panel-sync.js"></script>
+
+<!-- 공유 기능 -->
+<script src="js/share-ui.js?v=1"></script>
+<script src="js/share-viewer.js?v=1"></script>
 
 <!-- 컨텍스트 메뉴 & 패널 -->
 <script src="js/context-menu.js"></script>
@@ -849,6 +908,7 @@
 <script src="js/pdf/pdf-annotations.js?v=3"></script>
 <script src="js/pdf/pdf-tools.js?v=3"></script>
 <script src="js/pdf/pdf-drag-to-note.js?v=2"></script>
+<script src="js/pdf/pdf-live.js?v=1"></script>
 
 <!-- 지식 그래프 -->
 <script src="js/graph/knowledge-graph.js?v=6"></script>

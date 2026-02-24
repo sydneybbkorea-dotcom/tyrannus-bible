@@ -14,7 +14,8 @@ async function _saveMain(){
     await setDoc(doc(_db,'users',_uid,'data','main'),{
       hl:S.hl||{}, hlMemo:S.hlMemo||{}, hlRanges:S.hlRanges||{}, verseMemo:S.verseMemo||{},
       bk:[...(S.bk||[])], folders:S.folders||[], openFolders:[...(S.openFolders||[])],
-      hlTopics:S.hlTopics||[], activeHlTopic:S.activeHlTopic||'default', updatedAt:Date.now()
+      hlTopics:S.hlTopics||[], activeHlTopic:S.activeHlTopic||'default',
+      sharedByMe:S.sharedByMe||[], sharedWithMe:S.sharedWithMe||[], updatedAt:Date.now()
     });
     window._setSyncStatus?.('synced');
     window._updateQuotaAfterSave?.();
@@ -29,5 +30,10 @@ async function _saveNotes(){
   } catch(e){ console.error('notes 저장 실패:',e); window._setSyncStatus?.('error'); }
 }
 
-export function persistToCloud(){ clearTimeout(_timerMain); clearTimeout(_timerNotes); _timerMain=setTimeout(_saveMain,2000); _timerNotes=setTimeout(_saveNotes,2000); }
+export function persistToCloud(){
+  clearTimeout(_timerMain); clearTimeout(_timerNotes);
+  _timerMain=setTimeout(_saveMain,2000); _timerNotes=setTimeout(_saveNotes,2000);
+  // 공유 자동 갱신
+  if(typeof window._schedulePublishShares === 'function') window._schedulePublishShares();
+}
 export function flushPendingSaves(){ clearTimeout(_timerMain); clearTimeout(_timerNotes); _saveMain(); _saveNotes(); }

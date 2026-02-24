@@ -36,4 +36,7 @@ Object.assign(S, {
   hymnFav: new Set(),
   hymnPlaylists: [],
   hymnLastPlayed: null,
+  // 공유 상태
+  sharedByMe: [],      // [{shareCode, type, sourceId, sourceName}]
+  sharedWithMe: [],    // [{shareCode, ownerName, type, label}]
 });

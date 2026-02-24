@@ -64,6 +64,10 @@ function _htRenderManager(){
     h += '<span class="ht-item-name">' + _escHtml(t.name) + '</span>';
     h += '<button class="ht-edit-btn" onclick="_htPromptRename(\'' + t.id + '\')" title="이름 변경">';
     h += '<i class="fa fa-pen"></i></button>';
+    if(window._firebaseUid){
+      h += '<button class="ht-share-btn" onclick="_shareTopic(\'' + t.id + '\')" title="공유">';
+      h += '<i class="fa fa-share-alt"></i></button>';
+    }
     if(!isDefault){
       h += '<button class="ht-del-btn" onclick="_htConfirmDelete(\'' + t.id + '\')" title="삭제">';
       h += '<i class="fa fa-trash"></i></button>';

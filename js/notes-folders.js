@@ -4,6 +4,8 @@ function renderFolderTree(){
   cont.innerHTML='';
   const roots=S.folders.filter(f=>!f.parentId);
   roots.forEach(f=>cont.appendChild(_buildFolderNode(f,0)));
+  // 공유받은 폴더 렌더
+  if(typeof _svRenderSharedFolders === 'function') _svRenderSharedFolders(cont);
   _updateFolderSel();
 }
 

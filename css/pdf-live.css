@@ -1,0 +1,211 @@
+/* pdf-live.css — 라이브 강의 스타일 */
+
+/* ── 라이브 인디케이터 ── */
+.live-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 12px;
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-left: auto;
+  animation: live-blink 2s ease infinite;
+}
+.live-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ef4444;
+  animation: live-pulse 1.5s ease infinite;
+}
+@keyframes live-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
+@keyframes live-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.5; }
+}
+
+/* ── 사이드 패널 라이브 섹션 ── */
+.live-panel-body {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.live-hint {
+  font-size: 12px;
+  color: var(--text-2, #888);
+  padding: 8px;
+  text-align: center;
+}
+.live-hint i {
+  margin-right: 4px;
+  opacity: 0.7;
+}
+
+.live-divider {
+  height: 1px;
+  background: var(--border, #333);
+  margin: 4px 0;
+}
+
+.live-label {
+  font-size: 12px;
+  color: var(--text-2, #888);
+  margin-bottom: 4px;
+  display: block;
+}
+
+.live-join-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.live-join-row {
+  display: flex;
+  gap: 6px;
+}
+
+.live-code-input {
+  flex: 1;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border, #444);
+  background: var(--bg-2, #1a1a1a);
+  color: var(--text-1, #eee);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-align: center;
+  text-transform: uppercase;
+  outline: none;
+}
+.live-code-input:focus {
+  border-color: var(--accent, #6366f1);
+}
+.live-code-input::placeholder {
+  letter-spacing: 3px;
+  opacity: 0.4;
+}
+
+/* ── 버튼 ── */
+.live-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, opacity 0.15s;
+}
+.live-btn:active { opacity: 0.8; }
+
+.live-btn-start {
+  background: #ef4444;
+  color: #fff;
+}
+.live-btn-start:hover { background: #dc2626; }
+
+.live-btn-join {
+  background: var(--accent, #6366f1);
+  color: #fff;
+  white-space: nowrap;
+}
+.live-btn-join:hover { opacity: 0.85; }
+
+.live-btn-copy, .live-btn-link {
+  background: var(--bg-3, #2a2a2a);
+  color: var(--text-1, #eee);
+  flex: 1;
+}
+.live-btn-copy:hover, .live-btn-link:hover { background: var(--bg-4, #333); }
+
+.live-btn-end {
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  width: 100%;
+}
+.live-btn-end:hover { background: rgba(239, 68, 68, 0.25); }
+
+.live-btn-leave {
+  background: var(--bg-3, #2a2a2a);
+  color: var(--text-2, #aaa);
+  width: 100%;
+}
+.live-btn-leave:hover { background: var(--bg-4, #333); }
+
+/* ── 라이브 상태 표시 ── */
+.live-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+}
+.live-status-text {
+  font-size: 14px;
+  font-weight: 600;
+  color: #ef4444;
+}
+.live-viewer-count {
+  font-size: 12px;
+  color: var(--text-2, #888);
+  margin-left: auto;
+}
+
+/* ── 코드 표시 ── */
+.live-code-display {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 6px;
+  text-align: center;
+  padding: 12px;
+  border-radius: 10px;
+  background: var(--bg-2, #1a1a1a);
+  border: 1px solid var(--border, #333);
+  color: var(--text-1, #eee);
+  font-family: 'Courier New', monospace;
+}
+
+/* ── 액션 행 ── */
+.live-actions {
+  display: flex;
+  gap: 6px;
+}
+
+/* ── 라이브 스트로크 오버레이 ── */
+.pdf-live-stroke-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 5;
+}
+
+/* ── 레이저 포인터 ── */
+.pdf-laser-pointer {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: rgba(255, 0, 0, 0.8);
+  box-shadow: 0 0 12px rgba(255, 0, 0, 0.6), 0 0 24px rgba(255, 0, 0, 0.3);
+  pointer-events: none;
+  z-index: 6;
+  transform: translate(-50%, -50%);
+  animation: laser-pulse 1s ease infinite;
+}
+@keyframes laser-pulse {
+  0%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  50% { opacity: 0.6; transform: translate(-50%, -50%) scale(1.3); }
+}

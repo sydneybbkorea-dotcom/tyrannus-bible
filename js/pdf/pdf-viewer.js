@@ -177,6 +177,8 @@ var PDFViewer = (function(){
     _container.addEventListener('pointerdown', function(e){
       if(typeof PDFTools !== 'undefined' && PDFTools.getTool() !== 'select') return;
       if(e.target.closest('.pdf-annot')) return;
+      // 텍스트 레이어 위에서는 텍스트 선택 허용 (panDrag 차단)
+      if(e.target.closest('.pdf-text-layer')) return;
       isDragging = true;
       startX = e.clientX; startY = e.clientY;
       scrollL = _container.scrollLeft; scrollT = _container.scrollTop;
@@ -270,7 +272,13 @@ var PDFViewer = (function(){
       annotLayer.className = 'pdf-annot-layer';
       annotLayer.dataset.page = pageNum;
 
+      // 텍스트 레이어 (텍스트 선택/하이라이트 지원)
+      var textLayerDiv = document.createElement('div');
+      textLayerDiv.className = 'pdf-text-layer';
+      wrap.dataset.page = pageNum;
+
       wrap.appendChild(canvas);
+      wrap.appendChild(textLayerDiv);
       wrap.appendChild(annotLayer);
 
       // Insert in page order
@@ -289,6 +297,21 @@ var PDFViewer = (function(){
       _renderedPages.set(pageNum, true);
 
       page.render({ canvasContext: ctx, viewport: vp }).promise.then(function(){
+        // 텍스트 레이어 렌더링
+        page.getTextContent().then(function(textContent){
+          textLayerDiv.innerHTML = '';
+          if(window.pdfjsLib && window.pdfjsLib.renderTextLayer){
+            window.pdfjsLib.renderTextLayer({
+              textContentSource: textContent,
+              container: textLayerDiv,
+              viewport: vp,
+              textDivs: []
+            });
+          }
+        }).catch(function(e){
+          console.warn('[PDFViewer] text layer page ' + pageNum + ':', e);
+        });
+
         if(typeof PDFAnnotations !== 'undefined'){
           PDFAnnotations.renderPage(pageNum, annotLayer, vp);
         }
@@ -316,6 +339,9 @@ var PDFViewer = (function(){
     _currentPage = n;
     _updatePageInfo();
     _renderVisiblePages();
+    if(typeof EventBus !== 'undefined'){
+      EventBus.emit('pdf:pageChanged', { page: _currentPage });
+    }
   }
   function prevPage(){ goToPage(_currentPage - 1); }
   function nextPage(){ goToPage(_currentPage + 1); }

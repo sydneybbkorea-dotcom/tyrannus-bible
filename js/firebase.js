@@ -10,6 +10,8 @@ import { loadFromFirestore } from './firebase-sync-load.js';
 import { setSyncStatus, initOnlineListener } from './firebase-sync-status.js';
 import { loadQuota, initQuota, updateQuotaUsage } from './firebase-quota.js';
 import { initPdfSync, clearPdfSync, loadPdfFromFirestore, startPdfRealtimeSync, stopPdfRealtimeSync, flushPdfSaves } from './firebase-pdf-sync.js';
+import { initShare, clearShare, startSharedListeners, stopSharedListeners } from './share.js';
+import { initLiveSync, clearLiveSync } from './pdf-live-sync.js';
 
 const app = initializeApp({
   apiKey:"AIzaSyDMeWQk6o39IcctkLERX7b6uWWXXTJST30", authDomain:"tyrannus-kjb1611.firebaseapp.com",
@@ -19,6 +21,7 @@ const app = initializeApp({
 const auth    = getAuth(app);
 const db      = getFirestore(app);
 const storage = getStorage(app);
+window._firebaseAuth = auth;
 
 // 온라인/오프라인 감지 초기화
 initOnlineListener(function(){ flushPendingSaves(); flushPdfSaves(); });
@@ -29,6 +32,8 @@ onAuthStateChanged(auth, async user => {
     initSync(db, user.uid);
     initPdfSync(db, storage, user.uid);
     initQuota(db, user.uid);
+    initShare(db, user.uid);
+    initLiveSync(db, storage, user.uid);
     window._firebaseUid = user.uid;
     console.log('[Admin] Your UID:', user.uid);
     window.showUserBar?.(user);
@@ -37,11 +42,29 @@ onAuthStateChanged(auth, async user => {
     await loadPdfFromFirestore(db, user.uid);
     startRealtimeSync(db, user.uid);
     startPdfRealtimeSync(db, user.uid);
+    startSharedListeners();
     await updateQuotaUsage();
     window.updateQuotaDisplay?.(window.getQuotaInfo?.().used, window.getQuotaInfo?.().limit);
     setSyncStatus('synced');
+    // URL 파라미터 ?share= 감지
+    const shareParam = new URLSearchParams(window.location.search).get('share');
+    if(shareParam) {
+      window._handleShareJoin?.(shareParam);
+      // URL에서 share 파라미터 제거
+      const url = new URL(window.location);
+      url.searchParams.delete('share');
+      window.history.replaceState({}, '', url);
+    }
+    // URL 파라미터 ?live= 감지
+    const liveParam = new URLSearchParams(window.location.search).get('live');
+    if(liveParam) {
+      if(typeof PDFLive !== 'undefined') PDFLive.handleLiveParam(liveParam);
+      const url2 = new URL(window.location);
+      url2.searchParams.delete('live');
+      window.history.replaceState({}, '', url2);
+    }
   } else {
-    clearSync(); clearPdfSync(); stopRealtimeSync(); stopPdfRealtimeSync();
+    clearSync(); clearPdfSync(); clearShare(); clearLiveSync(); stopRealtimeSync(); stopPdfRealtimeSync(); stopSharedListeners();
     window._firebaseReady = false;
     window._firebaseUid = null;
     window.hideUserBar?.();

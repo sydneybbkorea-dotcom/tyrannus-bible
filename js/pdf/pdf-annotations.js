@@ -100,13 +100,34 @@ var PDFAnnotations = (function(){
     var pageNum = annot.pageNum;
     var annotId = annot.id;
     var text = annot.text || '';
+    var color = annot.color || '';
+
+    // PDF 제목 조회
+    var pdfTitle = '';
+    if(typeof S !== 'undefined' && S.pdfFiles){
+      var found = S.pdfFiles.find(function(f){ return f.id === pdfId; });
+      if(found) pdfTitle = found.name || '';
+    }
+    // 하이라이트 색상 → border-left 색상
+    var borderColor = '#f05050';
+    if(color){
+      if(color.charAt(0) === '#') borderColor = color;
+      else {
+        var m = color.match(/rgba?\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)/);
+        if(m) borderColor = '#' + ((1<<24)+(parseInt(m[1])<<16)+(parseInt(m[2])<<8)+parseInt(m[3])).toString(16).slice(1);
+      }
+    }
 
     // 노트 에디터에 citation 블록 삽입
     var uri = TyrannusURI.pdf(pdfId, pageNum);
-    var citationHTML = '<div class="pdf-cite" data-uri="' + TyrannusURI.pdfAnnot(pdfId, annotId) + '" contenteditable="false" '
+    var citationHTML = '<div class="pdf-cite" data-uri="' + TyrannusURI.pdfAnnot(pdfId, annotId) + '" data-color="' + _escHtml(borderColor) + '" contenteditable="false" '
+      + 'style="border-left-color:' + _escHtml(borderColor) + '" '
       + 'onclick="NavigationRouter.navigateTo(\'' + uri + '\')">'
       + '<i class="fa fa-file-pdf"></i>'
+      + '<div class="pdf-cite-body">'
+      + (pdfTitle ? '<span class="pdf-cite-title" contenteditable="true" onclick="event.stopPropagation()">' + _escHtml(pdfTitle) + '</span>' : '')
       + '<span class="pdf-cite-text">' + _escHtml(text) + '</span>'
+      + '</div>'
       + '<span class="pdf-cite-ref">p.' + pageNum + '</span>'
       + '</div>&#8203;';
 
@@ -218,6 +239,16 @@ var PDFAnnotations = (function(){
           path.setAttribute('d', d);
           path.setAttribute('stroke', annot.color || '#000');
           path.setAttribute('stroke-width', annot.strokeWidth || '2');
+          // opacity 적용
+          var fhOpacity = annot.opacity != null ? annot.opacity : 1;
+          path.setAttribute('stroke-opacity', fhOpacity);
+          // 펜 종류별 linecap
+          var fhPenType = annot.penType || 'ballpen';
+          if(fhPenType === 'highlighter'){
+            path.setAttribute('stroke-linecap', 'square');
+          } else {
+            path.setAttribute('stroke-linecap', 'round');
+          }
           el.appendChild(path);
         }
         break;
@@ -450,6 +481,8 @@ var PDFAnnotations = (function(){
       text: opts.text || '',
       color: opts.color || '#FACC15',
       strokeWidth: opts.strokeWidth || 2,
+      opacity: opts.opacity != null ? opts.opacity : 1,
+      penType: opts.penType || null,
       fontSize: opts.fontSize || null,
       linkedUri: opts.linkedUri || null,
       tags: opts.tags || [],
@@ -650,6 +683,22 @@ var PDFAnnotations = (function(){
     popup.appendChild(delRow);
 
     layer.appendChild(popup);
+
+    // 팝업 위치 보정 (화면 밖 방지)
+    requestAnimationFrame(function(){
+      var pRect = popup.getBoundingClientRect();
+      var vw = window.innerWidth, vh = window.innerHeight;
+      if(pRect.right > vw - 8){
+        popup.style.left = (parseInt(popup.style.left) - (pRect.right - vw + 12)) + 'px';
+      }
+      if(pRect.bottom > vh - 8){
+        // 위로 표시
+        popup.style.top = (rect.top - layerRect.top - pRect.height - 4) + 'px';
+      }
+      if(pRect.left < 8){
+        popup.style.left = '4px';
+      }
+    });
 
     // Add tag logic
     var input = popup.querySelector('.pdf-tag-input');

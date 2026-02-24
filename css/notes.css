@@ -3,10 +3,8 @@
 ═══════════════════════════════════════════════ */
 #rightPanel {
   width:640px; flex-shrink:0;
-  background:var(--glass-bg-1);
-  backdrop-filter:var(--glass-blur-1); -webkit-backdrop-filter:var(--glass-blur-1);
+  background:var(--bg);
   border-left:1px solid var(--glass-border);
-  box-shadow:var(--glass-highlight);
   display:flex; flex-direction:column; overflow:hidden; transition:width .22s;
   position:relative; z-index:10;
 }
@@ -197,7 +195,7 @@
 [data-theme="sepia"] .ft-arrow { color:hsl(28, 12%, 62%); }
 .ft-arrow.open { transform:rotate(90deg) }
 .ft-arrow-sp { width:14px; flex-shrink:0 }
-.ft-icon { font-size:12px; flex-shrink:0; margin-right:2px }
+.ft-icon { font-size:15px; flex-shrink:0; margin-right:4px }
 .ft-name {
   flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
   font-weight:500;

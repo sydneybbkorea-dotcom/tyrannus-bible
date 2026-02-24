@@ -71,5 +71,8 @@ function renderBible(){
     };
     cont.appendChild(row);
   });
-  if(!S.showStrong) requestAnimationFrame(()=>restoreHL());
+  if(!S.showStrong) requestAnimationFrame(()=>{
+    restoreHL();
+    if(typeof _svApplySharedHighlights === 'function') _svApplySharedHighlights();
+  });
 }

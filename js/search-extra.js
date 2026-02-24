@@ -7,7 +7,7 @@ function _schSearchExtra(q, results){
       const p=(n.title||'')+' '+(n.content||'').replace(/<[^>]+>/g,' ');
       if(p.includes(q)) results.push({
         type:'note',ref:'📝 '+(n.title||'무제'),
-        text:p.slice(0,120),nid:n.id,b:'',ch:0,v:0,positions:[],occCount:1
+        text:p,nid:n.id,b:'',ch:0,v:0,positions:[],occCount:1
       });
     });
   }

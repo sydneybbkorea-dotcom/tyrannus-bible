@@ -1,4 +1,4 @@
-// commentary-verse.js — verse-level commentary rendering (updateCommentary)
+// commentary-verse.js — verse-level commentary rendering (card layout)
 function updateCommentary(){
   var vn=S.selV; var el=document.getElementById('commentaryContent');
   if(!el) return;
@@ -32,105 +32,116 @@ function updateCommentary(){
   // 구절 텍스트 (한국어 + 영어)
   var krTxt=(BIBLE?.[S.book]?.[S.ch]?.[vn-1]||'').replace(/<[^>]+>/g,'').slice(0,120);
   var enTxt=(typeof KJV!=='undefined' && KJV?.[S.book]?.[S.ch]?.[vn-1]||'').replace(/<[^>]+>/g,'').slice(0,120);
-  var hasHL=!!S.hl[key];
 
   var hasContent = comm || refs.length || linked.length || memoMap.size || vMemo;
 
-  // ── 통합 헤더 ──
   var h = '<div class="cv-wrap">';
 
-  // Hero header
-  h += '<div class="cv-hero">';
-  h += '<div class="cv-hero-ref">'+S.book+' '+S.ch+':'+vn+'</div>';
+  // ══ Hero Card ══
+  h += '<div class="cv-card cv-card-hero"><div class="cv-card-bar"></div><div class="cv-card-body">';
+  h += '<div class="cv-card-badge"><i class="fa fa-bible"></i> '+S.book+'</div>';
+  h += '<div class="cv-card-title">'+S.ch+'장 '+vn+'절</div>';
   if(krTxt) h += '<div class="cv-hero-kr">'+krTxt+'</div>';
   if(enTxt) h += '<div class="cv-hero-en">'+enTxt+'</div>';
 
-  // Stats bar
-  var statsHtml = '';
-  if(comm) statsHtml += '<span class="cv-badge"><i class="fa fa-scroll"></i>주석</span>';
-  if(refs.length) statsHtml += '<span class="cv-badge"><i class="fa fa-link"></i>'+refs.length+'</span>';
-  if(linked.length) statsHtml += '<span class="cv-badge"><i class="fa fa-pen"></i>'+linked.length+'</span>';
-  if(memoMap.size) statsHtml += '<span class="cv-badge"><i class="fa fa-highlighter"></i>'+memoMap.size+'</span>';
-  if(hasHL) statsHtml += '<span class="cv-badge cv-badge-hl"><i class="fa fa-circle"></i></span>';
+  // Stats tags
+  var tags = '';
+  if(comm) tags += '<span class="cv-card-tag"><i class="fa fa-scroll"></i> 주석</span>';
+  if(refs.length) tags += '<span class="cv-card-tag"><i class="fa fa-link"></i> 참조 '+refs.length+'</span>';
+  if(linked.length) tags += '<span class="cv-card-tag"><i class="fa fa-pen"></i> 노트 '+linked.length+'</span>';
+  if(memoMap.size) tags += '<span class="cv-card-tag"><i class="fa fa-highlighter"></i> 메모 '+memoMap.size+'</span>';
   if(typeof KnowledgeGraph!=='undefined'){
-    statsHtml += '<span class="cv-badge cv-badge-link" onclick="event.stopPropagation();KnowledgeGraph.show(typeof TyrannusURI!==\'undefined\'?TyrannusURI.verse(\''+S.book+'\','+S.ch+','+vn+'):null,{depth:3})"><i class="fa fa-project-diagram"></i></span>';
+    tags += '<span class="cv-card-tag cv-card-tag-link" onclick="event.stopPropagation();KnowledgeGraph.show(typeof TyrannusURI!==\'undefined\'?TyrannusURI.verse(\''+S.book+'\','+S.ch+','+vn+'):null,{depth:3})"><i class="fa fa-project-diagram"></i> 그래프</span>';
   }
-  if(statsHtml) h += '<div class="cv-stats">'+statsHtml+'</div>';
-  h += '</div>'; // cv-hero
+  if(tags) h += '<div class="cv-card-tags">'+tags+'</div>';
+  h += '</div></div>';
 
   if(!hasContent){
     h += '<div class="comm-empty" style="padding:30px 16px"><div class="comm-empty-icon" style="font-size:16px"><i class="fa fa-feather-alt"></i></div><div class="comm-empty-msg">이 구절에 대한<br>주석이나 메모가 없어요</div></div>';
     h += '</div>'; el.innerHTML = h; return;
   }
 
-  h += '<div class="cv-sections">';
-
-  // ── 1) 참고 주석 (가장 중요 — 맨 위) ──
+  // ══ 1) 참고 주석 Card ══
   if(comm){
-    h += _cvSection('commentary', 'fa-scroll', '참고 주석', '<div class="cv-comm-body">'+comm+'</div>', true);
+    h += '<div class="cv-card cv-card-comm"><div class="cv-card-bar"></div><div class="cv-card-body">';
+    h += '<div class="cv-card-badge">참고 주석</div>';
+    h += '<div class="cv-card-desc cv-comm-body">'+comm+'</div>';
+    h += '</div></div>';
   }
 
-  // ── 2) 연결된 구절 ──
+  // ══ 2) 연결된 구절 Card ══
   if(refs.length){
-    var refsHtml = '<div class="cv-refs">';
-    // 미리보기 (최대 3개)
+    h += '<div class="cv-card cv-card-refs"><div class="cv-card-bar"></div><div class="cv-card-body">';
+    h += '<div class="cv-card-badge">연결된 구절</div>';
+    h += '<div class="cv-card-title" style="font-size:14px">교차 참조 ('+refs.length+')</div>';
+    // Top 3 with preview
+    h += '<div class="cv-card-list">';
     refs.slice(0,3).forEach(function(r){
       var m=r.match(/^(.+?)\s(\d+):(\d+)$/);
       var rTxt='';
       if(m) rTxt=(BIBLE?.[m[1]]?.[+m[2]]?.[+m[3]-1]||'').replace(/<[^>]+>/g,'').slice(0,50);
-      refsHtml += '<div class="cv-ref-row" onclick="navByRef(\''+r+'\')"><span class="cv-ref-label">'+r+'</span><span class="cv-ref-txt">'+rTxt+'</span></div>';
+      h += '<div class="cv-ref-row" onclick="navByRef(\''+r+'\')"><span class="cv-ref-label">'+r+'</span><span class="cv-ref-txt">'+rTxt+'</span></div>';
     });
-    // 나머지 칩
+    h += '</div>';
+    // Rest as chips
     if(refs.length > 3){
-      refsHtml += '<div class="cv-ref-chips">';
+      h += '<div class="cv-card-tags">';
       refs.slice(3).forEach(function(r){
-        refsHtml += '<span class="cref" onclick="navByRef(\''+r+'\')">'+r+'</span>';
+        h += '<span class="cref" onclick="navByRef(\''+r+'\')">'+r+'</span>';
       });
-      refsHtml += '</div>';
+      h += '</div>';
     }
-    refsHtml += '</div>';
-    h += _cvSection('refs', 'fa-link', '연결된 구절 ('+refs.length+')', refsHtml, true);
+    h += '</div></div>';
   }
 
-  // ── 3) 구절 주석 메모 ──
+  // ══ 3) 구절 주석 Card ══
   if(vMemo){
-    h += _cvSection('vmemo', 'fa-comment-dots', '구절 주석', '<div class="cv-vmemo">'+vMemo+'</div>', true);
+    h += '<div class="cv-card cv-card-vmemo"><div class="cv-card-bar"></div><div class="cv-card-body">';
+    h += '<div class="cv-card-badge">구절 주석</div>';
+    h += '<div class="cv-card-desc cv-vmemo">'+vMemo+'</div>';
+    h += '</div></div>';
   }
 
-  // ── 4) 하이라이트 메모 ──
+  // ══ 4) 하이라이트 메모 Card ══
   if(memoMap.size > 0){
     var colorDot = {'hl-y':'rgba(255,215,64,.9)','hl-o':'rgba(255,171,64,.9)','hl-g':'rgba(105,240,174,.9)','hl-b':'rgba(64,196,255,.9)','hl-p':'rgba(206,147,216,.9)'};
-    var hlHtml = '';
+    h += '<div class="cv-card cv-card-hl"><div class="cv-card-bar"></div><div class="cv-card-body">';
+    h += '<div class="cv-card-badge">하이라이트 메모</div>';
+    h += '<div style="padding:10px 16px 0">';
     memoMap.forEach(function(v, gid){
       var cls = v.color.split(' ').find(function(c){return c.startsWith('hl-')})||'hl-y';
       var dot = colorDot[cls]||'var(--gold)';
       var mData = S.hlMemo?.[gid];
       var mTags = (mData?.tags||[]).map(function(t){return '<span class="cv-memo-tag">#'+t+'</span>'}).join('');
       var mHtml = mData?.html || v.memo;
-      hlHtml += '<div class="cv-hl-item">';
-      hlHtml += '<div class="cv-hl-quote" style="border-left-color:'+dot+'"><span class="cv-hl-dot" style="background:'+dot+'"></span>'+v.text+'</div>';
-      hlHtml += '<div class="cv-hl-memo">'+mHtml+'</div>';
-      if(mTags) hlHtml += '<div class="cv-hl-tags">'+mTags+'</div>';
-      hlHtml += '</div>';
+      h += '<div class="cv-hl-item">';
+      h += '<div class="cv-hl-quote" style="border-left-color:'+dot+'"><span class="cv-hl-dot" style="background:'+dot+'"></span>'+v.text+'</div>';
+      h += '<div class="cv-hl-memo">'+mHtml+'</div>';
+      if(mTags) h += '<div class="cv-hl-tags">'+mTags+'</div>';
+      h += '</div>';
     });
-    h += _cvSection('hl', 'fa-highlighter', '하이라이트 메모 ('+memoMap.size+')', hlHtml, true);
+    h += '</div>';
+    h += '</div></div>';
   }
 
-  // ── 5) 연결된 노트 ──
+  // ══ 5) 연결된 노트 Card ══
   if(linked.length){
-    var notesHtml = '';
+    h += '<div class="cv-card cv-card-notes"><div class="cv-card-bar"></div><div class="cv-card-body">';
+    h += '<div class="cv-card-badge">연결된 노트</div>';
+    h += '<div style="padding:10px 16px 0">';
     linked.forEach(function(n){
       var folder = S.folders.find(function(f){return f.id===n.folderId});
-      notesHtml += '<div class="cv-note-row" onclick="loadNote(\''+n.id+'\',true);openPanel(\'notes\');switchSub(\'notes\')">';
-      notesHtml += '<div class="cv-note-icon"><i class="fa fa-file-alt"></i></div>';
-      notesHtml += '<div class="cv-note-info"><div class="cv-note-title">'+(n.title||'제목 없음')+'</div>';
-      if(folder) notesHtml += '<div class="cv-note-folder"><i class="fa fa-folder"></i> '+folder.name+'</div>';
-      notesHtml += '</div></div>';
+      h += '<div class="cv-note-row" onclick="loadNote(\''+n.id+'\',true);openPanel(\'notes\');switchSub(\'notes\')">';
+      h += '<div class="cv-note-icon"><i class="fa fa-file-alt"></i></div>';
+      h += '<div class="cv-note-info"><div class="cv-note-title">'+(n.title||'제목 없음')+'</div>';
+      if(folder) h += '<div class="cv-note-folder"><i class="fa fa-folder"></i> '+folder.name+'</div>';
+      h += '</div></div>';
     });
-    h += _cvSection('notes', 'fa-pen', '연결된 노트 ('+linked.length+')', notesHtml, true);
+    h += '</div>';
+    h += '</div></div>';
   }
 
-  h += '</div></div>'; // cv-sections, cv-wrap
+  h += '</div>'; // cv-wrap
   el.innerHTML = h;
 
   // delegation
@@ -148,20 +159,6 @@ function updateCommentary(){
   });
 }
 
-// ── 섹션 빌더 (접힘/펼침 지원) ──
-function _cvSection(type, icon, label, content, defaultOpen){
-  var openClass = defaultOpen ? ' cv-sec-open' : '';
-  return '<div class="cv-sec cv-sec-'+type+openClass+'">'
-    + '<div class="cv-sec-head" onclick="_cvToggle(this)">'
-    + '<i class="fa '+icon+' cv-sec-icon"></i>'
-    + '<span class="cv-sec-label">'+label+'</span>'
-    + '<i class="fa fa-chevron-down cv-sec-chev"></i>'
-    + '</div>'
-    + '<div class="cv-sec-body">'+content+'</div>'
-    + '</div>';
-}
-
-function _cvToggle(headEl){
-  var sec = headEl.closest('.cv-sec');
-  if(sec) sec.classList.toggle('cv-sec-open');
-}
+// (no longer needed — cards are always open, no toggle)
+function _cvToggle(headEl){}
+function _cvSection(){ return ''; }

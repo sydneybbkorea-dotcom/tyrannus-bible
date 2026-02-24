@@ -16,6 +16,7 @@ export async function loadFromFirestore(db, uid){
       if(d.bk) S.bk=new Set(d.bk); if(d.folders) S.folders=d.folders;
       if(d.openFolders) S.openFolders=new Set(d.openFolders);
       if(d.hlTopics) S.hlTopics=d.hlTopics; if(d.activeHlTopic) S.activeHlTopic=d.activeHlTopic;
+      if(d.sharedByMe) S.sharedByMe=d.sharedByMe; if(d.sharedWithMe) S.sharedWithMe=d.sharedWithMe;
       setLastTimestamps(d.updatedAt, 0);
     }
     if(notesSnap.exists()){
@@ -29,7 +30,8 @@ export async function loadFromFirestore(db, uid){
       await setDoc(doc(db,'users',uid,'data','main'),{
         hl:S.hl||{},hlMemo:S.hlMemo||{},hlRanges:S.hlRanges||{},verseMemo:S.verseMemo||{},
         bk:[...(S.bk||[])],folders:S.folders||[],openFolders:[...(S.openFolders||[])],
-        hlTopics:S.hlTopics||[],activeHlTopic:S.activeHlTopic||'default',updatedAt:now
+        hlTopics:S.hlTopics||[],activeHlTopic:S.activeHlTopic||'default',
+        sharedByMe:S.sharedByMe||[],sharedWithMe:S.sharedWithMe||[],updatedAt:now
       });
       await setDoc(doc(db,'users',uid,'data','notes'),{notes:S.notes||[],updatedAt:now});
     }

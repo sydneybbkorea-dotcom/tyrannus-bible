@@ -4,9 +4,11 @@ function showFolderCtx(e, folderId, folderName, noteCount){
   const menu=document.createElement('div');
   menu.id='folderNoteCtx'; menu.className='fn-ctx';
   const safeName=folderName.replace(/'/g,"\\'");
+  var shareItem = window._firebaseUid ? `<div class="fn-ctx-item" onclick="_shareFolder('${folderId}')"><i class="fa fa-share-alt"></i> 공유</div>` : '';
   menu.innerHTML=`
     <div class="fn-ctx-item" onclick="newFolder('${folderId}');hideFolderNoteCtx()"><i class="fa fa-folder-plus"></i> 하위 폴더</div>
     <div class="fn-ctx-item" onclick="renameFolder('${folderId}')"><i class="fa fa-pen"></i> 이름 변경</div>
+    ${shareItem}
     <div class="fn-ctx-item fn-ctx-danger" onclick="deleteFolder('${folderId}','${safeName}',${noteCount})"><i class="fa fa-trash"></i> 폴더 삭제</div>
   `;
   document.body.appendChild(menu);

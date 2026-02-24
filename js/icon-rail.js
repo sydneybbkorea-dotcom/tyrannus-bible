@@ -18,7 +18,13 @@ function toggleRail(name){
   openSidePanel(name);
 }
 
+function _closeTypingIfOpen(){
+  var tpEl = document.getElementById('typingOverlay');
+  if(tpEl && tpEl.style.display !== 'none' && typeof toggleTypingPanel==='function') toggleTypingPanel();
+}
+
 function openSidePanel(name){
+  _closeTypingIfOpen();
   _activeRail = name;
   document.querySelectorAll('.rail-icon').forEach(b=>{
     b.classList.toggle('active', b.dataset.rail===name);
@@ -59,6 +65,7 @@ function _updateBibleBars(){
 
 // 노트 아이콘: 사이드 카테고리 없이 오른쪽 패널 직접 토글
 function toggleNotePanel(){
+  _closeTypingIfOpen();
   const noteBtn = document.querySelector('.rail-icon[data-rail="notes"]');
   if(S.panelOpen==='notes' && !document.getElementById('rightPanel')?.classList.contains('rp-hide')){
     togglePanel('notes');
@@ -76,6 +83,7 @@ function toggleNotePanel(){
 
 // 사전 아이콘: 오른쪽 패널 사전 탭 직접 토글
 function toggleDictPanel(){
+  _closeTypingIfOpen();
   const btn=document.querySelector('.rail-icon[data-rail="dictionary"]');
   if(S.panelOpen==='dictionary'&&!document.getElementById('rightPanel')?.classList.contains('rp-hide')){
     togglePanel('dictionary');
@@ -90,11 +98,14 @@ function toggleDictPanel(){
 function _spTogglePin(){
   _spPinned = !_spPinned;
   const btn = document.getElementById('spPinBtn');
+  const sp = document.getElementById('sidePanel');
   if(btn) btn.classList.toggle('pinned', _spPinned);
+  if(sp) sp.classList.toggle('sp-pinned', _spPinned);
 }
 
 // 지식 그래프 토글 — 우측 패널 인라인 그래프 탭으로 전환
 function toggleKnowledgeGraph(){
+  _closeTypingIfOpen();
   if(typeof KnowledgeGraph==='undefined') return;
   var rp = document.getElementById('rightPanel');
   var isGraphShowing = S.panelOpen === 'notes' && S._noteSubTab === 'graph'
@@ -112,6 +123,7 @@ function toggleKnowledgeGraph(){
 
 /* ═══ 찬양 오버레이 토글 (상세뷰 열기/닫기) ═══ */
 function toggleHymnsOverlay(){
+  _closeTypingIfOpen();
   var el = document.getElementById('hymnsOverlay');
   var scroll = document.getElementById('bibleScroll');
   if(!el) return;
@@ -129,4 +141,5 @@ function _initSection(name){
   else if(name==='bugreport'&&typeof renderBugReport==='function') renderBugReport();
   else if(name==='settings'&&typeof renderSettingsPanel==='function') renderSettingsPanel();
   else if(name==='hymns'&&typeof _hymInitSidePanel==='function') _hymInitSidePanel();
+  else if(name==='live'&&typeof PDFLive!=='undefined') PDFLive.renderPanel();
 }

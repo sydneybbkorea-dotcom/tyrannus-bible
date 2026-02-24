@@ -90,9 +90,10 @@ var PDFDragToNote = (function(){
 
     // 1) Create highlight annotation on PDF
     var annotId = _createHighlightAnnot(pdfId);
+    var hlColor = 'rgba(250, 204, 21, 0.35)';
 
     // 2) Insert citation block in note editor
-    var citationHTML = _buildCitationHTML(pdfId, annotId, _selectedText, _selectedPageNum);
+    var citationHTML = _buildCitationHTML(pdfId, annotId, _selectedText, _selectedPageNum, hlColor);
     var nc = document.getElementById('noteContent');
     if(nc){
       nc.focus();
@@ -128,11 +129,12 @@ var PDFDragToNote = (function(){
     if(typeof newNote === 'function') newNote();
 
     // Insert citation in new note
+    var hlColor2 = 'rgba(250, 204, 21, 0.35)';
     setTimeout(function(){
       var nc = document.getElementById('noteContent');
       if(nc){
         var h1 = 'PDF ' + t('pdf.page', '페이지') + ' ' + _selectedPageNum;
-        var citationHTML = '<h1>' + h1 + '</h1>' + _buildCitationHTML(pdfId, annotId, _selectedText, _selectedPageNum);
+        var citationHTML = '<h1>' + h1 + '</h1>' + _buildCitationHTML(pdfId, annotId, _selectedText, _selectedPageNum, hlColor2);
         nc.innerHTML = citationHTML;
       }
     }, 100);
@@ -200,14 +202,42 @@ var PDFDragToNote = (function(){
     return annotId;
   }
 
-  function _buildCitationHTML(pdfId, annotId, text, pageNum){
+  function _buildCitationHTML(pdfId, annotId, text, pageNum, color){
     var uri = TyrannusURI.pdfAnnot(pdfId, annotId);
-    return '<div class="pdf-cite" data-uri="' + uri + '" contenteditable="false" '
+    // PDF 제목 조회
+    var pdfTitle = '';
+    if(typeof S !== 'undefined' && S.pdfFiles){
+      var found = S.pdfFiles.find(function(f){ return f.id === pdfId; });
+      if(found) pdfTitle = found.name || '';
+    }
+    // 하이라이트 색상에서 border-left 색상 추출
+    var borderColor = '#f05050';
+    if(color){
+      borderColor = _rgbaToHex(color);
+    }
+    return '<div class="pdf-cite" data-uri="' + uri + '" data-color="' + _escapeHTML(borderColor) + '" contenteditable="false" '
+      + 'style="border-left-color:' + _escapeHTML(borderColor) + '" '
       + 'onclick="NavigationRouter.navigateTo(\'' + TyrannusURI.pdf(pdfId, pageNum) + '\')">'
       + '<i class="fa fa-file-pdf"></i>'
+      + '<div class="pdf-cite-body">'
+      + (pdfTitle ? '<span class="pdf-cite-title" contenteditable="true" onclick="event.stopPropagation()">' + _escapeHTML(pdfTitle) + '</span>' : '')
       + '<span class="pdf-cite-text">' + _escapeHTML(text) + '</span>'
+      + '</div>'
       + '<span class="pdf-cite-ref">p.' + pageNum + '</span>'
       + '</div>&#8203;';
+  }
+
+  function _rgbaToHex(color){
+    if(!color) return '#f05050';
+    // 이미 hex인 경우
+    if(color.charAt(0) === '#') return color;
+    // rgba(r,g,b,a) → hex
+    var m = color.match(/rgba?\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)/);
+    if(m){
+      var r = parseInt(m[1]), g = parseInt(m[2]), b = parseInt(m[3]);
+      return '#' + ((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
+    }
+    return '#f05050';
   }
 
   function _escapeHTML(str){
@@ -322,8 +352,8 @@ var PDFDragToNote = (function(){
       }
     }
 
-    // Build citation HTML (reuse existing helper)
-    var citationHTML = _buildCitationHTML(data.pdfId, data.annotId, data.text, data.pageNum);
+    // Build citation HTML (reuse existing helper) — drag data에 color 포함
+    var citationHTML = _buildCitationHTML(data.pdfId, data.annotId, data.text, data.pageNum, data.color);
     nc.focus();
     document.execCommand('insertHTML', false, citationHTML);
 

@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════
-   COMMENTARY — Redesigned Study Notes
+   COMMENTARY — Card-based Study Notes
 ═══════════════════════════════════════════════ */
 .comm-body-wrap { flex:1; overflow-y:auto; padding:0 }
 
@@ -12,101 +12,140 @@
 .comm-empty-msg { font-size:13px; color:var(--text3); line-height:1.9 }
 
 /* ══════════════════════════════════════════════
-   VERSE MODE
+   VERSE MODE — Card Layout
 ══════════════════════════════════════════════ */
-.cv-wrap { padding:0 }
+.cv-wrap { padding:10px 12px; display:flex; flex-direction:column; gap:10px; }
 
-/* ── Hero Header ── */
-.cv-hero {
-  padding:16px 18px 12px;
-  background:var(--glass-bg-1);
-  backdrop-filter:var(--glass-blur-1); -webkit-backdrop-filter:var(--glass-blur-1);
-  border-bottom:1px solid var(--glass-border);
-  box-shadow:var(--glass-highlight);
-  position:sticky; top:0; z-index:2;
+/* ── Card base ── */
+.cv-card {
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:0;
+  overflow:hidden;
+  transition:border-color .15s;
 }
-.cv-hero-ref {
-  font-size:14px; font-weight:800;
-  color:var(--accent-color);
-  font-family:'JetBrains Mono','Noto Sans KR',monospace;
-  letter-spacing:.3px; margin-bottom:6px;
-}
-.cv-hero-kr {
-  font-size:13px; color:var(--text);
-  font-family:'KoPubWorld Batang','Noto Serif KR',serif;
-  line-height:1.7; margin-bottom:3px;
-}
-.cv-hero-en {
-  font-size:11.5px; color:var(--text3);
-  font-style:italic; line-height:1.5; margin-bottom:8px;
+.cv-card:hover { border-color:var(--text3); }
+
+/* Colored top bar */
+.cv-card-bar {
+  height:3px; width:100%;
+  background:linear-gradient(90deg, var(--card-bar-l), var(--card-bar-r));
 }
 
-/* Stats badges */
-.cv-stats { display:flex; flex-wrap:wrap; gap:6px; }
-.cv-badge {
-  display:inline-flex; align-items:center; gap:3px;
-  font-size:10px; color:var(--text3);
-  background:var(--glass-bg-1); border:1px solid var(--glass-border);
-  border-radius:10px; padding:2px 8px;
-  transition:all .15s;
-}
-.cv-badge i { font-size:8px; }
-.cv-badge-hl i { color:var(--accent-color); font-size:6px; }
-.cv-badge-link { cursor:pointer; }
-.cv-badge-link:hover { color:var(--accent-color); border-color:var(--accent-color); }
-
-/* ── Sections ── */
-.cv-sections { padding:4px 0 16px; }
-
-.cv-sec {
-  border-bottom:1px solid var(--glass-border);
-}
-.cv-sec:last-child { border-bottom:none; }
-
-/* Section head (clickable toggle) */
-.cv-sec-head {
-  display:flex; align-items:center; gap:8px;
-  padding:10px 18px;
-  cursor:pointer; user-select:none;
-  transition:background .1s;
-}
-.cv-sec-head:hover { background:var(--glass-bg-1); }
-.cv-sec-icon { font-size:11px; width:16px; text-align:center; }
-.cv-sec-label {
-  flex:1; font-size:11px; font-weight:700;
-  color:var(--text2); letter-spacing:.3px;
-  text-transform:uppercase;
-}
-.cv-sec-chev {
-  font-size:9px; color:var(--text3);
-  transition:transform .2s;
-  transform:rotate(-90deg);
+/* Badge pill */
+.cv-card-badge {
+  display:inline-block;
+  font-size:10px; font-weight:700;
+  padding:3px 10px; border-radius:6px;
+  margin:14px 16px 0;
+  letter-spacing:.3px;
 }
 
-/* Open state */
-.cv-sec-open .cv-sec-chev { transform:rotate(0deg); }
-.cv-sec-body {
-  display:none;
-  padding:0 18px 14px;
+/* Title */
+.cv-card-title {
+  font-size:16px; font-weight:800;
+  color:var(--text);
+  padding:8px 16px 0;
+  line-height:1.4;
+  font-family:'Noto Sans KR','KoPubWorld Dotum',sans-serif;
 }
-.cv-sec-open .cv-sec-body { display:block; }
 
-/* ── Type-specific section colors ── */
-
-/* 참고 주석 */
-.cv-sec-commentary .cv-sec-icon { color:var(--accent-color); }
-.cv-comm-body {
-  font-size:13px; color:var(--text2); line-height:1.85;
+/* Description */
+.cv-card-desc {
+  font-size:13px; color:var(--text2);
+  line-height:1.85; padding:8px 16px 0;
   font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif;
 }
 
+/* Tags row */
+.cv-card-tags {
+  display:flex; flex-wrap:wrap; gap:6px;
+  padding:12px 16px 0;
+}
+.cv-card-tag {
+  display:inline-flex; align-items:center; gap:4px;
+  font-size:11px; font-weight:600;
+  color:var(--text2);
+  background:transparent;
+  border:1px solid var(--glass-border);
+  border-radius:6px; padding:4px 10px;
+  transition:all .12s;
+}
+.cv-card-tag:hover { border-color:var(--text3); }
+.cv-card-tag i { font-size:9px; opacity:.6; }
+.cv-card-tag-link {
+  cursor:pointer;
+}
+.cv-card-tag-link:hover {
+  color:var(--accent-color); border-color:var(--accent-color);
+}
+
+/* List items */
+.cv-card-list {
+  padding:10px 16px 0;
+  display:flex; flex-direction:column; gap:0;
+}
+.cv-card-item {
+  font-size:12.5px; color:var(--text2); line-height:1.7;
+  padding:6px 0;
+  border-bottom:1px solid rgba(255,255,255,.04);
+  display:flex; align-items:baseline; gap:8px;
+}
+.cv-card-item:last-child { border-bottom:none; }
+.cv-card-item::before {
+  content:''; display:inline-block;
+  width:4px; height:4px; border-radius:50%;
+  background:var(--text3); flex-shrink:0;
+  margin-top:7px;
+}
+.cv-card-item-text { flex:1; min-width:0; }
+
+/* Card bottom padding */
+.cv-card-body { padding-bottom:16px; }
+
+/* ── Per-section card colors ── */
+
+/* Hero (verse info) */
+.cv-card-hero { --card-bar-l:#6495ed; --card-bar-r:#50c8b0; }
+.cv-card-hero .cv-card-badge { background:rgba(100,149,237,.15); color:#6495ed; }
+
+/* 참고 주석 */
+.cv-card-comm { --card-bar-l:var(--accent-color); --card-bar-r:rgba(255,180,80,.8); }
+.cv-card-comm .cv-card-badge { background:var(--accent-dim); color:var(--accent-color); }
+
 /* 연결된 구절 */
-.cv-sec-refs .cv-sec-icon { color:#6495ed; }
-.cv-refs { display:flex; flex-direction:column; gap:0; }
+.cv-card-refs { --card-bar-l:#6495ed; --card-bar-r:#82b4ff; }
+.cv-card-refs .cv-card-badge { background:rgba(100,149,237,.15); color:#6495ed; }
+
+/* 구절 주석 */
+.cv-card-vmemo { --card-bar-l:#a084c8; --card-bar-r:#c8a0e8; }
+.cv-card-vmemo .cv-card-badge { background:rgba(160,132,200,.15); color:#a084c8; }
+
+/* 하이라이트 메모 */
+.cv-card-hl { --card-bar-l:#ffd740; --card-bar-r:#ffab40; }
+.cv-card-hl .cv-card-badge { background:rgba(255,215,64,.15); color:#ffd740; }
+
+/* 연결된 노트 */
+.cv-card-notes { --card-bar-l:#50c8b0; --card-bar-r:#80e8d0; }
+.cv-card-notes .cv-card-badge { background:rgba(80,200,176,.15); color:#50c8b0; }
+
+/* ── Hero specific ── */
+.cv-hero-kr {
+  font-size:13px; color:var(--text);
+  font-family:'KoPubWorld Batang','Noto Serif KR',serif;
+  line-height:1.7; padding:8px 16px 0;
+}
+.cv-hero-en {
+  font-size:11.5px; color:var(--text3);
+  font-style:italic; line-height:1.5; padding:4px 16px 0;
+}
+
+/* ── Ref row (inside card) ── */
 .cv-ref-row {
   display:flex; align-items:baseline; gap:10px;
-  padding:7px 0; cursor:pointer;
-  border-bottom:1px solid var(--border);
+  padding:6px 0; cursor:pointer;
+  border-bottom:1px solid rgba(255,255,255,.04);
   transition:color .1s;
 }
 .cv-ref-row:last-child { border-bottom:none; }
@@ -121,59 +160,45 @@
   font-size:12px; color:var(--text3); line-height:1.5;
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1;
 }
-.cv-ref-chips { display:flex; flex-wrap:wrap; gap:4px; margin-top:6px; }
 
-/* 구절 주석 메모 */
-.cv-sec-vmemo .cv-sec-icon { color:#a084c8; }
-.cv-vmemo {
-  font-size:13px; color:var(--text); line-height:1.8;
-  font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif;
-  padding:8px 12px;
-  background:rgba(160,132,200,.06);
-  border-radius:6px; border-left:3px solid #a084c8;
-}
-
-/* 하이라이트 메모 */
-.cv-sec-hl .cv-sec-icon { color:var(--accent-color); }
+/* ── Highlight items (inside card) ── */
 .cv-hl-item {
-  margin-bottom:12px; padding-bottom:12px;
-  border-bottom:1px solid var(--border);
+  padding:8px 0;
+  border-bottom:1px solid rgba(255,255,255,.04);
 }
-.cv-hl-item:last-child { margin-bottom:0; padding-bottom:0; border-bottom:none; }
+.cv-hl-item:last-child { border-bottom:none; }
 .cv-hl-quote {
   display:flex; align-items:flex-start; gap:8px;
-  padding:6px 12px;
+  padding:4px 0;
   font-size:12.5px; color:var(--text2);
   font-family:'KoPubWorld Batang','Noto Serif KR',serif;
   line-height:1.7;
   border-left:3px solid var(--accent-color);
-  background:transparent;
+  padding-left:10px;
 }
 .cv-hl-dot {
   width:7px; height:7px; border-radius:50%;
   flex-shrink:0; margin-top:5px;
 }
 .cv-hl-memo {
-  padding:6px 12px 4px; font-size:13px;
+  padding:4px 0 2px 13px; font-size:13px;
   color:var(--text); line-height:1.8;
   font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif;
 }
-.cv-hl-tags { padding:2px 12px 0; display:flex; flex-wrap:wrap; gap:4px; }
+.cv-hl-tags { padding:2px 0 0 13px; display:flex; flex-wrap:wrap; gap:4px; }
 .cv-memo-tag {
   font-size:9px; color:var(--accent-color); background:var(--accent-dim);
   border-radius:4px; padding:2px 6px;
 }
 
-/* 연결된 노트 */
-.cv-sec-notes .cv-sec-icon { color:#50c8b0; }
+/* ── Note row (inside card) ── */
 .cv-note-row {
   display:flex; align-items:center; gap:10px;
-  padding:8px 10px; border-radius:6px;
+  padding:7px 0; border-radius:6px;
   cursor:pointer; transition:all .12s;
-  margin-bottom:2px;
 }
-.cv-note-row:hover { background:rgba(80,200,176,.1); }
-.cv-note-icon { color:#50c8b0; font-size:12px; flex-shrink:0; width:20px; text-align:center; }
+.cv-note-row:hover { color:#50c8b0; }
+.cv-note-icon { color:#50c8b0; font-size:12px; flex-shrink:0; width:18px; text-align:center; }
 .cv-note-info { flex:1; min-width:0; }
 .cv-note-title {
   font-size:13px; color:var(--text);
@@ -181,6 +206,12 @@
 }
 .cv-note-folder { font-size:9px; color:var(--text3); margin-top:1px; display:flex; align-items:center; gap:3px; }
 .cv-note-folder i { font-size:8px; }
+
+/* ── Verse memo (inside card) ── */
+.cv-vmemo {
+  font-size:13px; color:var(--text); line-height:1.8;
+  font-family:'KoPubWorld Dotum','Noto Sans KR',sans-serif;
+}
 
 /* ── 교차 참조 칩 (공용) ── */
 .cross-refs, .cv-ref-chips { display:flex; gap:5px; flex-wrap:wrap }
@@ -193,38 +224,48 @@
 .cref:hover { background:rgba(100,149,237,.22); border-color:rgba(100,149,237,.3); }
 
 /* ══════════════════════════════════════════════
-   CHAPTER MODE
+   CHAPTER MODE — Card Layout
 ══════════════════════════════════════════════ */
-.cc-wrap { padding:0; }
-.cc-title {
+.cc-wrap { padding:10px 12px; display:flex; flex-direction:column; gap:10px; }
+
+.cc-title-bar {
   display:flex; align-items:center; gap:8px;
-  padding:14px 18px; font-size:13px; font-weight:700;
+  padding:12px 16px; font-size:13px; font-weight:700;
   color:var(--accent-color);
   font-family:'JetBrains Mono','Noto Sans KR',monospace;
-  border-bottom:1px solid var(--glass-border);
-  background:var(--glass-bg-1);
-  backdrop-filter:var(--glass-blur-1); -webkit-backdrop-filter:var(--glass-blur-1);
-  box-shadow:var(--glass-highlight);
-  position:sticky; top:0; z-index:2;
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:12px;
 }
-.cc-title i { font-size:12px; }
+.cc-title-bar i { font-size:12px; }
 
-/* Verse block */
-.cc-verse {
-  border-bottom:1px solid var(--border);
-  transition:background .1s;
+/* Chapter verse card */
+.cc-card {
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:12px; overflow:hidden;
+  transition:border-color .15s;
 }
-.cc-verse:last-child { border-bottom:none; }
+.cc-card:hover { border-color:var(--text3); }
+.cc-card-bar {
+  height:3px; width:100%;
+  background:linear-gradient(90deg, var(--accent-color), rgba(255,180,80,.6));
+}
+.cc-card-sel { border-color:var(--accent-color); }
+.cc-card-sel .cc-card-bar {
+  height:3px;
+  background:linear-gradient(90deg, var(--accent-color), #ffd740);
+}
 
 .cc-vhead {
   display:flex; align-items:baseline; gap:8px;
-  padding:12px 18px 8px;
+  padding:12px 16px 8px;
   cursor:pointer; transition:background .08s;
 }
-.cc-vhead:hover { background:var(--glass-bg-1); }
+.cc-vhead:hover { background:rgba(255,255,255,.03); }
 .cc-vnum {
   font-family:'JetBrains Mono',monospace;
-  font-size:13px; font-weight:800;
+  font-size:14px; font-weight:800;
   color:var(--accent-color); min-width:24px; flex-shrink:0;
 }
 .cc-vtxt {
@@ -242,14 +283,8 @@
 }
 .cc-badge i { font-size:8px; color:var(--text3); opacity:.6; }
 
-/* Selected verse */
-.cc-verse-sel {
-  background:var(--accent-dim);
-}
-.cc-verse-sel .cc-vnum { color:var(--accent-color); }
-
 /* Verse body (content items) */
-.cc-vbody { padding:0 18px 12px 50px; }
+.cc-vbody { padding:0 16px 14px 48px; }
 
 .cc-item { margin-bottom:8px; }
 .cc-item:last-child { margin-bottom:0; }
@@ -286,9 +321,8 @@
 
 /* ── 장별/구절별 모드 바 ── */
 .comm-mode-bar {
-  display:flex; gap:0; border-bottom:1px solid var(--glass-border);
-  background:var(--glass-bg-1);
-  backdrop-filter:var(--glass-blur-1); -webkit-backdrop-filter:var(--glass-blur-1);
+  display:flex; gap:0; border-bottom:1px solid var(--border);
+  background:var(--bg);
   flex-shrink:0;
 }
 .comm-mode-btn {
@@ -306,30 +340,33 @@
   font-weight:700;
 }
 
-/* ── Light mode corrections — 웜 로즈 잉크 톤 ── */
-[data-theme="light"] .cv-vmemo { background:rgba(180,40,60,.05); border-left-color:hsl(350,50%,45%); }
+/* ── Light mode ── */
+[data-theme="light"] .cv-card-item { border-bottom-color:rgba(0,0,0,.06); }
+[data-theme="light"] .cv-ref-row { border-bottom-color:rgba(0,0,0,.06); }
+[data-theme="light"] .cv-hl-item { border-bottom-color:rgba(0,0,0,.06); }
+[data-theme="light"] .cv-vmemo { background:transparent; }
 [data-theme="light"] .cv-ref-label { color:hsl(350, 50%, 40%); }
 [data-theme="light"] .cref { background:rgba(180,40,60,.07); color:hsl(350,50%,38%); border-color:rgba(180,40,60,.14); }
 [data-theme="light"] .cref:hover { background:rgba(180,40,60,.14); }
 [data-theme="light"] .cv-note-icon { color:hsl(350,45%,40%); }
-[data-theme="light"] .cv-note-row:hover { background:rgba(180,40,60,.05); }
+[data-theme="light"] .cv-note-row:hover { color:hsl(350,45%,40%); }
+[data-theme="light"] .cc-vhead:hover { background:rgba(0,0,0,.03); }
 [data-theme="light"] .cc-note-chip { color:hsl(350,45%,40%); background:rgba(180,40,60,.05); border-color:rgba(180,40,60,.12); }
 [data-theme="light"] .cc-note-chip:hover { background:rgba(180,40,60,.12); }
-[data-theme="light"] .cv-sec-head:hover { background:var(--glass-bg-2); }
 [data-theme="light"] .comm-mode-btn:hover { color:var(--text-primary); background:var(--glass-bg-2); }
 [data-theme="light"] .comm-mode-btn.comm-mode-active { color:var(--accent-color); border-bottom-color:var(--accent-color); }
-[data-theme="light"] .cc-vhead:hover { background:var(--glass-bg-2); }
-[data-theme="light"] .cc-verse-sel { background:hsla(var(--accent-h),60%,50%,.10); }
 [data-theme="light"] .cv-comm-body { color:hsl(350, 28%, 18%); }
 
-/* ── Sepia mode corrections — 따뜻한 양피지 톤 ── */
-[data-theme="sepia"] .cv-vmemo { background:rgba(107,69,149,.06); border-left-color:hsl(270,35%,42%); }
+/* ── Sepia mode ── */
+[data-theme="sepia"] .cv-card-item { border-bottom-color:rgba(0,0,0,.06); }
+[data-theme="sepia"] .cv-ref-row { border-bottom-color:rgba(0,0,0,.06); }
+[data-theme="sepia"] .cv-hl-item { border-bottom-color:rgba(0,0,0,.06); }
 [data-theme="sepia"] .cv-ref-label { color:hsl(210, 30%, 42%); }
 [data-theme="sepia"] .cref { background:rgba(58,109,158,.08); color:hsl(210,30%,40%); border-color:rgba(58,109,158,.15); }
 [data-theme="sepia"] .cref:hover { background:rgba(58,109,158,.16); }
 [data-theme="sepia"] .cv-note-icon { color:hsl(155,40%,32%); }
-[data-theme="sepia"] .cv-note-row:hover { background:rgba(42,110,72,.06); }
+[data-theme="sepia"] .cv-note-row:hover { color:hsl(155,40%,32%); }
+[data-theme="sepia"] .cc-vhead:hover { background:rgba(0,0,0,.04); }
 [data-theme="sepia"] .cc-note-chip { color:hsl(155,40%,32%); background:rgba(42,110,72,.05); border-color:rgba(42,110,72,.12); }
 [data-theme="sepia"] .cc-note-chip:hover { background:rgba(42,110,72,.12); }
-[data-theme="sepia"] .cv-sec-head:hover { background:var(--glass-bg-2); }
 [data-theme="sepia"] .cv-comm-body { color:hsl(22, 26%, 20%); }

@@ -12,10 +12,17 @@ var PDFTools = (function(){
   var _activePointerId = null;
 
   var _fontSize = 16;
+  var _strokeWidth = 3;       // 펜 굵기 (1-10)
+  var _opacity = 1.0;          // 불투명도 (0.1-1.0)
+  var _penType = 'ballpen';    // 'ballpen' | 'highlighter' | 'pencil'
+  var _penFlyoutExpanded = false; // 고급 옵션 확장 여부
+  var _penFlyoutPos = null;    // 드래그 후 저장된 위치 {left, top}
 
   function setTool(tool){
     _currentTool = tool;
     _removeTextCursor();
+    // 다른 도구로 전환 시 펜 플라이아웃 닫기
+    if(tool !== 'draw') _closePenFlyout();
 
     // Update toolbar buttons
     document.querySelectorAll('#pdfToolbar .pdf-tool-btn').forEach(function(b){
@@ -43,10 +50,21 @@ var PDFTools = (function(){
     if(!bar) return;
     bar.innerHTML = '';
 
+    // 펜 플라이아웃 닫기
+    _closePenFlyout();
+
     if(tool === 'select' || tool === 'eraser'){
       bar.style.display = 'none';
       return;
     }
+
+    // draw 모드: 가로 옵션 바 숨기고, 세로 플라이아웃 표시
+    if(tool === 'draw'){
+      bar.style.display = 'none';
+      _showPenFlyout();
+      return;
+    }
+
     bar.style.display = 'flex';
 
     // 메모 도구: 색상만 표시 (사이즈 없음)
@@ -66,7 +84,7 @@ var PDFTools = (function(){
       return;
     }
 
-    // 색상 선택 (draw, highlight, text 모두)
+    // 색상 선택 (highlight, text)
     var colors = ['#FACC15','#4ADE80','#60A5FA','#F87171','#C084FC','#FB923C','#000000','#FFFFFF'];
     colors.forEach(function(c){
       var dot = document.createElement('button');
@@ -103,6 +121,218 @@ var PDFTools = (function(){
       sel.addEventListener('change', function(){ _fontSize = parseInt(sel.value); });
       bar.appendChild(sel);
     }
+  }
+
+  // ── 세로 펜 플라이아웃 ──
+  function _closePenFlyout(){
+    document.querySelectorAll('.pdf-pen-flyout').forEach(function(el){ el.remove(); });
+  }
+
+  function _showPenFlyout(){
+    _closePenFlyout();
+
+    var flyout = document.createElement('div');
+    flyout.className = 'pdf-pen-flyout';
+
+    // ── 드래그 핸들 ──
+    var handle = document.createElement('div');
+    handle.className = 'pdf-pen-handle';
+    handle.innerHTML = '<span class="pdf-pen-handle-grip"></span>';
+    flyout.appendChild(handle);
+
+    // ── 펜 종류 ──
+    var typeSection = document.createElement('div');
+    typeSection.className = 'pdf-pen-section pdf-pen-types';
+
+    var penTypes = [
+      { id: 'ballpen',      icon: 'fa-pen',        label: '볼펜' },
+      { id: 'highlighter',  icon: 'fa-highlighter', label: '형광펜' },
+      { id: 'pencil',       icon: 'fa-pencil',     label: '연필' }
+    ];
+    penTypes.forEach(function(pt){
+      var btn = document.createElement('button');
+      btn.className = 'pdf-pen-type-btn' + (pt.id === _penType ? ' active' : '');
+      btn.innerHTML = '<i class="fa ' + pt.icon + '"></i>';
+      btn.title = pt.label;
+      btn.addEventListener('click', function(e){
+        e.stopPropagation();
+        _penType = pt.id;
+        if(pt.id === 'highlighter'){ _opacity = 0.35; }
+        else if(pt.id === 'pencil'){ _opacity = 0.7; }
+        else { _opacity = 1.0; }
+        // 현재 위치 저장 후 리빌드
+        _penFlyoutPos = { left: parseInt(flyout.style.left), top: parseInt(flyout.style.top) };
+        _showPenFlyout();
+      });
+      typeSection.appendChild(btn);
+    });
+    flyout.appendChild(typeSection);
+
+    // ── 구분선 ──
+    flyout.appendChild(_makeDivider());
+
+    // ── 색상 (2열) ──
+    var colorSection = document.createElement('div');
+    colorSection.className = 'pdf-pen-color-grid';
+    var penColors = ['#FACC15','#4ADE80','#60A5FA','#F87171','#C084FC','#FB923C','#000000','#FFFFFF'];
+    penColors.forEach(function(c){
+      var dot = document.createElement('button');
+      dot.className = 'pdf-pen-color-dot' + (c === _currentColor ? ' active' : '');
+      dot.style.background = c;
+      if(c === '#FFFFFF') dot.style.border = '1px solid var(--border,#444)';
+      dot.addEventListener('click', function(e){
+        e.stopPropagation();
+        _currentColor = c;
+        colorSection.querySelectorAll('.pdf-pen-color-dot').forEach(function(d){ d.classList.remove('active'); });
+        dot.classList.add('active');
+      });
+      colorSection.appendChild(dot);
+    });
+    flyout.appendChild(colorSection);
+
+    // ── 확장 토글 버튼 ──
+    flyout.appendChild(_makeDivider());
+    var expandBtn = document.createElement('button');
+    expandBtn.className = 'pdf-pen-expand-btn';
+    expandBtn.innerHTML = _penFlyoutExpanded
+      ? '<i class="fa fa-chevron-up"></i>'
+      : '<i class="fa fa-sliders"></i>';
+    expandBtn.title = _penFlyoutExpanded ? '접기' : '굵기 · 투명도';
+    expandBtn.addEventListener('click', function(e){
+      e.stopPropagation();
+      _penFlyoutExpanded = !_penFlyoutExpanded;
+      _penFlyoutPos = { left: parseInt(flyout.style.left), top: parseInt(flyout.style.top) };
+      _showPenFlyout();
+    });
+    flyout.appendChild(expandBtn);
+
+    // ── 고급 옵션 (확장 시만 표시) ──
+    if(_penFlyoutExpanded){
+      flyout.appendChild(_makeDivider());
+
+      // 굵기
+      var widthSection = document.createElement('div');
+      widthSection.className = 'pdf-pen-section';
+      var widths = [
+        { val: 1, label: '가늘게' },
+        { val: 3, label: '보통' },
+        { val: 6, label: '굵게' }
+      ];
+      widths.forEach(function(w){
+        var btn = document.createElement('button');
+        btn.className = 'pdf-pen-width-btn' + (w.val === _strokeWidth ? ' active' : '');
+        btn.title = w.label;
+        var line = document.createElement('span');
+        line.className = 'pdf-pen-width-preview';
+        line.style.height = Math.max(1, w.val) + 'px';
+        btn.appendChild(line);
+        btn.addEventListener('click', function(e){
+          e.stopPropagation();
+          _strokeWidth = w.val;
+          widthSection.querySelectorAll('.pdf-pen-width-btn').forEach(function(b){ b.classList.remove('active'); });
+          btn.classList.add('active');
+        });
+        widthSection.appendChild(btn);
+      });
+      flyout.appendChild(widthSection);
+
+      flyout.appendChild(_makeDivider());
+
+      // 투명도
+      var opSection = document.createElement('div');
+      opSection.className = 'pdf-pen-section pdf-pen-opacity-section';
+      var opLabel = document.createElement('span');
+      opLabel.className = 'pdf-pen-opacity-label';
+      opLabel.textContent = Math.round(_opacity * 100) + '%';
+      var slider = document.createElement('input');
+      slider.type = 'range';
+      slider.className = 'pdf-pen-opacity-slider';
+      slider.min = '10'; slider.max = '100'; slider.step = '5';
+      slider.value = Math.round(_opacity * 100);
+      slider.addEventListener('input', function(e){
+        e.stopPropagation();
+        _opacity = parseInt(slider.value) / 100;
+        opLabel.textContent = slider.value + '%';
+      });
+      opSection.appendChild(slider);
+      opSection.appendChild(opLabel);
+      flyout.appendChild(opSection);
+    }
+
+    // 포인터 이벤트 차단 (드래그 핸들은 예외)
+    flyout.addEventListener('pointerdown', function(e){
+      if(!e.target.closest('.pdf-pen-handle')) e.stopPropagation();
+    });
+
+    // DOM 추가
+    document.body.appendChild(flyout);
+
+    // ── 위치: 저장된 위치 or PDF 뷰어 왼쪽 ──
+    if(_penFlyoutPos && _penFlyoutPos.left != null){
+      flyout.style.left = _penFlyoutPos.left + 'px';
+      flyout.style.top = _penFlyoutPos.top + 'px';
+    } else {
+      var host = document.getElementById('pdfViewerHost');
+      var container = document.getElementById('pdfViewerContainer');
+      var ref = host || container;
+      if(ref){
+        var refRect = ref.getBoundingClientRect();
+        flyout.style.left = (refRect.left + 8) + 'px';
+        flyout.style.top = (refRect.top + 60) + 'px';
+      } else {
+        flyout.style.left = '12px';
+        flyout.style.top = '120px';
+      }
+    }
+
+    // 화면 밖 보정
+    requestAnimationFrame(function(){
+      var fRect = flyout.getBoundingClientRect();
+      if(fRect.right > window.innerWidth - 4){
+        flyout.style.left = (window.innerWidth - fRect.width - 4) + 'px';
+      }
+      if(fRect.bottom > window.innerHeight - 4){
+        flyout.style.top = Math.max(4, window.innerHeight - fRect.height - 4) + 'px';
+      }
+      if(fRect.left < 0) flyout.style.left = '4px';
+      if(fRect.top < 0) flyout.style.top = '4px';
+    });
+
+    // ── 드래그 이동 로직 ──
+    _initFlyoutDrag(flyout, handle);
+  }
+
+  function _makeDivider(){
+    var d = document.createElement('div');
+    d.className = 'pdf-pen-divider';
+    return d;
+  }
+
+  function _initFlyoutDrag(flyout, handle){
+    var drag = { active: false, sx: 0, sy: 0, ox: 0, oy: 0 };
+    handle.addEventListener('pointerdown', function(e){
+      e.stopPropagation();
+      e.preventDefault();
+      drag.active = true;
+      drag.sx = e.clientX; drag.sy = e.clientY;
+      drag.ox = parseInt(flyout.style.left) || 0;
+      drag.oy = parseInt(flyout.style.top) || 0;
+      handle.style.cursor = 'grabbing';
+      try { handle.setPointerCapture(e.pointerId); } catch(err){}
+    });
+    handle.addEventListener('pointermove', function(e){
+      if(!drag.active) return;
+      var dx = e.clientX - drag.sx, dy = e.clientY - drag.sy;
+      flyout.style.left = (drag.ox + dx) + 'px';
+      flyout.style.top = (drag.oy + dy) + 'px';
+    });
+    handle.addEventListener('pointerup', function(e){
+      if(!drag.active) return;
+      drag.active = false;
+      handle.style.cursor = '';
+      try { handle.releasePointerCapture(e.pointerId); } catch(err){}
+      _penFlyoutPos = { left: parseInt(flyout.style.left), top: parseInt(flyout.style.top) };
+    });
   }
 
   function getFontSize(){ return _fontSize; }
@@ -175,6 +405,13 @@ var PDFTools = (function(){
     if(_currentTool === 'draw'){
       _currentPath.push({ x: pt.x, y: pt.y, pressure: e.pressure || 0.5 });
       _drawLivePreview(layer);
+      // 라이브 강의: 진행중 스트로크 프리뷰 발행
+      if(typeof PDFLive !== 'undefined' && PDFLive.isPresenting()){
+        var effW = _strokeWidth;
+        if(_penType === 'highlighter') effW = _strokeWidth * 2.5;
+        else if(_penType === 'pencil') effW = _strokeWidth * 0.7;
+        PDFLive.onStrokeProgress(pageNum, _currentPath, _currentColor, effW, _opacity, _penType);
+      }
     } else if(_currentTool === 'highlight'){
       _drawSelectionPreview(layer, pt);
     } else if(_currentTool === 'eraser'){
@@ -197,16 +434,28 @@ var PDFTools = (function(){
 
     if(_currentTool === 'draw' && _currentPath.length > 1){
       var avgP = _currentPath.reduce(function(s, p){ return s + p.pressure; }, 0) / _currentPath.length;
+      // 펜 종류별 실효 굵기 계산
+      var effectiveWidth = _strokeWidth;
+      if(_penType === 'highlighter') effectiveWidth = _strokeWidth * 2.5;
+      else if(_penType === 'pencil') effectiveWidth = _strokeWidth * 0.7;
+      // 압력 기반 미세 조정 (볼펜만)
+      if(_penType === 'ballpen') effectiveWidth = effectiveWidth + (avgP * 3);
       var annot = PDFAnnotations.createAnnot('freehand', pdfId, pageNum, {
         points: _currentPath,
         color: _currentColor,
-        strokeWidth: 1 + (avgP * 6)
+        strokeWidth: effectiveWidth,
+        opacity: _opacity,
+        penType: _penType
       });
       PDFAnnotations.save(annot);
       _undoStack.push(annot.id);
       _redoStack = [];
       _clearPreview(layer);
       PDFAnnotations.renderPage(pageNum, layer, _getViewport());
+      // 라이브 강의: 스트로크 완성 훅
+      if(typeof PDFLive !== 'undefined' && PDFLive.isPresenting()){
+        PDFLive.onStrokeComplete(pageNum, annot);
+      }
     }
     else if(_currentTool === 'highlight' && _startPoint){
       var rect = _makeRect(_startPoint, pt);
@@ -266,7 +515,13 @@ var PDFTools = (function(){
       d += ' L ' + (_currentPath[i].x * scale) + ' ' + (_currentPath[i].y * scale);
     }
     var avgP = _currentPath.reduce(function(s, p){ return s + p.pressure; }, 0) / _currentPath.length;
-    preview.innerHTML = '<path d="' + d + '" stroke="' + _currentColor + '" stroke-width="' + (1 + avgP * 6) + '" fill="none" stroke-linecap="round" stroke-linejoin="round"/>';
+    var prevW = _strokeWidth;
+    if(_penType === 'highlighter') prevW = _strokeWidth * 2.5;
+    else if(_penType === 'pencil') prevW = _strokeWidth * 0.7;
+    if(_penType === 'ballpen') prevW = prevW + (avgP * 3);
+    var prevCap = _penType === 'highlighter' ? 'square' : 'round';
+    preview.innerHTML = '<path d="' + d + '" stroke="' + _currentColor + '" stroke-width="' + prevW
+      + '" fill="none" stroke-linecap="' + prevCap + '" stroke-linejoin="round" stroke-opacity="' + _opacity + '"/>';
   }
 
   // ── Selection Preview (highlight) ──
