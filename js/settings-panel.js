@@ -145,6 +145,51 @@ function renderSettingsPanel(){
 
     h += '</div>'; // end 섹션 1
 
+    // ━━━━━━ 섹션 1.5: 배경 이미지 ━━━━━━
+    var bgEnabled = localStorage.getItem('kjb2-bg-image-enabled') === '1';
+    var bgOpacity = parseFloat(localStorage.getItem('kjb2-bg-image-opacity') || '0.3');
+    var bgOverlay = parseFloat(localStorage.getItem('kjb2-bg-image-overlay') || '0.7');
+    h += '<div class="stp-section">';
+    h += '<div class="stp-sec-title"><i class="fa fa-image"></i> 배경 이미지</div>';
+
+    // 이미지 선택 + 제거 버튼
+    h += '<div class="stp-row">';
+    h += '<div style="display:flex;gap:6px;align-items:center">';
+    h += '<button class="stp-theme-btn" onclick="_stpPickBgImage()" style="flex:1">'
+       + '<i class="fa fa-image"></i> 이미지 선택</button>';
+    if(bgEnabled){
+      h += '<button class="stp-theme-btn" onclick="_stpRemoveBgImage()" style="flex:0 0 auto;color:#ef4444">'
+         + '<i class="fa fa-times"></i> 제거</button>';
+    }
+    h += '</div>';
+    h += '</div>';
+
+    // 미리보기 썸네일
+    h += '<div id="stpBgPreview" class="stp-bg-preview"' + (bgEnabled ? '' : ' style="display:none"') + '></div>';
+
+    // 투명도 슬라이더
+    h += '<div class="stp-row">';
+    h += '<div class="stp-row-head"><i class="fa fa-sun"></i> 이미지 투명도'
+       + '<span class="stp-val" id="stpVal_bgOpacity">' + Math.round(bgOpacity*100) + '%</span></div>';
+    h += '<input type="range" class="stp-range" id="stpR_bgOpacity"'
+       + ' min="0" max="1" step="0.05" value="' + bgOpacity + '"'
+       + ' oninput="_stpChangeBgOpacity(this.value)">';
+    h += '</div>';
+
+    // 오버레이 슬라이더
+    h += '<div class="stp-row">';
+    h += '<div class="stp-row-head"><i class="fa fa-adjust"></i> 오버레이'
+       + '<span class="stp-val" id="stpVal_bgOverlay">' + Math.round(bgOverlay*100) + '%</span></div>';
+    h += '<input type="range" class="stp-range" id="stpR_bgOverlay"'
+       + ' min="0" max="1" step="0.05" value="' + bgOverlay + '"'
+       + ' oninput="_stpChangeBgOverlay(this.value)">';
+    h += '</div>';
+
+    h += '</div>'; // end 배경 이미지 섹션
+
+    // 미리보기 썸네일 로드 (비동기)
+    setTimeout(function(){ _stpLoadBgPreview(); }, 50);
+
     // ━━━━━━ 섹션 2: 본문 설정 ━━━━━━
     h += '<div class="stp-section">';
     h += '<div class="stp-sec-title"><i class="fa fa-font"></i> 본문 설정</div>';
