@@ -11,6 +11,10 @@ body {
 #bgImageLayer { display: none; }
 
 /* ━━ 배경 이미지 활성 시 — 불투명→반투명 글래스 전환 ━━ */
+/* 리사이즈 핸들 — 틈새로 배경 노출 방지 */
+body.has-bg-image .panel-resize-handle {
+  background: var(--bgi-panel);
+}
 /* 메인 콘텐츠 패널 */
 body.has-bg-image #biblePane,
 body.has-bg-image #rightPanel,
