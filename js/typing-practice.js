@@ -1327,6 +1327,7 @@ function _tpOnInput(){
 function _tpUpdateChars(){
   var container = document.getElementById('tpChars');
   if(!container || !_tp.verse) return;
+  if(_tp.source === 'handpos') return; // handpos has its own display logic
 
   var target = _tp.verse.text;
   var typed = _tp.typed;
@@ -2045,6 +2046,7 @@ function _tpCodeToChar(code){
 }
 
 /* Handpos keydown handler — bypasses IME, matches physical keys */
+var _tpHpLastKey = {code:'', time:0};
 function _tpHpKeydown(e){
   if(_tp.finished || !_tp.verse) return;
   if(e.key === 'Escape'){ toggleTypingPanel(); e.preventDefault(); return; }
@@ -2054,6 +2056,13 @@ function _tpHpKeydown(e){
   var ch = _tpCodeToChar(e.code);
   if(ch === null) return;
   e.preventDefault();
+
+  // Dedup: Korean IME can fire duplicate keydown for punctuation keys
+  var now = Date.now();
+  if(e.code === _tpHpLastKey.code && now - _tpHpLastKey.time < 60){
+    return;
+  }
+  _tpHpLastKey = {code:e.code, time:now};
 
   // Clear IME buffer
   var ta = document.getElementById('tpInput');
@@ -2106,22 +2115,23 @@ function _tpHpKeydown(e){
       setTimeout(function(){ _tpNextHandPosVerse(); }, 800);
     }
   } else {
-    // ── Wrong ──
+    // ── Wrong — shake the wrong key on keyboard, not text area ──
     _tp.hpWrong++;
     _tpPlayErrorSound();
-    if(spans[cursor]){
-      var origText = expected;
-      spans[cursor].textContent = ch;
-      spans[cursor].className = 'tp-char tp-wrong tp-punch-err tp-hp-current';
-      // Reset back to expected after shake animation
-      (function(s, txt){
-        setTimeout(function(){
-          if(!s.classList.contains('tp-correct')){
-            s.className = 'tp-char tp-hp-current';
-            s.textContent = txt;
-          }
-        }, 400);
-      })(spans[cursor], origText);
+    var kbEl = document.getElementById('tpKeyboard');
+    if(kbEl){
+      var attr = _tp.lang === 'en' ? 'en' : 'kr';
+      var wrongKey = null;
+      var allKeys = kbEl.querySelectorAll('.tp-kb-key');
+      for(var ki=0; ki<allKeys.length; ki++){
+        if(allKeys[ki].dataset[attr] === ch){ wrongKey = allKeys[ki]; break; }
+      }
+      if(wrongKey){
+        wrongKey.classList.remove('tp-kb-err');
+        void wrongKey.offsetWidth;
+        wrongKey.classList.add('tp-kb-err');
+        (function(k){ setTimeout(function(){ k.classList.remove('tp-kb-err'); }, 500); })(wrongKey);
+      }
     }
   }
 }

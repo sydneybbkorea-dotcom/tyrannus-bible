@@ -225,7 +225,7 @@
 
 /* 미입력 글자 */
 .tp-char {
-  border-radius:2px; color:#fff; opacity:0.5;
+  border-radius:2px; color:#7dd3fc; opacity:0.75;
   transition:opacity .1s, color .1s;
   display:inline-block;
 }
@@ -1567,6 +1567,26 @@
   background:#353a42; border-color:#454a52; border-bottom-color:#2a2f36;
 }
 .tp-overlay:not(.tp-light) .tp-kb-space .tp-kb-main { color:#6a7078; }
+
+/* ── Keyboard error shake (wrong key) ── */
+.tp-kb-key.tp-kb-err {
+  animation:tp-kb-shake 0.45s ease-out !important;
+  border-color:#ff4757 !important;
+  border-bottom-color:#cc2233 !important;
+  box-shadow:0 0 0 3px rgba(255,71,87,0.4), 0 4px 16px rgba(255,71,87,0.3) !important;
+  z-index:2;
+}
+.tp-kb-key.tp-kb-err .tp-kb-main {
+  color:#ff4757 !important;
+}
+@keyframes tp-kb-shake {
+  0%   { transform:translateX(0) scale(1.1); }
+  20%  { transform:translateX(-5px) scale(1.1); }
+  40%  { transform:translateX(5px) scale(1.1); }
+  60%  { transform:translateX(-3px) scale(1.05); }
+  80%  { transform:translateX(2px) scale(1.02); }
+  100% { transform:translateX(0) scale(1); }
+}
 
 /* ═══ Responsive ═══ */
 @media(max-width:600px){
