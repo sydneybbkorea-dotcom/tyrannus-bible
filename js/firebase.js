@@ -29,6 +29,8 @@ onAuthStateChanged(auth, async user => {
     initSync(db, user.uid);
     initPdfSync(db, storage, user.uid);
     initQuota(db, user.uid);
+    window._firebaseUid = user.uid;
+    console.log('[Admin] Your UID:', user.uid);
     window.showUserBar?.(user);
     await loadQuota(db, user.uid);
     await loadFromFirestore(db, user.uid);
@@ -41,6 +43,7 @@ onAuthStateChanged(auth, async user => {
   } else {
     clearSync(); clearPdfSync(); stopRealtimeSync(); stopPdfRealtimeSync();
     window._firebaseReady = false;
+    window._firebaseUid = null;
     window.hideUserBar?.();
     if(window.restore) window.restore();
     if(window.renderAll) window.renderAll();

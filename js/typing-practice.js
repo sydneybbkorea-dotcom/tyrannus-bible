@@ -32,10 +32,10 @@ function _tpGetTier(score){
 var _tpKbLayout = [
   // Row 0: top (qwertyuiop)
   [{en:'q',kr:'ㅂ',finger:0},{en:'w',kr:'ㅈ',finger:1},{en:'e',kr:'ㄷ',finger:2},{en:'r',kr:'ㄱ',finger:3},{en:'t',kr:'ㅅ',finger:3},{en:'y',kr:'ㅛ',finger:4},{en:'u',kr:'ㅕ',finger:4},{en:'i',kr:'ㅑ',finger:5},{en:'o',kr:'ㅐ',finger:6},{en:'p',kr:'ㅔ',finger:7}],
-  // Row 1: home (asdfghjkl)
-  [{en:'a',kr:'ㅁ',finger:0},{en:'s',kr:'ㄴ',finger:1},{en:'d',kr:'ㅇ',finger:2},{en:'f',kr:'ㄹ',finger:3},{en:'g',kr:'ㅎ',finger:3},{en:'h',kr:'ㅗ',finger:4},{en:'j',kr:'ㅓ',finger:4},{en:'k',kr:'ㅏ',finger:5},{en:'l',kr:'ㅣ',finger:6}],
-  // Row 2: bottom (zxcvbnm)
-  [{en:'z',kr:'ㅋ',finger:0},{en:'x',kr:'ㅌ',finger:1},{en:'c',kr:'ㅊ',finger:2},{en:'v',kr:'ㅍ',finger:3},{en:'b',kr:'ㅠ',finger:3},{en:'n',kr:'ㅜ',finger:4},{en:'m',kr:'ㅡ',finger:4}]
+  // Row 1: home (asdfghjkl;')
+  [{en:'a',kr:'ㅁ',finger:0},{en:'s',kr:'ㄴ',finger:1},{en:'d',kr:'ㅇ',finger:2},{en:'f',kr:'ㄹ',finger:3},{en:'g',kr:'ㅎ',finger:3},{en:'h',kr:'ㅗ',finger:4},{en:'j',kr:'ㅓ',finger:4},{en:'k',kr:'ㅏ',finger:5},{en:'l',kr:'ㅣ',finger:6},{en:';',kr:';',finger:7},{en:"'",kr:"'",finger:7}],
+  // Row 2: bottom (zxcvbnm,./)
+  [{en:'z',kr:'ㅋ',finger:0},{en:'x',kr:'ㅌ',finger:1},{en:'c',kr:'ㅊ',finger:2},{en:'v',kr:'ㅍ',finger:3},{en:'b',kr:'ㅠ',finger:3},{en:'n',kr:'ㅜ',finger:4},{en:'m',kr:'ㅡ',finger:4},{en:',',kr:',',finger:5},{en:'.',kr:'.',finger:6},{en:'/',kr:'/',finger:7}]
 ];
 
 // Reverse lookup: jamo/letter → keyboard position
@@ -2024,10 +2024,16 @@ function _tpFullDecompose(ch){
 }
 
 /* Map physical key code → character for current language */
+var _tpCodeMap = {Semicolon:';',Quote:"'",Comma:',',Period:'.',Slash:'/'};
 function _tpCodeToChar(code){
   if(!code) return null;
-  if(!code.startsWith('Key')) return null;
-  var letter = code.charAt(3).toLowerCase();
+  var letter = null;
+  if(code.startsWith('Key')){
+    letter = code.charAt(3).toLowerCase();
+  } else if(_tpCodeMap[code]){
+    letter = _tpCodeMap[code];
+  }
+  if(!letter) return null;
   for(var r = 0; r < _tpKbLayout.length; r++){
     for(var c = 0; c < _tpKbLayout[r].length; c++){
       if(_tpKbLayout[r][c].en === letter){
@@ -2183,19 +2189,17 @@ function _tpRenderKeyboard(){
   h+=k({mod:true,lbl:'\\'},1.5);
   h+='</div>';
 
-  // ── Home row: Caps + ASDF + ; ' Enter (15 units) ──
+  // ── Home row: Caps + ASDF;' + Enter (15 units) ──
   h+='<div class="tp-kb-row">';
   h+=k({mod:true,lbl:'Caps'},1.75);
   for(var c=0;c<_tpKbLayout[1].length;c++) h+=k(_tpKbLayout[1][c]);
-  h+=k({lbl:';',f:7}); h+=k({lbl:"'",f:7});
   h+=k({mod:true,lbl:'Enter'},2.25);
   h+='</div>';
 
-  // ── Bottom row: Shift + ZXCV + , . / Shift (15 units) ──
+  // ── Bottom row: Shift + ZXCV,./ + Shift (15 units) ──
   h+='<div class="tp-kb-row">';
   h+=k({mod:true,lbl:'Shift'},2.25);
   for(var c=0;c<_tpKbLayout[2].length;c++) h+=k(_tpKbLayout[2][c]);
-  h+=k({lbl:',',f:5}); h+=k({lbl:'.',f:6}); h+=k({lbl:'/',f:7});
   h+=k({mod:true,lbl:'Shift'},2.75);
   h+='</div>';
 

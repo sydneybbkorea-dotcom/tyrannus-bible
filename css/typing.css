@@ -169,7 +169,7 @@
 
 /* Verse Area */
 .tp-verse-area {
-  width:100%; max-width:960px; margin-bottom:28px;
+  width:100%; max-width:960px; margin:0 auto 28px;
   position:relative;
 }
 .tp-verse-header {
@@ -308,19 +308,34 @@
   60%  { filter:blur(2px); }
   100% { transform:scale(1); filter:blur(0); opacity:1; }
 }
-/* Correct — balloon pop burst */
+/* Dark theme: sky blue glow on appear */
+.tp-overlay:not(.tp-light) .tp-hp-chars .tp-hp-current {
+  animation:tp-hp-appear-dark 0.45s cubic-bezier(0.34,1.56,0.64,1) !important;
+}
+@keyframes tp-hp-appear-dark {
+  0%   { transform:scale(0.3); filter:blur(16px); opacity:0; text-shadow:none; }
+  50%  { filter:blur(3px); text-shadow:0 0 30px rgba(184,236,255,1), 0 0 60px rgba(125,211,252,0.6); }
+  100% { transform:scale(1); filter:blur(0); opacity:1;
+         text-shadow:0 0 12px rgba(184,236,255,0.9), 0 0 30px rgba(125,211,252,0.7), 0 0 60px rgba(96,165,250,0.4), 0 0 100px rgba(56,189,248,0.2); }
+}
+/* Correct — sky blue glow burst with dissolve */
 .tp-hp-chars .tp-char.tp-correct {
   opacity:0 !important;
-  color:#5eead4 !important;
+  color:#7dd3fc !important;
 }
 .tp-hp-chars .tp-char.tp-correct.tp-punch {
-  animation:tp-hp-pop 0.5s ease-out forwards !important;
+  animation:tp-hp-pop 0.65s cubic-bezier(0.25,0.46,0.45,0.94) forwards !important;
 }
 @keyframes tp-hp-pop {
-  0%   { transform:scale(1); filter:blur(0); opacity:1; }
-  30%  { transform:scale(1.5); filter:blur(2px); opacity:0.7; }
-  60%  { transform:scale(2.2); filter:blur(8px); opacity:0.3; }
-  100% { transform:scale(3); filter:blur(20px); opacity:0; }
+  0%   { transform:scale(1); filter:blur(0); opacity:1;
+         text-shadow:0 0 20px rgba(125,211,252,0.8), 0 0 40px rgba(96,165,250,0.5); }
+  20%  { transform:scale(1.4); filter:blur(1px); opacity:0.9;
+         text-shadow:0 0 30px rgba(125,211,252,1), 0 0 60px rgba(56,189,248,0.6), 0 0 100px rgba(96,165,250,0.3); }
+  50%  { transform:scale(2.0); filter:blur(6px); opacity:0.5;
+         text-shadow:0 0 40px rgba(125,211,252,0.6), 0 0 80px rgba(56,189,248,0.3); }
+  80%  { transform:scale(2.8); filter:blur(14px); opacity:0.15;
+         text-shadow:0 0 20px rgba(125,211,252,0.2); }
+  100% { transform:scale(3.2); filter:blur(24px); opacity:0; text-shadow:none; }
 }
 /* Wrong — red shake then fade */
 .tp-hp-chars .tp-char.tp-wrong {
@@ -362,15 +377,17 @@
 .tp-hp-chars .tp-caret { display:none !important; }
 /* Dark theme handpos */
 .tp-overlay:not(.tp-light) .tp-hp-chars {
-  background:#1e2228 !important;
-  border-color:#333840 !important;
-  box-shadow:0 4px 20px rgba(0,0,0,0.25) !important;
+  background:radial-gradient(ellipse at center, rgba(30,40,60,0.95), rgba(20,24,32,0.98)) !important;
+  border-color:#2a3545 !important;
+  box-shadow:0 4px 30px rgba(0,0,0,0.35), inset 0 0 60px rgba(96,165,250,0.03) !important;
 }
 .tp-overlay:not(.tp-light) .tp-hp-chars .tp-hp-current {
-  color:#e8ecf0 !important;
+  color:#b8ecff !important;
+  text-shadow:0 0 12px rgba(184,236,255,0.9), 0 0 30px rgba(125,211,252,0.7), 0 0 60px rgba(96,165,250,0.4), 0 0 100px rgba(56,189,248,0.2) !important;
+  filter:drop-shadow(0 0 10px rgba(184,236,255,0.5)) !important;
 }
 .tp-overlay:not(.tp-light) .tp-hp-chars .tp-char {
-  color:#404850 !important;
+  color:#2a3545 !important;
 }
 
 /* 글자 뒤 따라가는 캐럿 커서 */
@@ -1363,7 +1380,7 @@
 /* ═══ Keyboard — Full Layout (Ratatype 8-zone fingers) ═══ */
 .tp-keyboard {
   display:flex; flex-direction:column; align-items:stretch;
-  gap:4px; margin-top:18px; margin-bottom:8px;
+  gap:4px; margin:18px auto 8px;
   padding:16px 18px 14px;
   background:#e8edf0;
   border-radius:16px;
@@ -1371,7 +1388,6 @@
   user-select:none;
   max-width:780px;
   width:100%;
-  align-self:center;
 }
 .tp-kb-row { display:flex; gap:4px; }
 .tp-kb-key {
