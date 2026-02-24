@@ -40,6 +40,7 @@ export async function createSession(pdfName, totalPages){
     currentPage: 1,
     totalPages: totalPages || 0,
     strokes: {},
+    whiteboard: {},
     liveStroke: null,
     pointer: null,
     status: 'live',
@@ -174,6 +175,23 @@ export async function clearPointer(code){
   } catch(e){}
 }
 
+// ── 화이트보드 상태 업데이트 ──
+export async function updateWhiteboard(code, pageNum, isOn){
+  if(!_db) return;
+  try {
+    const snap = await getDoc(doc(_db, 'sessions', code));
+    if(!snap.exists()) return;
+    const data = snap.data();
+    const wb = data.whiteboard || {};
+    if(isOn) wb[String(pageNum)] = true;
+    else delete wb[String(pageNum)];
+    await updateDoc(doc(_db, 'sessions', code), {
+      whiteboard: wb,
+      updatedAt: Date.now()
+    });
+  } catch(e){ console.error('[LiveSync] updateWhiteboard:', e); }
+}
+
 // ── 해당 페이지 스트로크 초기화 ──
 export async function clearStrokes(code, pageNum){
   if(!_db) return;
@@ -236,6 +254,9 @@ export function listenSession(code, callbacks){
 
     // 레이저 포인터
     if(callbacks.onPointer) callbacks.onPointer(data.pointer);
+
+    // 화이트보드
+    if(callbacks.onWhiteboard) callbacks.onWhiteboard(data.whiteboard || {});
 
   }, function(err){
     console.error('[LiveSync] listenSession 오류:', err);
@@ -305,6 +326,7 @@ window._liveClearLiveStroke     = clearLiveStroke;
 window._liveUpdatePointer       = updatePointer;
 window._liveClearPointer        = clearPointer;
 window._liveClearStrokes        = clearStrokes;
+window._liveUpdateWhiteboard    = updateWhiteboard;
 window._liveEndSession          = endSession;
 window._liveListenSession       = listenSession;
 window._liveIncrementViewerCount = incrementViewerCount;

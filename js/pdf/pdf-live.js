@@ -54,6 +54,9 @@ var PDFLive = (function(){
     // 라이브 인디케이터 표시
     _showLiveIndicator();
 
+    // 프리젠터 툴바 표시
+    if(typeof PDFPresenterBar !== 'undefined') PDFPresenterBar.show();
+
     // 패널 갱신
     renderPanel();
     if(typeof toast === 'function') toast('라이브 시작! 코드: ' + code);
@@ -130,6 +133,8 @@ var PDFLive = (function(){
 
   async function endPresenting(){
     if(_role !== 'presenter' || !_sessionCode) return;
+    // 프리젠터 툴바 숨기기
+    if(typeof PDFPresenterBar !== 'undefined') PDFPresenterBar.hide();
     await _liveEndSession(_sessionCode);
     _unhookPresenterGoToPage();
     _hideLiveIndicator();
@@ -196,6 +201,8 @@ var PDFLive = (function(){
     var exists = S.pdfFolders.some(function(f){ return f.id === LIVE_FOLDER_ID; });
     if(!exists){
       S.pdfFolders.push({ id: LIVE_FOLDER_ID, name: '라이브 강의' });
+      // 기본 열림 상태
+      if(S.openPdfFolders) S.openPdfFolders.add(LIVE_FOLDER_ID);
       if(typeof persistPdf === 'function') persistPdf();
     }
   }
@@ -303,8 +310,23 @@ var PDFLive = (function(){
         if(_role !== 'viewer') return;
         _renderLaserPointer(pos);
       },
+      onWhiteboard: function(wb){
+        if(_role !== 'viewer' && _role !== 'replay') return;
+        _applyWhiteboardState(wb);
+      },
       onEnd: function(){
         _onSessionEnded();
+      }
+    });
+  }
+
+  // 시청자: 화이트보드 상태 적용
+  function _applyWhiteboardState(wb){
+    if(!wb || typeof wb !== 'object') return;
+    Object.keys(wb).forEach(function(pageStr){
+      var pageNum = parseInt(pageStr);
+      if(typeof PDFPresenterBar !== 'undefined'){
+        PDFPresenterBar.setWhiteboard(pageNum, !!wb[pageStr]);
       }
     });
   }
@@ -705,7 +727,13 @@ var PDFLive = (function(){
     }, 500);
   }
 
+  // ── 초기화: "라이브 강의" 폴더 보장 ──
+  function init(){
+    _ensureLiveFolder();
+  }
+
   return {
+    init: init,
     isPresenting: isPresenting,
     isViewing: isViewing,
     getSessionCode: getSessionCode,

@@ -67,6 +67,25 @@ var PDFAnnotations = (function(){
     return _annotsByPage.get(key) || [];
   }
 
+  // 해당 페이지 모든 어노테이션 삭제
+  function clearPage(pdfId, pageNum){
+    var key = pdfId + ':' + pageNum;
+    var annots = _annotsByPage.get(key) || [];
+    var ids = annots.map(function(a){ return a.id; });
+    _annotsByPage.set(key, []);
+    // IDB에서 삭제
+    var promises = ids.map(function(id){ return IDBStore.del('pdf-annots', id); });
+    Promise.all(promises).then(function(){
+      if(window.persistPdfAnnotsToCloud) window.persistPdfAnnotsToCloud();
+    });
+    // 레이어 리렌더
+    var layer = document.querySelector('.pdf-annot-layer[data-page="' + pageNum + '"]');
+    if(layer){
+      var vp = { scale: (typeof PDFViewer !== 'undefined') ? PDFViewer.getScale() || 1 : 1 };
+      renderPage(pageNum, layer, vp);
+    }
+  }
+
   // Render annotations on a page's annotation layer
   function renderPage(pageNum, layerEl, viewport){
     var pdfId = PDFViewer.getCurrentPdfId();
@@ -413,6 +432,84 @@ var PDFAnnotations = (function(){
         })(annot, el);
         break;
 
+      case 'shape':
+        el = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        el.setAttribute('class', 'pdf-annot pdf-annot-shape');
+        el.style.position = 'absolute';
+        el.style.top = '0';
+        el.style.left = '0';
+        el.style.width = '100%';
+        el.style.height = '100%';
+        el.style.overflow = 'visible';
+
+        var shapeScale = viewport.scale || 1;
+        var shapeColor = annot.color || '#000';
+        var shapeW = annot.strokeWidth || 2;
+        var shapeOp = annot.opacity != null ? annot.opacity : 1;
+
+        // arrowhead marker defs
+        if(annot.shapeType === 'arrow'){
+          var defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+          var markerId = 'arrow-' + (annot.id || '').replace(/[^a-z0-9]/gi, '');
+          var marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+          marker.setAttribute('id', markerId);
+          marker.setAttribute('markerWidth', '10');
+          marker.setAttribute('markerHeight', '7');
+          marker.setAttribute('refX', '10');
+          marker.setAttribute('refY', '3.5');
+          marker.setAttribute('orient', 'auto');
+          var poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+          poly.setAttribute('points', '0 0, 10 3.5, 0 7');
+          poly.setAttribute('fill', shapeColor);
+          poly.setAttribute('fill-opacity', shapeOp);
+          marker.appendChild(poly);
+          defs.appendChild(marker);
+          el.appendChild(defs);
+        }
+
+        var shapeEl;
+        if(annot.shapeType === 'line' || annot.shapeType === 'arrow'){
+          if(annot.points && annot.points.length >= 2){
+            shapeEl = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+            shapeEl.setAttribute('x1', annot.points[0].x * shapeScale);
+            shapeEl.setAttribute('y1', annot.points[0].y * shapeScale);
+            shapeEl.setAttribute('x2', annot.points[1].x * shapeScale);
+            shapeEl.setAttribute('y2', annot.points[1].y * shapeScale);
+            shapeEl.setAttribute('stroke', shapeColor);
+            shapeEl.setAttribute('stroke-width', shapeW);
+            shapeEl.setAttribute('stroke-opacity', shapeOp);
+            if(annot.shapeType === 'arrow'){
+              shapeEl.setAttribute('marker-end', 'url(#' + markerId + ')');
+            }
+          }
+        } else if(annot.shapeType === 'rect'){
+          if(annot.rect){
+            shapeEl = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            shapeEl.setAttribute('x', annot.rect.x * shapeScale);
+            shapeEl.setAttribute('y', annot.rect.y * shapeScale);
+            shapeEl.setAttribute('width', annot.rect.width * shapeScale);
+            shapeEl.setAttribute('height', annot.rect.height * shapeScale);
+            shapeEl.setAttribute('stroke', shapeColor);
+            shapeEl.setAttribute('stroke-width', shapeW);
+            shapeEl.setAttribute('stroke-opacity', shapeOp);
+            shapeEl.setAttribute('fill', 'none');
+          }
+        } else if(annot.shapeType === 'circle'){
+          if(annot.rect){
+            shapeEl = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+            shapeEl.setAttribute('cx', (annot.rect.x + annot.rect.width / 2) * shapeScale);
+            shapeEl.setAttribute('cy', (annot.rect.y + annot.rect.height / 2) * shapeScale);
+            shapeEl.setAttribute('rx', (annot.rect.width / 2) * shapeScale);
+            shapeEl.setAttribute('ry', (annot.rect.height / 2) * shapeScale);
+            shapeEl.setAttribute('stroke', shapeColor);
+            shapeEl.setAttribute('stroke-width', shapeW);
+            shapeEl.setAttribute('stroke-opacity', shapeOp);
+            shapeEl.setAttribute('fill', 'none');
+          }
+        }
+        if(shapeEl) el.appendChild(shapeEl);
+        break;
+
       case 'area-link':
         el = document.createElement('div');
         el.className = 'pdf-annot pdf-annot-area-link';
@@ -484,6 +581,7 @@ var PDFAnnotations = (function(){
       opacity: opts.opacity != null ? opts.opacity : 1,
       penType: opts.penType || null,
       fontSize: opts.fontSize || null,
+      shapeType: opts.shapeType || null,
       linkedUri: opts.linkedUri || null,
       tags: opts.tags || [],
       createdAt: Date.now()
@@ -761,6 +859,7 @@ var PDFAnnotations = (function(){
     save: save,
     remove: remove,
     getPage: getPage,
+    clearPage: clearPage,
     renderPage: renderPage,
     createAnnot: createAnnot,
     _insertMemoToNote: _insertMemoToNote

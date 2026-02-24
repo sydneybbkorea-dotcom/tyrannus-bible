@@ -14,9 +14,11 @@ var PDFTools = (function(){
   var _fontSize = 16;
   var _strokeWidth = 3;       // 펜 굵기 (1-10)
   var _opacity = 1.0;          // 불투명도 (0.1-1.0)
-  var _penType = 'ballpen';    // 'ballpen' | 'pencil'
+  var _penType = 'ballpen';    // 'ballpen' | 'pencil' | 'highlighter'
   var _penFlyoutExpanded = false; // 고급 옵션 확장 여부
   var _penFlyoutPos = null;    // 드래그 후 저장된 위치 {left, top}
+  var _shapeType = 'rect';     // 'line' | 'arrow' | 'rect' | 'circle'
+  var _shapePreview = null;    // 도형 프리뷰 SVG 요소
 
   function setTool(tool){
     _currentTool = tool;
@@ -28,7 +30,7 @@ var PDFTools = (function(){
     document.querySelectorAll('#pdfToolbar .pdf-tool-btn').forEach(function(b){
       b.classList.remove('active');
     });
-    var map = { select:'Select', highlight:'HL', draw:'Draw', text:'Text', memo:'Memo', eraser:'Eraser' };
+    var map = { select:'Select', highlight:'HL', draw:'Draw', text:'Text', memo:'Memo', eraser:'Eraser', shape:'Shape' };
     var activeBtn = document.getElementById('pdfTool' + map[tool]);
     if(activeBtn) activeBtn.classList.add('active');
 
@@ -358,6 +360,9 @@ var PDFTools = (function(){
 
     if(_currentTool === 'draw'){
       _currentPath = [{ x: pt.x, y: pt.y, pressure: e.pressure || 0.5 }];
+    } else if(_currentTool === 'shape'){
+      _startPoint = pt;
+      _shapePreview = _createShapePreviewSvg(layer);
     } else if(_currentTool === 'eraser'){
       var pdfId = typeof PDFViewer !== 'undefined' ? PDFViewer.getCurrentPdfId() : null;
       if(pdfId) _eraseAt(pt, pdfId, pageNum, layer);
@@ -387,6 +392,8 @@ var PDFTools = (function(){
         else if(_penType === 'pencil') effW = _strokeWidth * 0.7;
         PDFLive.onStrokeProgress(pageNum, _currentPath, _currentColor, effW, _opacity, _penType);
       }
+    } else if(_currentTool === 'shape'){
+      _updateShapePreview(pt);
     } else if(_currentTool === 'highlight'){
       _drawSelectionPreview(layer, pt);
     } else if(_currentTool === 'eraser'){
@@ -445,6 +452,9 @@ var PDFTools = (function(){
       }
       _clearPreview(layer);
       PDFAnnotations.renderPage(pageNum, layer, _getViewport());
+    }
+    else if(_currentTool === 'shape' && _startPoint){
+      _finalizeShape(pt, pdfId, pageNum, layer);
     }
     else if(_currentTool === 'text'){
       _showTextInput(layer, pt, pdfId, pageNum);
@@ -723,6 +733,128 @@ var PDFTools = (function(){
     document.querySelectorAll('.pdf-text-cursor').forEach(function(el){ el.remove(); });
   }
 
+  // ── 도형 프리뷰 ──
+  function _createShapePreviewSvg(layer){
+    var svg = layer.querySelector('.pdf-shape-preview');
+    if(!svg){
+      svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('class', 'pdf-shape-preview');
+      svg.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:5;overflow:visible';
+      layer.appendChild(svg);
+    }
+    // arrowhead marker 추가
+    var defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+    var marker = document.createElementNS('http://www.w3.org/2000/svg', 'marker');
+    marker.setAttribute('id', 'pb-arrow-preview');
+    marker.setAttribute('markerWidth', '10');
+    marker.setAttribute('markerHeight', '7');
+    marker.setAttribute('refX', '10');
+    marker.setAttribute('refY', '3.5');
+    marker.setAttribute('orient', 'auto');
+    var poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+    poly.setAttribute('points', '0 0, 10 3.5, 0 7');
+    poly.setAttribute('fill', _currentColor);
+    marker.appendChild(poly);
+    defs.appendChild(marker);
+    svg.appendChild(defs);
+    return svg;
+  }
+
+  function _updateShapePreview(pt){
+    if(!_shapePreview || !_startPoint) return;
+    var scale = _getViewport().scale;
+    var sx = _startPoint.x * scale, sy = _startPoint.y * scale;
+    var ex = pt.x * scale, ey = pt.y * scale;
+
+    // 기존 프리뷰 도형 제거 (defs는 유지)
+    var old = _shapePreview.querySelector('.pb-shape-el');
+    if(old) old.remove();
+
+    var el;
+    switch(_shapeType){
+      case 'line':
+        el = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        el.setAttribute('x1', sx); el.setAttribute('y1', sy);
+        el.setAttribute('x2', ex); el.setAttribute('y2', ey);
+        el.setAttribute('stroke', _currentColor);
+        el.setAttribute('stroke-width', _strokeWidth);
+        el.setAttribute('stroke-opacity', _opacity);
+        break;
+      case 'arrow':
+        el = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        el.setAttribute('x1', sx); el.setAttribute('y1', sy);
+        el.setAttribute('x2', ex); el.setAttribute('y2', ey);
+        el.setAttribute('stroke', _currentColor);
+        el.setAttribute('stroke-width', _strokeWidth);
+        el.setAttribute('stroke-opacity', _opacity);
+        el.setAttribute('marker-end', 'url(#pb-arrow-preview)');
+        break;
+      case 'rect':
+        el = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        el.setAttribute('x', Math.min(sx, ex));
+        el.setAttribute('y', Math.min(sy, ey));
+        el.setAttribute('width', Math.abs(ex - sx));
+        el.setAttribute('height', Math.abs(ey - sy));
+        el.setAttribute('stroke', _currentColor);
+        el.setAttribute('stroke-width', _strokeWidth);
+        el.setAttribute('stroke-opacity', _opacity);
+        el.setAttribute('fill', 'none');
+        break;
+      case 'circle':
+        el = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
+        el.setAttribute('cx', (sx + ex) / 2);
+        el.setAttribute('cy', (sy + ey) / 2);
+        el.setAttribute('rx', Math.abs(ex - sx) / 2);
+        el.setAttribute('ry', Math.abs(ey - sy) / 2);
+        el.setAttribute('stroke', _currentColor);
+        el.setAttribute('stroke-width', _strokeWidth);
+        el.setAttribute('stroke-opacity', _opacity);
+        el.setAttribute('fill', 'none');
+        break;
+    }
+    if(el){
+      el.setAttribute('class', 'pb-shape-el');
+      _shapePreview.appendChild(el);
+    }
+  }
+
+  function _finalizeShape(pt, pdfId, pageNum, layer){
+    // 프리뷰 제거
+    if(_shapePreview && _shapePreview.parentElement) _shapePreview.remove();
+    _shapePreview = null;
+
+    if(!_startPoint) return;
+    var dx = Math.abs(pt.x - _startPoint.x), dy = Math.abs(pt.y - _startPoint.y);
+    if(dx < 3 && dy < 3) return; // 너무 작으면 무시
+
+    var opts = {
+      color: _currentColor,
+      strokeWidth: _strokeWidth,
+      opacity: _opacity,
+      shapeType: _shapeType
+    };
+
+    if(_shapeType === 'line' || _shapeType === 'arrow'){
+      opts.points = [
+        { x: _startPoint.x, y: _startPoint.y },
+        { x: pt.x, y: pt.y }
+      ];
+    } else {
+      opts.rect = _makeRect(_startPoint, pt);
+    }
+
+    var annot = PDFAnnotations.createAnnot('shape', pdfId, pageNum, opts);
+    PDFAnnotations.save(annot);
+    _undoStack.push(annot.id);
+    _redoStack = [];
+    PDFAnnotations.renderPage(pageNum, layer, _getViewport());
+
+    // 라이브 강의: 스트로크 완성 훅
+    if(typeof PDFLive !== 'undefined' && PDFLive.isPresenting()){
+      PDFLive.onStrokeComplete(pageNum, annot);
+    }
+  }
+
   function _eraseAt(pt, pdfId, pageNum, layer){
     var annots = PDFAnnotations.getPage(pdfId, pageNum);
     for(var i = annots.length - 1; i >= 0; i--){
@@ -802,11 +934,42 @@ var PDFTools = (function(){
     if(layer) PDFAnnotations.renderPage(annotData.pageNum, layer, _getViewport());
   }
 
+  // ── 공개 API 확장 (프리젠터바에서 사용) ──
+  function setPenType(type){
+    if(type === 'highlighter'){
+      _penType = 'highlighter';
+      _opacity = 0.4;
+    } else if(type === 'pencil'){
+      _penType = 'pencil';
+      _opacity = 0.7;
+    } else {
+      _penType = 'ballpen';
+      _opacity = 1.0;
+    }
+  }
+  function getPenType(){ return _penType; }
+  function setStrokeWidth(w){ _strokeWidth = w; }
+  function getStrokeWidth(){ return _strokeWidth; }
+  function setOpacity(o){ _opacity = o; }
+  function getOpacity(){ return _opacity; }
+  function getColor(){ return _currentColor; }
+  function setShapeType(t){ _shapeType = t; }
+  function getShapeType(){ return _shapeType; }
+
   return {
     setTool: setTool,
     getTool: getTool,
     setColor: setColor,
+    getColor: getColor,
     getFontSize: getFontSize,
+    setPenType: setPenType,
+    getPenType: getPenType,
+    setStrokeWidth: setStrokeWidth,
+    getStrokeWidth: getStrokeWidth,
+    setOpacity: setOpacity,
+    getOpacity: getOpacity,
+    setShapeType: setShapeType,
+    getShapeType: getShapeType,
     initPageEvents: initPageEvents,
     undo: undo,
     redo: redo

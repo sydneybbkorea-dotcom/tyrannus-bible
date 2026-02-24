@@ -16,6 +16,16 @@ export function clearPdfSync(){
   clearTimeout(_timerMeta); clearTimeout(_timerAnnots);
 }
 
+// ── 라이브 강의 폴더 보장 (클라우드 동기화 후에도 유지) ──
+const LIVE_FOLDER_ID = 'pf-live-lectures';
+function _ensureLiveFolder(){
+  const S = window.S;
+  if(!S || !S.pdfFolders) return;
+  if(!S.pdfFolders.some(f => f.id === LIVE_FOLDER_ID)){
+    S.pdfFolders.push({ id: LIVE_FOLDER_ID, name: '라이브 강의' });
+  }
+}
+
 // ══════════════════════════════════════════════════════
 //  SAVE TO FIRESTORE (디바운스)
 // ══════════════════════════════════════════════════════
@@ -124,6 +134,9 @@ export async function loadPdfFromFirestore(db, uid){
       _migrateLocalBlobsToCloud();
     }
 
+    // 라이브 강의 폴더 보장
+    _ensureLiveFolder();
+
     // PDF 패널 UI 갱신
     if(typeof PDFLibrary !== 'undefined') PDFLibrary.render();
     return true;
@@ -169,6 +182,7 @@ export function startPdfRealtimeSync(db, uid){
     if(d.pdfFiles) S.pdfFiles = d.pdfFiles;
     if(d.curPdfFolder) S.curPdfFolder = d.curPdfFolder;
     if(d.openPdfFolders) S.openPdfFolders = new Set(d.openPdfFolders);
+    _ensureLiveFolder();
     if(typeof PDFLibrary !== 'undefined'){
       PDFLibrary.persistPdf();
       PDFLibrary.render();

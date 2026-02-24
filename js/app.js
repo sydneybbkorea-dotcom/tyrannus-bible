@@ -49,6 +49,9 @@
   // 3.6) Restore PDF library data
   if(typeof PDFLibrary !== 'undefined') PDFLibrary.restorePdf();
 
+  // 3.7) 라이브 강의 폴더 보장
+  if(typeof PDFLive !== 'undefined') PDFLive.init();
+
   // 4) 데이터 로드 완료 후 UI 렌더링
   setupVTip();
   initBibleTabs();

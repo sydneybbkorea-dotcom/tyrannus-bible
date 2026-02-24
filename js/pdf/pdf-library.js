@@ -15,6 +15,12 @@ var PDFLibrary = (function(){
       cont.innerHTML = '<div class="pdf-lib-empty"><i class="fa fa-file-pdf"></i><span>PDF 파일이 없습니다.<br>업로드 버튼을 눌러 파일을 추가하세요.</span></div>';
       return;
     }
+    // "라이브 강의" 폴더를 맨 위로 정렬
+    roots.sort(function(a, b){
+      if(a.id === 'pf-live-lectures') return -1;
+      if(b.id === 'pf-live-lectures') return 1;
+      return 0;
+    });
     roots.forEach(function(f){
       cont.appendChild(_buildFolderNode(f, 0));
     });
@@ -43,7 +49,10 @@ var PDFLibrary = (function(){
     var arrow = hasKids
       ? '<i class="ft-arrow fa fa-chevron-right' + (isOpen ? ' open' : '') + '"></i>'
       : '<span class="ft-arrow-sp"></span>';
-    var icon = '<i class="ft-icon fa fa-folder' + (isOpen ? '-open' : '') + '" style="color:' + (isOpen ? 'var(--gold)' : 'var(--text3)') + '"></i>';
+    var isLiveFolder = f.id === 'pf-live-lectures';
+    var icon = isLiveFolder
+      ? '<i class="ft-icon fa fa-tower-broadcast" style="color:#ef4444"></i>'
+      : '<i class="ft-icon fa fa-folder' + (isOpen ? '-open' : '') + '" style="color:' + (isOpen ? 'var(--gold)' : 'var(--text3)') + '"></i>';
     var count = files.length > 0 ? '<span class="pdf-ft-count">' + files.length + '</span>' : '';
     head.innerHTML = arrow + icon + '<span class="ft-name">' + _esc(f.name) + '</span>' + count;
 
@@ -172,6 +181,7 @@ var PDFLibrary = (function(){
 
   function renameFolder(folderId){
     hidePdfCtx();
+    if(folderId === 'pf-live-lectures'){ toast('기본 폴더는 이름을 변경할 수 없습니다.'); return; }
     var f = S.pdfFolders.find(function(x){ return x.id === folderId; });
     if(!f) return;
     var newName = prompt('새 폴더 이름:', f.name);
@@ -184,6 +194,7 @@ var PDFLibrary = (function(){
 
   function deleteFolder(folderId, folderName, fileCount){
     hidePdfCtx();
+    if(folderId === 'pf-live-lectures'){ toast('라이브 강의 폴더는 삭제할 수 없습니다.'); return; }
     var all = _getDescendants(folderId);
     var totalFiles = S.pdfFiles.filter(function(f){ return all.indexOf(f.folderId) !== -1; }).length;
     var msg = totalFiles > 0
