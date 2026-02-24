@@ -34,61 +34,55 @@ function _stpChange(id, val, unit){
 }
 
 // ── 배경 이미지 핸들러 ──
+var _stpBgPending = null; // 선택 후 적용 전 임시 dataUrl
+
 function _stpPickBgImage(){
   var inp = document.createElement('input');
   inp.type = 'file'; inp.accept = 'image/*';
   inp.onchange = function(){
     var file = inp.files && inp.files[0];
     if(!file) return;
-    // 최대 10MB 제한
     if(file.size > 10 * 1024 * 1024){
       alert('이미지 크기는 10MB 이하로 선택해주세요.');
       return;
     }
     var reader = new FileReader();
     reader.onload = function(){
-      var dataUrl = reader.result;
-      // IDB에 저장
-      IDBStore.open().then(function(){
-        return IDBStore.put('settings', { key: 'bg-image-data', value: dataUrl });
-      }).then(function(){
-        localStorage.setItem('kjb2-bg-image-enabled', '1');
-        var opacity = parseFloat(localStorage.getItem('kjb2-bg-image-opacity') || '0.3');
-        var overlay = parseFloat(localStorage.getItem('kjb2-bg-image-overlay') || '0.7');
-        _stpApplyBgImage(dataUrl, opacity, overlay);
-        renderSettingsPanel();
-      });
+      _stpBgPending = reader.result;
+      // 미리보기 표시
+      var prev = document.getElementById('stpBgPreview');
+      if(prev){ prev.style.display = ''; prev.style.backgroundImage = 'url("' + _stpBgPending + '")'; }
+      // 적용 버튼 표시
+      var btn = document.getElementById('stpBgApplyBtn');
+      if(btn) btn.style.display = '';
     };
     reader.readAsDataURL(file);
   };
   inp.click();
 }
 
-function _stpRemoveBgImage(){
+function _stpApplyBgImageBtn(){
+  var dataUrl = _stpBgPending;
+  if(!dataUrl) return;
   IDBStore.open().then(function(){
-    return IDBStore.del('settings', 'bg-image-data');
+    return IDBStore.put('settings', { key: 'bg-image-data', value: dataUrl });
   }).then(function(){
-    localStorage.removeItem('kjb2-bg-image-enabled');
-    _stpApplyBgImage(null, 0, 0.7);
+    localStorage.setItem('kjb2-bg-image-enabled', '1');
+    _stpApplyBgImage(dataUrl);
+    _stpBgPending = null;
     renderSettingsPanel();
   });
 }
 
-function _stpChangeBgOpacity(val){
-  val = parseFloat(val);
-  var lbl = document.getElementById('stpVal_bgOpacity');
-  if(lbl) lbl.textContent = Math.round(val*100) + '%';
-  localStorage.setItem('kjb2-bg-image-opacity', String(val));
-  var el = document.getElementById('bgImageLayer');
-  if(el) el.style.opacity = String(val);
-}
-
-function _stpChangeBgOverlay(val){
-  val = parseFloat(val);
-  var lbl = document.getElementById('stpVal_bgOverlay');
-  if(lbl) lbl.textContent = Math.round(val*100) + '%';
-  localStorage.setItem('kjb2-bg-image-overlay', String(val));
-  document.documentElement.style.setProperty('--bg-overlay-opacity', String(val));
+function _stpRemoveBgImage(){
+  _stpBgPending = null;
+  IDBStore.open().then(function(){
+    return IDBStore.del('settings', 'bg-image-data');
+  }).then(function(){
+    localStorage.removeItem('kjb2-bg-image-enabled');
+    _stpApplyBgImage(null);
+    renderSettingsPanel();
+  });
 }
 
 // 미리보기 썸네일 로드
@@ -102,7 +96,7 @@ function _stpLoadBgPreview(){
   }).then(function(rec){
     if(rec && rec.value){
       previewEl.style.display = '';
-      previewEl.style.backgroundImage = 'url(' + rec.value + ')';
+      previewEl.style.backgroundImage = 'url("' + rec.value + '")';
     } else {
       previewEl.style.display = 'none';
     }

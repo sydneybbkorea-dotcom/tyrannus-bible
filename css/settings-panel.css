@@ -231,6 +231,14 @@
   background-repeat:no-repeat;
   border:1px solid var(--glass-border);
 }
+.stp-bg-apply {
+  width:100%; padding:8px 0; font-size:12px; font-weight:700;
+  color:#fff; background:var(--accent-color, var(--gold));
+  border:none; border-radius:6px; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; gap:6px;
+  transition:opacity .15s;
+}
+.stp-bg-apply:hover { opacity:.85; }
 
 /* ── Language selector ── */
 .stp-lang-sel {

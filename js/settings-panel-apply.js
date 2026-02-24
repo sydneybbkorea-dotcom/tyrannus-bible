@@ -117,23 +117,16 @@ function _stpReset(){
   _stpResetText();
 }
 
-// ── 배경 이미지 적용 ──
+// ── 배경 이미지 적용 (body에 직접) ──
 function _stpApplyBgImage(dataUrl, opacity, overlay){
-  var el = document.getElementById('bgImageLayer');
-  if(!el) return;
+  var body = document.body;
   if(!dataUrl){
-    el.style.opacity = '0';
-    el.style.backgroundImage = '';
-    document.documentElement.classList.remove('has-bg-image');
-    document.body.classList.remove('has-bg-image');
-    document.documentElement.style.removeProperty('--bg-overlay-opacity');
+    body.classList.remove('has-bg-image');
+    body.style.removeProperty('--bg-user-image');
     return;
   }
-  el.style.backgroundImage = 'url(' + dataUrl + ')';
-  el.style.opacity = String(opacity);
-  document.documentElement.classList.add('has-bg-image');
-  document.body.classList.add('has-bg-image');
-  document.documentElement.style.setProperty('--bg-overlay-opacity', String(overlay));
+  body.style.setProperty('--bg-user-image', 'url("' + dataUrl + '")');
+  body.classList.add('has-bg-image');
 }
 
 function _stpRestoreOnLoad(){
@@ -145,12 +138,10 @@ function _stpRestoreOnLoad(){
   // 배경 이미지 복원
   var bgEnabled = localStorage.getItem('kjb2-bg-image-enabled');
   if(bgEnabled === '1'){
-    var opacity = parseFloat(localStorage.getItem('kjb2-bg-image-opacity') || '0.3');
-    var overlay = parseFloat(localStorage.getItem('kjb2-bg-image-overlay') || '0.7');
     IDBStore.open().then(function(){
       return IDBStore.get('settings', 'bg-image-data');
     }).then(function(rec){
-      if(rec && rec.value) _stpApplyBgImage(rec.value, opacity, overlay);
+      if(rec && rec.value) _stpApplyBgImage(rec.value);
     });
   }
 }
