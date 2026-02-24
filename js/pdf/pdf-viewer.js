@@ -374,6 +374,8 @@ var PDFViewer = (function(){
     if(_container) _container.innerHTML = '';
     _container = null;
     _scale = 1.0;
+    // 펜 플라이아웃 정리
+    if(typeof PDFTools !== 'undefined') PDFTools.setTool('select');
     // Tell panel to close this tab
     if(typeof PDFPanel !== 'undefined'){
       PDFPanel.closeActiveTab();

@@ -58,11 +58,10 @@ var PDFTools = (function(){
       return;
     }
 
-    // draw 모드: 가로 옵션 바 숨기고, 세로 플라이아웃 표시
+    // draw 모드: 색상 바 + 세로 플라이아웃(펜 종류·굵기·투명도) 동시 표시
     if(tool === 'draw'){
-      bar.style.display = 'none';
       _showPenFlyout();
-      return;
+      // 아래에서 색상 바 그대로 표시 (fall through)
     }
 
     bar.style.display = 'flex';
@@ -84,7 +83,7 @@ var PDFTools = (function(){
       return;
     }
 
-    // 색상 선택 (highlight, text)
+    // 색상 선택 (highlight, text, draw)
     var colors = ['#FACC15','#4ADE80','#60A5FA','#F87171','#C084FC','#FB923C','#000000','#FFFFFF'];
     colors.forEach(function(c){
       var dot = document.createElement('button');
@@ -167,28 +166,6 @@ var PDFTools = (function(){
       typeSection.appendChild(btn);
     });
     flyout.appendChild(typeSection);
-
-    // ── 구분선 ──
-    flyout.appendChild(_makeDivider());
-
-    // ── 색상 (2열) ──
-    var colorSection = document.createElement('div');
-    colorSection.className = 'pdf-pen-color-grid';
-    var penColors = ['#FACC15','#4ADE80','#60A5FA','#F87171','#C084FC','#FB923C','#000000','#FFFFFF'];
-    penColors.forEach(function(c){
-      var dot = document.createElement('button');
-      dot.className = 'pdf-pen-color-dot' + (c === _currentColor ? ' active' : '');
-      dot.style.background = c;
-      if(c === '#FFFFFF') dot.style.border = '1px solid var(--border,#444)';
-      dot.addEventListener('click', function(e){
-        e.stopPropagation();
-        _currentColor = c;
-        colorSection.querySelectorAll('.pdf-pen-color-dot').forEach(function(d){ d.classList.remove('active'); });
-        dot.classList.add('active');
-      });
-      colorSection.appendChild(dot);
-    });
-    flyout.appendChild(colorSection);
 
     // ── 확장 토글 버튼 ──
     flyout.appendChild(_makeDivider());
