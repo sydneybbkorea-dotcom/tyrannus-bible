@@ -9,15 +9,36 @@ body {
 }
 /* ── Background Image: body.style 인라인으로 적용됨 ── */
 #bgImageLayer { display: none; }
-/* 배경 이미지 활성 시 — 불투명 배경을 반투명 글래스로 전환 */
+
+/* ━━ 배경 이미지 활성 시 — 불투명→반투명 글래스 전환 ━━ */
+/* 메인 콘텐츠 패널 */
 body.has-bg-image #biblePane,
+body.has-bg-image #rightPanel,
+body.has-bg-image #noteContent {
+  background: var(--bgi-panel) !important;
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+}
+/* 툴바/탭바 */
 body.has-bg-image #bibleTabBar,
 body.has-bg-image #bibleViewBar {
-  background: var(--glass-bg-1);
-  backdrop-filter: var(--glass-blur-2); -webkit-backdrop-filter: var(--glass-blur-2);
+  background: var(--bgi-bar) !important;
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
 }
+/* 스크롤 영역 — 투명 (부모 패널 글래스가 커버) */
 body.has-bg-image #bibleScroll {
-  background: transparent;
+  background: transparent !important;
+}
+/* 팝업/드롭다운 — 가장 불투명 */
+body.has-bg-image .nav-picker-popup,
+body.has-bg-image .cp-drop {
+  background: var(--bgi-popup) !important;
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+}
+/* PDF 패널 */
+body.has-bg-image #pdfPanel,
+body.has-bg-image .pdf-panel {
+  background: var(--bgi-panel) !important;
+  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
 }
 
 #main { display:flex; flex:1; overflow:hidden }

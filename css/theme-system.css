@@ -213,6 +213,10 @@
   --glass-blur-2: blur(20px);
   --glass-blur-3: blur(24px);
   --body-gradient: linear-gradient(135deg, #0a0a1a, #0d1025, #151030, #0a0a1a);
+  /* 배경 이미지 활성 시 사용 — 가독성 확보용 */
+  --bgi-panel: rgba(10,10,26,0.82);
+  --bgi-bar: rgba(10,10,26,0.75);
+  --bgi-popup: rgba(10,10,26,0.88);
 }
 
 :root[data-theme="light"] {
@@ -226,6 +230,9 @@
   --glass-blur-2: blur(20px);
   --glass-blur-3: blur(24px);
   --body-gradient: linear-gradient(135deg, #fff5f5, #ffe8e8, #fce0e0, #fff0f0);
+  --bgi-panel: rgba(255,245,245,0.85);
+  --bgi-bar: rgba(255,240,240,0.80);
+  --bgi-popup: rgba(255,245,245,0.90);
 }
 
 :root[data-theme="sepia"] {
@@ -239,6 +246,9 @@
   --glass-blur-2: blur(20px);
   --glass-blur-3: blur(24px);
   --body-gradient: linear-gradient(135deg, #f5ead6, #f0e0c4, #ebe0c0, #f5ead6);
+  --bgi-panel: rgba(245,234,214,0.85);
+  --bgi-bar: rgba(240,224,196,0.80);
+  --bgi-popup: rgba(245,234,214,0.90);
 }
 
 /* ── Design System Tokens ── */
