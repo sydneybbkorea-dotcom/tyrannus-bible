@@ -7,8 +7,18 @@ body {
   display:flex; flex-direction:column; font-size:14px;
   -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
 }
-/* ── Background Image: body.style.background 인라인으로 적용됨 ── */
+/* ── Background Image: body.style 인라인으로 적용됨 ── */
 #bgImageLayer { display: none; }
+/* 배경 이미지 활성 시 — 불투명 배경을 반투명 글래스로 전환 */
+body.has-bg-image #biblePane,
+body.has-bg-image #bibleTabBar,
+body.has-bg-image #bibleViewBar {
+  background: var(--glass-bg-1);
+  backdrop-filter: var(--glass-blur-2); -webkit-backdrop-filter: var(--glass-blur-2);
+}
+body.has-bg-image #bibleScroll {
+  background: transparent;
+}
 
 #main { display:flex; flex:1; overflow:hidden }
 
