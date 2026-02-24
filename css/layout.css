@@ -7,14 +7,7 @@ body {
   display:flex; flex-direction:column; font-size:14px;
   -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
 }
-/* ── Background Image (body에 직접 적용) ── */
-body.has-bg-image {
-  background-image: var(--bg-user-image) !important;
-  background-size: cover !important;
-  background-position: center !important;
-  background-repeat: no-repeat !important;
-  background-attachment: fixed !important;
-}
+/* ── Background Image: body.style.background 인라인으로 적용됨 ── */
 #bgImageLayer { display: none; }
 
 #main { display:flex; flex:1; overflow:hidden }

@@ -117,15 +117,16 @@ function _stpReset(){
   _stpResetText();
 }
 
-// ── 배경 이미지 적용 (body에 직접) ──
-function _stpApplyBgImage(dataUrl, opacity, overlay){
+// ── 배경 이미지 적용 (body.style.background 인라인) ──
+function _stpApplyBgImage(dataUrl){
   var body = document.body;
   if(!dataUrl){
+    body.style.background = '';   // 인라인 제거 → CSS var(--body-gradient) 복원
     body.classList.remove('has-bg-image');
-    body.style.removeProperty('--bg-user-image');
     return;
   }
-  body.style.setProperty('--bg-user-image', 'url("' + dataUrl + '")');
+  // 인라인 background로 직접 설정 — CSS 변수/클래스 우선순위 문제 없음
+  body.style.background = 'url("' + dataUrl + '") center / cover no-repeat fixed';
   body.classList.add('has-bg-image');
 }
 
