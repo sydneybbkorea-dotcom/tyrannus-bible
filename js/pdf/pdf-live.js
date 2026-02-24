@@ -557,12 +557,12 @@ var PDFLive = (function(){
     // 코드 입력 참가
     html += '<div class="live-join-section">'
       + '<label class="live-label">코드로 참가</label>'
-      + '<div class="live-join-row">'
       + '<input class="live-code-input" id="liveCodeInput" placeholder="ABC123" maxlength="6" '
+      + 'style="width:100%;margin-bottom:6px" '
       + 'onkeydown="if(event.key===\'Enter\')PDFLive.joinFromInput()">'
-      + '<button class="live-btn live-btn-join" onclick="PDFLive.joinFromInput()">'
+      + '<button class="live-btn live-btn-join" style="width:100%" onclick="PDFLive.joinFromInput()">'
       + '<i class="fa fa-sign-in-alt"></i> 참가</button>'
-      + '</div></div>';
+      + '</div>';
 
     html += '<div class="live-divider"></div>';
 
