@@ -1,5 +1,5 @@
 // sw.js — Service Worker for offline support
-var CACHE_NAME = 'tyrannus-v43';
+var CACHE_NAME = 'tyrannus-v44';
 var SHELL_CACHE = 'tyrannus-shell-v30';
 var DATA_CACHE = 'tyrannus-data-v30';
 
