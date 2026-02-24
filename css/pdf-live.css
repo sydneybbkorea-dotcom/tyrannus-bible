@@ -85,7 +85,6 @@
   font-weight: 600;
   letter-spacing: 3px;
   text-align: center;
-  text-transform: uppercase;
   outline: none;
 }
 .live-code-input:focus {
