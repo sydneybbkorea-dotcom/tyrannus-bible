@@ -2,7 +2,7 @@
 import { doc, getDoc, setDoc, updateDoc, deleteDoc, onSnapshot, increment,
   collection, query, where, orderBy, getDocs, limit }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
-import { ref, uploadBytes, getDownloadURL }
+import { ref, uploadBytes, getDownloadURL, getBlob }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js';
 
 let _db = null, _storage = null, _uid = null;
@@ -88,6 +88,22 @@ export async function getSessionPdfUrl(code){
     return await getDownloadURL(ref(_storage, data.pdfStoragePath));
   } catch(e){
     console.error('[LiveSync] getSessionPdfUrl 실패:', e);
+    return null;
+  }
+}
+
+// ── PDF Blob 직접 다운로드 (CORS 우회) ──
+export async function downloadSessionPdfBlob(code){
+  if(!_storage || !_db) return null;
+  try {
+    const snap = await getDoc(doc(_db, 'sessions', code));
+    if(!snap.exists()) return null;
+    const data = snap.data();
+    if(!data.pdfStoragePath) return null;
+    const storageRef = ref(_storage, data.pdfStoragePath);
+    return await getBlob(storageRef);
+  } catch(e){
+    console.error('[LiveSync] downloadSessionPdfBlob 실패:', e);
     return null;
   }
 }
@@ -281,6 +297,7 @@ window._liveCreateSession       = createSession;
 window._liveJoinSession         = joinSession;
 window._liveUploadSessionPdf    = uploadSessionPdf;
 window._liveGetSessionPdfUrl    = getSessionPdfUrl;
+window._liveDownloadPdfBlob     = downloadSessionPdfBlob;
 window._liveUpdatePage          = updatePage;
 window._liveAddStroke           = addStroke;
 window._liveUpdateLiveStroke    = updateLiveStroke;

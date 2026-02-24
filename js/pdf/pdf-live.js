@@ -27,6 +27,10 @@ var PDFLive = (function(){
     var pdfName = PDFViewer.getCurrentPdfId() || 'slide';
     var totalPages = PDFViewer.getTotalPages() || 1;
 
+    // "라이브 강의" 폴더에 현재 PDF 등록
+    _ensureLiveFolder();
+    _registerPdfInLiveFolder(pdfName);
+
     if(typeof _liveCreateSession !== 'function'){
       toast('Firebase 모듈이 로드되지 않았습니다.');
       _role = null;
@@ -184,31 +188,66 @@ var PDFLive = (function(){
     if(typeof toast === 'function') toast((data.ownerName || '발표자') + '님의 강의에 참가합니다.');
   }
 
+  // ── "라이브 강의" 전용 폴더 확보 ──
+  var LIVE_FOLDER_ID = 'pf-live-lectures';
+
+  function _ensureLiveFolder(){
+    if(!S.pdfFolders) S.pdfFolders = [];
+    var exists = S.pdfFolders.some(function(f){ return f.id === LIVE_FOLDER_ID; });
+    if(!exists){
+      S.pdfFolders.push({ id: LIVE_FOLDER_ID, name: '라이브 강의' });
+      if(typeof persistPdf === 'function') persistPdf();
+    }
+  }
+
+  // 발표자: 현재 열린 PDF를 라이브 강의 폴더로 이동/등록
+  function _registerPdfInLiveFolder(pdfId){
+    if(!S.pdfFiles) return;
+    var file = S.pdfFiles.find(function(f){ return f.id === pdfId; });
+    if(file){
+      file.folderId = LIVE_FOLDER_ID;
+      if(typeof persistPdf === 'function') persistPdf();
+    }
+  }
+
   async function _downloadAndOpenPdf(code, pdfName){
     try {
       if(typeof toast === 'function') toast('PDF 다운로드 중...');
 
-      // PDF URL 대기 (업로드 진행 중일 수 있음)
-      var url = null;
+      // Firebase SDK getBlob()으로 직접 다운로드 (CORS 우회)
+      var blob = null;
       for(var attempt = 0; attempt < 10; attempt++){
-        url = await _liveGetSessionPdfUrl(code);
-        if(url) break;
+        blob = await _liveDownloadPdfBlob(code);
+        if(blob) break;
         await new Promise(function(r){ setTimeout(r, 1500); });
       }
-      if(!url){
+      if(!blob){
         if(typeof toast === 'function') toast('PDF를 다운로드할 수 없습니다.');
         return false;
       }
 
-      // fetch → blob
-      var resp = await fetch(url);
-      var blob = await resp.blob();
+      // "라이브 강의" 폴더 확보
+      _ensureLiveFolder();
 
-      // IDB 저장
-      var pdfId = 'live-' + code;
+      // IDB에 저장 + pdfFiles 목록에 등록
+      var pdfId = 'live_' + code;
+      var fileName = (pdfName || 'slide') + '.pdf';
       if(typeof IDBStore !== 'undefined'){
         await IDBStore.open();
-        await IDBStore.saveFile(blob, { id: pdfId, name: pdfName || 'slide.pdf', type: 'application/pdf' });
+        await IDBStore.saveFile(blob, { id: pdfId, name: fileName, type: 'application/pdf' });
+      }
+
+      // S.pdfFiles에 등록 (중복 방지)
+      if(!S.pdfFiles) S.pdfFiles = [];
+      if(!S.pdfFiles.some(function(f){ return f.id === pdfId; })){
+        S.pdfFiles.push({
+          id: pdfId,
+          name: fileName,
+          size: blob.size || 0,
+          folderId: LIVE_FOLDER_ID,
+          createdAt: Date.now()
+        });
+        if(typeof persistPdf === 'function') persistPdf();
       }
 
       // PDF 패널 열기 + 뷰어에 표시
