@@ -144,14 +144,22 @@ function _stpRestoreOnLoad(){
   _stpApply('fontSize', v.fontSize);
   _stpApply('letterSp', v.letterSp);
   _stpApply('lineH', v.lineH);
+  // 배경 이미지는 _stpRestoreBgImage()로 별도 호출 (IDB 초기화 후)
+}
 
-  // 배경 이미지 복원
+// IDB open 완료 후 호출되어야 함
+function _stpRestoreBgImage(){
   var bgEnabled = localStorage.getItem('kjb2-bg-image-enabled');
-  if(bgEnabled === '1'){
-    IDBStore.open().then(function(){
-      return IDBStore.get('settings', 'bg-image-data');
-    }).then(function(rec){
-      if(rec && rec.value) _stpApplyBgImage(rec.value);
-    });
-  }
+  if(bgEnabled !== '1') return;
+  IDBStore.get('settings', 'bg-image-data').then(function(rec){
+    if(rec && rec.value && rec.value.length > 100){
+      _stpApplyBgImage(rec.value);
+      console.log('[BG] 복원 완료, URL 길이:', rec.value.length);
+    } else {
+      console.warn('[BG] IDB에 유효한 이미지 없음, 길이:', rec ? (rec.value||'').length : 0);
+      localStorage.removeItem('kjb2-bg-image-enabled');
+    }
+  }).catch(function(e){
+    console.warn('[BG] 복원 실패:', e);
+  });
 }

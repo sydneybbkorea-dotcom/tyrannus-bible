@@ -38,6 +38,8 @@
           await LinkRegistry.bulkMigrate(S.notes);
         }
       }
+      // IDB open 완료 → 배경 이미지 복원
+      if(typeof _stpRestoreBgImage === 'function') _stpRestoreBgImage();
     } catch(e){
       console.warn('[App] IDB/LinkRegistry init failed:', e);
     }
