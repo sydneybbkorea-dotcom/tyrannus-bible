@@ -115,15 +115,27 @@ function _stpSetLang(lang){
   }
 }
 
-// 색상 초기화 (테마 다크 + 강조 레드 + 배경 레드 + 성경글씨 기본)
+// 색상 초기화 — 현재 테마 유지, 테마별 기본값 적용
 function _stpResetColors(){
   if(typeof ThemeSwitcher !== 'undefined'){
-    ThemeSwitcher.setTheme('dark');
-    ThemeSwitcher.setAccent('red');
-    if(ThemeSwitcher.setBase) ThemeSwitcher.setBase('red');
-    if(ThemeSwitcher.setBookAccent) ThemeSwitcher.setBookAccent('red');
-    if(ThemeSwitcher.setRailAccent) ThemeSwitcher.setRailAccent('');
-    if(ThemeSwitcher.setLayoutColor) ThemeSwitcher.setLayoutColor('');
+    var theme = ThemeSwitcher.getTheme();
+
+    if(theme === 'light'){
+      // 라이트 모드 기본값
+      ThemeSwitcher.setAccent('cyan');
+      if(ThemeSwitcher.setBase) ThemeSwitcher.setBase('cyan');
+      if(ThemeSwitcher.setBookAccent) ThemeSwitcher.setBookAccent('orange');
+      if(ThemeSwitcher.setRailAccent) ThemeSwitcher.setRailAccent('cyan');
+      if(ThemeSwitcher.setCustomLayoutColor) ThemeSwitcher.setCustomLayoutColor('#ffffff');
+    } else {
+      // 다크/세피아 기본값
+      if(theme !== 'sepia') ThemeSwitcher.setTheme('dark');
+      ThemeSwitcher.setAccent('red');
+      if(ThemeSwitcher.setBase) ThemeSwitcher.setBase('red');
+      if(ThemeSwitcher.setBookAccent) ThemeSwitcher.setBookAccent('red');
+      if(ThemeSwitcher.setRailAccent) ThemeSwitcher.setRailAccent('');
+      if(ThemeSwitcher.setLayoutColor) ThemeSwitcher.setLayoutColor('');
+    }
     if(ThemeSwitcher.resetContentColor) ThemeSwitcher.resetContentColor();
   }
   renderSettingsPanel();
