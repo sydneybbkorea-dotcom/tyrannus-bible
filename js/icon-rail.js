@@ -1,4 +1,4 @@
-// icon-rail.js — Slack 스타일 아이콘 레일 클릭 → 확장 패널 토글
+// icon-rail.js — 아이콘 레일: 패널 토글 + 사이드패널 섹션 토글 (PaneManager 연동)
 var _activeRail = null;
 var _spPinned = false;
 var _railHidden = false;
@@ -26,23 +26,25 @@ function _closeTypingIfOpen(){
 function openSidePanel(name){
   _closeTypingIfOpen();
   _activeRail = name;
-  document.querySelectorAll('.rail-icon').forEach(b=>{
+  // 섹션 아이콘 활성 상태 (패널 토글 아이콘 제외)
+  document.querySelectorAll('.rail-icon:not(.rail-pane-toggle)').forEach(function(b){
     b.classList.toggle('active', b.dataset.rail===name);
   });
   const sp = document.getElementById('sidePanel');
   if(sp) sp.classList.add('open');
-  document.querySelectorAll('.sp-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.sp-section').forEach(function(s){ s.classList.remove('active'); });
   const sec = document.getElementById('sp-'+name);
   if(sec) sec.classList.add('active');
   _initSection(name);
-  // hymns: hide bible top bars for full height
   _updateBibleBars();
 }
 
 function closeSidePanel(){
   if(_spPinned && _activeRail==='bible') return;
   _activeRail = null;
-  document.querySelectorAll('.rail-icon').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.rail-icon:not(.rail-pane-toggle)').forEach(function(b){
+    b.classList.remove('active');
+  });
   const sp = document.getElementById('sidePanel');
   if(sp) sp.classList.remove('open');
   _updateBibleBars();
@@ -52,7 +54,6 @@ function closeSidePanel(){
 function _updateBibleBars(){
   var tabBar = document.getElementById('bibleTabBar');
   var viewBar = document.getElementById('bibleViewBar');
-  // hide when hymns panel is active, hymns overlay is open, or typing panel is open
   var hymnsActive = _activeRail === 'hymns';
   var hymOvl = document.getElementById('hymnsOverlay');
   var overlayOpen = hymOvl && hymOvl.style.display !== 'none';
@@ -63,25 +64,36 @@ function _updateBibleBars(){
   if(viewBar) viewBar.style.display = hide ? 'none' : '';
 }
 
-// 노트 아이콘: 사이드 카테고리 없이 오른쪽 패널 직접 토글
+// 노트 아이콘: PaneManager 통해 노트 pane 토글
 function toggleNotePanel(){
   _closeTypingIfOpen();
-  const noteBtn = document.querySelector('.rail-icon[data-rail="notes"]');
-  if(S.panelOpen==='notes' && !document.getElementById('rightPanel')?.classList.contains('rp-hide')){
-    togglePanel('notes');
-    if(noteBtn) noteBtn.classList.remove('active');
+  if(typeof PaneManager !== 'undefined'){
+    PaneManager.toggle('notes');
+    // 노트가 표시되면 기본 탭 활성화
+    if(PaneManager.isVisible('notes')){
+      openPanel('notes'); switchSub('notes');
+      if(typeof NotePanel!=='undefined' && !NotePanel.isInEditor()){
+        if(typeof renderFolderTree==='function') renderFolderTree();
+      }
+    }
   } else {
-    if(_activeRail && !_spPinned) closeSidePanel();
-    openPanel('notes'); switchSub('notes');
-    if(noteBtn) noteBtn.classList.add('active');
-    // 라이브러리가 기본 — 활성 탭 없으면 폴더 트리 렌더
-    if(typeof NotePanel!=='undefined' && !NotePanel.isInEditor()){
-      if(typeof renderFolderTree==='function') renderFolderTree();
+    // PaneManager 미로드 시 레거시 동작
+    const noteBtn = document.querySelector('.rail-icon[data-rail="notes"]');
+    if(S.panelOpen==='notes' && !document.getElementById('rightPanel')?.classList.contains('rp-hide')){
+      togglePanel('notes');
+      if(noteBtn) noteBtn.classList.remove('active');
+    } else {
+      if(_activeRail && !_spPinned) closeSidePanel();
+      openPanel('notes'); switchSub('notes');
+      if(noteBtn) noteBtn.classList.add('active');
+      if(typeof NotePanel!=='undefined' && !NotePanel.isInEditor()){
+        if(typeof renderFolderTree==='function') renderFolderTree();
+      }
     }
   }
 }
 
-// 사전 아이콘: 오른쪽 패널 사전 탭 직접 토글
+// 사전 아이콘: PaneManager 통해 노트 pane에서 사전 탭 표시
 function toggleDictPanel(){
   _closeTypingIfOpen();
   const btn=document.querySelector('.rail-icon[data-rail="dictionary"]');
@@ -90,6 +102,8 @@ function toggleDictPanel(){
     if(btn) btn.classList.remove('active');
   }else{
     if(_activeRail&&!_spPinned) closeSidePanel();
+    // PaneManager로 노트 pane 표시 (사전은 노트 pane 안에 있음)
+    if(typeof PaneManager !== 'undefined') PaneManager.show('notes');
     openPanel('dictionary'); switchTab('dictionary');
     if(btn) btn.classList.add('active');
   }
@@ -115,6 +129,7 @@ function toggleKnowledgeGraph(){
     document.querySelector('.rail-icon[data-rail="graph"]')?.classList.remove('active');
   } else {
     if(_activeRail && !_spPinned) closeSidePanel();
+    if(typeof PaneManager !== 'undefined') PaneManager.show('notes');
     openPanel('notes');
     switchSub('graph');
     document.querySelector('.rail-icon[data-rail="graph"]')?.classList.add('active');
@@ -142,4 +157,15 @@ function _initSection(name){
   else if(name==='settings'&&typeof renderSettingsPanel==='function') renderSettingsPanel();
   else if(name==='hymns'&&typeof _hymInitSidePanel==='function') _hymInitSidePanel();
   else if(name==='live'&&typeof PDFLive!=='undefined') PDFLive.renderPanel();
+}
+
+// ── PaneManager 상태 변경 시 레일 아이콘 동기화 ──
+if(typeof EventBus !== 'undefined'){
+  EventBus.on('pane:changed', function(data){
+    var visible = data.visible || [];
+    document.querySelectorAll('.rail-pane-toggle').forEach(function(btn){
+      var paneId = btn.dataset.pane;
+      btn.classList.toggle('active', visible.indexOf(paneId) !== -1);
+    });
+  });
 }

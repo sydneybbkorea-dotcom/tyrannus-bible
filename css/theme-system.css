@@ -299,6 +299,42 @@
 
   /* Focus ring (accessibility) */
   --focus-ring: 0 0 0 2px var(--bg-primary), 0 0 0 4px var(--accent-color);
+
+  /* ── Pane System (3-Pane 레이아웃) ── */
+  --pane-bg: var(--bg-surface);
+  --pane-radius: 0px;
+  --pane-margin: 0px;
+  --pane-shadow: none;
+  --pane-header-bg: var(--bg-secondary);
+  --pane-header-border: var(--glass-border);
+  --pane-tag-bg: var(--accent-dim);
+  --pane-tag-color: var(--accent-color);
+
+  /* ── Icon Rail (왼쪽 레일) ── */
+  --rail-width: 56px;
+  --rail-icon-size: 40px;
+  --rail-icon-bg: transparent;
+  --rail-icon-color: var(--text-muted);
+  --rail-icon-hover-bg: var(--glass-bg-2);
+  --rail-icon-active-bg: var(--accent-dim);
+  --rail-icon-active-color: var(--accent-color);
+
+  /* ── Right Menu (우측 드롭다운) ── */
+  --rmenu-width: 240px;
+  --rmenu-bg: var(--glass-bg-3);
+  --rmenu-border: var(--glass-border);
+  --rmenu-shadow: var(--glass-shadow);
+
+  /* ── Resize Handle ── */
+  --handle-width: 5px;
+  --handle-color: transparent;
+  --handle-hover-color: var(--accent-color);
+
+  /* ── 패널별 개별 변수 ── */
+  --bible-tabbar-bg: var(--bg-secondary);
+  --bible-viewbar-bg: var(--bg-secondary);
+  --pdf-header-bg: var(--bg-secondary);
+  --notes-tabs-bg: var(--bg-secondary);
 }
 
 /* ── Focus Ring for Accessibility ── */

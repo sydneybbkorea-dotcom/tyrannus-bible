@@ -14,11 +14,13 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <!-- App CSS (모듈화) -->
-<link rel="stylesheet" href="css/theme-system.css?v=16">
-<link rel="stylesheet" href="css/variables.css?v=25">
-<link rel="stylesheet" href="css/layout.css?v=26">
-<link rel="stylesheet" href="css/icon-rail.css?v=18">
-<link rel="stylesheet" href="css/side-panel.css?v=17">
+<link rel="stylesheet" href="css/theme-system.css?v=17">
+<link rel="stylesheet" href="css/variables.css?v=26">
+<link rel="stylesheet" href="css/pane-system.css?v=1">
+<link rel="stylesheet" href="css/layout.css?v=27">
+<link rel="stylesheet" href="css/icon-rail.css?v=19">
+<link rel="stylesheet" href="css/side-panel.css?v=18">
+<link rel="stylesheet" href="css/right-menu.css?v=1">
 <link rel="stylesheet" href="css/topbar.css?v=17">
 <link rel="stylesheet" href="css/bible.css?v=28">
 <link rel="stylesheet" href="css/notes.css?v=26">
@@ -69,110 +71,78 @@
 <select id="chSel" style="display:none" onchange="onChChange()"></select>
 <input type="hidden" id="qsInput">
 
-<!-- ══ MAIN ════════════════════════════════════ -->
-<div id="main">
+<!-- ══ APP SHELL ════════════════════════════════ -->
+<div id="appShell">
 
   <!-- 레거시 요소 (숨김) -->
   <div id="bookNav" style="display:none"><div id="bookNavTab"></div></div>
   <div id="bookNavOverlay" style="display:none"></div>
+  <!-- 레거시 호환: #main alias -->
+  <div id="main" style="display:none"></div>
 
-  <!-- CENTER: Bible Text -->
-  <div id="biblePane">
-    <!-- 1행: 사이드바 토글 + 탭 -->
-    <div id="bibleTabBar">
-      <button class="tb-pin" id="railToggleBtn" onclick="_toggleIconRail()" ontouchend="_toggleIconRail();event.preventDefault();" title="사이드바 열기/닫기">
-        <svg class="rail-ico rail-ico-open" width="18" height="18" viewBox="0 0 20 20" fill="none" style="pointer-events:none"><rect x="1.5" y="1.5" width="17" height="17" rx="3" stroke="currentColor" stroke-width="1.6"/><rect x="1.5" y="1.5" width="6" height="17" rx="3" fill="currentColor" opacity=".4"/><line x1="9.5" y1="4" x2="9.5" y2="16" stroke="currentColor" stroke-width="1.2" opacity=".35"/></svg>
-        <svg class="rail-ico rail-ico-closed" width="18" height="18" viewBox="0 0 20 20" fill="none" style="pointer-events:none"><rect x="1.5" y="1.5" width="17" height="17" rx="3" stroke="currentColor" stroke-width="1.6"/><rect x="1.5" y="1.5" width="6" height="17" rx="3" fill="currentColor" opacity=".4"/></svg>
+  <!-- ── 아이콘 레일 (최상위, #bibleBody에서 이동) ── -->
+  <div id="iconRail">
+    <div class="rail-top">
+      <!-- 패널 토글 섹션 -->
+      <button class="rail-icon rail-pane-toggle" data-pane="bible" onclick="PaneManager.toggle('bible')" title="성경 패널">
+        <i class="fa fa-book-bible"></i><span class="rail-label">성경</span>
       </button>
-      <div id="bibleTabList"></div>
+      <button class="rail-icon rail-pane-toggle" data-pane="pdf" onclick="PaneManager.toggle('pdf')" title="PDF 패널">
+        <i class="fa fa-file-pdf"></i><span class="rail-label">PDF</span>
+      </button>
+      <button class="rail-icon rail-pane-toggle" data-pane="notes" onclick="PaneManager.toggle('notes')" title="노트 패널">
+        <i class="fa fa-pen"></i><span class="rail-label">노트</span>
+      </button>
+      <div class="rail-divider"></div>
+      <!-- 섹션 버튼 (사이드패널 열기) -->
+      <button class="rail-icon" data-rail="bible" onclick="toggleRail('bible')" title="성경 검색">
+        <i class="fa fa-list"></i><span class="rail-label" data-i18n="nav.bible">목록</span>
+      </button>
+      <button class="rail-icon" data-rail="dictionary" onclick="toggleDictPanel()" title="사전">
+        <i class="fas fa-spell-check"></i><span class="rail-label" data-i18n="nav.dict">사전</span>
+      </button>
+      <button class="rail-icon" data-rail="library" onclick="toggleRail('library')" title="도서관">
+        <i class="fa fa-book-open-reader"></i><span class="rail-label" data-i18n="nav.library">도서관</span>
+      </button>
+      <button class="rail-icon" data-rail="qna" onclick="toggleRail('qna')" title="Q&A">
+        <i class="fa fa-comments"></i><span class="rail-label" data-i18n="nav.qna">Q&A</span>
+      </button>
+      <button class="rail-icon" data-rail="graph" onclick="toggleKnowledgeGraph()" title="지식 그래프">
+        <i class="fa fa-project-diagram"></i><span class="rail-label">그래프</span>
+      </button>
+      <button class="rail-icon" data-rail="reading" onclick="toggleRail('reading')" title="읽기 계획">
+        <i class="fa fa-calendar-check"></i><span class="rail-label" data-i18n="nav.reading">읽기</span>
+      </button>
+      <button class="rail-icon" data-rail="typing" onclick="toggleTypingPanel()" title="타자 연습">
+        <i class="fa fa-keyboard"></i><span class="rail-label">타자</span>
+      </button>
+      <button class="rail-icon" data-rail="hymns" onclick="toggleRail('hymns')" title="찬양">
+        <i class="fa fa-music"></i><span class="rail-label">찬양</span>
+      </button>
+      <button class="rail-icon" data-rail="live" onclick="toggleRail('live')" title="라이브 강의">
+        <i class="fa-solid fa-tower-broadcast"></i><span class="rail-label">라이브</span>
+      </button>
     </div>
-    <!-- 2행: 새탭 + 책/장 선택 + 뷰 옵션 -->
-    <div id="bibleViewBar">
-      <button class="tb-pin" id="bibleTabAdd" onclick="addBibleTab()" title="새 탭"><i class="fa fa-plus"></i></button>
-      <div class="vb-left">
-        <button class="nav-picker-btn" id="navPickerBtn" onclick="toggleNavPicker()">
-          <span id="navPickerLabel">창세기 1장</span>
-          <i class="fa fa-chevron-down nav-picker-arrow"></i>
+    <div class="rail-bottom">
+      <button class="rail-icon" data-rail="bugreport" onclick="toggleRail('bugreport')" title="버그 리포트">
+        <i class="fa fa-bug"></i><span class="rail-label" data-i18n="nav.bugreport">버그</span>
+      </button>
+      <div id="railUser">
+        <button id="loginBtn" class="rail-icon" onclick="signInWithGoogle()" title="로그인">
+          <i class="fa fa-sign-in-alt"></i>
         </button>
-        <button class="vb-arrow" onclick="prevCh()" title="이전 장"><i class="fa fa-chevron-left"></i></button>
-        <button class="vb-arrow" onclick="nextCh()" title="다음 장"><i class="fa fa-chevron-right"></i></button>
-        <div id="navPickerPopup" class="nav-picker-popup"></div>
+        <div id="userBar" class="rail-user-info" style="display:none">
+          <img id="userAvatar" class="rail-avatar" src="" title="프로필">
+        </div>
       </div>
-      <div class="vb-search">
-        <i class="fa fa-search vb-sch-icon"></i>
-        <input type="text" id="vbSchInput" placeholder="검색..." onkeydown="vbSchKey(event)">
-      </div>
-      <div class="vb-right">
-        <button class="vb-btn vb-on" id="vbKorean" onclick="toggleLang('kr')" title="한글 본문">한</button>
-        <button class="vb-btn" id="vbEnglish" onclick="toggleLang('en')" title="영어 본문">영</button>
-        <span class="vb-sep"></span>
-        <button class="vb-btn" id="vbRed" onclick="toggleRedLetter()" title="예수님 말씀"><svg class="vb-svg" viewBox="0 0 100 100" width="15" height="15"><text x="10" y="72" font-family="serif" font-size="75" font-weight="700" font-style="italic" fill="currentColor">&#x0391;</text><text x="56" y="95" font-family="serif" font-size="60" font-weight="700" font-style="italic" fill="currentColor">&#x03A9;</text></svg></button>
-        <button class="vb-btn" id="vbStrong" onclick="toggleStrongCodes()" title="원어 코드"><svg class="vb-svg" viewBox="0 0 100 110" width="14" height="15"><circle cx="36" cy="70" r="21" fill="none" stroke="currentColor" stroke-width="7"/><circle cx="64" cy="70" r="21" fill="none" stroke="currentColor" stroke-width="7"/><line x1="24" y1="54" x2="14" y2="8" stroke="currentColor" stroke-width="7" stroke-linecap="round"/><line x1="44" y1="52" x2="40" y2="8" stroke="currentColor" stroke-width="7" stroke-linecap="round"/><line x1="64" y1="49" x2="64" y2="5" stroke="currentColor" stroke-width="7" stroke-linecap="round"/><line x1="76" y1="54" x2="86" y2="8" stroke="currentColor" stroke-width="7" stroke-linecap="round"/><line x1="52" y1="22" x2="76" y2="22" stroke="currentColor" stroke-width="6" stroke-linecap="round"/></svg></button>
-        <button class="vb-btn vb-on" id="vbHL" onclick="toggleHighlight()" title="형광펜 표시"><i class="fa fa-highlighter"></i></button>
-        <span class="vb-sep"></span>
-        <button class="vb-btn" id="vbComm" onclick="toggleCommentaryBtn()" title="주석"><i class="fa fa-scroll"></i></button>
-        <span class="vb-sep"></span>
-        <span class="vb-info" id="vbVerseCount"></span>
-      </div>
+      <button class="rail-icon" data-rail="settings" onclick="toggleRail('settings')" title="설정">
+        <i class="fa fa-cog"></i><span class="rail-label" data-i18n="nav.settings">설정</span>
+      </button>
     </div>
-    <!-- 3행: 아이콘레일 + 사이드패널 + 본문 (레일만 슬라이드) -->
-    <div id="bibleBody">
-      <!-- 아이콘 레일 (슬라이드 영역) -->
-      <div id="iconRail">
-        <div class="rail-top">
-          <button class="rail-icon" data-rail="bible" onclick="toggleRail('bible')" title="성경 검색">
-            <i class="fa fa-book-bible"></i><span class="rail-label" data-i18n="nav.bible">성경</span>
-          </button>
-          <button class="rail-icon" data-rail="notes" onclick="toggleNotePanel()" title="노트">
-            <i class="fa fa-pen"></i><span class="rail-label" data-i18n="nav.notes">노트</span>
-          </button>
-          <button class="rail-icon" data-rail="pdf" onclick="togglePdfPanel()" title="PDF">
-            <i class="fa fa-file-pdf"></i><span class="rail-label">PDF</span>
-          </button>
-          <button class="rail-icon" data-rail="dictionary" onclick="toggleDictPanel()" title="사전">
-            <i class="fas fa-spell-check"></i><span class="rail-label" data-i18n="nav.dict">사전</span>
-          </button>
-          <button class="rail-icon" data-rail="library" onclick="toggleRail('library')" title="도서관">
-            <i class="fa fa-book-open-reader"></i><span class="rail-label" data-i18n="nav.library">도서관</span>
-          </button>
-          <button class="rail-icon" data-rail="qna" onclick="toggleRail('qna')" title="Q&A">
-            <i class="fa fa-comments"></i><span class="rail-label" data-i18n="nav.qna">Q&A</span>
-          </button>
-          <button class="rail-icon" data-rail="graph" onclick="toggleKnowledgeGraph()" title="지식 그래프">
-            <i class="fa fa-project-diagram"></i><span class="rail-label">그래프</span>
-          </button>
-          <button class="rail-icon" data-rail="reading" onclick="toggleRail('reading')" title="읽기 계획">
-            <i class="fa fa-calendar-check"></i><span class="rail-label" data-i18n="nav.reading">읽기</span>
-          </button>
-          <button class="rail-icon" data-rail="typing" onclick="toggleTypingPanel()" title="타자 연습">
-            <i class="fa fa-keyboard"></i><span class="rail-label">타자</span>
-          </button>
-          <button class="rail-icon" data-rail="hymns" onclick="toggleRail('hymns')" title="찬양">
-            <i class="fa fa-music"></i><span class="rail-label">찬양</span>
-          </button>
-          <button class="rail-icon" data-rail="live" onclick="toggleRail('live')" title="라이브 강의">
-            <i class="fa-solid fa-tower-broadcast"></i><span class="rail-label">라이브</span>
-          </button>
-        </div>
-        <div class="rail-bottom">
-          <button class="rail-icon" data-rail="bugreport" onclick="toggleRail('bugreport')" title="버그 리포트">
-            <i class="fa fa-bug"></i><span class="rail-label" data-i18n="nav.bugreport">버그</span>
-          </button>
-          <div id="railUser">
-            <button id="loginBtn" class="rail-icon" onclick="signInWithGoogle()" title="로그인">
-              <i class="fa fa-sign-in-alt"></i>
-            </button>
-            <div id="userBar" class="rail-user-info" style="display:none">
-              <img id="userAvatar" class="rail-avatar" src="" title="프로필">
-            </div>
-          </div>
-          <button class="rail-icon" data-rail="settings" onclick="toggleRail('settings')" title="설정">
-            <i class="fa fa-cog"></i><span class="rail-label" data-i18n="nav.settings">설정</span>
-          </button>
-        </div>
-      </div>
-      <!-- 확장 사이드패널 -->
-      <div id="sidePanel">
+  </div>
+
+  <!-- ── 사이드패널 (최상위, #bibleBody에서 이동) ── -->
+  <div id="sidePanel">
         <div class="sp-section" id="sp-bible">
           <div class="sp-head"><i class="fa fa-book-bible"></i> <span data-i18n="bible.bibleList">성경 목록</span><button class="sp-pin-btn" id="spPinBtn" onclick="_spTogglePin()" title="고정"><i class="fa fa-thumbtack"></i></button></div>
           <div class="sp-body" id="bookList"></div>
@@ -247,99 +217,182 @@
           <div class="sp-body" id="liveSpBody"></div>
         </div>
       </div>
-      <!-- 성경 본문 스크롤 -->
-      <div id="bibleScroll">
-      <div class="ch-head">
-        <h1 id="chTitle">창세기 1장</h1>
-        <p id="chSub">Genesis</p>
-      </div>
-      <div id="vCont"></div>
-      <div class="ch-nav">
-        <button class="chnav" onclick="prevCh()"><i class="fa fa-chevron-left"></i> 이전 장</button>
-        <span style="font-size:11px;color:var(--text3)" id="chNavLbl"></span>
-        <button class="chnav" onclick="nextCh()">다음 장 <i class="fa fa-chevron-right"></i></button>
-      </div>
-    </div><!-- /bibleScroll -->
-    <!-- 찬양 오버레이 (상세뷰: 악보+플레이어) -->
-    <div id="hymnsOverlay" class="hymns-overlay" style="display:none">
-      <div class="hymns-header" id="hymnsHeader">
-        <div class="hym-hdr-left">
-          <button class="hym-back-btn" id="hymBackBtn" onclick="_hymCloseDetail()">
-            <i class="fa fa-arrow-left"></i></button>
-          <span class="hym-title" id="hymTitle">찬양</span>
-        </div>
-        <div class="hym-hdr-tabs" id="hymHdrTabs">
-          <button class="hym-ht-btn active" data-tab="lyrics" onclick="_hymSwitchTab('lyrics')">가사</button>
-          <button class="hym-ht-btn" data-tab="sheet" onclick="_hymSwitchTab('sheet')">악보</button>
-        </div>
-        <div class="hym-hdr-right">
-          <button class="hym-fav-btn" id="hymHdrFavBtn" onclick="_hymToggleFavCurrent()" title="즐겨찾기" style="display:none"><i class="far fa-heart"></i></button>
-          <button class="hymns-close" onclick="_hymCloseDetail()" title="닫기"><i class="fa fa-times"></i></button>
-        </div>
-      </div>
-      <div class="hymns-body" id="hymnsBody">
-        <div id="hymViewDetail"></div>
-      </div>
-      <div class="hym-player-bar" id="hymPlayerBar" style="display:none">
-        <div class="hym-pb-info" onclick="_hymOpenCurrentDetail()">
-          <span class="hym-pb-title" id="hymPbTitle"></span>
-        </div>
-        <div class="hym-pb-controls">
-          <button class="hym-pb-btn" onclick="_hymPrev()"><i class="fa fa-step-backward"></i></button>
-          <button class="hym-pb-btn hym-pb-play" id="hymPbPlayBtn" onclick="_hymTogglePlay()"><i class="fa fa-play"></i></button>
-          <button class="hym-pb-btn" onclick="_hymNext()"><i class="fa fa-step-forward"></i></button>
-        </div>
-        <div class="hym-pb-progress">
-          <div class="hym-pb-track" id="hymPbTrack" onmousedown="_hymSeekStart(event,'mini')" ontouchstart="_hymSeekStart(event,'mini')"><div class="hym-pb-fill" id="hymPbFill"></div></div>
-          <span class="hym-pb-time" id="hymPbTime">0:00</span>
-        </div>
-      </div>
-    </div>
-    <!-- Typing Practice (inside bibleBody so left rail stays visible) -->
-    <div id="typingOverlay" class="tp-overlay" style="display:none">
-      <div class="tp-header">
-        <span class="tp-title"><i class="fa fa-keyboard"></i> 타자 연습</span>
-        <div class="tp-header-right">
-          <div class="tp-lang-group">
-            <button class="tp-lang active" id="tpLangKr" onclick="_tpSetLang('kr')">Korean</button>
-            <button class="tp-lang" id="tpLangEn" onclick="_tpSetLang('en')">English</button>
+
+  <!-- ══ PANE CONTAINER (3-Pane 유연 레이아웃) ════════ -->
+  <div id="paneContainer">
+
+    <!-- ══ PANE: 성경 ══ -->
+    <div class="pane" id="pane-bible" data-visible="true">
+      <div class="pane-inner" id="biblePane">
+        <!-- 패널 헤더 (성경) -->
+        <div class="pane-header" id="biblePaneHeader">
+          <div class="pane-header-title"><i class="fa fa-book-bible"></i> <span class="pane-tag">성경</span></div>
+          <button class="tb-pin" id="railToggleBtn" onclick="_toggleIconRail()" ontouchend="_toggleIconRail();event.preventDefault();" title="사이드바 열기/닫기">
+            <svg class="rail-ico rail-ico-open" width="18" height="18" viewBox="0 0 20 20" fill="none" style="pointer-events:none"><rect x="1.5" y="1.5" width="17" height="17" rx="3" stroke="currentColor" stroke-width="1.6"/><rect x="1.5" y="1.5" width="6" height="17" rx="3" fill="currentColor" opacity=".4"/><line x1="9.5" y1="4" x2="9.5" y2="16" stroke="currentColor" stroke-width="1.2" opacity=".35"/></svg>
+            <svg class="rail-ico rail-ico-closed" width="18" height="18" viewBox="0 0 20 20" fill="none" style="pointer-events:none"><rect x="1.5" y="1.5" width="17" height="17" rx="3" stroke="currentColor" stroke-width="1.6"/><rect x="1.5" y="1.5" width="6" height="17" rx="3" fill="currentColor" opacity=".4"/></svg>
+          </button>
+          <div class="pane-controls">
+            <button class="pane-ctrl-btn" onclick="PaneManager.toggleMaximize('bible')" title="최대화/복원"><i class="fa fa-expand"></i></button>
+            <!-- 우측 메뉴 트리거 -->
+            <button class="pane-ctrl-btn rmenu-trigger" id="rmenuTrigger" onclick="RMenu.toggle()" title="메뉴"><i class="fa fa-ellipsis-v"></i></button>
           </div>
-          <button class="tp-rank-btn" onclick="_tpShowRanking()" title="Ranking"><i class="fa fa-trophy"></i></button>
-          <button class="tp-theme-btn" id="tpThemeBtn" onclick="_tpToggleTheme()" title="Light Mode"><i class="fa fa-sun"></i></button>
-          <button class="tp-close" onclick="toggleTypingPanel()" title="Close"><i class="fa fa-times"></i></button>
         </div>
-      </div>
-      <div class="tp-settings" id="tpSettings"></div>
-      <div class="tp-body" id="tpBody"></div>
-    </div>
-    </div><!-- /bibleBody -->
-  </div><!-- /biblePane -->
+        <!-- 1행: 탭 -->
+        <div id="bibleTabBar">
+          <div id="bibleTabList"></div>
+        </div>
+        <!-- 2행: 새탭 + 책/장 선택 + 뷰 옵션 -->
+        <div id="bibleViewBar">
+          <button class="tb-pin" id="bibleTabAdd" onclick="addBibleTab()" title="새 탭"><i class="fa fa-plus"></i></button>
+          <div class="vb-left">
+            <button class="nav-picker-btn" id="navPickerBtn" onclick="toggleNavPicker()">
+              <span id="navPickerLabel">창세기 1장</span>
+              <i class="fa fa-chevron-down nav-picker-arrow"></i>
+            </button>
+            <button class="vb-arrow" onclick="prevCh()" title="이전 장"><i class="fa fa-chevron-left"></i></button>
+            <button class="vb-arrow" onclick="nextCh()" title="다음 장"><i class="fa fa-chevron-right"></i></button>
+            <div id="navPickerPopup" class="nav-picker-popup"></div>
+          </div>
+          <div class="vb-search">
+            <i class="fa fa-search vb-sch-icon"></i>
+            <input type="text" id="vbSchInput" placeholder="검색..." onkeydown="vbSchKey(event)">
+          </div>
+          <div class="vb-right">
+            <button class="vb-btn vb-on" id="vbKorean" onclick="toggleLang('kr')" title="한글 본문">한</button>
+            <button class="vb-btn" id="vbEnglish" onclick="toggleLang('en')" title="영어 본문">영</button>
+            <span class="vb-sep"></span>
+            <button class="vb-btn" id="vbRed" onclick="toggleRedLetter()" title="예수님 말씀"><svg class="vb-svg" viewBox="0 0 100 100" width="15" height="15"><text x="10" y="72" font-family="serif" font-size="75" font-weight="700" font-style="italic" fill="currentColor">&#x0391;</text><text x="56" y="95" font-family="serif" font-size="60" font-weight="700" font-style="italic" fill="currentColor">&#x03A9;</text></svg></button>
+            <button class="vb-btn" id="vbStrong" onclick="toggleStrongCodes()" title="원어 코드"><svg class="vb-svg" viewBox="0 0 100 110" width="14" height="15"><circle cx="36" cy="70" r="21" fill="none" stroke="currentColor" stroke-width="7"/><circle cx="64" cy="70" r="21" fill="none" stroke="currentColor" stroke-width="7"/><line x1="24" y1="54" x2="14" y2="8" stroke="currentColor" stroke-width="7" stroke-linecap="round"/><line x1="44" y1="52" x2="40" y2="8" stroke="currentColor" stroke-width="7" stroke-linecap="round"/><line x1="64" y1="49" x2="64" y2="5" stroke="currentColor" stroke-width="7" stroke-linecap="round"/><line x1="76" y1="54" x2="86" y2="8" stroke="currentColor" stroke-width="7" stroke-linecap="round"/><line x1="52" y1="22" x2="76" y2="22" stroke="currentColor" stroke-width="6" stroke-linecap="round"/></svg></button>
+            <button class="vb-btn vb-on" id="vbHL" onclick="toggleHighlight()" title="형광펜 표시"><i class="fa fa-highlighter"></i></button>
+            <span class="vb-sep"></span>
+            <button class="vb-btn" id="vbComm" onclick="toggleCommentaryBtn()" title="주석"><i class="fa fa-scroll"></i></button>
+            <span class="vb-sep"></span>
+            <span class="vb-info" id="vbVerseCount"></span>
+          </div>
+        </div>
+        <!-- 본문 영역 (아이콘레일/사이드패널 제거됨) -->
+        <div id="bibleBody">
+          <!-- 성경 본문 스크롤 -->
+          <div id="bibleScroll">
+            <div class="ch-head">
+              <h1 id="chTitle">창세기 1장</h1>
+              <p id="chSub">Genesis</p>
+            </div>
+            <div id="vCont"></div>
+            <div class="ch-nav">
+              <button class="chnav" onclick="prevCh()"><i class="fa fa-chevron-left"></i> 이전 장</button>
+              <span style="font-size:11px;color:var(--text3)" id="chNavLbl"></span>
+              <button class="chnav" onclick="nextCh()">다음 장 <i class="fa fa-chevron-right"></i></button>
+            </div>
+          </div><!-- /bibleScroll -->
+          <!-- 찬양 오버레이 -->
+          <div id="hymnsOverlay" class="hymns-overlay" style="display:none">
+            <div class="hymns-header" id="hymnsHeader">
+              <div class="hym-hdr-left">
+                <button class="hym-back-btn" id="hymBackBtn" onclick="_hymCloseDetail()">
+                  <i class="fa fa-arrow-left"></i></button>
+                <span class="hym-title" id="hymTitle">찬양</span>
+              </div>
+              <div class="hym-hdr-tabs" id="hymHdrTabs">
+                <button class="hym-ht-btn active" data-tab="lyrics" onclick="_hymSwitchTab('lyrics')">가사</button>
+                <button class="hym-ht-btn" data-tab="sheet" onclick="_hymSwitchTab('sheet')">악보</button>
+              </div>
+              <div class="hym-hdr-right">
+                <button class="hym-fav-btn" id="hymHdrFavBtn" onclick="_hymToggleFavCurrent()" title="즐겨찾기" style="display:none"><i class="far fa-heart"></i></button>
+                <button class="hymns-close" onclick="_hymCloseDetail()" title="닫기"><i class="fa fa-times"></i></button>
+              </div>
+            </div>
+            <div class="hymns-body" id="hymnsBody">
+              <div id="hymViewDetail"></div>
+            </div>
+            <div class="hym-player-bar" id="hymPlayerBar" style="display:none">
+              <div class="hym-pb-info" onclick="_hymOpenCurrentDetail()">
+                <span class="hym-pb-title" id="hymPbTitle"></span>
+              </div>
+              <div class="hym-pb-controls">
+                <button class="hym-pb-btn" onclick="_hymPrev()"><i class="fa fa-step-backward"></i></button>
+                <button class="hym-pb-btn hym-pb-play" id="hymPbPlayBtn" onclick="_hymTogglePlay()"><i class="fa fa-play"></i></button>
+                <button class="hym-pb-btn" onclick="_hymNext()"><i class="fa fa-step-forward"></i></button>
+              </div>
+              <div class="hym-pb-progress">
+                <div class="hym-pb-track" id="hymPbTrack" onmousedown="_hymSeekStart(event,'mini')" ontouchstart="_hymSeekStart(event,'mini')"><div class="hym-pb-fill" id="hymPbFill"></div></div>
+                <span class="hym-pb-time" id="hymPbTime">0:00</span>
+              </div>
+            </div>
+          </div>
+          <!-- 타자 연습 -->
+          <div id="typingOverlay" class="tp-overlay" style="display:none">
+            <div class="tp-header">
+              <span class="tp-title"><i class="fa fa-keyboard"></i> 타자 연습</span>
+              <div class="tp-header-right">
+                <div class="tp-lang-group">
+                  <button class="tp-lang active" id="tpLangKr" onclick="_tpSetLang('kr')">Korean</button>
+                  <button class="tp-lang" id="tpLangEn" onclick="_tpSetLang('en')">English</button>
+                </div>
+                <button class="tp-rank-btn" onclick="_tpShowRanking()" title="Ranking"><i class="fa fa-trophy"></i></button>
+                <button class="tp-theme-btn" id="tpThemeBtn" onclick="_tpToggleTheme()" title="Light Mode"><i class="fa fa-sun"></i></button>
+                <button class="tp-close" onclick="toggleTypingPanel()" title="Close"><i class="fa fa-times"></i></button>
+              </div>
+            </div>
+            <div class="tp-settings" id="tpSettings"></div>
+            <div class="tp-body" id="tpBody"></div>
+          </div>
+        </div><!-- /bibleBody -->
+      </div><!-- /pane-inner (biblePane) -->
+    </div><!-- /pane-bible -->
 
-  <!-- PDF Panel (독립 flex child — 노트 왼쪽) -->
-  <div id="pdfPanel" class="pdf-panel-hide">
-    <div class="pdf-panel-header">
-      <i class="fa fa-file-pdf"></i>
-      <span class="pdf-panel-title">PDF 도서관</span>
-      <button class="pdf-panel-close" onclick="PDFPanel.headerClose()" title="닫기"><i class="fa fa-times"></i></button>
-    </div>
-    <!-- Tab Bar (열린 PDF 탭 목록) -->
-    <div class="pdf-tab-bar" id="pdfTabBar" style="display:none"></div>
-    <!-- Library View (default) -->
-    <div id="pdfLibraryView">
-      <div class="pdf-lib-actions">
-        <button class="pdf-lib-btn pdf-lib-btn-primary" onclick="PDFLibrary.uploadPdf()"><i class="fa fa-upload"></i> PDF 업로드</button>
-        <button class="pdf-lib-btn" onclick="PDFLibrary.newFolder()"><i class="fa fa-folder-plus"></i> 새 폴더</button>
-      </div>
-      <div class="pdf-folder-tree" id="pdfFolderTree"></div>
-    </div>
-    <!-- Viewer View -->
-    <div id="pdfViewerView">
-      <div id="pdfViewerHost"></div>
-    </div>
-  </div>
+    <!-- ── 리사이즈 핸들: 성경↔PDF ── -->
+    <div class="pane-resize-handle" data-left-pane="bible" data-right-pane="pdf"></div>
 
-  <!-- RIGHT: Panel (초기 비활성) -->
-  <div id="rightPanel" class="rp-hide">
+    <!-- ══ PANE: PDF ══ -->
+    <div class="pane" id="pane-pdf" data-visible="false">
+      <div class="pane-inner">
+        <!-- 패널 헤더 (PDF) -->
+        <div class="pane-header" id="pdfPaneHeader">
+          <div class="pane-header-title"><i class="fa fa-file-pdf"></i> <span class="pane-tag">PDF</span></div>
+          <div class="pane-controls">
+            <button class="pane-ctrl-btn" onclick="PaneManager.toggleMaximize('pdf')" title="최대화/복원"><i class="fa fa-expand"></i></button>
+            <button class="pane-ctrl-btn" onclick="PaneManager.hide('pdf')" title="패널 닫기"><i class="fa fa-times"></i></button>
+          </div>
+        </div>
+        <div id="pdfPanel">
+          <div class="pdf-panel-header">
+            <i class="fa fa-file-pdf"></i>
+            <span class="pdf-panel-title">PDF 도서관</span>
+            <button class="pdf-panel-close" onclick="PDFPanel.headerClose()" title="닫기"><i class="fa fa-times"></i></button>
+          </div>
+          <!-- Tab Bar (열린 PDF 탭 목록) -->
+          <div class="pdf-tab-bar" id="pdfTabBar" style="display:none"></div>
+          <!-- Library View (default) -->
+          <div id="pdfLibraryView">
+            <div class="pdf-lib-actions">
+              <button class="pdf-lib-btn pdf-lib-btn-primary" onclick="PDFLibrary.uploadPdf()"><i class="fa fa-upload"></i> PDF 업로드</button>
+              <button class="pdf-lib-btn" onclick="PDFLibrary.newFolder()"><i class="fa fa-folder-plus"></i> 새 폴더</button>
+            </div>
+            <div class="pdf-folder-tree" id="pdfFolderTree"></div>
+          </div>
+          <!-- Viewer View -->
+          <div id="pdfViewerView">
+            <div id="pdfViewerHost"></div>
+          </div>
+        </div>
+      </div><!-- /pane-inner -->
+    </div><!-- /pane-pdf -->
+
+    <!-- ── 리사이즈 핸들: PDF↔노트 ── -->
+    <div class="pane-resize-handle" data-left-pane="pdf" data-right-pane="notes"></div>
+
+    <!-- ══ PANE: 노트 ══ -->
+    <div class="pane" id="pane-notes" data-visible="false">
+      <div class="pane-inner" id="rightPanel">
+        <!-- 패널 헤더 (노트) -->
+        <div class="pane-header" id="notesPaneHeader">
+          <div class="pane-header-title"><i class="fa fa-pen"></i> <span class="pane-tag">노트</span></div>
+          <div class="pane-controls">
+            <button class="pane-ctrl-btn" onclick="PaneManager.toggleMaximize('notes')" title="최대화/복원"><i class="fa fa-expand"></i></button>
+            <button class="pane-ctrl-btn" onclick="PaneManager.hide('notes')" title="패널 닫기"><i class="fa fa-times"></i></button>
+          </div>
+        </div>
     <div class="rp-tabs" id="rpTabs">
       <div class="rp-subtabs" id="subtabs-notes">
         <div class="rp-tab act" data-sub="notes" onclick="switchSub('notes')"><i class="fa fa-pen"></i> <span data-i18n="panel.notes">노트</span></div>
@@ -574,6 +627,52 @@
       </div>
 
     </div>
+      </div><!-- /pane-inner (rightPanel) -->
+      <!-- 노트 패널 헤더 (상단 삽입) -->
+    </div><!-- /pane-notes -->
+
+  </div><!-- /paneContainer -->
+
+</div><!-- /appShell -->
+
+<!-- ══ RIGHT MENU DROPDOWN ════════════════════ -->
+<div class="rmenu-backdrop" id="rmenuBackdrop"></div>
+<div class="rmenu-dropdown" id="rmenuDropdown">
+  <div class="rmenu-section">레이아웃</div>
+  <div class="rmenu-item" data-pane-toggle="bible" onclick="RMenu.togglePane('bible')">
+    <i class="fa fa-book-bible"></i>
+    <span class="rmenu-item-label">성경</span>
+    <div class="rmenu-toggle on"></div>
+  </div>
+  <div class="rmenu-item" data-pane-toggle="pdf" onclick="RMenu.togglePane('pdf')">
+    <i class="fa fa-file-pdf"></i>
+    <span class="rmenu-item-label">PDF</span>
+    <div class="rmenu-toggle"></div>
+  </div>
+  <div class="rmenu-item" data-pane-toggle="notes" onclick="RMenu.togglePane('notes')">
+    <i class="fa fa-pen"></i>
+    <span class="rmenu-item-label">노트</span>
+    <div class="rmenu-toggle"></div>
+  </div>
+  <div class="rmenu-divider"></div>
+  <div class="rmenu-section">도구</div>
+  <div class="rmenu-item" onclick="toggleKnowledgeGraph();RMenu.close()">
+    <i class="fa fa-project-diagram"></i>
+    <span class="rmenu-item-label">지식 그래프</span>
+  </div>
+  <div class="rmenu-item" onclick="toggleTypingPanel();RMenu.close()">
+    <i class="fa fa-keyboard"></i>
+    <span class="rmenu-item-label">타자 연습</span>
+  </div>
+  <div class="rmenu-item" onclick="toggleRail('hymns');RMenu.close()">
+    <i class="fa fa-music"></i>
+    <span class="rmenu-item-label">찬송가</span>
+  </div>
+  <div class="rmenu-divider"></div>
+  <div class="rmenu-section">설정</div>
+  <div class="rmenu-item" onclick="toggleRail('settings');RMenu.close()">
+    <i class="fa fa-cog"></i>
+    <span class="rmenu-item-label">설정</span>
   </div>
 </div>
 
@@ -924,8 +1023,12 @@
 <!-- 찬양 -->
 <script src="js/hymns.js?v=2"></script>
 
+<!-- Pane Manager & Right Menu -->
+<script src="js/pane-manager.js?v=1"></script>
+<script src="js/right-menu.js?v=1"></script>
+
 <!-- 초기화 (반드시 마지막) -->
-<script src="js/panel-resize.js?v=1"></script>
+<script src="js/panel-resize.js?v=2"></script>
 <script src="js/app-paste.js"></script>
 <script src="js/app.js?v=4"></script>
 

@@ -12,7 +12,8 @@ body {
 
 /* ━━ 배경 이미지 활성 시 — 불투명→반투명 글래스 전환 ━━ */
 /* 리사이즈 핸들 — 틈새로 배경 노출 방지 */
-body.has-bg-image .panel-resize-handle {
+body.has-bg-image .panel-resize-handle,
+body.has-bg-image .pane-resize-handle {
   background: var(--bgi-panel);
 }
 /* 메인 콘텐츠 패널 */
@@ -24,7 +25,8 @@ body.has-bg-image #noteContent {
 }
 /* 툴바/탭바 */
 body.has-bg-image #bibleTabBar,
-body.has-bg-image #bibleViewBar {
+body.has-bg-image #bibleViewBar,
+body.has-bg-image .pane-header {
   background: var(--bgi-bar) !important;
   backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
 }
@@ -45,7 +47,9 @@ body.has-bg-image .pdf-panel {
   backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
 }
 
-#main { display:flex; flex:1; overflow:hidden }
+/* ── 레거시 #main (숨김) + 새 #appShell ── */
+#main { display:none }
+#appShell { display:flex; flex:1; overflow:hidden }
 
 /* 레거시 bookNav 요소 숨김 (아이콘 레일로 대체) */
 #bookNav, #bookNavTab, #bookNavOverlay { display:none !important; }

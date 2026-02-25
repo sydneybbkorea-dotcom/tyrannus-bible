@@ -39,4 +39,6 @@ Object.assign(S, {
   // 공유 상태
   sharedByMe: [],      // [{shareCode, type, sourceId, sourceName}]
   sharedWithMe: [],    // [{shareCode, ownerName, type, label}]
+  // Pane 상태 (PaneManager와 별도 — 여기는 S 글로벌 참조용)
+  paneState: { bible: true, pdf: false, notes: false },
 });

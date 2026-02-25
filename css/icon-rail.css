@@ -40,6 +40,28 @@
   box-shadow:var(--glass-shadow); pointer-events:none; z-index:999;
 }
 .rail-icon:hover .rail-label { display:block; }
+/* ── 레일 구분선 (패널 토글 ↔ 섹션 버튼 사이) ── */
+.rail-divider {
+  width: 28px;
+  height: 1px;
+  background: var(--glass-border);
+  margin: 4px auto;
+  opacity: 0.6;
+}
+/* 패널 토글 아이콘 — 원형 강조 */
+.rail-pane-toggle {
+  border-radius: 50% !important;
+  width: 36px !important;
+  height: 36px !important;
+  font-size: 14px !important;
+}
+.rail-pane-toggle.active {
+  background: var(--rail-icon-active-bg, var(--accent-dim)) !important;
+  color: var(--rail-icon-active-color, var(--accent-color)) !important;
+}
+.rail-pane-toggle.active::before {
+  display: none; /* 패널 토글에는 좌측 바 표시 안 함 */
+}
 /* 접힘 상태 */
 #iconRail.rail-collapsed { width:0; padding:0; border-right:none; backdrop-filter:none; -webkit-backdrop-filter:none; }
 [data-theme="light"] .rail-icon:hover { background:var(--glass-bg-2); color:var(--text-primary); }

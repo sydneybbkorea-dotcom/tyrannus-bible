@@ -17,6 +17,8 @@ var PDFPanel = (function(){
     if(!panel) return;
     panel.classList.remove('pdf-panel-hide');
     document.body.classList.add('pdf-open');
+    // PaneManager로 PDF pane 표시
+    if(typeof PaneManager !== 'undefined') PaneManager.show('pdf');
     var btn = document.querySelector('.rail-icon[data-rail="pdf"]');
     if(btn) btn.classList.add('active');
     if(!_activeTabId) showLibrary();
@@ -27,6 +29,8 @@ var PDFPanel = (function(){
     if(!panel) return;
     panel.classList.add('pdf-panel-hide');
     document.body.classList.remove('pdf-open');
+    // PaneManager로 PDF pane 숨기기
+    if(typeof PaneManager !== 'undefined') PaneManager.hide('pdf');
     var btn = document.querySelector('.rail-icon[data-rail="pdf"]');
     if(btn) btn.classList.remove('active');
   }

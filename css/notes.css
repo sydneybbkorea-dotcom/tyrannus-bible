@@ -2,13 +2,14 @@
    RIGHT PANEL — wider, no inner explorer
 ═══════════════════════════════════════════════ */
 #rightPanel {
-  width:640px; flex-shrink:0;
+  flex:1;
   background:var(--bg);
-  border-left:1px solid var(--glass-border);
-  display:flex; flex-direction:column; overflow:hidden; transition:width .22s;
+  display:flex; flex-direction:column; overflow:hidden;
   position:relative; z-index:10;
+  min-width:0; min-height:0;
 }
-#rightPanel.rp-hide { width:0 !important; border:none; overflow:hidden; visibility:hidden }
+/* 레거시 호환: rp-hide (PaneManager가 pane[data-visible]로 제어) */
+#rightPanel.rp-hide { overflow:hidden; }
 
 .rp-tabs {
   display:flex; border-bottom:1px solid var(--glass-border);

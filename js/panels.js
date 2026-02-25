@@ -1,7 +1,11 @@
-// panels.js — 우측 패널 열기/닫기/탭 전환 제어
+// panels.js — 우측 패널 열기/닫기/탭 전환 제어 (PaneManager 연동)
 function openPanel(name){
   const rp=document.getElementById('rightPanel');
   if(!rp) return;
+
+  // PaneManager로 노트 pane 표시
+  if(typeof PaneManager !== 'undefined') PaneManager.show('notes');
+
   rp.classList.remove('rp-hide'); S.panelOpen=name;
   switchTab(name);
   document.body.classList.add('panel-open');
@@ -16,6 +20,8 @@ function togglePanel(name){
     document.body.classList.remove('panel-open');
     document.querySelector('.rail-icon[data-rail="notes"]')?.classList.remove('active');
     document.querySelector('.rail-icon[data-rail="dictionary"]')?.classList.remove('active');
+    // PaneManager로 노트 pane 숨기기
+    if(typeof PaneManager !== 'undefined') PaneManager.hide('notes');
     var commBtn = document.getElementById('vbComm');
     if(commBtn) commBtn.classList.remove('vb-on');
     if(typeof EventBus !== 'undefined') EventBus.emit('panel:closed', { name: name });
@@ -36,6 +42,7 @@ function toggleCommentaryBtn(){
     rp.classList.add('rp-hide');
     S.panelOpen = null;
     document.body.classList.remove('panel-open');
+    if(typeof PaneManager !== 'undefined') PaneManager.hide('notes');
     if(btn) btn.classList.remove('vb-on');
   } else {
     // 주석 열기

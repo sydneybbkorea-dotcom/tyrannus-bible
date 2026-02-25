@@ -1,5 +1,6 @@
 /* ═══════════════════════════════════════════════
    RESPONSIVE — 3-stage breakpoints + input-adaptive sizing
+   3-Pane 레이아웃 시스템 반응형
 ═══════════════════════════════════════════════ */
 
 /* ── Input Mode Adaptive Sizing ── */
@@ -43,14 +44,16 @@
 
 /* ── Desktop (1024px+) ── */
 @media (min-width: 1024px) {
-  #iconRail { width: 56px; }
+  #iconRail { width: var(--rail-width, 56px); }
   #sidePanel.open { width: 280px; margin-right: -280px; }
   #sidePanel.open.sp-pinned { margin-right: 0; }
-  #rightPanel:not(.rp-hide) { width: 380px; max-width: 500px; }
   .rte-row { flex-wrap: nowrap; }
-  /* PDF 3-pane: pdf 넓게, 본문/노트 축소 */
-  #pdfPanel:not(.pdf-panel-hide) { width: 55%; }
-  body.pdf-open #rightPanel:not(.rp-hide) { width: 320px; }
+
+  /* 3-Pane: 기본 균등 분배 (flex:1), 저장된 너비가 우선 */
+  .pane[data-visible="true"] { min-width: 240px; }
+
+  /* 노트 패널 단독 표시 시 최대 너비 */
+  #pane-notes:only-child .pane-inner { max-width: 800px; margin: 0 auto; }
 }
 
 /* ── Tablet (600px - 1023px) ── */
@@ -59,7 +62,6 @@
   #iconRail .rail-label { display: none; }
   #sidePanel.open { width: 240px; margin-right: -240px; }
   #sidePanel.open.sp-pinned { margin-right: 0; }
-  #rightPanel:not(.rp-hide) { width: 320px; }
   .rte-row { flex-wrap: wrap; }
   .rte-row2 { display: none; }
   body.panel-open #sidePanel { display: none; }
@@ -67,22 +69,26 @@
   .vb-search { min-width: 120px; }
   .vb-right .vb-sep:nth-of-type(2) ~ .vb-btn { display: none; }
 
-  /* PDF panel tablet size */
-  #pdfPanel:not(.pdf-panel-hide) { width: 50%; }
-  body.pdf-open #rightPanel:not(.rp-hide) { width: 260px; }
+  /* 태블릿: 2패널까지만 표시 (3번째는 자동 숨김하지 않음 — 사용자 제어) */
+  .pane[data-visible="true"] { min-width: 200px; }
 }
 
 /* ── Mobile (~599px) ── */
 @media (max-width: 599px) {
-  .panel-resize-handle { display: none !important; }
+  .panel-resize-handle,
+  .pane-resize-handle { display: none !important; }
+
+  /* 앱쉘을 세로로 */
+  #appShell { flex-direction: column; }
 
   #iconRail {
     position: fixed;
     bottom: 0; left: 0; right: 0;
-    width: 100%; height: 52px;
+    width: 100% !important; height: 52px;
     flex-direction: row;
     z-index: 900;
     border-top: 1px solid var(--border);
+    border-right: none;
     overflow-x: auto;
   }
   #iconRail .rail-top,
@@ -92,6 +98,12 @@
   }
   #iconRail .rail-label { display: none; }
   #iconRail .rail-icon { padding: 8px 12px; }
+  #iconRail .rail-divider { display: none; }
+  #iconRail .rail-pane-toggle {
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+  }
   #iconRail #railUser { display: none; }
 
   #sidePanel {
@@ -104,17 +116,27 @@
     background: var(--bg) !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
+    margin-right: 0 !important;
   }
   #sidePanel.open {
     transform: translateX(0);
+    margin-right: 0 !important;
   }
 
   /* 사이드패널 내부 요소 모바일 너비 제한 */
   #bookList { min-width: 0; }
   .sp-section { min-width: 0; }
 
-  #biblePane {
+  /* paneContainer: 세로 스택 */
+  #paneContainer {
+    flex-direction: column;
+    flex: 1;
     padding-bottom: 52px;
+  }
+
+  /* 모바일: 한 번에 하나의 pane만 (flex:1 100%) */
+  .pane[data-visible="true"] {
+    flex: 1 1 100%;
   }
 
   #bibleViewBar {
@@ -135,11 +157,21 @@
     max-height: 60vh;
   }
 
-  #rightPanel {
+  /* 노트 패널 모바일 풀스크린 */
+  #pane-notes[data-visible="true"] .pane-inner {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 52px;
     width: 100%;
     z-index: 700;
+    border-left: none;
+  }
+
+  /* PDF 패널 모바일 풀스크린 */
+  #pane-pdf[data-visible="true"] .pane-inner {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 52px;
+    width: 100%;
+    z-index: 750;
     border-left: none;
   }
 
@@ -153,25 +185,19 @@
   .vb-info { display: none; }
   #bibleTabAdd { display: none; }
   .sp-pin-btn { display: none; }
+  .pane-tag { display: none; }
 
   /* Chapter navigation */
   .ch-nav { padding: 16px 12px 24px; }
   .chnav { padding: 10px 16px; font-size: 13px; }
-
-  /* PDF panel: fullscreen on mobile */
-  #pdfPanel:not(.pdf-panel-hide) {
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 52px;
-    width: 100%;
-    z-index: 750;
-    border-left: none;
-  }
 }
 
 /* ── Print styles ── */
 @media print {
-  #iconRail, #sidePanel, #rightPanel, #bibleViewBar, #bibleTabBar,
+  #iconRail, #sidePanel, #pane-notes, #pane-pdf, #bibleViewBar, #bibleTabBar,
+  .pane-header, .pane-resize-handle,
   #ctxMenu, .modal-bg, #toast { display: none !important; }
+  #pane-bible { flex: 1 !important; }
   #biblePane { margin: 0; padding: 20px; }
   .vrow { break-inside: avoid; }
 }

@@ -1,0 +1,283 @@
+/* ═══════════════════════════════════════════════
+   PANE SYSTEM — 3-Pane 유연 레이아웃 (Obsidian/Antigravity 스타일)
+   성경 / PDF / 노트 독립 패널, 1~3개 자유 조합
+═══════════════════════════════════════════════ */
+
+/* ── App Shell (최상위 flex row) ── */
+#appShell {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  height: 100%;
+}
+
+/* ── Pane Container (패널들이 들어가는 메인 영역) ── */
+#paneContainer {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  gap: 0;
+  position: relative;
+}
+
+/* ── Pane (개별 패널 래퍼) ── */
+.pane {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+  position: relative;
+  transition: flex var(--anim-normal, 250ms ease);
+}
+
+/* visible 상태 — flex:1로 균등 배분 */
+.pane[data-visible="true"] {
+  flex: 1 1 0%;
+}
+
+/* hidden 상태 — 완전히 숨김 */
+.pane[data-visible="false"] {
+  flex: 0 0 0px;
+  width: 0;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 최대화 상태 */
+.pane[data-maximized="true"] {
+  flex: 1 1 100% !important;
+}
+
+/* 최대화 시 다른 패널 숨기기 */
+#paneContainer.has-maximized .pane:not([data-maximized="true"]) {
+  flex: 0 0 0px !important;
+  width: 0 !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* ── Pane Inner (기존 ID 보존용 컨테이너) ── */
+.pane-inner {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* ── Pane Header (각 패널 상단 바) ── */
+.pane-header {
+  display: flex;
+  align-items: center;
+  height: 36px;
+  padding: 0 8px 0 12px;
+  flex-shrink: 0;
+  background: var(--pane-header-bg, var(--bg-secondary));
+  border-bottom: 1px solid var(--pane-header-border, var(--glass-border));
+  gap: 8px;
+  user-select: none;
+}
+
+.pane-header-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+
+.pane-header-title i {
+  font-size: 11px;
+  color: var(--accent-color);
+}
+
+/* 패널 태그 (성경/PDF/노트) */
+.pane-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  color: var(--pane-tag-color, var(--accent-color));
+  background: var(--pane-tag-bg, var(--accent-dim));
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+/* 패널 컨트롤 버튼 그룹 */
+.pane-controls {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: auto;
+}
+
+.pane-ctrl-btn {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 11px;
+  cursor: pointer;
+  border-radius: var(--radius-sm, 4px);
+  transition: all 0.12s;
+}
+
+.pane-ctrl-btn:hover {
+  background: var(--glass-bg-2);
+  color: var(--text-primary);
+}
+
+.pane-ctrl-btn.active {
+  color: var(--accent-color);
+  background: var(--accent-dim);
+}
+
+/* ── Resize Handle (패널 사이 드래그 핸들) ── */
+.pane-resize-handle {
+  width: var(--handle-width, 5px);
+  flex-shrink: 0;
+  cursor: col-resize;
+  position: relative;
+  z-index: 20;
+  background: var(--handle-color, transparent);
+  transition: background 0.15s;
+}
+
+.pane-resize-handle::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 1px;
+  width: 3px;
+  border-radius: 2px;
+  background: transparent;
+  transition: background 0.15s;
+}
+
+.pane-resize-handle:hover::after,
+.pane-resize-handle.active::after {
+  background: var(--handle-hover-color, var(--accent-color, #daa520));
+}
+
+.pane-resize-handle:hover,
+.pane-resize-handle.active {
+  background: var(--accent-dim, rgba(218,165,32,.15));
+}
+
+/* 드래그 중 상태 */
+body.pane-resizing {
+  cursor: col-resize !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+}
+body.pane-resizing * {
+  cursor: col-resize !important;
+  transition: none !important;
+}
+body.pane-resizing iframe {
+  pointer-events: none !important;
+}
+
+/* ── 패널별 기본 스타일 ── */
+#pane-bible .pane-inner {
+  background: var(--bg-surface);
+}
+
+#pane-pdf .pane-inner {
+  background: var(--bg-surface);
+  border-left: 1px solid var(--glass-border);
+}
+
+#pane-notes .pane-inner {
+  background: var(--bg-surface);
+  border-left: 1px solid var(--glass-border);
+}
+
+/* 단일 패널일 때 border 제거 */
+.pane:first-child .pane-inner,
+.pane[data-visible="true"]:first-of-type .pane-inner {
+  border-left: none;
+}
+
+/* ── 배경 이미지 활성 시 패널 글래스모피즘 ── */
+body.has-bg-image .pane-inner {
+  background: var(--bgi-panel) !important;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+body.has-bg-image .pane-header {
+  background: var(--bgi-bar) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+body.has-bg-image .pane-resize-handle {
+  background: var(--bgi-panel);
+}
+
+/* ── 모바일 반응형 ── */
+@media (max-width: 599px) {
+  #paneContainer {
+    flex-direction: column;
+  }
+
+  .pane-resize-handle {
+    display: none !important;
+  }
+
+  .pane[data-visible="true"] {
+    flex: 1 1 100%;
+  }
+
+  /* 모바일에서는 한번에 하나만 */
+  .pane-header {
+    height: 40px;
+  }
+}
+
+/* ── 태블릿 ── */
+@media (min-width: 600px) and (max-width: 1023px) {
+  .pane-header {
+    height: 34px;
+    padding: 0 6px 0 10px;
+  }
+}
+
+/* ── 라이트 테마 ── */
+[data-theme="light"] .pane-header {
+  background: var(--pane-header-bg, var(--bg-secondary));
+}
+
+[data-theme="light"] .pane-ctrl-btn:hover {
+  background: var(--glass-bg-2);
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .pane-tag {
+  color: var(--accent-color);
+  background: hsla(var(--accent-h), 60%, 50%, 0.12);
+}
+
+/* ── 세피아 테마 ── */
+[data-theme="sepia"] .pane-header {
+  background: var(--pane-header-bg, var(--bg-secondary));
+}
+
+[data-theme="sepia"] .pane-tag {
+  color: var(--accent-color);
+  background: hsla(var(--accent-h), 45%, 55%, 0.12);
+}

@@ -1,4 +1,4 @@
-/* side-panel.css — Slack 스타일 확장 사이드패널 */
+/* side-panel.css — 확장 사이드패널 (appShell 레벨) */
 #sidePanel {
   width:0; overflow:hidden; flex-shrink:0;
   background:var(--glass-bg-1);
@@ -6,12 +6,12 @@
   border-right:1px solid var(--glass-border);
   box-shadow:var(--glass-highlight);
   display:flex; flex-direction:column;
-  transition:width .25s cubic-bezier(.4,0,.2,1), margin-right .25s cubic-bezier(.4,0,.2,1);
+  transition:width .25s cubic-bezier(.4,0,.2,1);
   position:relative; z-index:150;
 }
-/* 기본: 오버레이 (본문 밀지 않음) */
+/* 기본: 오버레이 (paneContainer 위에 겹침) */
 #sidePanel.open { width:260px; overflow:visible; margin-right:-260px; }
-/* 핀 고정: 본문을 밀어냄 */
+/* 핀 고정: paneContainer를 밀어냄 */
 #sidePanel.open.sp-pinned { margin-right:0; }
 .sp-section { display:none; flex-direction:column; flex:1; overflow:hidden; min-width:260px; }
 .sp-section.active { display:flex; }
