@@ -242,6 +242,29 @@ var PDFViewer = (function(){
     _container.addEventListener('pointerleave', function(){
       isDragging = false; _container.classList.remove('pdf-panning');
     });
+
+    // ── iOS Safari: touchstart/touchmove 레벨에서 스크롤 차단 ──
+    // PointerEvent preventDefault()만으로는 iOS에서 스크롤을 막지 못함
+    _container.addEventListener('touchstart', function(e){
+      if(typeof PDFTools === 'undefined') return;
+      var tool = PDFTools.getTool();
+      // Apple Pencil (touchType === 'stylus') → 항상 스크롤 차단
+      var isStylus = e.touches.length === 1 && e.touches[0].touchType === 'stylus';
+      if(isStylus){
+        e.preventDefault();
+        if(tool === 'select') PDFTools.setTool('draw');
+        return;
+      }
+      // 도구 활성 시 손가락 스크롤도 차단
+      if(tool !== 'select') e.preventDefault();
+    }, { passive: false });
+
+    _container.addEventListener('touchmove', function(e){
+      if(typeof PDFTools === 'undefined') return;
+      var tool = PDFTools.getTool();
+      var isStylus = e.touches.length === 1 && e.touches[0].touchType === 'stylus';
+      if(isStylus || tool !== 'select') e.preventDefault();
+    }, { passive: false });
   }
 
   function _updatePannable(){
