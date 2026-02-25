@@ -93,20 +93,19 @@ function toggleNotePanel(){
   }
 }
 
-// 사전 아이콘: PaneManager 통해 노트 pane에서 사전 탭 표시
+// 사전 아이콘: 사이드패널에서 독립 표시
 function toggleDictPanel(){
   _closeTypingIfOpen();
-  const btn=document.querySelector('.rail-icon[data-rail="dictionary"]');
-  if(S.panelOpen==='dictionary'&&!document.getElementById('rightPanel')?.classList.contains('rp-hide')){
-    togglePanel('dictionary');
-    if(btn) btn.classList.remove('active');
-  }else{
-    if(_activeRail&&!_spPinned) closeSidePanel();
-    // PaneManager로 노트 pane 표시 (사전은 노트 pane 안에 있음)
-    if(typeof PaneManager !== 'undefined') PaneManager.show('notes');
-    openPanel('dictionary'); switchTab('dictionary');
-    if(btn) btn.classList.add('active');
-  }
+  toggleRail('dictionary');
+}
+
+// 사이드패널 사전 탭 전환
+function _spSwitchDict(sub){
+  document.querySelectorAll('.sp-dict-tab').forEach(function(t){
+    t.classList.toggle('active', t.dataset.dict === sub);
+  });
+  // 기존 노트패널 사전 기능 활용
+  if(typeof switchSub === 'function') switchSub(sub);
 }
 
 function _spTogglePin(){
@@ -158,6 +157,7 @@ function _initSection(name){
   else if(name==='settings'&&typeof renderSettingsPanel==='function') renderSettingsPanel();
   else if(name==='hymns'&&typeof _hymInitSidePanel==='function') _hymInitSidePanel();
   else if(name==='live'&&typeof PDFLive!=='undefined') PDFLive.renderPanel();
+  else if(name==='dictionary') { /* 사전 초기화 — 기존 사전 탭 데이터 활용 */ }
 }
 
 // ── PaneManager 상태 변경 시 레일 아이콘 동기화 ──
@@ -168,8 +168,5 @@ if(typeof EventBus !== 'undefined'){
       var paneId = btn.dataset.pane;
       btn.classList.toggle('active', visible.indexOf(paneId) !== -1);
     });
-    // 성경 목록 서브 버튼: 성경 패널 열림 시만 표시
-    var bibleListBtn = document.getElementById('railBibleList');
-    if(bibleListBtn) bibleListBtn.style.display = visible.indexOf('bible') !== -1 ? '' : 'none';
   });
 }

@@ -6,31 +6,30 @@
   background: var(--slider-bg, rgba(0,0,0,0.72));
   backdrop-filter: var(--slider-blur, blur(24px));
   -webkit-backdrop-filter: var(--slider-blur, blur(24px));
-  border-right: 1px solid var(--slider-border, rgba(255,255,255,0.08));
+  border: 1px solid var(--slider-border, rgba(255,255,255,0.08));
   box-shadow: var(--slider-shadow);
   display: flex;
   flex-direction: column;
-  transition: transform 0.3s cubic-bezier(.4,0,.2,1),
-              width 0s linear 0.3s;
-  /* 항상 오버레이 — 메인 레이아웃 안 밀림 */
+  /* 메뉴 옆에서 슬라이드 — translateX 아닌 width/opacity 전환 */
+  transition: width 0.3s cubic-bezier(.4,0,.2,1),
+              opacity 0.3s ease;
   position: absolute;
-  top: 46px;
-  bottom: 0;
+  top: var(--pane-gap, 4px);
+  bottom: var(--pane-gap, 4px);
   left: var(--rail-width, 56px);
   z-index: 150;
-  transform: translateX(-100%);
+  border-radius: var(--pane-radius, 12px);
+  opacity: 0;
 }
-/* 열림: 슬라이드인 오버레이 */
+/* 열림: 메뉴 바로 옆에서 폭이 넓어지며 나타남 */
 #sidePanel.open {
   width: 270px;
   overflow: visible;
-  transform: translateX(0);
-  transition: transform 0.3s cubic-bezier(.4,0,.2,1),
-              width 0s linear 0s;
+  opacity: 1;
 }
-/* 핀 고정도 오버레이 유지 (레이아웃 안 밀림) */
+/* 핀 고정도 오버레이 유지 */
 #sidePanel.open.sp-pinned {
-  transform: translateX(0);
+  opacity: 1;
 }
 .sp-section { display:none; flex-direction:column; flex:1; overflow:hidden; min-width:260px; }
 .sp-section.active { display:flex; }
@@ -39,6 +38,7 @@
   border-bottom:1px solid var(--glass-border); display:flex;
   align-items:center; gap:6px; flex-shrink:0;
   box-shadow:0 1px 3px rgba(0,0,0,0.1);
+  border-radius: var(--pane-radius, 12px) var(--pane-radius, 12px) 0 0;
 }
 .sp-head i { font-size:12px; color:var(--gold); }
 .sp-pin-btn {
@@ -76,3 +76,19 @@
 [data-theme="light"] .sp-note-item:hover { background:var(--glass-bg-2); color:var(--text-primary); }
 [data-theme="light"] .sp-note-item.active { background:hsla(var(--accent-h),60%,50%,.12); color:var(--accent-color); }
 [data-theme="light"] .sp-pin-btn.pinned { color:var(--accent-color); }
+
+/* ── 사전 탭 ── */
+.sp-dict-tabs {
+  display:flex; gap:2px; padding:6px 8px; flex-shrink:0;
+  border-bottom:1px solid var(--glass-border);
+}
+.sp-dict-tab {
+  flex:1; padding:5px 4px; font-size:10px; text-align:center;
+  background:none; border:none; border-radius:6px;
+  color:var(--text3); cursor:pointer; transition:all .12s;
+  display:flex; align-items:center; justify-content:center; gap:3px;
+}
+.sp-dict-tab:hover { background:var(--glass-bg-2); color:var(--text2); }
+.sp-dict-tab.active { background:var(--accent-dim); color:var(--accent-color); font-weight:600; }
+.sp-dict-tab i { font-size:9px; }
+.sp-dict-content { flex:1; overflow-y:auto; }
