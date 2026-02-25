@@ -1,5 +1,6 @@
 // settings-panel.js — 설정 패널 렌더링 (메뉴 + 서브페이지)
 var _stpView = 'main';
+var _stpAdvOpen = false;
 function _stpGoTheme(){ _stpView='theme'; renderSettingsPanel(); }
 function _stpGoTopics(){ _stpView='topics'; renderSettingsPanel(); }
 function _stpGoSharing(){ _stpView='sharing'; renderSettingsPanel(); }
@@ -8,8 +9,9 @@ function _stpToggleAdvanced(){
   var body = document.getElementById('stpAdvBody');
   var arrow = document.querySelector('.stp-adv-arrow');
   if(!body) return;
-  var open = body.classList.toggle('stp-adv-open');
-  if(arrow) arrow.classList.toggle('open', open);
+  _stpAdvOpen = !_stpAdvOpen;
+  body.classList.toggle('stp-adv-open', _stpAdvOpen);
+  if(arrow) arrow.classList.toggle('open', _stpAdvOpen);
 }
 
 function renderSettingsPanel(){
@@ -72,10 +74,10 @@ function renderSettingsPanel(){
 
     // ── 색상 고급설정 토글 ──
     h += '<div class="stp-adv-toggle" onclick="_stpToggleAdvanced()">';
-    h += '<i class="fa fa-chevron-right stp-adv-arrow"></i>';
+    h += '<i class="fa fa-chevron-right stp-adv-arrow' + (_stpAdvOpen ? ' open' : '') + '"></i>';
     h += '<span>색상 고급설정</span>';
     h += '</div>';
-    h += '<div class="stp-adv-body" id="stpAdvBody">';
+    h += '<div class="stp-adv-body' + (_stpAdvOpen ? ' stp-adv-open' : '') + '" id="stpAdvBody">';
 
     h += '<div class="stp-section">';
 
@@ -307,7 +309,11 @@ function renderSettingsPanel(){
   }
 
   h += '</div>';
+  // 스크롤 위치 보존
+  var scrollParent = el.closest('.sp-body') || el.parentElement;
+  var scrollTop = scrollParent ? scrollParent.scrollTop : 0;
   el.innerHTML = h;
+  if(scrollParent) scrollParent.scrollTop = scrollTop;
   var ub=document.getElementById('userBar');
   var lw=document.getElementById('stpLogoutWrap');
   if(lw&&ub&&ub.style.display!=='none') lw.style.display='';

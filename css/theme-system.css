@@ -138,6 +138,9 @@
   --handle-width: 4px;
   --handle-color: transparent;
   --handle-hover-color: var(--accent-color);
+
+  /* ── 액센트 버튼 위 텍스트 (배경색 변경에 영향 안 받음) ── */
+  --btn-on-accent: #0a0a1a;
 }
 
 
@@ -210,6 +213,9 @@
   --slider-blur:    blur(24px);
   --slider-border:  rgba(0,0,0,0.08);
   --slider-shadow:  0 8px 40px rgba(0,0,0,0.08);
+
+  /* 액센트 버튼 텍스트 */
+  --btn-on-accent: #ffffff;
 }
 
 
@@ -276,6 +282,9 @@
   --slider-blur:    blur(24px);
   --slider-border:  rgba(120,80,30,0.10);
   --slider-shadow:  0 8px 40px rgba(80,50,15,0.10);
+
+  /* 액센트 버튼 텍스트 */
+  --btn-on-accent: #ffffff;
 }
 
 

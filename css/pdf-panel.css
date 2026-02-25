@@ -165,12 +165,12 @@
 }
 .pdf-lib-btn-primary {
   background: var(--gold);
-  color: var(--bg);
+  color: var(--btn-on-accent, #fff);
   border-color: var(--gold);
 }
 .pdf-lib-btn-primary:hover {
   filter: brightness(1.1);
-  color: var(--bg);
+  color: var(--btn-on-accent, #fff);
 }
 
 /* ── Folder Tree ── */
