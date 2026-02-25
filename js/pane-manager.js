@@ -40,10 +40,6 @@ var PaneManager = (function(){
   // ── 패널 숨기기 ──
   function hide(id){
     if(PANE_IDS.indexOf(id) === -1) return;
-    // 최소 1개 패널은 유지
-    var visibleCount = _getVisibleCount();
-    if(visibleCount <= 1 && _state[id].visible) return;
-
     _state[id].visible = false;
     if(_state.maximized === id) _state.maximized = null;
     _applyState();
@@ -198,8 +194,7 @@ var PaneManager = (function(){
       }
     } catch(e){}
 
-    // 최소 1개 패널 보장
-    if(_getVisibleCount() === 0) _state.bible.visible = true;
+    // 0개 패널도 허용 (모든 패널 닫기 가능)
   }
 
   function _getVisibleCount(){

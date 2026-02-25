@@ -1,9 +1,9 @@
-/* xref-inline.css — 교차참조 CROSS REFERENCE 카드 */
+/* xref-inline.css — 참조 칩 + 인라인 메모 */
 .xref-bar {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 10px 14px 10px 30px;
+  gap: 0;
+  padding: 0;
   margin: 4px 0 4px 20px;
   background: var(--popup-bg, rgba(15,15,30,0.90));
   backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
@@ -11,9 +11,15 @@
   border-radius: 10px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.25);
   animation: xrefSlide .25s ease-out;
-  max-width: 500px;
+  max-width: 480px;
+  overflow: hidden;
 }
 @keyframes xrefSlide { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:none} }
+
+/* ── 참조 섹션 ── */
+.xref-section {
+  padding: 8px 12px 8px 14px;
+}
 
 .xref-label {
   font-size: 9px;
@@ -24,40 +30,15 @@
   display: flex;
   align-items: center;
   gap: 4px;
+  margin-bottom: 6px;
 }
 .xref-label i { font-size: 8px; }
 
-/* 참조 구절 카드 */
-.xref-card {
-  cursor: pointer;
-  transition: background 0.15s;
-  padding: 6px 8px;
-  border-radius: 6px;
-}
-.xref-card:hover {
-  background: rgba(255,255,255,0.05);
-}
-
-.xref-card-ref {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--accent-color);
-  margin-bottom: 3px;
-}
-
-.xref-card-text {
-  font-size: 12px;
-  font-style: italic;
-  color: var(--text-secondary);
-  line-height: 1.5;
-}
-
-/* 구절 칩 (더보기) */
+/* 구절 칩 */
 .xref-chips {
   display: flex;
   flex-wrap: wrap;
   gap: 4px;
-  margin-top: 2px;
 }
 .xref-chip {
   font-size: 10px;
@@ -75,28 +56,126 @@
   background: var(--accent-sel);
   border-color: var(--accent-color);
 }
-
 .xref-more {
   font-size: 9px;
   color: var(--text-muted);
   padding: 2px 6px;
+  align-self: center;
 }
 
-/* 라이트 테마 */
+/* ── 메모 섹션 ── */
+.xref-memo-section {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--pane-border, rgba(255,255,255,0.06));
+  padding: 8px 12px 10px 14px;
+}
+
+.xref-memo-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.xref-memo-label {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.xref-memo-label i { font-size: 8px; }
+
+.xref-memo-edit {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 11px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all .15s;
+}
+.xref-memo-edit:hover {
+  background: rgba(255,255,255,0.08);
+  color: var(--accent-color);
+}
+
+.xref-memo-body {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  word-break: break-word;
+}
+.xref-memo-body .memo-vlink {
+  font-size: 10px;
+}
+
+/* 참조 노트: 메모 하단 정렬 */
+.xref-memo-notes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 8px;
+  padding-top: 6px;
+  border-top: 1px dashed var(--pane-border, rgba(255,255,255,0.06));
+}
+.xref-memo-notes .memo-nlink {
+  font-size: 10px;
+}
+
+/* ── 주석 작성 버튼 ── */
+.xref-add-memo {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 14px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all .15s;
+  border-top: 1px solid var(--pane-border, rgba(255,255,255,0.06));
+}
+.xref-add-memo:hover {
+  background: rgba(255,255,255,0.04);
+  color: var(--accent-color);
+}
+.xref-add-memo i { font-size: 9px; }
+
+/* ── 라이트 테마 ── */
 [data-theme="light"] .xref-bar {
   background: var(--popup-bg, rgba(245,245,252,0.96));
   border-color: var(--popup-border);
   box-shadow: 0 4px 20px rgba(0,0,0,0.08);
 }
-[data-theme="light"] .xref-card:hover {
+[data-theme="light"] .xref-chip:hover {
+  background: var(--accent-sel);
+}
+[data-theme="light"] .xref-memo-edit:hover {
+  background: rgba(0,0,0,0.05);
+}
+[data-theme="light"] .xref-add-memo:hover {
   background: rgba(0,0,0,0.03);
 }
 
-/* 세피아 테마 */
+/* ── 세피아 테마 ── */
 [data-theme="sepia"] .xref-bar {
   background: var(--popup-bg, rgba(245,234,214,0.96));
   border-color: var(--popup-border);
 }
-[data-theme="sepia"] .xref-card:hover {
+[data-theme="sepia"] .xref-memo-edit:hover {
+  background: rgba(120,80,30,0.06);
+}
+[data-theme="sepia"] .xref-add-memo:hover {
   background: rgba(120,80,30,0.04);
 }

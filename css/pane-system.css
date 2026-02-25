@@ -236,6 +236,13 @@ body.has-bg-image .pane-header {
   -webkit-backdrop-filter: blur(16px);
 }
 
+/* ── 모든 패널 닫힘 상태 ── */
+#paneContainer:not(:has(.pane[data-visible="true"])) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* ── 모바일 ── */
 @media (max-width: 599px) {
   #paneContainer {

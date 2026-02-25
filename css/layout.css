@@ -14,8 +14,21 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* ── Background Image Layer ── */
-#bgImageLayer { display: none; }
+/* ── Background Image Layer (블러 배경) ── */
+#bgImageLayer {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(8px) brightness(0.7);
+  transform: scale(1.05);  /* 블러 가장자리 빈 공간 방지 */
+}
+body.has-bg-image #bgImageLayer {
+  display: block;
+}
 
 /* ━━ 배경 이미지 활성 시 글래스 전환 ━━ */
 body.has-bg-image .panel-resize-handle,

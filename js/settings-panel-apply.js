@@ -131,26 +131,27 @@ function _stpReset(){
   _stpResetText();
 }
 
-// ── 배경 이미지 적용 (body.style 인라인) ──
+// ── 배경 이미지 적용 (#bgImageLayer 블러 레이어) ──
 function _stpApplyBgImage(imgUrl){
   var body = document.body;
+  var layer = document.getElementById('bgImageLayer');
   if(!imgUrl){
+    if(layer) layer.style.backgroundImage = '';
     body.style.backgroundImage = '';
     body.style.backgroundSize = '';
     body.style.backgroundPosition = '';
     body.style.backgroundRepeat = '';
     body.style.backgroundAttachment = '';
     body.classList.remove('has-bg-image');
-    console.log('[BG] 배경 제거됨');
     return;
   }
-  body.style.backgroundImage = 'url("' + imgUrl + '")';
-  body.style.backgroundSize = 'cover';
-  body.style.backgroundPosition = 'center';
-  body.style.backgroundRepeat = 'no-repeat';
-  body.style.backgroundAttachment = 'fixed';
+  // 블러 레이어에 배경 이미지 적용
+  if(layer){
+    layer.style.backgroundImage = 'url("' + imgUrl + '")';
+  }
+  // body에도 적용 (fallback + gradient 대체)
+  body.style.backgroundImage = 'none';
   body.classList.add('has-bg-image');
-  console.log('[BG] 배경 적용됨, URL 길이:', imgUrl.length);
 }
 
 function _stpRestoreOnLoad(){
