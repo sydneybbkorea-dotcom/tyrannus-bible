@@ -36,10 +36,12 @@ body.has-bg-image .pane-resize-handle {
   background: transparent;
 }
 body.has-bg-image #biblePane,
-body.has-bg-image #rightPanel,
-body.has-bg-image #noteContent {
+body.has-bg-image #rightPanel {
   background: var(--bgi-panel) !important;
   backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+}
+body.has-bg-image #noteContent {
+  background: transparent !important;
 }
 body.has-bg-image #bibleTabBar,
 body.has-bg-image #bibleViewBar,
