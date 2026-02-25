@@ -129,10 +129,10 @@ function _stpResetColors(){
       if(ThemeSwitcher.setCustomLayoutColor) ThemeSwitcher.setCustomLayoutColor('#ffffff');
     } else if(theme === 'sepia'){
       // 세피아 모드 기본값
-      ThemeSwitcher.setAccent('yellow');
+      ThemeSwitcher.setAccent('orange');
       if(ThemeSwitcher.setCustomBase) ThemeSwitcher.setCustomBase('#ffffff');
       if(ThemeSwitcher.setBookAccent) ThemeSwitcher.setBookAccent('orange');
-      if(ThemeSwitcher.setRailAccent) ThemeSwitcher.setRailAccent('yellow');
+      if(ThemeSwitcher.setRailAccent) ThemeSwitcher.setRailAccent('orange');
       if(ThemeSwitcher.setCustomLayoutColor) ThemeSwitcher.setCustomLayoutColor('#ffffff');
     } else {
       // 다크 모드 기본값

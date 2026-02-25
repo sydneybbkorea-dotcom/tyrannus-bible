@@ -1,6 +1,6 @@
 // layout-manager.js — CSS Grid 기반 화면 분할 시스템
 // 8종 프리셋 + 슬롯별 10가지 기능 선택 + 위/아래 스왑
-var APP_VERSION = '1.0.4';
+var APP_VERSION = '1.0.5';
 
 var LayoutManager = (function(){
   'use strict';
