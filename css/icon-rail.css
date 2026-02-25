@@ -5,23 +5,16 @@
 #iconRail {
   width: var(--rail-width, 56px);
   flex-shrink: 0;
-  background: var(--rail-bg);
-  backdrop-filter: var(--rail-blur);
-  -webkit-backdrop-filter: var(--rail-blur);
-  border-right: 1px solid var(--rail-border);
-  /* 3D 입체감 */
-  box-shadow: 2px 0 20px rgba(0,0,0,0.25),
-              inset -1px 0 0 rgba(255,255,255,0.04);
+  background: transparent;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 0 0 8px 0;
+  gap: 6px;
+  padding: 6px 4px 6px 4px;
   z-index: 100;
   transition: width 0.3s cubic-bezier(0.4,0,0.2,1),
               opacity 0.3s ease,
               transform 0.3s cubic-bezier(0.4,0,0.2,1);
   overflow: hidden;
-  /* 레일은 paneContainer 패딩과 무관하게 전체 높이 차지 */
   margin: 0;
   border-radius: 0;
 }
@@ -92,34 +85,56 @@
 }
 .rail-icon:hover .rail-label { display: block; }
 
-/* ── 햄버거 메뉴 버튼 (레일 맨 위) ── */
-.rail-hamburger {
-  width: 100%;
-  height: 44px;
+/* ── 사이드바 토글 버튼 (독립 영역) ── */
+.rail-toggle-btn {
+  width: 44px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: none;
-  background: transparent;
+  border-radius: 10px;
+  background: var(--rail-bg, rgba(20,20,40,0.65));
+  backdrop-filter: var(--rail-blur, blur(20px));
+  -webkit-backdrop-filter: var(--rail-blur, blur(20px));
+  border: 1px solid var(--rail-border, rgba(255,255,255,0.06));
+  flex-shrink: 0;
+  align-self: center;
   color: var(--text-muted);
-  font-size: 17px;
+  font-size: 16px;
   cursor: pointer;
   transition: all 0.15s;
-  flex-shrink: 0;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
 }
-.rail-hamburger:hover {
-  background: rgba(255,255,255,0.06);
+.rail-toggle-btn:hover {
+  background: rgba(255,255,255,0.08);
   color: var(--text-primary);
 }
-.rail-hamburger.open {
+.rail-toggle-btn.active {
   color: var(--rail-accent, var(--accent-color));
   background: var(--rail-accent-dim, var(--accent-dim));
 }
-[data-theme="light"] .rail-hamburger:hover {
+
+/* ── 메뉴 래퍼 (둥근 카드) ── */
+.rail-menu-wrap {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: var(--rail-bg, rgba(20,20,40,0.65));
+  backdrop-filter: var(--rail-blur, blur(20px));
+  -webkit-backdrop-filter: var(--rail-blur, blur(20px));
+  border: 1px solid var(--rail-border, rgba(255,255,255,0.06));
+  border-radius: 12px;
+  padding: 6px 0 8px 0;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2),
+              inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+/* ── 라이트/세피아 테마: 토글 버튼 ── */
+[data-theme="light"] .rail-toggle-btn:hover {
   background: rgba(0,0,0,0.05);
 }
-[data-theme="sepia"] .rail-hamburger:hover {
+[data-theme="sepia"] .rail-toggle-btn:hover {
   background: rgba(120,80,30,0.06);
 }
 

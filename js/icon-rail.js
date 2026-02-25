@@ -125,7 +125,8 @@ function toggleKnowledgeGraph(){
   var isGraphShowing = S.panelOpen === 'notes' && S._noteSubTab === 'graph'
                        && rp && !rp.classList.contains('rp-hide');
   if(isGraphShowing){
-    togglePanel('notes');
+    // 그래프 끄면 노트 탭으로 복귀 (패널 숨기지 않음)
+    switchSub('notes');
     document.querySelector('.rail-icon[data-rail="graph"]')?.classList.remove('active');
   } else {
     if(_activeRail && !_spPinned) closeSidePanel();

@@ -84,66 +84,69 @@
 
   <!-- ── 아이콘 레일 (최상위, #bibleBody에서 이동) ── -->
   <div id="iconRail">
-    <!-- 레일 토글 버튼 (맨 위) -->
-    <button class="rail-hamburger" id="railToggleBtn" onclick="_toggleIconRail()" title="사이드바 열기/닫기">
+    <!-- 사이드바 토글 버튼 (독립 영역) -->
+    <button class="rail-toggle-btn" id="railToggleBtn" onclick="_toggleIconRail()" title="사이드바 열기/닫기">
       <i class="fa fa-columns" id="railToggleIcon"></i>
     </button>
-    <div class="rail-top">
-      <!-- 패널 토글 섹션 -->
-      <button class="rail-icon rail-pane-toggle" data-pane="bible" onclick="PaneManager.toggle('bible')" title="성경 패널">
-        <i class="fa fa-book-bible"></i><span class="rail-label">성경</span>
-      </button>
-      <button class="rail-icon rail-bible-list" id="railBibleList" onclick="toggleRail('bible')" title="성경 목록" style="display:none">
-        <i class="fa fa-list"></i><span class="rail-label">목록</span>
-      </button>
-      <button class="rail-icon rail-pane-toggle" data-pane="pdf" onclick="PaneManager.toggle('pdf')" title="PDF 패널">
-        <i class="fa fa-file-pdf"></i><span class="rail-label">PDF</span>
-      </button>
-      <button class="rail-icon rail-pane-toggle" data-pane="notes" onclick="PaneManager.toggle('notes')" title="노트 패널">
-        <i class="fa fa-pen"></i><span class="rail-label">노트</span>
-      </button>
-      <div class="rail-divider"></div>
-      <!-- 섹션 버튼 (사이드패널 열기) -->
-      <button class="rail-icon" data-rail="dictionary" onclick="toggleDictPanel()" title="사전">
-        <i class="fas fa-spell-check"></i><span class="rail-label" data-i18n="nav.dict">사전</span>
-      </button>
-      <button class="rail-icon" data-rail="library" onclick="toggleRail('library')" title="도서관">
-        <i class="fa fa-book-open-reader"></i><span class="rail-label" data-i18n="nav.library">도서관</span>
-      </button>
-      <button class="rail-icon" data-rail="qna" onclick="toggleRail('qna')" title="Q&A">
-        <i class="fa fa-comments"></i><span class="rail-label" data-i18n="nav.qna">Q&A</span>
-      </button>
-      <button class="rail-icon" data-rail="graph" onclick="toggleKnowledgeGraph()" title="지식 그래프">
-        <i class="fa fa-project-diagram"></i><span class="rail-label">그래프</span>
-      </button>
-      <button class="rail-icon" data-rail="reading" onclick="toggleRail('reading')" title="읽기 계획">
-        <i class="fa fa-calendar-check"></i><span class="rail-label" data-i18n="nav.reading">읽기</span>
-      </button>
-      <button class="rail-icon" data-rail="typing" onclick="toggleTypingPanel()" title="타자 연습">
-        <i class="fa fa-keyboard"></i><span class="rail-label">타자</span>
-      </button>
-      <button class="rail-icon" data-rail="hymns" onclick="toggleRail('hymns')" title="찬양">
-        <i class="fa fa-music"></i><span class="rail-label">찬양</span>
-      </button>
-      <button class="rail-icon" data-rail="live" onclick="toggleRail('live')" title="라이브 강의">
-        <i class="fa-solid fa-tower-broadcast"></i><span class="rail-label">라이브</span>
-      </button>
-    </div>
-    <div class="rail-bottom">
-      <button class="rail-icon" data-rail="bugreport" onclick="toggleRail('bugreport')" title="버그 리포트">
-        <i class="fa fa-bug"></i><span class="rail-label" data-i18n="nav.bugreport">버그</span>
-      </button>
-      <div id="railUser">
-        <button id="loginBtn" class="rail-icon" onclick="signInWithGoogle()" title="로그인">
-          <i class="fa fa-sign-in-alt"></i>
+    <!-- 메뉴 영역 (별도 둥근 배경) -->
+    <div class="rail-menu-wrap">
+      <div class="rail-top">
+        <!-- 패널 토글 섹션 -->
+        <button class="rail-icon rail-pane-toggle" data-pane="bible" onclick="PaneManager.toggle('bible')" title="성경 패널">
+          <i class="fa fa-book-bible"></i><span class="rail-label">성경</span>
         </button>
-        <div id="userBar" class="rail-user-info" style="display:none">
-          <img id="userAvatar" class="rail-avatar" src="" title="프로필">
-        </div>
+        <button class="rail-icon rail-bible-list" id="railBibleList" onclick="toggleRail('bible')" title="성경 목록" style="display:none">
+          <i class="fa fa-list"></i><span class="rail-label">목록</span>
+        </button>
+        <button class="rail-icon rail-pane-toggle" data-pane="pdf" onclick="PaneManager.toggle('pdf')" title="PDF 패널">
+          <i class="fa fa-file-pdf"></i><span class="rail-label">PDF</span>
+        </button>
+        <button class="rail-icon rail-pane-toggle" data-pane="notes" onclick="PaneManager.toggle('notes')" title="노트 패널">
+          <i class="fa fa-pen"></i><span class="rail-label">노트</span>
+        </button>
+        <div class="rail-divider"></div>
+        <!-- 섹션 버튼 (사이드패널 열기) -->
+        <button class="rail-icon" data-rail="dictionary" onclick="toggleDictPanel()" title="사전">
+          <i class="fas fa-spell-check"></i><span class="rail-label" data-i18n="nav.dict">사전</span>
+        </button>
+        <button class="rail-icon" data-rail="library" onclick="toggleRail('library')" title="도서관">
+          <i class="fa fa-book-open-reader"></i><span class="rail-label" data-i18n="nav.library">도서관</span>
+        </button>
+        <button class="rail-icon" data-rail="qna" onclick="toggleRail('qna')" title="Q&A">
+          <i class="fa fa-comments"></i><span class="rail-label" data-i18n="nav.qna">Q&A</span>
+        </button>
+        <button class="rail-icon" data-rail="graph" onclick="toggleKnowledgeGraph()" title="지식 그래프">
+          <i class="fa fa-project-diagram"></i><span class="rail-label">그래프</span>
+        </button>
+        <button class="rail-icon" data-rail="reading" onclick="toggleRail('reading')" title="읽기 계획">
+          <i class="fa fa-calendar-check"></i><span class="rail-label" data-i18n="nav.reading">읽기</span>
+        </button>
+        <button class="rail-icon" data-rail="typing" onclick="toggleTypingPanel()" title="타자 연습">
+          <i class="fa fa-keyboard"></i><span class="rail-label">타자</span>
+        </button>
+        <button class="rail-icon" data-rail="hymns" onclick="toggleRail('hymns')" title="찬양">
+          <i class="fa fa-music"></i><span class="rail-label">찬양</span>
+        </button>
+        <button class="rail-icon" data-rail="live" onclick="toggleRail('live')" title="라이브 강의">
+          <i class="fa-solid fa-tower-broadcast"></i><span class="rail-label">라이브</span>
+        </button>
       </div>
-      <button class="rail-icon" data-rail="settings" onclick="toggleRail('settings')" title="설정">
-        <i class="fa fa-cog"></i><span class="rail-label" data-i18n="nav.settings">설정</span>
-      </button>
+      <div class="rail-bottom">
+        <button class="rail-icon" data-rail="bugreport" onclick="toggleRail('bugreport')" title="버그 리포트">
+          <i class="fa fa-bug"></i><span class="rail-label" data-i18n="nav.bugreport">버그</span>
+        </button>
+        <div id="railUser">
+          <button id="loginBtn" class="rail-icon" onclick="signInWithGoogle()" title="로그인">
+            <i class="fa fa-sign-in-alt"></i>
+          </button>
+          <div id="userBar" class="rail-user-info" style="display:none">
+            <img id="userAvatar" class="rail-avatar" src="" title="프로필">
+          </div>
+        </div>
+        <button class="rail-icon" data-rail="settings" onclick="toggleRail('settings')" title="설정">
+          <i class="fa fa-cog"></i><span class="rail-label" data-i18n="nav.settings">설정</span>
+        </button>
+      </div>
     </div>
   </div>
 
