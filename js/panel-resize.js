@@ -16,17 +16,8 @@
   }
 
   function updateHandleVisibility(){
-    var handles = document.querySelectorAll('.pane-resize-handle');
-    handles.forEach(function(h){
-      var leftId = h.dataset.leftPane;
-      var rightId = h.dataset.rightPane;
-      var leftVis = typeof PaneManager !== 'undefined' && PaneManager.isVisible(leftId);
-      var rightVis = typeof PaneManager !== 'undefined' && PaneManager.isVisible(rightId);
-      var noMax = typeof PaneManager !== 'undefined' && !PaneManager.isMaximized(leftId) && !PaneManager.isMaximized(rightId);
-      h.style.display = (leftVis && rightVis && noMax) ? '' : 'none';
-    });
-
-    // 레거시 핸들도 숨김 (이전 버전 호환)
+    // PaneManager가 핸들을 동적 생성하므로 별도 가시성 관리 불필요
+    // 레거시 핸들만 숨김
     var legacyHandles = document.querySelectorAll('.panel-resize-handle');
     legacyHandles.forEach(function(h){ h.style.display = 'none'; });
   }

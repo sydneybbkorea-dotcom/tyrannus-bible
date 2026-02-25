@@ -116,9 +116,8 @@ var PaneManager = (function(){
       }
 
       if(vis && !_state.maximized){
-        // 저장된 너비가 있고 3개 패널일 때만 고정 너비 사용
-        // 패널 수가 바뀌면 균등 배분 (flex:1)
-        if(_state[id].width && visibleCount >= 3){
+        // 저장된 너비가 있으면 고정 너비 사용 (2개 이상)
+        if(_state[id].width && visibleCount >= 2){
           pane.style.flex = '0 0 ' + _state[id].width + 'px';
         } else {
           pane.style.flex = '1 1 0%';  // 균등 배분
@@ -161,16 +160,29 @@ var PaneManager = (function(){
     if(noteBtn) noteBtn.classList.toggle('active', _state.notes.visible);
   }
 
-  // ── 리사이즈 핸들 가시성 업데이트 ──
+  // ── 리사이즈 핸들 동적 생성 (visible 패널 사이에만) ──
   function _updateResizeHandles(){
-    var handles = document.querySelectorAll('.pane-resize-handle');
-    handles.forEach(function(h){
-      var leftId = h.dataset.leftPane;
-      var rightId = h.dataset.rightPane;
-      var leftVis = _state[leftId] && _state[leftId].visible;
-      var rightVis = _state[rightId] && _state[rightId].visible;
-      h.style.display = (leftVis && rightVis && !_state.maximized) ? '' : 'none';
-    });
+    var container = document.getElementById('paneContainer');
+    if(!container) return;
+
+    // 기존 핸들 제거
+    container.querySelectorAll('.pane-resize-handle').forEach(function(h){ h.remove(); });
+
+    if(_state.maximized) return;
+
+    // visible 패널을 DOM 순서(bible→pdf→notes)로 수집
+    var visiblePanes = PANE_IDS.filter(function(id){ return _state[id].visible; });
+
+    // 인접한 visible 패널 사이에 핸들 삽입
+    for(var i = 0; i < visiblePanes.length - 1; i++){
+      var leftPane = document.getElementById('pane-' + visiblePanes[i]);
+      if(!leftPane) continue;
+      var handle = document.createElement('div');
+      handle.className = 'pane-resize-handle';
+      handle.dataset.leftPane = visiblePanes[i];
+      handle.dataset.rightPane = visiblePanes[i + 1];
+      leftPane.after(handle);
+    }
   }
 
   // ── 상태 저장/복원 ──
