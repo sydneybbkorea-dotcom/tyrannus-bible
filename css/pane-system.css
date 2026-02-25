@@ -229,6 +229,7 @@ body.pane-resizing iframe {
   border-left: none;
 }
 
+
 /* ── 배경 이미지 활성 시 ── */
 body.has-bg-image .pane-inner {
   background: var(--bgi-panel) !important;

@@ -2,7 +2,8 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged }
   from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { getFirestore } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, getDocs, query, where, onSnapshot }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 import { getStorage } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js';
 import { initSync, persistToCloud, flushPendingSaves, clearSync } from './firebase-sync.js';
 import { startRealtimeSync, stopRealtimeSync } from './firebase-sync-listen.js';
@@ -22,6 +23,10 @@ const auth    = getAuth(app);
 const db      = getFirestore(app);
 const storage = getStorage(app);
 window._firebaseAuth = auth;
+
+// ── Firestore DB 브릿지 (관리자 패널 등 외부에서 사용)
+window._firebaseDB = db;
+window._fbFn = { doc, getDoc, setDoc, updateDoc, deleteDoc, collection, getDocs, query, where, onSnapshot };
 
 // 온라인/오프라인 감지 초기화
 initOnlineListener(function(){ flushPendingSaves(); flushPdfSaves(); });
@@ -46,6 +51,21 @@ onAuthStateChanged(auth, async user => {
     await updateQuotaUsage();
     window.updateQuotaDisplay?.(window.getQuotaInfo?.().used, window.getQuotaInfo?.().limit);
     setSyncStatus('synced');
+    // ── 서버 테마 기본값 적용 (사용자 미커스텀 시)
+    if(typeof ThemeSwitcher !== 'undefined' && ThemeSwitcher.fetchServerDefaults){
+      ThemeSwitcher.fetchServerDefaults();
+    }
+    // ── 관리자 감지: admins/{uid} 문서 존재 확인
+    try {
+      const adminDoc = await getDoc(doc(db, 'admins', user.uid));
+      if(adminDoc.exists()){
+        window._isAdmin = true;
+        console.log('[Admin] 관리자 권한 확인됨');
+        if(typeof window._initAdminPanel === 'function') window._initAdminPanel();
+      } else {
+        window._isAdmin = false;
+      }
+    } catch(e){ window._isAdmin = false; }
     // URL 파라미터 ?share= 감지
     const shareParam = new URLSearchParams(window.location.search).get('share');
     if(shareParam) {
@@ -67,6 +87,7 @@ onAuthStateChanged(auth, async user => {
     clearSync(); clearPdfSync(); clearShare(); clearLiveSync(); stopRealtimeSync(); stopPdfRealtimeSync(); stopSharedListeners();
     window._firebaseReady = false;
     window._firebaseUid = null;
+    window._isAdmin = false;
     window.hideUserBar?.();
     if(window.restore) window.restore();
     if(window.renderAll) window.renderAll();

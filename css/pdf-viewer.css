@@ -7,7 +7,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: var(--bg-primary, var(--bg));
+  background: transparent;
 }
 
 /* ── PDF Toolbar ── */
@@ -35,7 +35,7 @@
   border: none; background: none;
 }
 .pdf-tool-btn:hover {
-  background: var(--bg-tertiary, var(--bg3));
+  background: var(--glass-bg-2, var(--bg3));
   color: var(--text-primary, var(--text));
 }
 .pdf-tool-btn.active {
@@ -82,8 +82,8 @@
   align-items: center;
   gap: 5px;
   padding: 4px 10px;
-  background: var(--bg-secondary, var(--bg2));
-  border-bottom: 1px solid var(--border-color, var(--border));
+  background: var(--glass-bg-1);
+  border-bottom: 1px solid var(--glass-border, var(--border));
   flex-shrink: 0;
 }
 .pdf-opt-color {
@@ -110,9 +110,9 @@
   margin-left: 4px;
 }
 .pdf-opt-fontsize {
-  background: var(--bg3, #22242e);
+  background: var(--glass-bg-2, #22242e);
   color: var(--text, #e8e8e8);
-  border: 1px solid var(--border, #2a2c34);
+  border: 1px solid var(--glass-border, #2a2c34);
   border-radius: 4px;
   padding: 2px 4px;
   font-size: 11px;
@@ -137,7 +137,7 @@
   outline-offset: 2px;
 }
 .pdf-annot-inline-text.editing {
-  background: var(--bg2, #1a1c24);
+  background: var(--glass-bg-3, #1a1c24);
   outline: 2px solid var(--accent-color, #bd8a00);
   outline-offset: 2px;
   border-radius: 4px;
@@ -190,10 +190,11 @@
   position: absolute;
   z-index: 15;
   width: 220px;
-  background: var(--bg2, #1a1c24);
+  background: var(--glass-bg-3, #1a1c24);
+  backdrop-filter: var(--glass-blur-2); -webkit-backdrop-filter: var(--glass-blur-2);
   border: 1px solid var(--glass-border, #2a2c34);
   border-radius: 10px;
-  box-shadow: 0 4px 16px rgba(0,0,0,.35);
+  box-shadow: var(--glass-shadow, 0 4px 16px rgba(0,0,0,.35));
   overflow: hidden;
 }
 .pdf-memo-editor-header {
@@ -213,7 +214,7 @@
 .pdf-memo-editor-textarea {
   width: 100%;
   border: none;
-  background: var(--bg3, #22242e);
+  background: var(--glass-bg-1, #22242e);
   color: var(--text, #e8e8e8);
   font-size: 12px;
   line-height: 1.55;
@@ -240,13 +241,13 @@
   border-radius: 6px;
   font-size: 11px;
   cursor: pointer;
-  border: 1px solid var(--border, #2a2c34);
+  border: 1px solid var(--glass-border, #2a2c34);
   background: none;
   color: var(--text3, #666);
   transition: all .12s;
 }
 .pdf-memo-editor-cancel:hover {
-  background: var(--bg3, #22242e);
+  background: var(--glass-bg-2, #22242e);
   color: var(--text, #e8e8e8);
 }
 .pdf-memo-editor-save {
@@ -273,13 +274,14 @@
   padding: 10px 12px;
   border: 1px solid var(--glass-border, #2a2c34);
   border-radius: 10px;
-  background: var(--bg2, #1a1c24);
+  background: var(--glass-bg-3, #1a1c24);
+  backdrop-filter: var(--glass-blur-2); -webkit-backdrop-filter: var(--glass-blur-2);
   color: var(--text, #e8e8e8);
   outline: none;
   line-height: 1.4;
   word-break: break-word;
   white-space: pre-wrap;
-  box-shadow: 0 4px 16px rgba(0,0,0,.35);
+  box-shadow: var(--glass-shadow, 0 4px 16px rgba(0,0,0,.35));
 }
 
 /* ── Tag popup color row ── */
@@ -445,10 +447,11 @@
   position: absolute;
   top: 24px; left: 0;
   min-width: 160px; max-width: 220px;
-  background: var(--bg2, #1a1c24);
-  border: 1px solid var(--border, #2a2c34);
+  background: var(--glass-bg-3, #1a1c24);
+  backdrop-filter: var(--glass-blur-2); -webkit-backdrop-filter: var(--glass-blur-2);
+  border: 1px solid var(--glass-border, #2a2c34);
   border-radius: 8px;
-  box-shadow: 0 4px 16px rgba(0,0,0,.3);
+  box-shadow: var(--glass-shadow, 0 4px 16px rgba(0,0,0,.3));
   z-index: 14;
   overflow: hidden;
 }
@@ -482,7 +485,7 @@
   transition: all .12s;
 }
 .pdf-memo-bubble-btn:hover {
-  background: var(--bg3, #22242e);
+  background: var(--glass-bg-2, #22242e);
   color: var(--accent-color, var(--gold));
 }
 .pdf-memo-bubble-del:hover {
@@ -493,8 +496,8 @@
 .pdf-memo-btn-note {
   margin-left: auto;
   width: 28px; height: 28px;
-  border: 1px solid var(--border, #2a2c34);
-  background: var(--bg3, #22242e);
+  border: 1px solid var(--glass-border, #2a2c34);
+  background: var(--glass-bg-2, #22242e);
   color: var(--text3, #666);
   border-radius: 6px;
   cursor: pointer;
@@ -558,7 +561,7 @@
   transition: background var(--anim-fast, 150ms);
 }
 .pdf-sel-btn:hover {
-  background: var(--bg-tertiary, var(--bg4));
+  background: var(--glass-bg-2, var(--bg4));
 }
 .pdf-sel-btn i { margin-right: 4px; }
 
@@ -569,7 +572,7 @@
   gap: 8px;
   padding: 8px 12px;
   margin: 8px 0;
-  background: var(--bg-secondary, var(--bg2));
+  background: var(--glass-bg-1, var(--bg2));
   border-left: 3px solid var(--red, #f05050);
   border-radius: 0 var(--radius-sm, 4px) var(--radius-sm, 4px) 0;
   font-size: 13px;
@@ -577,7 +580,7 @@
   transition: background var(--anim-fast, 150ms);
 }
 .pdf-cite:hover {
-  background: var(--bg-tertiary, var(--bg3));
+  background: var(--glass-bg-2, var(--bg3));
 }
 .pdf-cite i {
   color: var(--red, #f05050);
@@ -637,14 +640,14 @@
   align-items: center;
   gap: 10px;
   padding: 10px 12px;
-  background: var(--bg-secondary, var(--bg2));
-  border: 1px solid var(--border-color, var(--border));
+  background: var(--glass-bg-1, var(--bg2));
+  border: 1px solid var(--glass-border, var(--border));
   border-radius: var(--radius-md, 8px);
   cursor: pointer;
   transition: all var(--anim-fast, 150ms);
 }
 .pdf-library-item:hover {
-  background: var(--bg-tertiary, var(--bg3));
+  background: var(--glass-bg-2, var(--bg3));
   border-color: var(--accent-color, var(--gold));
 }
 .pdf-library-icon {
@@ -696,7 +699,7 @@
   position: absolute;
   z-index: 13;
   width: 260px;
-  background: var(--glass-bg-2);
+  background: var(--glass-bg-3);
   backdrop-filter: var(--glass-blur-2); -webkit-backdrop-filter: var(--glass-blur-2);
   border: 1px solid var(--glass-border);
   border-radius: 10px;
@@ -731,13 +734,13 @@
   font-size: 11px;
 }
 .pdf-memo-header .pdf-memo-close:hover {
-  background: var(--bg3, #22242e);
+  background: var(--glass-bg-2, #22242e);
   color: var(--text, #e8e8e8);
 }
 .pdf-memo-textarea {
   width: 100%;
   border: none;
-  background: var(--bg3, #22242e);
+  background: var(--glass-bg-1, #22242e);
   color: var(--text, #e8e8e8);
   font-size: 12px;
   line-height: 1.55;
@@ -825,9 +828,10 @@
 
 /* ── Tag popup ── */
 .pdf-tag-popup { position:absolute; z-index:15; min-width:180px; max-width:260px;
-  background:var(--bg2, #1a1c24);
+  background:var(--glass-bg-3, #1a1c24);
+  backdrop-filter:var(--glass-blur-2); -webkit-backdrop-filter:var(--glass-blur-2);
   border:1px solid var(--glass-border, #2a2c34);
-  border-radius:10px; box-shadow:0 4px 16px rgba(0,0,0,.35); padding:8px;
+  border-radius:10px; box-shadow:var(--glass-shadow, 0 4px 16px rgba(0,0,0,.35)); padding:8px;
   pointer-events:auto; }
 .pdf-tag-chips { display:flex; flex-wrap:wrap; gap:4px; margin-bottom:6px; }
 .pdf-tag-chip { display:inline-flex; align-items:center; gap:2px; padding:2px 8px;
@@ -837,17 +841,17 @@
   font-size:12px; padding:0 2px; opacity:.6; }
 .pdf-tag-remove:hover { opacity:1; }
 .pdf-tag-input-row { display:flex; gap:4px; }
-.pdf-tag-input { flex:1; border:1px solid var(--border,#2a2c34); background:var(--bg3,#22242e);
+.pdf-tag-input { flex:1; border:1px solid var(--glass-border,#2a2c34); background:var(--glass-bg-1,#22242e);
   color:var(--text,#e8e8e8); border-radius:6px; padding:4px 8px; font-size:11px; outline:none; }
-.pdf-tag-add-btn { width:28px; height:28px; border:1px solid var(--border,#2a2c34);
-  background:var(--bg3,#22242e); color:var(--text3,#666); border-radius:6px;
+.pdf-tag-add-btn { width:28px; height:28px; border:1px solid var(--glass-border,#2a2c34);
+  background:var(--glass-bg-1,#22242e); color:var(--text3,#666); border-radius:6px;
   cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:11px; }
 .pdf-tag-add-btn:hover { color:var(--accent-color,#bd8a00); border-color:var(--accent-color); }
 
 /* Tag badge on highlight */
 .pdf-annot-tag-badge { position:absolute; bottom:-14px; left:0;
-  font-size:9px; color:var(--accent-color,#bd8a00); background:var(--bg2,#1a1c24);
-  border:1px solid var(--border,#2a2c34); border-radius:8px; padding:1px 6px;
+  font-size:9px; color:var(--accent-color,#bd8a00); background:var(--glass-bg-3,#1a1c24);
+  border:1px solid var(--glass-border,#2a2c34); border-radius:8px; padding:1px 6px;
   white-space:nowrap; pointer-events:none; opacity:.85; }
 
 /* ── Highlight tag popup: delete button row ── */
@@ -881,8 +885,8 @@
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: var(--bg2, #1a1c24);
-  border: 1px solid var(--border, #2a2c34);
+  background: var(--glass-bg-3, #1a1c24);
+  border: 1px solid var(--glass-border, #2a2c34);
   color: var(--text3, #666);
   cursor: pointer;
   font-size: 10px;
@@ -933,10 +937,11 @@
   align-items: center;
   gap: 2px;
   padding: 4px;
-  background: var(--bg2, rgba(22,24,30,.97));
+  background: var(--glass-bg-3, rgba(22,24,30,.85));
+  backdrop-filter: var(--glass-blur-2); -webkit-backdrop-filter: var(--glass-blur-2);
   border: 1px solid var(--glass-border, #2a2c34);
   border-radius: 10px;
-  box-shadow: 0 4px 16px rgba(0,0,0,.4);
+  box-shadow: var(--glass-shadow, 0 4px 16px rgba(0,0,0,.4));
   width: 42px;
 }
 .pdf-float-toolbar .pdf-tool-btn {
@@ -990,10 +995,11 @@
   gap: 5px;
   padding: 8px 8px;
   min-width: 120px;
-  background: var(--bg2, rgba(22,24,30,.97));
+  background: var(--glass-bg-3, rgba(22,24,30,.85));
+  backdrop-filter: var(--glass-blur-2); -webkit-backdrop-filter: var(--glass-blur-2);
   border: 1px solid var(--glass-border, #2a2c34);
   border-radius: 10px;
-  box-shadow: 0 4px 16px rgba(0,0,0,.4);
+  box-shadow: var(--glass-shadow, 0 4px 16px rgba(0,0,0,.4));
   z-index: 200;
   animation: side-in .12s ease-out;
 }
@@ -1056,7 +1062,7 @@
   transition: all .12s;
 }
 .pdf-flyout-shape-btn:hover {
-  background: var(--bg-tertiary, var(--bg3));
+  background: var(--glass-bg-2, var(--bg3));
   color: var(--text-primary, var(--text));
 }
 .pdf-flyout-shape-btn.active {

@@ -4,10 +4,11 @@
   overflow: hidden;
   flex-shrink: 0;
   background: var(--slider-bg, rgba(0,0,0,0.72));
-  backdrop-filter: var(--slider-blur, blur(24px));
-  -webkit-backdrop-filter: var(--slider-blur, blur(24px));
+  backdrop-filter: var(--slider-blur, blur(32px));
+  -webkit-backdrop-filter: var(--slider-blur, blur(32px));
   border: 1px solid var(--slider-border, rgba(255,255,255,0.08));
-  box-shadow: var(--slider-shadow);
+  border-top-color: rgba(255,255,255,0.15);
+  box-shadow: var(--slider-shadow), inset 0 1px 0 rgba(255,255,255,0.08);
   display: flex;
   flex-direction: column;
   /* 메뉴 옆에서 슬라이드 — translateX 아닌 width/opacity 전환 */
@@ -76,6 +77,14 @@
 [data-theme="light"] .sp-note-item:hover { background:var(--glass-bg-2); color:var(--text-primary); }
 [data-theme="light"] .sp-note-item.active { background:hsla(var(--accent-h),60%,50%,.12); color:var(--accent-color); }
 [data-theme="light"] .sp-pin-btn.pinned { color:var(--accent-color); }
+[data-theme="light"] #sidePanel {
+  border-top-color: rgba(255,255,255,0.25);
+  box-shadow: var(--slider-shadow), inset 0 1px 0 rgba(255,255,255,0.15);
+}
+[data-theme="sepia"] #sidePanel {
+  border-top-color: rgba(255,255,255,0.18);
+  box-shadow: var(--slider-shadow), inset 0 1px 0 rgba(255,255,255,0.10);
+}
 
 /* ── 사전 탭 ── */
 .sp-dict-tabs {

@@ -89,22 +89,34 @@
     z-index: 900;
     border-top: 1px solid var(--border);
     border-right: none;
-    overflow-x: auto;
+    overflow-x: hidden;
   }
+  #iconRail .rail-menu-wrap {
+    flex-direction: row;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    flex-shrink: 0;
+    width: 100%;
+  }
+  #iconRail .rail-menu-wrap::-webkit-scrollbar { display: none; }
   #iconRail .rail-top,
   #iconRail .rail-bottom {
     flex-direction: row;
     gap: 0;
+    flex-shrink: 0;
   }
   #iconRail .rail-label { display: none; }
-  #iconRail .rail-icon { padding: 8px 12px; }
+  #iconRail .rail-icon { padding: 8px 12px; flex-shrink: 0; }
   #iconRail .rail-divider { display: none; }
   #iconRail .rail-pane-toggle {
     width: 40px !important;
     height: 40px !important;
     border-radius: 50% !important;
+    flex-shrink: 0;
   }
   #iconRail #railUser { display: none; }
+  #iconRail .rail-toggle-btn { display: none; }
 
   #sidePanel {
     position: fixed;

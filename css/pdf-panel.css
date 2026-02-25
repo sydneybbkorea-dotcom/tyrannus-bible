@@ -7,7 +7,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  background: transparent;
+  background: var(--bg-primary, var(--bg));
   overflow: hidden;
   min-height: 0;
 }
@@ -22,8 +22,8 @@
   align-items: center;
   gap: 2px;
   padding: 4px 6px;
-  border-bottom: 1px solid var(--border);
-  background: var(--bg2);
+  border-bottom: 1px solid var(--glass-border, var(--border));
+  background: var(--pane-header-bg, var(--glass-bg-1));
   flex-shrink: 0;
   overflow-x: auto;
   min-height: 34px;
@@ -42,7 +42,7 @@
   flex-shrink: 0;
 }
 .pdf-tab-home:hover {
-  background: var(--bg3);
+  background: var(--glass-bg-2, var(--bg3));
   color: var(--text);
 }
 .pdf-tab-home.active {
@@ -65,7 +65,7 @@
   flex-shrink: 0;
 }
 .pdf-tab:hover {
-  background: var(--bg3);
+  background: var(--glass-bg-2, var(--bg3));
   color: var(--text2);
 }
 .pdf-tab.active {
@@ -138,7 +138,7 @@
   display: flex;
   gap: 6px;
   padding: 10px 12px;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--glass-border, var(--border));
   flex-shrink: 0;
 }
 .pdf-lib-btn {
@@ -150,13 +150,13 @@
   font-size: 11px;
   font-weight: 600;
   cursor: pointer;
-  border: 1px solid var(--border);
-  background: var(--bg2);
+  border: 1px solid var(--glass-border, var(--border));
+  background: var(--glass-bg-1, var(--bg2));
   color: var(--text2);
   transition: all .15s;
 }
 .pdf-lib-btn:hover {
-  background: var(--bg3);
+  background: var(--glass-bg-2, var(--bg3));
   color: var(--text);
   border-color: var(--text3);
 }
@@ -192,9 +192,10 @@
   font-size: 12px;
   color: var(--text);
   user-select: none;
+  background: var(--glass-bg-1, transparent);
 }
 .pdf-ft-head:hover {
-  background: var(--bg3);
+  background: var(--glass-bg-2, var(--bg3));
 }
 .pdf-ft-head.pdf-ft-sel {
   background: var(--gold-dim, rgba(218,165,32,.12));
@@ -242,7 +243,7 @@
   user-select: none;
 }
 .pdf-ft-file:hover {
-  background: var(--bg3);
+  background: var(--glass-bg-2, var(--bg3));
 }
 .pdf-ft-file.pdf-ft-file-sel {
   background: var(--gold-dim, rgba(218,165,32,.12));
@@ -295,11 +296,12 @@
   position: fixed;
   z-index: 999;
   min-width: 160px;
-  background: var(--bg2);
-  border: 1px solid var(--border);
+  background: var(--glass-bg-3, var(--bg2));
+  backdrop-filter: var(--glass-blur-2); -webkit-backdrop-filter: var(--glass-blur-2);
+  border: 1px solid var(--glass-border, var(--border));
   border-radius: 8px;
   padding: 4px;
-  box-shadow: 0 4px 16px rgba(0,0,0,.18);
+  box-shadow: var(--glass-shadow, 0 4px 16px rgba(0,0,0,.18));
 }
 .pdf-ctx-item {
   display: flex;
@@ -313,7 +315,7 @@
   transition: background .12s;
 }
 .pdf-ctx-item:hover {
-  background: var(--bg3);
+  background: var(--glass-bg-2, var(--bg3));
 }
 .pdf-ctx-item i {
   width: 16px;

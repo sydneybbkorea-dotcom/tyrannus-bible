@@ -337,6 +337,42 @@ var ThemeSwitcher = (function(){
     else if(layoutC) setLayoutColor(layoutC);
   }
 
+  // ── 서버 기본값 적용 (사용자 미커스텀 시) ──
+  function applyServerDefaults(themeDefaults){
+    if(!themeDefaults) return;
+    var theme = getTheme();
+    var def = themeDefaults[theme];
+    if(!def) return;
+    // 사용자가 직접 강조색을 설정하지 않은 경우에만 서버 기본값 적용
+    var userAccent = localStorage.getItem(CUSTOM_ACCENT_KEY);
+    if(!userAccent && def.accentColor){
+      setCustomAccent(def.accentColor);
+    }
+    // 사용자가 직접 배경색을 설정하지 않은 경우에만
+    var userBase = localStorage.getItem(CUSTOM_BASE_KEY);
+    if(!userBase && def.baseColor){
+      setCustomBase(def.baseColor);
+    }
+    // 사용자가 직접 본문색을 설정하지 않은 경우에만
+    var userContent = localStorage.getItem(CONTENT_COLOR_KEY);
+    if(!userContent && def.contentColor){
+      setContentColor(def.contentColor);
+    }
+  }
+
+  // Firestore에서 서버 기본값 fetch
+  async function fetchServerDefaults(){
+    var db = window._firebaseDB;
+    var fn = window._fbFn;
+    if(!db || !fn) return;
+    try {
+      var snap = await fn.getDoc(fn.doc(db, 'config', 'theme-defaults'));
+      if(snap.exists()){
+        applyServerDefaults(snap.data());
+      }
+    } catch(e){ /* 서버 기본값 없으면 무시 */ }
+  }
+
   return {
     THEMES: THEMES, ACCENTS: ACCENTS, BASES: BASES,
     DARK_DEFAULT_ACCENT: DARK_DEFAULT_ACCENT, LIGHT_DEFAULT_ACCENT: LIGHT_DEFAULT_ACCENT,
@@ -352,6 +388,8 @@ var ThemeSwitcher = (function(){
     setRailAccent: setRailAccent, setCustomRailAccent: setCustomRailAccent,
     getLayoutColor: getLayoutColor, getCustomLayoutColor: getCustomLayoutColor,
     setLayoutColor: setLayoutColor, setCustomLayoutColor: setCustomLayoutColor,
-    cycleTheme: cycleTheme, init: init
+    cycleTheme: cycleTheme, init: init,
+    applyServerDefaults: applyServerDefaults,
+    fetchServerDefaults: fetchServerDefaults
   };
 })();

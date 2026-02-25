@@ -101,6 +101,34 @@ var PaneManager = (function(){
     var container = document.getElementById('paneContainer');
     var visibleCount = _getVisibleCount();
 
+    // 컨테이너 가용 폭 계산 (패딩, 간격, 핸들 고려)
+    var containerW = container ? container.clientWidth : window.innerWidth;
+    var gap = 4; // --pane-gap default
+    var padding = gap * 2; // 좌우 padding
+    var handleW = 4; // 핸들 폭
+    var handleCount = Math.max(0, visibleCount - 1);
+    var gapTotal = Math.max(0, visibleCount - 1) * gap;
+    var available = containerW - padding - gapTotal - (handleCount * handleW);
+
+    // 저장된 고정 너비 합산 체크 + 비율 축소
+    if(visibleCount >= 2 && !_state.maximized){
+      var totalFixed = 0;
+      var fixedIds = [];
+      PANE_IDS.forEach(function(id){
+        if(_state[id].visible && _state[id].width){
+          totalFixed += _state[id].width;
+          fixedIds.push(id);
+        }
+      });
+      // 고정 너비 합산이 가용 폭 초과 시 비율 축소
+      if(totalFixed > available && totalFixed > 0){
+        var ratio = available / totalFixed;
+        fixedIds.forEach(function(id){
+          _state[id].width = Math.max(200, Math.round(_state[id].width * ratio));
+        });
+      }
+    }
+
     PANE_IDS.forEach(function(id){
       var pane = document.getElementById('pane-' + id);
       if(!pane) return;
@@ -118,7 +146,10 @@ var PaneManager = (function(){
       if(vis && !_state.maximized){
         // 저장된 너비가 있으면 고정 너비 사용 (2개 이상)
         if(_state[id].width && visibleCount >= 2){
-          pane.style.flex = '0 0 ' + _state[id].width + 'px';
+          // 개별 패널이 가용 폭을 넘지 않도록
+          var w = Math.min(_state[id].width, available - (visibleCount - 1) * 200);
+          w = Math.max(200, w);
+          pane.style.flex = '0 0 ' + w + 'px';
         } else {
           pane.style.flex = '1 1 0%';  // 균등 배분
         }
@@ -224,12 +255,26 @@ var PaneManager = (function(){
     }
   }
 
+  // ── 브라우저 리사이즈 시 패널 폭 재조정 ──
+  var _resizeTimer = null;
+  function _onWindowResize(){
+    clearTimeout(_resizeTimer);
+    _resizeTimer = setTimeout(function(){
+      _applyState();
+      _saveState();
+    }, 100);
+  }
+
   // ── DOM Ready ──
   function _onReady(){
     if(document.readyState === 'loading'){
-      document.addEventListener('DOMContentLoaded', init);
+      document.addEventListener('DOMContentLoaded', function(){
+        init();
+        window.addEventListener('resize', _onWindowResize);
+      });
     } else {
       init();
+      window.addEventListener('resize', _onWindowResize);
     }
   }
 

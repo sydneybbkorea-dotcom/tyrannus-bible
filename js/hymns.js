@@ -34,6 +34,7 @@ var _hym = {
   filter: 'all',
   search: '',
   selectedId: null,
+  lastViewedId: null,     // 닫기 후 FAB에서 다시 열 수 있는 마지막 ID
   audio: null,
   playing: false,
   currentId: null,
@@ -118,12 +119,9 @@ function _hymOpenDetail(id){
   _hym.detailOpen = true;
   _hym.zoom = 1;
   _hym.detailView = 'lyrics';
-  // show overlay, hide bibleScroll
+  // show overlay (성경과 독립)
   var overlay = document.getElementById('hymnsOverlay');
-  var scroll = document.getElementById('bibleScroll');
   if(overlay) overlay.style.display = 'flex';
-  if(scroll) scroll.style.display = 'none';
-  if(typeof _updateBibleBars==='function') _updateBibleBars();
   // update overlay header
   var title = document.getElementById('hymTitle');
   if(title) title.textContent = _hymnLabel(id);
@@ -138,14 +136,13 @@ function _hymOpenDetail(id){
 function _hymCloseDetail(){
   _hym.detailOpen = false;
   var overlay = document.getElementById('hymnsOverlay');
-  var scroll = document.getElementById('bibleScroll');
   if(overlay) overlay.style.display = 'none';
-  if(scroll) scroll.style.display = '';
-  if(typeof _updateBibleBars==='function') _updateBibleBars();
   _hymShowGlobalPlayer();
   // remove dynamic full player
   var fp = document.getElementById('hymFullPlayer');
   if(fp) fp.remove();
+  // 마지막 열람 ID 기록 (FAB용)
+  if(_hym.selectedId) _hym.lastViewedId = _hym.selectedId;
 }
 
 function _hymSetupDetailBar(id){
@@ -194,7 +191,9 @@ function _hymSetupDetailBar(id){
   h += '<button class="hym-fp-btn'+(_hym.repeat!=='none'?' hym-fp-active':'')+'" onclick="_hymToggleRepeat()"><i class="fa fa-redo"></i>'+(_hym.repeat==='one'?'<small class="hym-fp-rep1">1</small>':'')+'</button>';
   h += '</div>';
   fp.innerHTML = h;
-  overlay.appendChild(fp);
+  // body에 추가 (플로팅 — position:absolute)
+  var body = document.getElementById('hymnsBody');
+  (body || overlay).appendChild(fp);
 }
 
 /* ── Section 5: List View (side panel) — virtual scroll ── */
@@ -333,6 +332,24 @@ function _hymQuickPlay(id, e){
 }
 
 /* ── Section 6: Detail View (overlay in bibleScroll area) ── */
+/* ── Firestore 가사 fetch ── */
+function _hymFetchLyrics(id){
+  var el = document.getElementById('hymLyricsText');
+  if(!el) return;
+  var db = window._firebaseDB;
+  var fn = window._fbFn;
+  if(!db || !fn){ el.textContent = '가사가 준비 중입니다'; return; }
+  fn.getDoc(fn.doc(db, 'hymn-lyrics', String(id))).then(function(snap){
+    if(snap.exists() && snap.data().text){
+      el.textContent = snap.data().text;
+    } else {
+      el.textContent = '가사가 준비 중입니다';
+    }
+  }).catch(function(){
+    el.textContent = '가사를 불러올 수 없습니다';
+  });
+}
+
 function _hymRenderDetail(id){
   var cont = document.getElementById('hymViewDetail');
   if(!cont || !id) return;
@@ -342,7 +359,7 @@ function _hymRenderDetail(id){
   // lyrics area
   h += '<div class="hym-lyrics-wrap" id="hymLyricsWrap" style="display:'+(tab==='lyrics'?'flex':'none')+'">';
   h += '<div class="hym-lyrics-title">'+_hymnLabel(id)+'</div>';
-  h += '<div class="hym-lyrics-text">\uAC00\uC0AC\uAC00 \uC900\uBE44 \uC911\uC785\uB2C8\uB2E4</div>';
+  h += '<div class="hym-lyrics-text" id="hymLyricsText">가사를 불러오는 중...</div>';
   h += '</div>';
   // sheet area
   h += '<div class="hym-sheet-wrap" id="hymSheetWrap" style="display:'+(tab==='sheet'?'block':'none')+'">';
@@ -360,6 +377,8 @@ function _hymRenderDetail(id){
   }
   h += '</div>';
   cont.innerHTML = h;
+  // Firestore에서 가사 fetch
+  _hymFetchLyrics(id);
 }
 
 function _hymSwitchTab(tab){
@@ -562,10 +581,10 @@ function _hymShowPlayerBar(){
 function _hymShowGlobalPlayer(){
   var el = document.getElementById('hymGlobalPlayer');
   if(!el) return;
-  // Show only when there's a current hymn AND the hymns overlay is NOT open
+  // Show when there's a current hymn or lastViewedId AND the hymns overlay is NOT open
   var overlay = document.getElementById('hymnsOverlay');
   var overlayVisible = overlay && overlay.style.display !== 'none';
-  if(_hym.currentId && !overlayVisible){
+  if((_hym.currentId || _hym.lastViewedId) && !overlayVisible){
     el.style.display = '';
   } else {
     el.style.display = 'none';
@@ -920,3 +939,20 @@ window._hymSwitchTab = _hymSwitchTab;
     _fabTimer = setTimeout(function(){ fab.classList.remove('is-expanded'); }, 6000);
   }, {passive:true});
 })();
+
+/* ── Fullscreen API ── */
+function _hymToggleFullscreen(){
+  var overlay = document.getElementById('hymnsOverlay');
+  if(!overlay) return;
+  if(document.fullscreenElement === overlay){
+    document.exitFullscreen().catch(function(){});
+  } else {
+    (overlay.requestFullscreen || overlay.webkitRequestFullscreen || overlay.msRequestFullscreen).call(overlay).catch(function(){});
+  }
+}
+
+/* ── Hymn FAB re-open (닫기 후 다시 열기) ── */
+function _hymReopenLast(){
+  var id = _hym.lastViewedId || _hym.currentId;
+  if(id) _hymOpenDetail(id);
+}

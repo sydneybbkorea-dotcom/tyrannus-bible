@@ -2,10 +2,19 @@
    hymns.css — Hymn overlay styles (glassmorphism)
    ═══════════════════════════════════════════════════ */
 
-/* ── Overlay container ── */
+/* ── Overlay container (paneContainer 직속 자식, 성경 독립) ── */
 .hymns-overlay {
-  flex:1; display:flex; flex-direction:column; overflow:hidden;
-  position:relative;
+  position:absolute;
+  top:var(--pane-gap,4px); left:var(--pane-gap,4px);
+  right:var(--pane-gap,4px); bottom:var(--pane-gap,4px);
+  z-index:200;
+  display:flex; flex-direction:column; overflow:hidden;
+  border-radius:var(--pane-radius,12px);
+  background:var(--pane-bg, var(--bg));
+  backdrop-filter:var(--pane-blur, blur(20px));
+  -webkit-backdrop-filter:var(--pane-blur, blur(20px));
+  border:1px solid var(--glass-border);
+  box-shadow:0 4px 24px rgba(0,0,0,.2);
 }
 
 /* ── Header (overlay detail view) ── */
@@ -78,6 +87,14 @@
   background:var(--accent-dim); color:var(--accent-color); font-weight:600;
 }
 
+/* ── Fullscreen button ── */
+.hym-btn-fs {
+  background:none; border:none; color:var(--text3); font-size:13px; cursor:pointer;
+  padding:4px 6px; border-radius:var(--radius); transition:all .15s;
+  display:flex; align-items:center; justify-content:center;
+}
+.hym-btn-fs:hover { color:var(--text); background:var(--glass-bg-2); }
+
 /* ── Close button ── */
 .hymns-close {
   background:none; border:none; color:var(--text3); font-size:14px; cursor:pointer;
@@ -88,6 +105,7 @@
 /* ── Body / Views ── */
 .hymns-body {
   flex:1; overflow-y:auto; overflow-x:hidden; position:relative;
+  padding-bottom:80px; /* 플로팅 플레이어 공간 확보 */
 }
 .hym-view { padding:8px 10px 80px; }
 
@@ -148,10 +166,12 @@
 }
 .hym-add-pl-btn:hover { color:var(--accent-color); background:var(--accent-dim); }
 
-/* ── Full Player (glass island, compact) ── */
+/* ── Full Player (glass island, floating over sheet) ── */
 .hym-full-player {
-  flex-shrink:0; padding:10px 14px 8px;
-  margin:6px auto 8px; border-radius:16px;
+  position:absolute; bottom:8px; left:50%; transform:translateX(-50%);
+  z-index:10;
+  padding:10px 14px 8px;
+  border-radius:16px;
   width:calc(50% - 8px); min-width:220px; max-width:320px;
   background:var(--glass-bg-2);
   backdrop-filter:var(--glass-blur-2); -webkit-backdrop-filter:var(--glass-blur-2);

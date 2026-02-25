@@ -100,6 +100,26 @@
       newLeftW = dragging.leftStartW + dragging.rightStartW - MIN_WIDTH;
     }
 
+    // 컨테이너 가용 폭 초과 방지
+    var container = document.getElementById('paneContainer');
+    if(container){
+      var containerW = container.clientWidth;
+      var gap = 4;
+      var otherPanesW = 0;
+      container.querySelectorAll('.pane[data-visible="true"]').forEach(function(p){
+        if(p !== dragging.leftPane && p !== dragging.rightPane){
+          otherPanesW += p.getBoundingClientRect().width;
+        }
+      });
+      var handles = container.querySelectorAll('.pane-resize-handle').length;
+      var maxForPair = containerW - (gap * 2) - (handles * gap) - otherPanesW;
+      if(newLeftW + newRightW > maxForPair){
+        var scale = maxForPair / (newLeftW + newRightW);
+        newLeftW = Math.max(MIN_WIDTH, Math.round(newLeftW * scale));
+        newRightW = Math.max(MIN_WIDTH, Math.round(newRightW * scale));
+      }
+    }
+
     dragging.leftPane.style.flex = '0 0 ' + newLeftW + 'px';
     dragging.rightPane.style.flex = '0 0 ' + newRightW + 'px';
   }
