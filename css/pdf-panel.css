@@ -16,42 +16,6 @@
   /* pane 시스템에서는 pane[data-visible]로 제어 */
 }
 
-/* ── Panel Header ── */
-.pdf-panel-header {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 14px;
-  border-bottom: 1px solid var(--border);
-  background: var(--bg2);
-  flex-shrink: 0;
-}
-.pdf-panel-header i {
-  color: #f05050;
-  font-size: 16px;
-}
-.pdf-panel-title {
-  flex: 1;
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text);
-  letter-spacing: .3px;
-}
-.pdf-panel-close {
-  width: 28px; height: 28px;
-  display: flex; align-items: center; justify-content: center;
-  border: none; background: none;
-  color: var(--text3);
-  cursor: pointer;
-  border-radius: 6px;
-  transition: all .15s;
-  font-size: 13px;
-}
-.pdf-panel-close:hover {
-  background: var(--bg3);
-  color: var(--text);
-}
-
 /* ── Tab Bar (열린 PDF 탭) ── */
 .pdf-tab-bar {
   display: flex;

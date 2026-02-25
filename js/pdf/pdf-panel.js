@@ -49,9 +49,6 @@ var PDFPanel = (function(){
     _activeTabId = null;
     _updateViews();
     _renderTabBar();
-    var title = document.querySelector('.pdf-panel-title');
-    if(title) title.textContent = 'PDF 도서관';
-    _updateCloseIcon();
     if(typeof PDFLibrary !== 'undefined') PDFLibrary.render();
   }
 
@@ -190,31 +187,8 @@ var PDFPanel = (function(){
     });
   }
 
-  function _updateTitle(){
-    var title = document.querySelector('.pdf-panel-title');
-    if(!title) return;
-    if(!_activeTabId){
-      title.textContent = 'PDF 도서관';
-      return;
-    }
-    var tab = null;
-    for(var i = 0; i < _tabs.length; i++){
-      if(_tabs[i].id === _activeTabId){ tab = _tabs[i]; break; }
-    }
-    title.textContent = tab ? tab.name : 'PDF 뷰어';
-  }
-
-  function _updateCloseIcon(){
-    var btn = document.querySelector('.pdf-panel-close');
-    if(!btn) return;
-    if(_activeTabId){
-      btn.innerHTML = '<i class="fa fa-arrow-left"></i>';
-      btn.title = '도서관으로';
-    } else {
-      btn.innerHTML = '<i class="fa fa-times"></i>';
-      btn.title = '닫기';
-    }
-  }
+  function _updateTitle(){}
+  function _updateCloseIcon(){}
 
   function isOpen(){
     var panel = document.getElementById('pdfPanel');
