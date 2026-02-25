@@ -216,12 +216,10 @@ var PDFViewer = (function(){
     _container.addEventListener('pointerdown', function(e){
       if(typeof PDFTools !== 'undefined' && PDFTools.getTool() !== 'select') return;
       if(e.target.closest('.pdf-annot')) return;
-      // 텍스트 레이어 위에서는 텍스트 선택 허용 (panDrag 차단)
-      if(e.target.closest('.pdf-text-layer')) return;
       isDragging = true;
       startX = e.clientX; startY = e.clientY;
       scrollL = _container.scrollLeft; scrollT = _container.scrollTop;
-      _container.style.cursor = 'grabbing';
+      _container.classList.add('pdf-panning');
       e.preventDefault();
     });
     _container.addEventListener('pointermove', function(e){
@@ -230,11 +228,18 @@ var PDFViewer = (function(){
       _container.scrollTop  = scrollT - (e.clientY - startY);
     });
     _container.addEventListener('pointerup', function(){
-      isDragging = false; _container.style.cursor = '';
+      isDragging = false; _container.classList.remove('pdf-panning');
     });
     _container.addEventListener('pointerleave', function(){
-      isDragging = false; _container.style.cursor = '';
+      isDragging = false; _container.classList.remove('pdf-panning');
     });
+  }
+
+  function _updatePannable(){
+    if(!_container) return;
+    var overflows = _container.scrollWidth > _container.clientWidth + 2
+                 || _container.scrollHeight > _container.clientHeight + 2;
+    _container.classList.toggle('pdf-pannable', overflows);
   }
 
   // ── Fit scale to container width ──
@@ -311,13 +316,9 @@ var PDFViewer = (function(){
       annotLayer.className = 'pdf-annot-layer';
       annotLayer.dataset.page = pageNum;
 
-      // 텍스트 레이어 (텍스트 선택/하이라이트 지원)
-      var textLayerDiv = document.createElement('div');
-      textLayerDiv.className = 'pdf-text-layer';
       wrap.dataset.page = pageNum;
 
       wrap.appendChild(canvas);
-      wrap.appendChild(textLayerDiv);
       wrap.appendChild(annotLayer);
 
       // Insert in page order
@@ -336,21 +337,6 @@ var PDFViewer = (function(){
       _renderedPages.set(pageNum, true);
 
       page.render({ canvasContext: ctx, viewport: vp }).promise.then(function(){
-        // 텍스트 레이어 렌더링
-        page.getTextContent().then(function(textContent){
-          textLayerDiv.innerHTML = '';
-          if(window.pdfjsLib && window.pdfjsLib.renderTextLayer){
-            window.pdfjsLib.renderTextLayer({
-              textContentSource: textContent,
-              container: textLayerDiv,
-              viewport: vp,
-              textDivs: []
-            });
-          }
-        }).catch(function(e){
-          console.warn('[PDFViewer] text layer page ' + pageNum + ':', e);
-        });
-
         if(typeof PDFAnnotations !== 'undefined'){
           PDFAnnotations.renderPage(pageNum, annotLayer, vp);
         }
@@ -403,6 +389,7 @@ var PDFViewer = (function(){
     if(_container) _container.innerHTML = '';
     _updatePageInfo();
     _renderVisiblePages();
+    setTimeout(_updatePannable, 200);
   }
 
   // ── Close ──

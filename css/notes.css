@@ -17,6 +17,10 @@
   backdrop-filter:var(--glass-blur-1); -webkit-backdrop-filter:var(--glass-blur-1);
   flex-shrink:0; height:38px;
 }
+/* 자식 subtabs 모두 숨김이면 탭 바 자체 숨김 */
+.rp-tabs:not(:has(.rp-subtabs[style*="flex"])) {
+  display:none;
+}
 .rp-subtabs {
   display:flex; width:100%; height:100%;
 }

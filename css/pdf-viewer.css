@@ -332,26 +332,14 @@
   border-radius: 2px;
 }
 
-/* ── PDF.js Text Layer (텍스트 선택 지원) ── */
-.pdf-text-layer {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  opacity: 0.25;
-  line-height: 1.0;
-  z-index: 1;
+/* ── Drag-to-pan when zoomed ── */
+.pdf-viewport.pdf-pannable {
+  cursor: grab;
 }
-.pdf-text-layer span {
-  position: absolute;
-  white-space: pre;
-  color: transparent;
-  cursor: text;
-}
-.pdf-text-layer ::selection {
-  background: rgba(250, 204, 21, 0.35);
-}
-.pdf-text-layer ::-moz-selection {
-  background: rgba(250, 204, 21, 0.35);
+.pdf-viewport.pdf-panning {
+  cursor: grabbing;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 /* ── Annotation Layer (overlays on each page) ── */
