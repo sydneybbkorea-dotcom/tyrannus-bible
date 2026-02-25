@@ -43,7 +43,7 @@
 .adv-item:hover{background:var(--glass-bg-1)}
 .adv-ref{display:block;font-size:11px;color:var(--gold);font-family:'JetBrains Mono',monospace;font-weight:600;margin-bottom:4px}
 .adv-txt{display:block;font-size:12.5px;color:var(--text2);line-height:1.75;white-space:normal;word-break:break-word}
-.adv-hl{background:rgba(212,175,55,.25);color:var(--gold);border-radius:2px;padding:0 1px}
+.adv-hl{background:rgba(255,210,0,.35);color:#ffe066;border-radius:3px;padding:1px 3px;font-weight:700;text-shadow:0 0 6px rgba(255,210,0,.4)}
 
 /* 참조 칩 그리드 */
 .adv-ref-grid{display:flex;flex-wrap:wrap;gap:4px;padding:8px 10px}
@@ -70,8 +70,8 @@
 .adv-help-title{font-size:11px;font-weight:700;color:var(--gold);margin-bottom:8px}
 .adv-help-item{font-size:11px;color:var(--text2);padding:3px 0;font-family:'JetBrains Mono',monospace}
 
-/* 라이트 테마 — 웜 로즈 잉크 하이라이트 */
-[data-theme="light"] .adv-hl{background:hsla(var(--accent-h),60%,50%,.18);color:hsl(var(--accent-h),var(--accent-s),calc(var(--accent-l) - 8%))}
+/* 라이트 테마 — 선명한 하이라이트 */
+[data-theme="light"] .adv-hl{background:hsla(var(--accent-h),80%,60%,.28);color:hsl(var(--accent-h),var(--accent-s),calc(var(--accent-l) - 12%));font-weight:700;text-shadow:none}
 [data-theme="light"] .adv-ref-chip:hover{color:hsl(var(--accent-h),var(--accent-s),calc(var(--accent-l) - 8%))}
 [data-theme="light"] .adv-input{background:var(--glass-bg-1);border-color:var(--glass-border)}
 [data-theme="light"] .adv-input:focus{border-color:var(--accent-color)}
@@ -87,5 +87,5 @@
 [data-theme="light"] .adv-book-sel{background:var(--glass-bg-1);border-color:var(--glass-border)}
 
 /* 세피아 테마 — 따뜻한 하이라이트 */
-[data-theme="sepia"] .adv-hl{background:hsla(var(--accent-h),50%,45%,.18);color:hsl(var(--accent-h),var(--accent-s),calc(var(--accent-l) - 5%))}
+[data-theme="sepia"] .adv-hl{background:hsla(var(--accent-h),70%,50%,.25);color:hsl(var(--accent-h),var(--accent-s),calc(var(--accent-l) - 10%));font-weight:700;text-shadow:none}
 [data-theme="sepia"] .adv-ref-chip:hover{color:hsl(var(--accent-h),var(--accent-s),calc(var(--accent-l) - 5%))}

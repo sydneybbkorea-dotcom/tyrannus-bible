@@ -4,7 +4,7 @@ function schToggleAdv(){
   const btn=document.getElementById('schAdvToggle');
   if(!panel) return;
   const show=panel.style.display==='none';
-  panel.style.display=show?'':'none';
+  panel.style.display=show?'flex':'none';
   if(btn) btn.classList.toggle('on',show);
 }
 

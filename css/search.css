@@ -1,7 +1,7 @@
 /* ═══════════════════════════════════════════════
    SEARCH — 통합 검색 패널
 ═══════════════════════════════════════════════ */
-.search-wrap { display:flex; flex-direction:column; gap:8px; flex:1; overflow:hidden; padding:12px 14px }
+.search-wrap { display:flex; flex-direction:column; gap:6px; flex:1; overflow:hidden; padding:12px 14px }
 
 /* 검색 입력 행 */
 .sch-row { display:flex; gap:6px }
@@ -13,14 +13,27 @@
 .sch-row input:focus { border-color:var(--gold) }
 .sch-row button {
   padding:10px 16px; border-radius:8px; font-size:14px; font-weight:700;
-  background:var(--gold); color:var(--bg); border:none; cursor:pointer; flex-shrink:0;
+  background:var(--gold); color:var(--btn-on-accent, #fff); border:none; cursor:pointer; flex-shrink:0;
 }
-.sch-help-btn {
+
+/* 고급 검색 토글 버튼 */
+.sch-adv-btn {
   padding:10px 12px; border-radius:8px; font-size:13px;
   background:none; color:var(--text3); border:1px solid var(--border);
-  cursor:pointer; flex-shrink:0; transition:color .15s;
+  cursor:pointer; flex-shrink:0; transition:all .15s;
 }
-.sch-help-btn:hover { color:var(--gold); border-color:var(--gold) }
+.sch-adv-btn:hover { color:var(--gold); border-color:var(--gold) }
+.sch-adv-btn.on {
+  color:var(--gold); border-color:var(--gold);
+  background:rgba(212,175,55,.1);
+}
+
+/* 고급 검색 패널 */
+.sch-adv-panel {
+  display:flex; flex-direction:column; gap:8px;
+  padding:10px; border-radius:8px;
+  background:var(--glass-bg-1); border:1px solid var(--glass-border);
+}
 
 /* 필터 칩 행 */
 .sch-filters { display:flex; gap:5px; flex-wrap:wrap; align-items:center }
@@ -32,7 +45,7 @@
 }
 .sf-chip:hover { border-color:var(--text3); color:var(--text2) }
 .sf-chip.on { background:var(--gold-dim); border-color:var(--gold); color:var(--gold) }
-.sf-chip[data-f="all"].on { background:var(--gold); border-color:var(--gold); color:var(--bg) }
+.sf-chip[data-f="all"].on { background:var(--gold); border-color:var(--gold); color:var(--btn-on-accent, #fff) }
 .sf-book-sel {
   padding:5px 24px 5px 10px; border-radius:20px; font-size:12px;
   background:var(--bg3); border:1px solid var(--border); color:var(--text2);
@@ -43,32 +56,12 @@
 }
 .sf-book-sel:focus { border-color:var(--gold) }
 
-/* 고급 토글 행 */
-.sch-adv-row {
+/* 고급 옵션 행 (필터 아래) */
+.sch-adv-opts {
   display:flex; gap:4px; align-items:center;
-  padding:4px 0; border-bottom:1px solid var(--border);
+  padding-top:6px; border-top:1px solid var(--border);
 }
-.sch-adv-toggle {
-  font-size:12px; padding:4px 10px; border-radius:6px; cursor:pointer;
-  color:var(--text3); border:1px solid transparent; background:none;
-  transition:all .15s; display:inline-flex; align-items:center; gap:4px;
-}
-.sch-adv-toggle.on { color:var(--gold); border-color:var(--gold); background:rgba(212,175,55,.1) }
-.sch-adv-toggle:hover { color:var(--gold) }
 .sch-sep { width:1px; height:16px; background:var(--border); margin:0 3px }
-.sch-vm-btn {
-  width:28px; height:28px; display:flex; align-items:center; justify-content:center;
-  font-size:12px; border-radius:6px; cursor:pointer; color:var(--text3);
-  border:1px solid transparent; background:none; transition:all .15s;
-}
-.sch-vm-btn.on { color:var(--gold); border-color:var(--gold); background:rgba(212,175,55,.1) }
-.sch-vm-btn:hover { color:var(--gold) }
-
-/* 고급 옵션 패널 */
-.sch-adv-panel {
-  display:flex; gap:4px; align-items:center;
-  padding:6px 0; border-bottom:1px solid var(--border);
-}
 .sch-opt-btn, .sch-scope-btn {
   font-size:12px; padding:4px 10px; border-radius:6px; cursor:pointer;
   color:var(--text3); border:1px solid transparent; background:none;
@@ -77,7 +70,23 @@
 .sch-opt-btn.on, .sch-scope-btn.on {
   color:var(--gold); border-color:var(--gold); background:rgba(212,175,55,.1);
 }
+.sch-vm-btn {
+  width:28px; height:28px; display:flex; align-items:center; justify-content:center;
+  font-size:12px; border-radius:6px; cursor:pointer; color:var(--text3);
+  border:1px solid transparent; background:none; transition:all .15s;
+}
+.sch-vm-btn.on { color:var(--gold); border-color:var(--gold); background:rgba(212,175,55,.1) }
+.sch-vm-btn:hover { color:var(--gold) }
+
+/* 검색 도움말 링크 */
+.sch-adv-help {
+  font-size:11px; color:var(--text3); cursor:pointer;
+  padding-top:4px; border-top:1px solid var(--border);
+  display:flex; align-items:center; gap:4px;
+  transition:color .15s;
+}
+.sch-adv-help:hover { color:var(--gold) }
 
 /* 결과 카운트 */
-.sch-count { font-size:12px; color:var(--text3); padding:4px 0 }
+.sch-count { font-size:12px; color:var(--text3); padding:2px 0 }
 #schList { flex:1; overflow-y:auto; min-height:0 }
