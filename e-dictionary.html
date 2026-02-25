@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>E-Dictionary — KJV 영어 단어 사전</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0a0a1a;color:#e0e0e0;min-height:100vh}
+.header{background:rgba(0,0,0,.6);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08);padding:16px 24px;position:sticky;top:0;z-index:10}
+.header h1{font-size:20px;font-weight:700;color:#ffe066;display:flex;align-items:center;gap:10px}
+.header h1 span{font-size:12px;color:rgba(255,255,255,.5);font-weight:400}
+.toolbar{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;align-items:center}
+.search-box{flex:1;min-width:200px;display:flex;gap:6px}
+.search-box input{flex:1;padding:10px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#fff;font-size:14px;outline:none}
+.search-box input:focus{border-color:#ffe066}
+.search-box input::placeholder{color:rgba(255,255,255,.3)}
+.btn{padding:8px 16px;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid rgba(255,255,255,.12);background:rgba(255,255,255,.06);color:#ccc;transition:all .15s;white-space:nowrap}
+.btn:hover{border-color:#ffe066;color:#ffe066}
+.btn.active{background:rgba(255,210,0,.15);border-color:#ffe066;color:#ffe066}
+.btn-download{background:rgba(0,180,120,.15);border-color:rgba(0,180,120,.4);color:#4ade80}
+.btn-download:hover{background:rgba(0,180,120,.25);border-color:#4ade80}
+.stats{font-size:11px;color:rgba(255,255,255,.4);padding:8px 24px}
+.stats b{color:#ffe066}
+
+/* 테이블 */
+.table-wrap{padding:0 16px 100px;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+thead{position:sticky;top:90px;z-index:5}
+th{background:rgba(20,20,40,.95);backdrop-filter:blur(8px);padding:10px 12px;text-align:left;font-size:11px;font-weight:700;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid rgba(255,210,0,.3);cursor:pointer;user-select:none;white-space:nowrap}
+th:hover{color:#ffe066}
+th .sort-arrow{font-size:9px;margin-left:4px;opacity:.4}
+th.sorted .sort-arrow{opacity:1;color:#ffe066}
+td{padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:top}
+tr:hover{background:rgba(255,255,255,.03)}
+.e-num{font-family:'JetBrains Mono',monospace;font-size:11px;color:#ffe066;font-weight:600;white-space:nowrap}
+.word{font-size:15px;font-weight:700;color:#fff}
+.count{font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(255,255,255,.7);text-align:right}
+.verses{font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(255,255,255,.4);text-align:right}
+.refs{font-size:10px;color:rgba(255,255,255,.35);line-height:1.6;max-height:60px;overflow:hidden;transition:max-height .3s}
+.refs.expanded{max-height:none}
+.refs span{cursor:pointer;margin-right:6px;white-space:nowrap}
+.refs span:hover{color:#ffe066}
+.expand-btn{font-size:9px;color:#ffe066;cursor:pointer;margin-top:2px;display:inline-block}
+
+/* 알파벳 네비 */
+.alpha-nav{display:flex;gap:2px;flex-wrap:wrap;align-items:center}
+.alpha-btn{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer;border:1px solid transparent;background:none;color:rgba(255,255,255,.5);transition:all .15s}
+.alpha-btn:hover,.alpha-btn.active{color:#ffe066;border-color:#ffe066;background:rgba(255,210,0,.1)}
+
+/* 로딩 */
+.loading{text-align:center;padding:60px;color:rgba(255,255,255,.4);font-size:14px}
+.loading i{animation:spin 1s linear infinite;margin-right:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* 반응형 */
+@media(max-width:768px){
+  .toolbar{flex-direction:column}
+  .search-box{min-width:100%}
+  th,td{padding:6px 8px;font-size:11px}
+  .word{font-size:13px}
+  .refs{display:none}
+}
+</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<div class="header">
+  <h1><i class="fa fa-book-open" style="color:#ffe066"></i> E-Dictionary <span>KJV 영어 단어 사전 — 12,557 words</span></h1>
+  <div class="toolbar">
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="단어 또는 E번호 검색..." oninput="filterWords()">
+    </div>
+    <div class="alpha-nav" id="alphaNav"></div>
+    <button class="btn btn-download" onclick="downloadCSV()"><i class="fa fa-download"></i> Excel(CSV) 다운로드</button>
+  </div>
+</div>
+<div class="stats" id="statsBar">로딩 중...</div>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr>
+        <th onclick="sortBy('e')" id="th-e" class="sorted">E번호 <span class="sort-arrow">▲</span></th>
+        <th onclick="sortBy('w')" id="th-w">단어 <span class="sort-arrow">▲</span></th>
+        <th onclick="sortBy('c')" id="th-c" style="text-align:right">출현횟수 <span class="sort-arrow">▼</span></th>
+        <th onclick="sortBy('v')" id="th-v" style="text-align:right">절수 <span class="sort-arrow">▼</span></th>
+        <th>구절 주소</th>
+      </tr>
+    </thead>
+    <tbody id="tbody">
+      <tr><td colspan="5" class="loading"><i class="fa fa-spinner"></i> 사전 데이터 로딩 중...</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+var _dict = [];
+var _filtered = [];
+var _sortKey = 'e';
+var _sortAsc = true;
+var _alphaFilter = '';
+var _page = 0;
+var _pageSize = 500;
+
+// 데이터 로드
+fetch('data/e-dictionary.json')
+  .then(r => r.json())
+  .then(data => {
+    _dict = data;
+    _filtered = data;
+    buildAlphaNav();
+    renderStats();
+    renderTable();
+  });
+
+function buildAlphaNav() {
+  var nav = document.getElementById('alphaNav');
+  var h = '<button class="alpha-btn active" onclick="filterAlpha(\'\',this)">ALL</button>';
+  for (var i = 0; i < 26; i++) {
+    var ch = String.fromCharCode(65 + i);
+    h += '<button class="alpha-btn" onclick="filterAlpha(\'' + ch.toLowerCase() + '\',this)">' + ch + '</button>';
+  }
+  nav.innerHTML = h;
+}
+
+function filterAlpha(ch, btn) {
+  _alphaFilter = ch;
+  _page = 0;
+  document.querySelectorAll('.alpha-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  applyFilter();
+}
+
+function filterWords() {
+  _page = 0;
+  applyFilter();
+}
+
+function applyFilter() {
+  var q = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+  _filtered = _dict.filter(function(item) {
+    if (_alphaFilter && !item.w.startsWith(_alphaFilter)) return false;
+    if (!q) return true;
+    if (item.e.toLowerCase().indexOf(q) !== -1) return true;
+    if (item.w.indexOf(q) !== -1) return true;
+    return false;
+  });
+  applySort();
+  renderStats();
+  renderTable();
+}
+
+function sortBy(key) {
+  if (_sortKey === key) {
+    _sortAsc = !_sortAsc;
+  } else {
+    _sortKey = key;
+    _sortAsc = (key === 'c' || key === 'v') ? false : true;
+  }
+  document.querySelectorAll('th').forEach(th => th.classList.remove('sorted'));
+  var th = document.getElementById('th-' + key);
+  if (th) {
+    th.classList.add('sorted');
+    th.querySelector('.sort-arrow').textContent = _sortAsc ? '▲' : '▼';
+  }
+  applySort();
+  renderTable();
+}
+
+function applySort() {
+  _filtered.sort(function(a, b) {
+    var va = a[_sortKey], vb = b[_sortKey];
+    if (typeof va === 'string') {
+      var cmp = va.localeCompare(vb);
+      return _sortAsc ? cmp : -cmp;
+    }
+    return _sortAsc ? va - vb : vb - va;
+  });
+}
+
+function renderStats() {
+  var total = _filtered.reduce(function(s, item) { return s + item.c; }, 0);
+  document.getElementById('statsBar').innerHTML =
+    '표시: <b>' + _filtered.length.toLocaleString() + '</b>개 단어 / 전체: <b>' + _dict.length.toLocaleString() + '</b>개 | 총 출현: <b>' + total.toLocaleString() + '</b>회';
+}
+
+function renderTable() {
+  var tbody = document.getElementById('tbody');
+  var slice = _filtered.slice(0, (_page + 1) * _pageSize);
+  var h = '';
+  slice.forEach(function(item, idx) {
+    var refsStr = (item.r || []).join(', ');
+    var needExpand = refsStr.length > 120;
+    h += '<tr>';
+    h += '<td class="e-num">' + item.e + '</td>';
+    h += '<td class="word">' + item.w + '</td>';
+    h += '<td class="count">' + item.c.toLocaleString() + '</td>';
+    h += '<td class="verses">' + item.v.toLocaleString() + '</td>';
+    h += '<td class="refs' + (needExpand ? '' : ' expanded') + '" id="ref-' + idx + '">';
+    (item.r || []).forEach(function(r) {
+      h += '<span>' + r + '</span>';
+    });
+    if (needExpand) h += '<br><span class="expand-btn" onclick="toggleRef(' + idx + ')">+ 더 보기</span>';
+    h += '</td>';
+    h += '</tr>';
+  });
+  if (_filtered.length > slice.length) {
+    h += '<tr><td colspan="5" style="text-align:center;padding:16px">';
+    h += '<button class="btn" onclick="loadMore()" style="font-size:13px;padding:10px 32px">';
+    h += '더 보기 (' + slice.length + ' / ' + _filtered.length + ')</button></td></tr>';
+  }
+  if (!_filtered.length) {
+    h = '<tr><td colspan="5" style="text-align:center;padding:40px;color:rgba(255,255,255,.3)">검색 결과 없음</td></tr>';
+  }
+  tbody.innerHTML = h;
+}
+
+function loadMore() {
+  _page++;
+  renderTable();
+}
+
+function toggleRef(idx) {
+  var el = document.getElementById('ref-' + idx);
+  if (el) el.classList.toggle('expanded');
+}
+
+function downloadCSV() {
+  // CSV 다운로드 (서버의 CSV 파일)
+  window.open('data/e-dictionary.csv', '_blank');
+}
+</script>
+</body>
+</html>
