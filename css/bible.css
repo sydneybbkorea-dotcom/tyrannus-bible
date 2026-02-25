@@ -106,15 +106,15 @@
   height: 30px;
 }
 .tb-pin:hover { background:var(--glass-bg-1); color:var(--text) }
-/* ── Bible Tab Bar ── */
+/* ── Bible Tab Bar (pane-header 안에 인라인) ── */
 #bibleTabBar {
   display:flex; align-items:stretch;
-  background:var(--pane-header-bg);
-  flex-shrink:0; height:36px;
-  border-bottom:1px solid var(--pane-header-border);
+  flex:1; min-width:0;
+  height:100%;
   position:relative;
 }
-#bibleTabList { display:flex; align-items:flex-end; flex:1; min-width:0; gap:0; overflow:hidden; padding:6px 6px 0; }
+#bibleTabList { display:flex; align-items:flex-end; flex:1; min-width:0; gap:0; overflow:hidden; padding:4px 0 0; }
+#bibleTabAdd { height:100%; width:28px; font-size:11px; flex-shrink:0 }
 .btab {
   display:flex; align-items:center; gap:5px; padding:7px 20px 8px 24px; font-size:11.5px;
   color:var(--text3); cursor:pointer; white-space:nowrap;
@@ -144,8 +144,7 @@
 }
 .btab:hover .btab-close, .btab.btab-active .btab-close { opacity:.5 }
 .btab-close:hover { background:var(--bg4); color:var(--text); opacity:1 !important }
-/* #bibleTabAdd → .tb-pin 클래스로 통합됨 */
-#bibleTabAdd { font-size:11px }
+/* #bibleTabAdd → pane-header 안 탭 옆 */
 #bibleTabAdd:hover { color:var(--gold) }
 
 /* Bible scroll top border — connects with active tab */

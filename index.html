@@ -233,20 +233,19 @@
     <!-- ══ PANE: 성경 ══ -->
     <div class="pane" id="pane-bible" data-visible="true">
       <div class="pane-inner" id="biblePane">
-        <!-- 패널 헤더 (성경) -->
+        <!-- 1행: 컨트롤 + 탭 + 태그 -->
         <div class="pane-header" id="biblePaneHeader">
           <div class="pane-controls">
             <button class="pane-ctrl-btn" onclick="PaneManager.toggleMaximize('bible')" title="최대화/복원"><i class="fa fa-expand"></i></button>
           </div>
+          <div id="bibleTabBar">
+            <div id="bibleTabList"></div>
+            <button class="tb-pin" id="bibleTabAdd" onclick="addBibleTab()" title="새 탭"><i class="fa fa-plus"></i></button>
+          </div>
           <div class="pane-header-title"><i class="fa fa-book-bible"></i> <span class="pane-tag">성경</span></div>
         </div>
-        <!-- 1행: 탭 -->
-        <div id="bibleTabBar">
-          <div id="bibleTabList"></div>
-        </div>
-        <!-- 2행: 새탭 + 책/장 선택 + 뷰 옵션 -->
+        <!-- 2행: 책/장 선택 + 뷰 옵션 -->
         <div id="bibleViewBar">
-          <button class="tb-pin" id="bibleTabAdd" onclick="addBibleTab()" title="새 탭"><i class="fa fa-plus"></i></button>
           <div class="vb-left">
             <button class="nav-picker-btn" id="navPickerBtn" onclick="toggleNavPicker()">
               <span id="navPickerLabel">창세기 1장</span>
