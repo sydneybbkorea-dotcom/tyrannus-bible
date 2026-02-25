@@ -347,9 +347,9 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
 /* ── Inline highlights (drag-selection) ─────────────────────────
    글래스 효과: 투명 배경 + 뚜렷한 테두리 라인 + 글꼴 높이에 맞춤
 ───────────────────────────────────────────────────────────────── */
-.vtxt mark.hl-active { filter: brightness(1.2) saturate(1.15); outline: none !important; }
+.vtxt mark.hl-active { filter: brightness(1.2) saturate(1.15); }
 
-/* mark: 글꼴 상속 + 높이 최소화 */
+/* mark: 글꼴 상속 + 높이 최소화 — outline은 레이아웃 영향 없음 */
 .vtxt mark,
 .vtxt .dg mark,
 .vtxt b mark,
@@ -363,41 +363,40 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
   line-height: inherit !important;
   vertical-align: baseline !important;
   display: inline;
-  padding: 0 0.08em;
-  margin: -2px -0.02em;
+  padding: 0 0.06em;
+  margin: 0;
+  border: none;
   border-radius: 3px;
-  line-height: 1 !important;
-  outline: none !important;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
   cursor: pointer;
   color: inherit;
 }
 
-/* ── 다크 테마 인라인 하이라이트 — 글래스 + 테두리 ── */
+/* ── 다크 테마 인라인 하이라이트 — outline(레이아웃 무영향) + 글래스 ── */
 .vtxt mark.hl-y {
   background: rgba(255,220,30,.25);
-  border: 1px solid rgba(255,220,30,.65);
+  outline: 1px solid rgba(255,220,30,.65);
   box-shadow: inset 0 0 6px rgba(255,220,30,.18);
 }
 .vtxt mark.hl-o {
   background: rgba(255,160,60,.25);
-  border: 1px solid rgba(255,160,60,.62);
+  outline: 1px solid rgba(255,160,60,.62);
   box-shadow: inset 0 0 6px rgba(255,160,60,.18);
 }
 .vtxt mark.hl-g {
   background: rgba(40,230,160,.22);
-  border: 1px solid rgba(40,230,160,.60);
+  outline: 1px solid rgba(40,230,160,.60);
   box-shadow: inset 0 0 6px rgba(40,230,160,.15);
 }
 .vtxt mark.hl-b {
   background: rgba(90,175,255,.25);
-  border: 1px solid rgba(90,175,255,.62);
+  outline: 1px solid rgba(90,175,255,.62);
   box-shadow: inset 0 0 6px rgba(90,175,255,.18);
 }
 .vtxt mark.hl-p {
   background: rgba(210,150,255,.25);
-  border: 1px solid rgba(210,150,255,.60);
+  outline: 1px solid rgba(210,150,255,.60);
   box-shadow: inset 0 0 6px rgba(210,150,255,.18);
 }
 
@@ -411,54 +410,54 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
 /* ── 라이트 테마 하이라이트 — 밝은 글래스 ── */
 [data-theme="light"] .vtxt mark.hl-y {
   background: rgba(255,215,0,.22);
-  border: 1px solid rgba(200,170,0,.55);
+  outline: 1px solid rgba(200,170,0,.55);
   box-shadow: inset 0 0 6px rgba(255,215,0,.12);
 }
 [data-theme="light"] .vtxt mark.hl-o {
   background: rgba(255,140,50,.20);
-  border: 1px solid rgba(220,120,30,.52);
+  outline: 1px solid rgba(220,120,30,.52);
   box-shadow: inset 0 0 6px rgba(255,140,50,.12);
 }
 [data-theme="light"] .vtxt mark.hl-g {
   background: rgba(16,200,120,.18);
-  border: 1px solid rgba(10,160,90,.50);
+  outline: 1px solid rgba(10,160,90,.50);
   box-shadow: inset 0 0 6px rgba(16,200,120,.10);
 }
 [data-theme="light"] .vtxt mark.hl-b {
   background: rgba(50,140,255,.18);
-  border: 1px solid rgba(40,110,220,.50);
+  outline: 1px solid rgba(40,110,220,.50);
   box-shadow: inset 0 0 6px rgba(50,140,255,.10);
 }
 [data-theme="light"] .vtxt mark.hl-p {
   background: rgba(170,80,255,.18);
-  border: 1px solid rgba(140,60,220,.48);
+  outline: 1px solid rgba(140,60,220,.48);
   box-shadow: inset 0 0 6px rgba(170,80,255,.10);
 }
 
 /* ── 세피아 테마 하이라이트 — 따뜻한 글래스 ── */
 [data-theme="sepia"] .vtxt mark.hl-y {
   background: rgba(240,195,20,.20);
-  border: 1px solid rgba(200,160,15,.55);
+  outline: 1px solid rgba(200,160,15,.55);
   box-shadow: inset 0 0 6px rgba(240,195,20,.12);
 }
 [data-theme="sepia"] .vtxt mark.hl-o {
   background: rgba(230,140,45,.18);
-  border: 1px solid rgba(190,110,30,.52);
+  outline: 1px solid rgba(190,110,30,.52);
   box-shadow: inset 0 0 6px rgba(230,140,45,.10);
 }
 [data-theme="sepia"] .vtxt mark.hl-g {
   background: rgba(40,180,110,.16);
-  border: 1px solid rgba(30,140,80,.50);
+  outline: 1px solid rgba(30,140,80,.50);
   box-shadow: inset 0 0 6px rgba(40,180,110,.08);
 }
 [data-theme="sepia"] .vtxt mark.hl-b {
   background: rgba(60,130,200,.18);
-  border: 1px solid rgba(45,100,170,.50);
+  outline: 1px solid rgba(45,100,170,.50);
   box-shadow: inset 0 0 6px rgba(60,130,200,.10);
 }
 [data-theme="sepia"] .vtxt mark.hl-p {
   background: rgba(140,80,180,.18);
-  border: 1px solid rgba(110,60,150,.48);
+  outline: 1px solid rgba(110,60,150,.48);
   box-shadow: inset 0 0 6px rgba(140,80,180,.08);
 }
 
