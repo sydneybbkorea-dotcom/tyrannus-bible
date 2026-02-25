@@ -214,6 +214,15 @@ var PDFViewer = (function(){
   function _initPanDrag(){
     var isDragging = false, startX, startY, scrollL, scrollT;
     _container.addEventListener('pointerdown', function(e){
+      // 펜 입력은 뷰포트 드래그 안 함 — 어노테이션 레이어가 처리
+      if(e.pointerType === 'pen'){
+        e.preventDefault();
+        // select 모드면 자동으로 draw 전환
+        if(typeof PDFTools !== 'undefined' && PDFTools.getTool() === 'select'){
+          PDFTools.setTool('draw');
+        }
+        return;
+      }
       if(typeof PDFTools !== 'undefined' && PDFTools.getTool() !== 'select') return;
       if(e.target.closest('.pdf-annot')) return;
       isDragging = true;

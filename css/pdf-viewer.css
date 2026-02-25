@@ -355,6 +355,14 @@
   touch-action: none;        /* 터치 드래그 시 스크롤 방지 */
   cursor: crosshair;
 }
+/* 펜 입력 시 annotation 레이어가 항상 이벤트 수신 (auto-switch 지원) */
+[data-input="pen"] .pdf-annot-layer {
+  pointer-events: auto;
+}
+/* 도구 활성 시 뷰포트 스크롤 차단 (iPad Safari touch-action 전파) */
+.pdf-viewport.pdf-tool-active {
+  touch-action: none;
+}
 
 /* Annotation types */
 .pdf-annot {

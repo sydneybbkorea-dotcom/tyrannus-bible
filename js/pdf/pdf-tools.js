@@ -54,6 +54,11 @@ var PDFTools = (function(){
       else layer.classList.remove('interactive');
     });
 
+    // 뷰포트에 touch-action:none 토글 (iPad 펜슬 스크롤 방지)
+    document.querySelectorAll('.pdf-viewport').forEach(function(vp){
+      vp.classList.toggle('pdf-tool-active', tool !== 'select');
+    });
+
     // 플라이아웃 표시
     if(hasFlyout) _showToolFlyout(tool);
   }
