@@ -14,6 +14,7 @@ function renderViewBar(){
   _syncVbBtn('vbHL', !document.body.classList.contains('hide-hl'));
   _syncVbBtn('vbRed', !!S.showRedLetter);
   _syncVbBtn('vbStrong', !!S.showStrong);
+  _syncVbBtn('vbECode', !!S.showECode);
 }
 
 function _syncVbBtn(id, on){

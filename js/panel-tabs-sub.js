@@ -21,7 +21,7 @@ function switchSub(sub){
   if(sub.startsWith('dict-')){
     S._dictSubTab = sub;
     document.getElementById('sec-dictionary')?.classList.add('act');
-    ['dict-strongs','dict-webster','dict-enko','dict-korean'].forEach(id=>{
+    ['dict-strongs','dict-webster','dict-enko','dict-korean','dict-ecode'].forEach(id=>{
       const el=document.getElementById('sec-'+id);
       if(el){ el.style.display=(id===sub)?'flex':'none'; el.classList.toggle('act',id===sub); }
     });

@@ -18,6 +18,13 @@ async function loadBibleEN() {
   if (KJV) return KJV;
   const res = await fetch('data/bible-en.json');
   KJV = await res.json();
+  // 한글성경 키 ↔ 영어성경 키 불일치 보정
+  var alias = {
+    '여호수아기':'여호수아','사무엘기상':'사무엘상','사무엘기하':'사무엘하',
+    '느헤미야기':'느헤미야','에스더기':'에스더','솔로몬의아가':'아가',
+    '이사야서':'이사야','예레미야서':'예레미야','에스겔서':'에스겔','다니엘서':'다니엘'
+  };
+  for (var k in alias) { if (KJV[alias[k]] && !KJV[k]) KJV[k] = KJV[alias[k]]; }
   return KJV;
 }
 async function loadCommentary() {

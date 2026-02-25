@@ -50,7 +50,11 @@ function renderBible(){
     const wantEN = !!S.showEnglish;
     const wantKR = !!S.showKorean;
     const kjvTxt = wantEN ? (KJV?.[S.book]?.[S.ch]?.[i] || '') : '';
-    const kjvDisplay = (S.showStrong && kjvTxt && typeof renderEnStrongsInline==='function') ? renderEnStrongsInline(kjvTxt,S.book,S.ch,vn) : kjvTxt;
+    const kjvDisplay = (S.showECode && kjvTxt && typeof renderECodesInline==='function')
+      ? renderECodesInline(kjvTxt)
+      : (S.showStrong && kjvTxt && typeof renderEnStrongsInline==='function')
+        ? renderEnStrongsInline(kjvTxt,S.book,S.ch,vn)
+        : kjvTxt;
     const indic = `<span class="vindic">${hasNote?'<span class="vd vd-n" title="노트 있음"></span>':''}${hasBk?'<span class="vd vd-b" title="북마크"></span>':''}${hasComm?'<span class="vd vd-c" title="주석 있음"></span>':''}</span>`;
     const menuBtn = `<button class="vrow-menu-btn" data-v="${vn}" title="메뉴" onclick="event.stopPropagation();toggleVerseMenu(${vn},this)"><i class="fa fa-ellipsis-v"></i></button>`;
 

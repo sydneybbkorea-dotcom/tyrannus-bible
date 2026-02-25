@@ -43,3 +43,17 @@ async function _ensureEN(){
 async function toggleParallel(){
   await toggleLang('en');
 }
+
+// E코드 토글
+async function toggleECodes(){
+  S.showECode = !S.showECode;
+  if(S.showECode){
+    var loads=[loadECodeDict()];
+    if(!S.showEnglish){ S.showEnglish=true; loads.push(loadBibleEN()); }
+    toast('E코드 데이터 로딩 중...');
+    await Promise.all(loads);
+  }
+  renderBible(); restoreSel();
+  if(typeof renderViewBar==='function') renderViewBar();
+  toast(S.showECode ? 'E코드 표시 ON' : 'E코드 표시 OFF');
+}

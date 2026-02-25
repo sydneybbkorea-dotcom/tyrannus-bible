@@ -23,7 +23,7 @@ Object.assign(S, {
   curFolder:'default', curNoteId:null, curTags:[],
   schFilter:'all',
   panelOpen:null,
-  _noteSubTab:'notes', _dictSubTab:'dict-strongs',
+  _noteSubTab:'notes', _dictSubTab:'dict-ecode',
   bookNavOpen:false, explorerOpen:false,   // 슬라이드 패널: 기본 닫힘
   openFolders:new Set(['default']),
   navHistory:[],  // for backlink navigation

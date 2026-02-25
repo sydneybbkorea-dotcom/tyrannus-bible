@@ -537,6 +537,37 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
 .str-code:hover { background:var(--gold); color:var(--bg); border-color:var(--gold) }
 /* 영어 텍스트 내 스트롱 코드 — 더 작고 윗첨자 */
 .str-en { font-size:8px; vertical-align:super; margin:0 0 0 1px; padding:0 2px; opacity:.85 }
+/* ── E코드 인라인 배지 ── */
+.e-code {
+  display:inline-block; font-family:'JetBrains Mono',monospace;
+  font-size:8px; color:#0bc; background:rgba(0,187,204,.12);
+  border:1px solid rgba(0,187,204,.25); border-radius:3px;
+  padding:0 2px; margin:0 1px; vertical-align:super;
+  cursor:pointer; transition:all .12s; line-height:1.4;
+}
+.e-code:hover { background:#0bc; color:#000; border-color:#0bc; }
+[data-theme="light"] .e-code { background:rgba(0,170,187,.10); border-color:rgba(0,170,187,.20); }
+/* ── E사전 성구 링크 버튼 ── */
+.e-ref-btn {
+  display:inline-block; font-family:'JetBrains Mono',monospace;
+  font-size:10px; color:#0bc; background:rgba(0,187,204,.10);
+  border:1px solid rgba(0,187,204,.30); border-radius:4px;
+  padding:3px 6px; cursor:pointer; transition:all .12s; white-space:nowrap;
+}
+.e-ref-btn:hover { background:#0bc; color:#000; border-color:#0bc; }
+/* ── E사전 단어 하이라이트 ── */
+mark.e-word-hl {
+  background:#0bc; color:#000; border-radius:2px; padding:0 1px;
+  animation: eWordPop .25s ease;
+}
+@keyframes eWordPop { from{transform:scale(1.4)} to{transform:scale(1)} }
+/* ── E사전 구절 행 flash ── */
+.e-row-flash { animation: eRowFlash 1.8s ease forwards; }
+@keyframes eRowFlash {
+  0%   { background:rgba(0,187,204,.35) }
+  60%  { background:rgba(0,187,204,.15) }
+  100% { background:transparent }
+}
 /* 단어 연구 페이지네이션 */
 .ws-pag { display:flex; align-items:center; justify-content:center; gap:8px; padding:10px 0 }
 .ws-pg-btn { font-size:11px; padding:4px 12px; border-radius:4px; background:var(--bg3); border:1px solid var(--border); color:var(--text2); cursor:pointer }

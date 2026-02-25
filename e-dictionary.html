@@ -4,10 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>KJB 영어 성구 사전</title>
+<meta name="robots" content="noindex, nofollow">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0a0a1a;color:#e0e0e0;min-height:100vh}
-.header{background:rgba(0,0,0,.6);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08);padding:16px 24px;position:sticky;top:0;z-index:10}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0a0a1a;color:#e0e0e0;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+.header{background:rgba(0,0,0,.6);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08);padding:16px 24px;flex-shrink:0}
 .header h1{font-size:20px;font-weight:700;color:#ffe066;display:flex;align-items:center;gap:10px}
 .header h1 span{font-size:12px;color:rgba(255,255,255,.5);font-weight:400}
 .toolbar{display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;align-items:center}
@@ -20,14 +21,14 @@ body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:#0a0a1
 .btn.active{background:rgba(255,210,0,.15);border-color:#ffe066;color:#ffe066}
 .btn-download{background:rgba(0,180,120,.15);border-color:rgba(0,180,120,.4);color:#4ade80}
 .btn-download:hover{background:rgba(0,180,120,.25);border-color:#4ade80}
-.stats{font-size:11px;color:rgba(255,255,255,.4);padding:8px 24px}
+.stats{font-size:11px;color:rgba(255,255,255,.4);padding:8px 24px;flex-shrink:0}
 .stats b{color:#ffe066}
 
 /* 테이블 */
-.table-wrap{padding:0 16px 100px;overflow-x:auto}
+.table-wrap{padding:0 16px 40px;overflow:auto;flex:1}
 table{width:100%;border-collapse:collapse;font-size:13px}
-thead{position:sticky;top:90px;z-index:5}
-th{background:rgba(20,20,40,.95);backdrop-filter:blur(8px);padding:10px 12px;text-align:left;font-size:11px;font-weight:700;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid rgba(255,210,0,.3);cursor:pointer;user-select:none;white-space:nowrap}
+thead{z-index:5}
+th{position:sticky;top:0;background:rgba(20,20,40,.97);backdrop-filter:blur(8px);padding:10px 12px;text-align:left;font-size:11px;font-weight:700;color:rgba(255,255,255,.5);text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid rgba(255,210,0,.3);cursor:pointer;user-select:none;white-space:nowrap;z-index:5}
 th:hover{color:#ffe066}
 th .sort-arrow{font-size:9px;margin-left:4px;opacity:.4}
 th.sorted .sort-arrow{opacity:1;color:#ffe066}
