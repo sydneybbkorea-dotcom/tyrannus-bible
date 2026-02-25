@@ -1271,7 +1271,7 @@ function _tpOnInput(){
     }
   }
 
-  // 연속 오타 6자 제한: 더 이상 앞으로 진행 불가 (백스페이스로 수정 필요)
+  // 연속 오타 10자 제한: 더 이상 앞으로 진행 불가 (스페이스로 단어 처음으로 되돌리기)
   if(!_tp.composing && _tp.typed.length > prev.length){
     var chkResult = _tpBuildMapping(_tp.verse.text, _tp.typed);
     var wrongRun = 0;
@@ -1281,7 +1281,7 @@ function _tpOnInput(){
         wrongRun++;
       } else { break; }
     }
-    if(wrongRun >= 6){
+    if(wrongRun >= 10){
       _tp.typed = prev;
       ta.value = prev;
       return;
@@ -2458,6 +2458,34 @@ function _tpRenderBody(){
         _tp.keyPulse = 1.0;
         if(_tp.verse && !_tp.finished){
           var mapping = _tpBuildMapping(_tp.verse.text, _tp.typed);
+
+          // 연속 오타 10자 이상이면 현재 단어 처음으로 되돌리기
+          var spWrongRun = 0;
+          for(var sw = mapping.map.length - 1; sw >= 0; sw--){
+            var swti = mapping.map[sw];
+            if(swti === -1 || (swti >= 0 && !_tpMatch(_tp.typed[sw], _tp.verse.text[swti]))){
+              spWrongRun++;
+            } else { break; }
+          }
+          if(spWrongRun >= 10){
+            // 마지막 정타에서 대상 텍스트 위치 찾기
+            var lastOk = _tp.typed.length - spWrongRun - 1;
+            var tgtPos = (lastOk >= 0 && mapping.map[lastOk] >= 0) ? mapping.map[lastOk] + 1 : 0;
+            // 현재 단어 시작점 (이전 공백 다음)
+            var ws = tgtPos;
+            while(ws > 0 && _tp.verse.text[ws - 1] !== ' ') ws--;
+            // 단어 시작 전까지의 입력만 보존
+            var cut = 0;
+            for(var ci = 0; ci < mapping.map.length; ci++){
+              if(mapping.map[ci] >= 0 && mapping.map[ci] < ws) cut = ci + 1;
+            }
+            _tp.typed = _tp.typed.slice(0, cut);
+            ta.value = _tp.typed;
+            _tp.composing = false;
+            _tpUpdateChars();
+            return;
+          }
+
           var cur = mapping.nextTarget;
           if(cur < _tp.verse.text.length){
             // 현재 단어 끝까지 찾기
