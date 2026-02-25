@@ -5,10 +5,10 @@ var _railHidden = false;
 
 function _toggleIconRail(){
   _railHidden = !_railHidden;
-  const rail = document.getElementById('iconRail');
-  const btn = document.getElementById('railToggleBtn');
+  var rail = document.getElementById('iconRail');
+  var btn = document.getElementById('railToggleBtn');
   if(rail) rail.classList.toggle('rail-collapsed', _railHidden);
-  if(btn) btn.classList.toggle('rail-hidden', _railHidden);
+  if(btn) btn.classList.toggle('active', !_railHidden);
   if(_railHidden && _activeRail && !_spPinned) closeSidePanel();
 }
 

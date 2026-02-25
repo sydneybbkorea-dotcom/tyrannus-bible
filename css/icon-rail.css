@@ -1,54 +1,101 @@
-/* icon-rail.css — Slack 스타일 아이콘 레일 (왼쪽 네비게이션) */
+/* ═══════════════════════════════════════════════
+   ICON RAIL — Obsidian Translucent 왼쪽 사이드바
+   독립 유리 패널 스타일
+═══════════════════════════════════════════════ */
 #iconRail {
-  width:56px; flex-shrink:0;
-  background:var(--glass-bg-1);
-  backdrop-filter:var(--glass-blur-1); -webkit-backdrop-filter:var(--glass-blur-1);
-  border-right:1px solid var(--glass-border);
-  box-shadow:var(--glass-highlight);
-  display:flex; flex-direction:column; justify-content:space-between;
-  padding:8px 0; z-index:100;
-  transition:width .25s cubic-bezier(.4,0,.2,1);
-  overflow:hidden;
+  width: var(--rail-width, 56px);
+  flex-shrink: 0;
+  background: var(--rail-bg);
+  backdrop-filter: var(--rail-blur);
+  -webkit-backdrop-filter: var(--rail-blur);
+  border-right: 1px solid var(--rail-border);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 8px 0;
+  z-index: 100;
+  transition: width 0.3s cubic-bezier(0.4,0,0.2,1),
+              opacity 0.3s ease,
+              transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  overflow: hidden;
 }
-.rail-top, .rail-bottom { display:flex; flex-direction:column; align-items:center; gap:2px; }
-/* 사이드바 토글 → .tb-pin (bible.css)로 이동됨 */
+
+.rail-top, .rail-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+/* ── 레일 아이콘 ── */
 .rail-icon {
-  width:40px; height:40px; border-radius:8px; border:none;
-  display:flex; align-items:center; justify-content:center;
-  color:var(--text3); font-size:16px; cursor:pointer;
-  transition:all .15s; position:relative; background:transparent;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+  background: transparent;
 }
+
 .rail-icon:hover {
-  background:var(--glass-bg-2); color:var(--text);
-  box-shadow:var(--glass-highlight);
+  background: rgba(255,255,255,0.08);
+  color: var(--text-primary);
 }
+
 .rail-icon.active {
-  color:var(--gold); background:var(--gold-dim);
+  color: var(--accent-color);
+  background: var(--accent-dim);
 }
+
 .rail-icon.active::before {
-  content:''; position:absolute; left:0; top:8px; bottom:8px;
-  width:3px; background:var(--gold); border-radius:0 3px 3px 0;
-  box-shadow:0 0 8px var(--gold);
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  background: var(--accent-color);
+  border-radius: 0 3px 3px 0;
+  box-shadow: 0 0 8px var(--accent-color);
 }
+
+/* 툴팁 */
 .rail-icon .rail-label {
-  display:none; font-size:9px; position:absolute;
-  left:56px; white-space:nowrap;
-  background:var(--glass-bg-3);
-  backdrop-filter:var(--glass-blur-3); -webkit-backdrop-filter:var(--glass-blur-3);
-  border:1px solid var(--glass-border);
-  color:var(--text); padding:4px 8px; border-radius:4px;
-  box-shadow:var(--glass-shadow); pointer-events:none; z-index:999;
+  display: none;
+  font-size: 11px;
+  position: absolute;
+  left: 58px;
+  white-space: nowrap;
+  background: var(--slider-bg, rgba(0,0,0,0.72));
+  backdrop-filter: var(--slider-blur, blur(24px));
+  -webkit-backdrop-filter: var(--slider-blur, blur(24px));
+  border: 1px solid var(--slider-border, rgba(255,255,255,0.08));
+  color: var(--text-primary);
+  padding: 5px 10px;
+  border-radius: 8px;
+  box-shadow: var(--slider-shadow);
+  pointer-events: none;
+  z-index: 999;
 }
-.rail-icon:hover .rail-label { display:block; }
-/* ── 레일 구분선 (패널 토글 ↔ 섹션 버튼 사이) ── */
+.rail-icon:hover .rail-label { display: block; }
+
+/* ── 구분선 ── */
 .rail-divider {
   width: 28px;
   height: 1px;
   background: var(--glass-border);
-  margin: 4px auto;
-  opacity: 0.6;
+  margin: 6px auto;
+  opacity: 0.8;
 }
-/* 패널 토글 아이콘 — 원형 강조 */
+
+/* ── 패널 토글 아이콘 ── */
 .rail-pane-toggle {
   border-radius: 50% !important;
   width: 36px !important;
@@ -56,34 +103,141 @@
   font-size: 14px !important;
 }
 .rail-pane-toggle.active {
-  background: var(--rail-icon-active-bg, var(--accent-dim)) !important;
-  color: var(--rail-icon-active-color, var(--accent-color)) !important;
+  background: var(--accent-dim) !important;
+  color: var(--accent-color) !important;
 }
 .rail-pane-toggle.active::before {
-  display: none; /* 패널 토글에는 좌측 바 표시 안 함 */
+  display: none;
 }
-/* 접힘 상태 */
-#iconRail.rail-collapsed { width:0; padding:0; border-right:none; backdrop-filter:none; -webkit-backdrop-filter:none; }
-[data-theme="light"] .rail-icon:hover { background:var(--glass-bg-2); color:var(--text-primary); }
-[data-theme="light"] .rail-icon.active { color:var(--accent-color); background:hsla(var(--accent-h),60%,50%,.12); }
-[data-theme="light"] .rail-icon.active::before { background:var(--accent-color); box-shadow:0 0 8px var(--accent-color); }
-[data-theme="light"] .rail-avatar { border-color:var(--accent-color); }
-[data-theme="light"] .rail-logout:hover { background:var(--glass-bg-2); }
 
-/* ── 사이드바 하단 사용자 영역 ── */
+/* ── 접힘 상태 (슬라이드 아웃) ── */
+#iconRail.rail-collapsed {
+  width: 0;
+  padding: 0;
+  border-right: none;
+  opacity: 0;
+  transform: translateX(-56px);
+  pointer-events: none;
+}
+
+/* ── 사용자 영역 ── */
 #railUser { display:flex; flex-direction:column; align-items:center; gap:4px; margin-bottom:4px }
 .rail-avatar {
-  width:32px; height:32px; border-radius:50%; border:2px solid var(--gold);
-  object-fit:cover; cursor:default;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--accent-color);
+  object-fit: cover;
+  cursor: default;
 }
 .rail-user-info {
-  display:flex; flex-direction:column; align-items:center; gap:4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
 }
-/* 동기화/쿼타 → 설정 패널로 이동됨 */
 .rail-logout {
-  width:32px; height:20px; border-radius:4px; border:none;
-  background:transparent; color:var(--text3); font-size:11px;
-  cursor:pointer; display:flex; align-items:center; justify-content:center;
-  transition:all .12s;
+  width: 32px;
+  height: 20px;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 11px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.12s;
 }
-.rail-logout:hover { background:var(--glass-bg-2); color:var(--red) }
+.rail-logout:hover {
+  background: rgba(255,80,80,0.12);
+  color: #f05050;
+}
+
+/* ── 라이트 테마 ── */
+[data-theme="light"] .rail-icon:hover {
+  background: rgba(0,0,0,0.06);
+  color: var(--text-primary);
+}
+[data-theme="light"] .rail-icon.active {
+  color: var(--accent-color);
+  background: var(--accent-dim);
+}
+[data-theme="light"] .rail-icon.active::before {
+  background: var(--accent-color);
+  box-shadow: 0 0 8px var(--accent-color);
+}
+[data-theme="light"] .rail-logout:hover {
+  background: rgba(211,47,47,0.08);
+}
+
+/* ── 세피아 테마 ── */
+[data-theme="sepia"] .rail-icon:hover {
+  background: rgba(120,80,30,0.08);
+  color: var(--text-primary);
+}
+[data-theme="sepia"] .rail-icon.active {
+  color: var(--accent-color);
+  background: var(--accent-dim);
+}
+
+/* ── 오른쪽 상단 고정 사이드바 토글 버튼 ── */
+.rail-toggle-fixed {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: var(--pane-bg, rgba(0,0,0,0.65));
+  backdrop-filter: var(--pane-blur, blur(20px));
+  -webkit-backdrop-filter: var(--pane-blur, blur(20px));
+  color: var(--text-muted);
+  font-size: 15px;
+  cursor: pointer;
+  border-radius: 10px;
+  border: 1px solid var(--pane-border, rgba(255,255,255,0.08));
+  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
+  transition: all 0.2s;
+  position: fixed;
+  top: 8px;
+  right: 8px;
+  z-index: 1001;
+}
+
+.rail-toggle-fixed:hover {
+  background: rgba(255,255,255,0.12);
+  color: var(--text-primary);
+  transform: scale(1.05);
+}
+
+.rail-toggle-fixed.active {
+  color: var(--accent-color);
+  background: var(--accent-dim);
+  border-color: var(--accent-color);
+}
+
+[data-theme="light"] .rail-toggle-fixed {
+  background: var(--pane-bg);
+  border-color: var(--pane-border);
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+[data-theme="light"] .rail-toggle-fixed:hover {
+  background: rgba(0,0,0,0.05);
+}
+
+[data-theme="sepia"] .rail-toggle-fixed {
+  background: var(--pane-bg);
+  border-color: var(--pane-border);
+}
+
+@media (max-width: 599px) {
+  .rail-toggle-fixed {
+    width: 32px;
+    height: 32px;
+    top: 6px;
+    right: 6px;
+    font-size: 14px;
+  }
+}

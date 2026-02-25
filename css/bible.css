@@ -1,6 +1,6 @@
 /* ── CENTER: Bible Text ── */
 #biblePane {
-  flex:1; display:flex; flex-direction:column; background:var(--bg-surface); min-width:0;
+  flex:1; display:flex; flex-direction:column; background:transparent; min-width:0;
   position:relative; /* 드롭다운 기준점 */
 }
 /* 본문 영역 (아이콘레일/사이드패널은 appShell 레벨로 이동) */
@@ -9,9 +9,8 @@
 #bibleViewBar {
   display:flex; align-items:center;
   height:34px; flex-shrink:0; padding:0;
-  background:var(--bg-secondary);
-  border-bottom:1px solid var(--glass-border);
-  box-shadow:var(--glass-highlight);
+  background:var(--pane-header-bg);
+  border-bottom:1px solid var(--pane-header-border);
   position:relative; z-index:90; overflow:visible;
 }
 #bibleViewBar .vb-left { padding-left:6px }
@@ -109,10 +108,9 @@
 /* ── Bible Tab Bar ── */
 #bibleTabBar {
   display:flex; align-items:stretch;
-  background:var(--bg-secondary);
+  background:var(--pane-header-bg);
   flex-shrink:0; height:36px;
-  border-bottom:1px solid var(--glass-border);
-  box-shadow:var(--glass-highlight);
+  border-bottom:1px solid var(--pane-header-border);
   position:relative;
 }
 #bibleTabList { display:flex; align-items:flex-end; flex:1; min-width:0; gap:0; overflow:hidden; padding:6px 6px 0; }

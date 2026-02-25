@@ -1,12 +1,13 @@
 /* side-panel.css — 확장 사이드패널 (appShell 레벨) */
 #sidePanel {
   width:0; overflow:hidden; flex-shrink:0;
-  background:var(--glass-bg-1);
-  backdrop-filter:var(--glass-blur-1); -webkit-backdrop-filter:var(--glass-blur-1);
-  border-right:1px solid var(--glass-border);
-  box-shadow:var(--glass-highlight);
+  background:var(--slider-bg, rgba(0,0,0,0.72));
+  backdrop-filter:var(--slider-blur, blur(24px));
+  -webkit-backdrop-filter:var(--slider-blur, blur(24px));
+  border-right:1px solid var(--slider-border, rgba(255,255,255,0.08));
+  box-shadow:var(--slider-shadow);
   display:flex; flex-direction:column;
-  transition:width .25s cubic-bezier(.4,0,.2,1);
+  transition:width .3s cubic-bezier(.4,0,.2,1);
   position:relative; z-index:150;
 }
 /* 기본: 오버레이 (paneContainer 위에 겹침) */

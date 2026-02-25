@@ -1,64 +1,27 @@
 /* ═══════════════════════════════════════════════
-   THEME SYSTEM — 3 Themes + 8 Accent Colors
-   HSL-based dynamic color system (Obsidian Light & Bright inspired)
+   THEME SYSTEM — Obsidian Translucent Glass Design
+   반투명 글래스모피즘 + 3테마 + 8 액센트 컬러
 ═══════════════════════════════════════════════ */
 
-/* ── Default Accent (다크: #bd8a00, 라이트: #f06f38) ── */
+/* ── Default Accent ── */
 :root {
-  --accent-h: 44;
-  --accent-s: 100%;
-  --accent-l: 37%;
+  --accent-h: 210;
+  --accent-s: 80%;
+  --accent-l: 55%;
 }
 
-/* ── Default Book Accent (성경 본문 강조: 장 제목, 구절 번호) ── */
-:root {
-  --book-h: 50;
-  --book-s: 100%;
-  --book-l: 50%;
-}
 /* ── Accent Color Palettes ── */
-:root[data-accent="blue"] {
-  --accent-h: 214;
-  --accent-s: 92%;
-  --accent-l: 45%;
-}
-:root[data-accent="red"] {
-  --accent-h: 0;
-  --accent-s: 96%;
-  --accent-l: 43%;
-}
-:root[data-accent="orange"] {
-  --accent-h: 30;
-  --accent-s: 90%;
-  --accent-l: 46%;
-}
-:root[data-accent="yellow"] {
-  --accent-h: 46;
-  --accent-s: 100%;
-  --accent-l: 44%;
-}
-:root[data-accent="cyan"] {
-  --accent-h: 179;
-  --accent-s: 100%;
-  --accent-l: 37%;
-}
-:root[data-accent="purple"] {
-  --accent-h: 256;
-  --accent-s: 83%;
-  --accent-l: 63%;
-}
-:root[data-accent="pink"] {
-  --accent-h: 330;
-  --accent-s: 65%;
-  --accent-l: 53%;
-}
-:root[data-accent="black"] {
-  --accent-h: 0;
-  --accent-s: 0%;
-  --accent-l: 65%;
-}
+:root[data-accent="blue"]   { --accent-h: 214; --accent-s: 92%; --accent-l: 50%; }
+:root[data-accent="red"]    { --accent-h: 0;   --accent-s: 85%; --accent-l: 50%; }
+:root[data-accent="orange"] { --accent-h: 30;  --accent-s: 90%; --accent-l: 50%; }
+:root[data-accent="yellow"] { --accent-h: 46;  --accent-s: 100%; --accent-l: 44%; }
+:root[data-accent="cyan"]   { --accent-h: 179; --accent-s: 100%; --accent-l: 37%; }
+:root[data-accent="purple"] { --accent-h: 256; --accent-s: 83%; --accent-l: 63%; }
+:root[data-accent="pink"]   { --accent-h: 330; --accent-s: 65%; --accent-l: 53%; }
+:root[data-accent="black"]  { --accent-h: 0;   --accent-s: 0%;  --accent-l: 65%; }
 
-/* ── Book Accent Color Palettes (성경 본문 강조색) ── */
+/* ── Book Accent (성경 강조색) ── */
+:root { --book-h: 50; --book-s: 100%; --book-l: 50%; }
 :root[data-book-accent="blue"]   { --book-h:214; --book-s:92%;  --book-l:45%; }
 :root[data-book-accent="red"]    { --book-h:0;   --book-s:96%;  --book-l:43%; }
 :root[data-book-accent="orange"] { --book-h:30;  --book-s:90%;  --book-l:46%; }
@@ -68,204 +31,292 @@
 :root[data-book-accent="pink"]   { --book-h:330; --book-s:65%;  --book-l:53%; }
 :root[data-book-accent="black"]  { --book-h:0;   --book-s:0%;   --book-l:65%; }
 
-/* ── Default Base (첫 방문 기본값: #04050b) ── */
+/* ── Base Color (배경 톤) ── */
 :root { --base-h: 231; --base-s: 47%; --base-l: 3%; }
-/* ── Base Color Palettes (배경 H/S/L) ── */
-:root[data-base="blue"]           { --base-h: 214; --base-s: 35%; --base-l: 5%; }
-:root[data-base="red"]            { --base-h: 355; --base-s: 35%; --base-l: 5%; }
-:root[data-base="orange"]         { --base-h: 30;  --base-s: 35%; --base-l: 5%; }
-:root[data-base="yellow"]         { --base-h: 46;  --base-s: 35%; --base-l: 5%; }
-:root[data-base="cyan"]           { --base-h: 179; --base-s: 35%; --base-l: 5%; }
-:root[data-base="purple"]         { --base-h: 256; --base-s: 35%; --base-l: 5%; }
-:root[data-base="pink"]           { --base-h: 330; --base-s: 35%; --base-l: 5%; }
-:root[data-base="black"]          { --base-h: 0;   --base-s: 0%;  --base-l: 3%; }
+:root[data-base="blue"]   { --base-h: 214; --base-s: 35%; --base-l: 5%; }
+:root[data-base="red"]    { --base-h: 355; --base-s: 35%; --base-l: 5%; }
+:root[data-base="orange"] { --base-h: 30;  --base-s: 35%; --base-l: 5%; }
+:root[data-base="yellow"] { --base-h: 46;  --base-s: 35%; --base-l: 5%; }
+:root[data-base="cyan"]   { --base-h: 179; --base-s: 35%; --base-l: 5%; }
+:root[data-base="purple"] { --base-h: 256; --base-s: 35%; --base-l: 5%; }
+:root[data-base="pink"]   { --base-h: 330; --base-s: 35%; --base-l: 5%; }
+:root[data-base="black"]  { --base-h: 0;   --base-s: 0%;  --base-l: 3%; }
 
-/* ── Computed Accent (shared across all themes) ── */
+/* ── Computed Accent ── */
 :root {
   --accent-color: hsl(var(--accent-h), var(--accent-s), var(--accent-l));
   --accent-hover: hsl(var(--accent-h), var(--accent-s), calc(var(--accent-l) + 8%));
-  --accent-dim: hsla(var(--accent-h), var(--accent-s), var(--accent-l), 0.12);
+  --accent-dim: hsla(var(--accent-h), var(--accent-s), var(--accent-l), 0.15);
   --accent-sel: hsla(var(--accent-h), 60%, 50%, 0.20);
 }
 
-/* ── Computed Book Accent (성경 본문 강조색) ── */
+/* ── Computed Book Accent ── */
 :root {
   --book-color: hsl(var(--book-h), var(--book-s), var(--book-l));
   --book-hover: hsl(var(--book-h), var(--book-s), calc(var(--book-l) + 8%));
   --book-dim:   hsla(var(--book-h), var(--book-s), var(--book-l), 0.12);
 }
 
-/* ── Theme 1: Light — warm rose-white (red accent feel) ── */
-:root[data-theme="light"] {
-  --bg-primary:     hsl(0, 52%, 96%);       /* 선명한 로즈 화이트 */
-  --bg-secondary:   hsl(0, 45%, 92%);       /* 패널 — 뚜렷한 핑크 구분 */
-  --bg-tertiary:    hsl(0, 35%, 86%);       /* 입력/버튼 — 로즈 깊이 */
-  --bg-surface:     hsl(0, 40%, 98%);       /* 따뜻한 화이트 종이 */
-  --text-primary:   hsl(350, 36%, 12%);     /* 깊은 다크 와인 — 최대 가독성 */
-  --text-secondary: hsl(350, 22%, 34%);     /* 워밍 보조 텍스트 */
-  --text-muted:     hsl(350, 14%, 52%);     /* 로즈 그레이 */
-  --text-faint:     hsl(350, 8%, 66%);      /* 희미한 로즈 */
-  --border-color:   hsl(0, 38%, 82%);       /* 뚜렷한 로즈 경계선 */
-  --shadow-color:   rgba(120, 20, 30, 0.10);/* 강한 로즈 그림자 */
-  --hl-opacity:     0.32;
-  --rail-bg-color:  hsl(0, 42%, 93%);       /* 레일 배경 — 선명한 웜 로즈 */
-  --content-text:       #720808;            /* 딥 버건디 잉크 본문 */
-  --content-text-sub:   hsl(350, 14%, 34%); /* 보조 본문 */
-  /* 강조색 강제 오버라이드: 선명한 레드 */
-  --accent-color:   #d70404;
-  --accent-hover:   #e81818;
-  --accent-dim:     rgba(215, 4, 4, 0.12);
-  --accent-sel:     rgba(215, 4, 4, 0.20);
-}
 
-/* ── Theme 2: Dark (default) — base S/L relative offsets ── */
+/* ═══════════════════════════════════════════════
+   THEME: DARK — Obsidian Translucent
+   투명 패널 + 블러 배경 + 미세한 보더
+═══════════════════════════════════════════════ */
 :root, :root[data-theme="dark"] {
+  /* 앱 배경 — 패널 뒤로 보이는 영역 */
   --bg-primary:     hsl(var(--base-h), var(--base-s), var(--base-l));
   --bg-secondary:   hsl(var(--base-h), calc(var(--base-s) - 7%), calc(var(--base-l) + 4%));
   --bg-tertiary:    hsl(var(--base-h), calc(var(--base-s) - 13%), calc(var(--base-l) + 10%));
   --bg-surface:     hsl(var(--base-h), calc(var(--base-s) - 7%), calc(var(--base-l) + 5%));
-  --text-primary:   hsl(var(--base-h), 10%, 92%);
-  --text-secondary: hsl(var(--base-h), 8%, 70%);
-  --text-muted:     hsl(var(--base-h), 6%, 48%);
-  --text-faint:     hsl(var(--base-h), 5%, 35%);
-  --border-color:   hsl(var(--base-h), calc(var(--base-s) - 13%), calc(var(--base-l) + 8%));
-  --shadow-color:   rgba(0, 0, 0, 0.50);
+  --text-primary:   rgba(255,255,255,0.92);
+  --text-secondary: rgba(255,255,255,0.65);
+  --text-muted:     rgba(255,255,255,0.40);
+  --text-faint:     rgba(255,255,255,0.22);
+  --border-color:   rgba(255,255,255,0.08);
+  --shadow-color:   rgba(0,0,0,0.50);
   --hl-opacity:     0.45;
   --rail-bg-color:  hsl(var(--base-h), var(--base-s), calc(var(--base-l) - 1%));
-  --content-text:       hsl(0, 0%, 93%);
-  --content-text-sub:   hsl(0, 0%, 73%);
+  --content-text:       rgba(255,255,255,0.90);
+  --content-text-sub:   rgba(255,255,255,0.60);
+
+  /* ── Glassmorphism 토큰 — Obsidian Translucent 핵심 ── */
+  --glass-bg-1:       rgba(255,255,255,0.03);      /* 레일, 사이드패널 */
+  --glass-bg-2:       rgba(255,255,255,0.05);      /* 호버 상태 */
+  --glass-bg-3:       rgba(255,255,255,0.07);      /* 메뉴, 팝업 */
+  --glass-border:     rgba(255,255,255,0.06);
+  --glass-highlight:  inset 0 1px 0 rgba(255,255,255,0.04);
+  --glass-shadow:     0 8px 32px rgba(0,0,0,0.4);
+  --glass-blur-1:     blur(12px);
+  --glass-blur-2:     blur(20px);
+  --glass-blur-3:     blur(24px);
+
+  /* ── 패널 카드 스타일 (핵심: 독립 입체감) ── */
+  --pane-bg:          rgba(0,0,0,0.65);             /* Obsidian 패널 불투명도 */
+  --pane-blur:        blur(20px);
+  --pane-border:      rgba(255,255,255,0.08);
+  --pane-radius:      12px;
+  --pane-gap:         4px;                          /* 패널 사이 간격 (좁게) */
+  --pane-shadow:      0 4px 24px rgba(0,0,0,0.3), 0 1px 3px rgba(0,0,0,0.2);
+  --pane-header-bg:   rgba(255,255,255,0.03);
+  --pane-header-border: rgba(255,255,255,0.06);
+  --pane-tag-bg:      var(--accent-dim);
+  --pane-tag-color:   var(--accent-color);
+
+  /* ── body 배경 (패널 뒤 그라데이션) ── */
+  --body-gradient: linear-gradient(135deg,
+    hsl(var(--base-h), 30%, 8%) 0%,
+    hsl(var(--base-h), 25%, 5%) 50%,
+    hsl(calc(var(--base-h) + 20), 20%, 7%) 100%);
+
+  /* ── 배경 이미지 활성 시 ── */
+  --bgi-panel:  rgba(10,10,26,0.78);
+  --bgi-bar:    rgba(10,10,26,0.70);
+  --bgi-popup:  rgba(10,10,26,0.88);
+
+  /* ── 아이콘 레일 ── */
+  --rail-width:   56px;
+  --rail-bg:      rgba(0,0,0,0.40);
+  --rail-blur:    blur(16px);
+  --rail-border:  rgba(255,255,255,0.06);
+
+  /* ── 사이드 메뉴 (좌/우) ── */
+  --slider-bg:      rgba(0,0,0,0.72);
+  --slider-blur:    blur(24px);
+  --slider-border:  rgba(255,255,255,0.08);
+  --slider-shadow:  0 8px 40px rgba(0,0,0,0.5);
+  --slider-width:   280px;
+
+  /* ── 리사이즈 핸들 ── */
+  --handle-width: 4px;
+  --handle-color: transparent;
+  --handle-hover-color: var(--accent-color);
 }
 
-/* ── Theme 3: Sepia — aged parchment (warm amber-brown) ── */
+
+/* ═══════════════════════════════════════════════
+   THEME: LIGHT — 투명 서리 유리
+═══════════════════════════════════════════════ */
+:root[data-theme="light"] {
+  --bg-primary:     hsl(220, 20%, 96%);
+  --bg-secondary:   hsl(220, 15%, 92%);
+  --bg-tertiary:    hsl(220, 12%, 88%);
+  --bg-surface:     hsl(220, 18%, 98%);
+  --text-primary:   rgba(0,0,0,0.87);
+  --text-secondary: rgba(0,0,0,0.60);
+  --text-muted:     rgba(0,0,0,0.38);
+  --text-faint:     rgba(0,0,0,0.20);
+  --border-color:   rgba(0,0,0,0.08);
+  --shadow-color:   rgba(0,0,0,0.08);
+  --hl-opacity:     0.32;
+  --rail-bg-color:  hsl(220, 15%, 94%);
+  --content-text:       rgba(0,0,0,0.82);
+  --content-text-sub:   rgba(0,0,0,0.55);
+
+  /* 강조색 오버라이드 */
+  --accent-color: hsl(var(--accent-h), calc(var(--accent-s) - 10%), calc(var(--accent-l) - 8%));
+  --accent-hover: hsl(var(--accent-h), var(--accent-s), calc(var(--accent-l) - 3%));
+  --accent-dim:   hsla(var(--accent-h), var(--accent-s), var(--accent-l), 0.12);
+  --accent-sel:   hsla(var(--accent-h), 60%, 50%, 0.15);
+
+  /* Glassmorphism */
+  --glass-bg-1:       rgba(255,255,255,0.50);
+  --glass-bg-2:       rgba(255,255,255,0.60);
+  --glass-bg-3:       rgba(255,255,255,0.70);
+  --glass-border:     rgba(0,0,0,0.06);
+  --glass-highlight:  inset 0 1px 0 rgba(255,255,255,0.7);
+  --glass-shadow:     0 8px 32px rgba(0,0,0,0.06);
+  --glass-blur-1:     blur(12px);
+  --glass-blur-2:     blur(20px);
+  --glass-blur-3:     blur(24px);
+
+  /* 패널 카드 */
+  --pane-bg:          rgba(255,255,255,0.55);
+  --pane-blur:        blur(20px);
+  --pane-border:      rgba(0,0,0,0.06);
+  --pane-radius:      12px;
+  --pane-gap:         4px;
+  --pane-shadow:      0 2px 16px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --pane-header-bg:   rgba(255,255,255,0.40);
+  --pane-header-border: rgba(0,0,0,0.05);
+
+  --body-gradient: linear-gradient(135deg,
+    hsl(220, 40%, 92%) 0%,
+    hsl(240, 35%, 95%) 50%,
+    hsl(200, 30%, 93%) 100%);
+
+  --bgi-panel:  rgba(255,255,255,0.78);
+  --bgi-bar:    rgba(255,255,255,0.70);
+  --bgi-popup:  rgba(255,255,255,0.90);
+
+  /* 레일 */
+  --rail-bg:      rgba(255,255,255,0.45);
+  --rail-blur:    blur(16px);
+  --rail-border:  rgba(0,0,0,0.06);
+
+  /* 슬라이더 메뉴 */
+  --slider-bg:      rgba(255,255,255,0.78);
+  --slider-blur:    blur(24px);
+  --slider-border:  rgba(0,0,0,0.08);
+  --slider-shadow:  0 8px 40px rgba(0,0,0,0.08);
+}
+
+
+/* ═══════════════════════════════════════════════
+   THEME: SEPIA — 따뜻한 양피지 유리
+═══════════════════════════════════════════════ */
 :root[data-theme="sepia"] {
-  --bg-primary:     hsl(36, 33%, 93%);      /* 따뜻한 양피지 */
-  --bg-secondary:   hsl(34, 26%, 87%);      /* 에이지드 패널 */
-  --bg-tertiary:    hsl(32, 20%, 80%);      /* 깊은 따뜻함 (입력/버튼) */
-  --bg-surface:     hsl(40, 40%, 96%);      /* 크림빛 종이 */
-  --text-primary:   hsl(22, 36%, 15%);      /* 깊은 에스프레소 브라운 */
-  --text-secondary: hsl(22, 18%, 34%);      /* 월넛 브라운 */
-  --text-muted:     hsl(25, 12%, 50%);      /* 부드러운 카키 */
-  --text-faint:     hsl(28, 8%, 64%);       /* 희미한 베이지 */
-  --border-color:   hsl(32, 18%, 78%);      /* 오크빛 경계선 */
-  --shadow-color:   rgba(80, 50, 15, 0.07); /* 따뜻한 앰버 그림자 */
+  --bg-primary:     hsl(36, 33%, 93%);
+  --bg-secondary:   hsl(34, 26%, 87%);
+  --bg-tertiary:    hsl(32, 20%, 80%);
+  --bg-surface:     hsl(40, 40%, 96%);
+  --text-primary:   rgba(40,25,5,0.87);
+  --text-secondary: rgba(40,25,5,0.60);
+  --text-muted:     rgba(40,25,5,0.38);
+  --text-faint:     rgba(40,25,5,0.20);
+  --border-color:   rgba(100,60,20,0.10);
+  --shadow-color:   rgba(80,50,15,0.07);
   --hl-opacity:     0.28;
-  --rail-bg-color:  hsl(34, 24%, 85%);      /* 레일 배경 */
-  --content-text:       hsl(22, 30%, 15%);  /* 초콜릿 잉크 본문 */
-  --content-text-sub:   hsl(22, 14%, 36%);  /* 보조 본문 */
+  --rail-bg-color:  hsl(34, 24%, 85%);
+  --content-text:       rgba(40,25,5,0.82);
+  --content-text-sub:   rgba(40,25,5,0.55);
+
+  /* Glassmorphism */
+  --glass-bg-1:       rgba(255,245,230,0.40);
+  --glass-bg-2:       rgba(255,245,230,0.55);
+  --glass-bg-3:       rgba(255,245,230,0.65);
+  --glass-border:     rgba(120,80,30,0.10);
+  --glass-highlight:  inset 0 1px 0 rgba(255,250,240,0.5);
+  --glass-shadow:     0 8px 32px rgba(80,50,15,0.08);
+  --glass-blur-1:     blur(12px);
+  --glass-blur-2:     blur(20px);
+  --glass-blur-3:     blur(24px);
+
+  /* 패널 카드 */
+  --pane-bg:          rgba(255,245,230,0.55);
+  --pane-blur:        blur(20px);
+  --pane-border:      rgba(120,80,30,0.08);
+  --pane-radius:      12px;
+  --pane-gap:         4px;
+  --pane-shadow:      0 2px 16px rgba(80,50,15,0.06), 0 1px 2px rgba(80,50,15,0.04);
+  --pane-header-bg:   rgba(255,245,230,0.40);
+  --pane-header-border: rgba(120,80,30,0.06);
+
+  --body-gradient: linear-gradient(135deg,
+    hsl(36, 40%, 88%) 0%,
+    hsl(32, 35%, 85%) 50%,
+    hsl(28, 30%, 87%) 100%);
+
+  --bgi-panel:  rgba(245,234,214,0.80);
+  --bgi-bar:    rgba(240,224,196,0.75);
+  --bgi-popup:  rgba(245,234,214,0.90);
+
+  /* 레일 */
+  --rail-bg:      rgba(255,245,230,0.45);
+  --rail-blur:    blur(16px);
+  --rail-border:  rgba(120,80,30,0.08);
+
+  /* 슬라이더 메뉴 */
+  --slider-bg:      rgba(255,245,230,0.78);
+  --slider-blur:    blur(24px);
+  --slider-border:  rgba(120,80,30,0.10);
+  --slider-shadow:  0 8px 40px rgba(80,50,15,0.10);
 }
 
-/* ── Dark + Black accent: monochrome accent colors ── */
+
+/* ═══════════════════════════════════════════════
+   SPECIAL ACCENT OVERRIDES
+═══════════════════════════════════════════════ */
+
+/* Dark + Black accent */
 :root[data-theme="dark"][data-accent="black"],
 :root[data-accent="black"]:not([data-theme="light"]):not([data-theme="sepia"]) {
-  --accent-color:   hsl(0, 0%, 80%);
-  --accent-hover:   hsl(0, 0%, 90%);
-  --accent-dim:     hsla(0, 0%, 80%, 0.10);
-  --accent-sel:     hsla(0, 0%, 80%, 0.15);
+  --accent-color: hsl(0,0%,80%);
+  --accent-hover: hsl(0,0%,90%);
+  --accent-dim:   hsla(0,0%,80%,0.10);
+  --accent-sel:   hsla(0,0%,80%,0.15);
 }
 
-/* ── Light + Black accent: warm ink for readability ── */
+/* Light + Black accent */
 :root[data-theme="light"][data-accent="black"] {
-  --accent-color:   hsl(350, 18%, 18%);
-  --accent-hover:   hsl(350, 14%, 28%);
-  --accent-dim:     hsla(350, 18%, 10%, 0.08);
-  --accent-sel:     hsla(350, 18%, 10%, 0.12);
+  --accent-color: hsl(220,10%,25%);
+  --accent-hover: hsl(220,8%,35%);
+  --accent-dim:   hsla(220,10%,15%,0.08);
+  --accent-sel:   hsla(220,10%,15%,0.12);
 }
 
-/* ── Sepia + Black accent: espresso brown for readability ── */
+/* Sepia + Black accent */
 :root[data-theme="sepia"][data-accent="black"] {
-  --accent-color:   hsl(22, 20%, 18%);
-  --accent-hover:   hsl(22, 16%, 28%);
-  --accent-dim:     hsla(22, 20%, 10%, 0.08);
-  --accent-sel:     hsla(22, 20%, 10%, 0.12);
+  --accent-color: hsl(22,20%,18%);
+  --accent-hover: hsl(22,16%,28%);
+  --accent-dim:   hsla(22,20%,10%,0.08);
+  --accent-sel:   hsla(22,20%,10%,0.12);
 }
 
-/* ── Dark + Black book accent: monochrome book colors ── */
+/* Book accent black variants */
 :root[data-theme="dark"][data-book-accent="black"],
 :root[data-book-accent="black"]:not([data-theme="light"]):not([data-theme="sepia"]) {
-  --book-color: hsl(0, 0%, 80%);
-  --book-hover: hsl(0, 0%, 90%);
-  --book-dim:   hsla(0, 0%, 80%, 0.10);
+  --book-color: hsl(0,0%,80%); --book-hover: hsl(0,0%,90%); --book-dim: hsla(0,0%,80%,0.10);
 }
-
-/* ── Light + Black book accent: warm ink ── */
 :root[data-theme="light"][data-book-accent="black"] {
-  --book-color: hsl(350, 18%, 18%);
-  --book-hover: hsl(350, 14%, 28%);
-  --book-dim:   hsla(350, 18%, 10%, 0.08);
+  --book-color: hsl(220,10%,20%); --book-hover: hsl(220,8%,30%); --book-dim: hsla(220,10%,15%,0.08);
 }
-
-/* ── Sepia + Black book accent: espresso brown ── */
 :root[data-theme="sepia"][data-book-accent="black"] {
-  --book-color: hsl(22, 20%, 18%);
-  --book-hover: hsl(22, 16%, 28%);
-  --book-dim:   hsla(22, 20%, 10%, 0.08);
+  --book-color: hsl(22,20%,18%); --book-hover: hsl(22,16%,28%); --book-dim: hsla(22,20%,10%,0.08);
 }
 
-/* ── Glass Morphism Tokens (3-layer system) ── */
-:root, :root[data-theme="dark"] {
-  --glass-bg-1: rgba(255,255,255,0.03);
-  --glass-bg-2: rgba(255,255,255,0.05);
-  --glass-bg-3: rgba(255,255,255,0.07);
-  --glass-border: rgba(255,255,255,0.08);
-  --glass-highlight: inset 0 1px 0 rgba(255,255,255,0.05);
-  --glass-shadow: 0 8px 32px rgba(0,0,0,0.3);
-  --glass-blur-1: blur(12px);
-  --glass-blur-2: blur(20px);
-  --glass-blur-3: blur(24px);
-  --body-gradient: linear-gradient(135deg, #0a0a1a, #0d1025, #151030, #0a0a1a);
-  /* 배경 이미지 활성 시 사용 — 가독성 확보용 */
-  --bgi-panel: rgba(10,10,26,0.82);
-  --bgi-bar: rgba(10,10,26,0.75);
-  --bgi-popup: rgba(10,10,26,0.88);
-}
 
-:root[data-theme="light"] {
-  --glass-bg-1: rgba(255,255,255,0.45);
-  --glass-bg-2: rgba(255,255,255,0.55);
-  --glass-bg-3: rgba(255,255,255,0.65);
-  --glass-border: rgba(180,80,90,0.12);
-  --glass-highlight: inset 0 1px 0 rgba(255,255,255,0.5);
-  --glass-shadow: 0 8px 32px rgba(140,30,40,0.06);
-  --glass-blur-1: blur(12px);
-  --glass-blur-2: blur(20px);
-  --glass-blur-3: blur(24px);
-  --body-gradient: linear-gradient(135deg, #fff5f5, #ffe8e8, #fce0e0, #fff0f0);
-  --bgi-panel: rgba(255,245,245,0.85);
-  --bgi-bar: rgba(255,240,240,0.80);
-  --bgi-popup: rgba(255,245,245,0.90);
-}
-
-:root[data-theme="sepia"] {
-  --glass-bg-1: rgba(255,245,230,0.35);
-  --glass-bg-2: rgba(255,245,230,0.50);
-  --glass-bg-3: rgba(255,245,230,0.60);
-  --glass-border: rgba(120,80,30,0.12);
-  --glass-highlight: inset 0 1px 0 rgba(255,250,240,0.4);
-  --glass-shadow: 0 8px 32px rgba(80,50,15,0.08);
-  --glass-blur-1: blur(12px);
-  --glass-blur-2: blur(20px);
-  --glass-blur-3: blur(24px);
-  --body-gradient: linear-gradient(135deg, #f5ead6, #f0e0c4, #ebe0c0, #f5ead6);
-  --bgi-panel: rgba(245,234,214,0.85);
-  --bgi-bar: rgba(240,224,196,0.80);
-  --bgi-popup: rgba(245,234,214,0.90);
-}
-
-/* ── Design System Tokens ── */
+/* ═══════════════════════════════════════════════
+   DESIGN TOKENS
+═══════════════════════════════════════════════ */
 :root {
-  /* Spacing (4px base unit) */
-  --sp-1: 4px;
-  --sp-2: 8px;
-  --sp-3: 12px;
-  --sp-4: 16px;
-  --sp-6: 24px;
-  --sp-8: 32px;
-  --sp-12: 48px;
+  /* Spacing */
+  --sp-1: 4px;  --sp-2: 8px;  --sp-3: 12px;
+  --sp-4: 16px; --sp-6: 24px; --sp-8: 32px; --sp-12: 48px;
 
   /* Border Radius */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
 
   /* Shadows */
   --shadow-sm: 0 1px 3px var(--shadow-color);
@@ -277,101 +328,78 @@
   --anim-normal: 250ms ease;
   --anim-slow: 350ms ease;
 
-  /* Typography Scale */
-  --font-h1: 24px;
-  --font-h2: 20px;
-  --font-h3: 17px;
-  --font-body: 15px;
-  --font-caption: 13px;
-  --font-small: 11px;
+  /* Typography */
+  --font-h1: 24px; --font-h2: 20px; --font-h3: 17px;
+  --font-body: 15px; --font-caption: 13px; --font-small: 11px;
 
   /* Touch targets */
   --touch-min: 44px;
   --mouse-min: 32px;
 
-  /* Highlight Colors */
-  --hl-yellow: hsla(48, 100%, 50%, var(--hl-opacity));
-  --hl-green:  hsla(120, 60%, 50%, var(--hl-opacity));
-  --hl-blue:   hsla(210, 80%, 55%, var(--hl-opacity));
-  --hl-pink:   hsla(330, 80%, 55%, var(--hl-opacity));
-  --hl-purple: hsla(270, 70%, 55%, var(--hl-opacity));
-  --hl-orange: hsla(30, 90%, 50%, var(--hl-opacity));
+  /* Highlights */
+  --hl-yellow: hsla(48,100%,50%, var(--hl-opacity));
+  --hl-green:  hsla(120,60%,50%, var(--hl-opacity));
+  --hl-blue:   hsla(210,80%,55%, var(--hl-opacity));
+  --hl-pink:   hsla(330,80%,55%, var(--hl-opacity));
+  --hl-purple: hsla(270,70%,55%, var(--hl-opacity));
+  --hl-orange: hsla(30,90%,50%,  var(--hl-opacity));
 
-  /* Focus ring (accessibility) */
+  /* Focus ring */
   --focus-ring: 0 0 0 2px var(--bg-primary), 0 0 0 4px var(--accent-color);
 
-  /* ── Pane System (3-Pane 레이아웃) ── */
-  --pane-bg: var(--bg-surface);
-  --pane-radius: 0px;
-  --pane-margin: 0px;
-  --pane-shadow: none;
-  --pane-header-bg: var(--bg-secondary);
-  --pane-header-border: var(--glass-border);
-  --pane-tag-bg: var(--accent-dim);
-  --pane-tag-color: var(--accent-color);
+  /* 패널별 개별 변수 */
+  --bible-tabbar-bg: var(--pane-header-bg);
+  --bible-viewbar-bg: var(--pane-header-bg);
+  --pdf-header-bg: var(--pane-header-bg);
+  --notes-tabs-bg: var(--pane-header-bg);
 
-  /* ── Icon Rail (왼쪽 레일) ── */
-  --rail-width: 56px;
-  --rail-icon-size: 40px;
-  --rail-icon-bg: transparent;
-  --rail-icon-color: var(--text-muted);
-  --rail-icon-hover-bg: var(--glass-bg-2);
-  --rail-icon-active-bg: var(--accent-dim);
-  --rail-icon-active-color: var(--accent-color);
-
-  /* ── Right Menu (우측 드롭다운) ── */
-  --rmenu-width: 240px;
-  --rmenu-bg: var(--glass-bg-3);
-  --rmenu-border: var(--glass-border);
-  --rmenu-shadow: var(--glass-shadow);
-
-  /* ── Resize Handle ── */
-  --handle-width: 5px;
-  --handle-color: transparent;
-  --handle-hover-color: var(--accent-color);
-
-  /* ── 패널별 개별 변수 ── */
-  --bible-tabbar-bg: var(--bg-secondary);
-  --bible-viewbar-bg: var(--bg-secondary);
-  --pdf-header-bg: var(--bg-secondary);
-  --notes-tabs-bg: var(--bg-secondary);
+  /* 우측 메뉴 */
+  --rmenu-width: 260px;
+  --rmenu-bg: var(--slider-bg);
+  --rmenu-border: var(--slider-border);
+  --rmenu-shadow: var(--slider-shadow);
 }
 
-/* ── Focus Ring for Accessibility ── */
+/* Focus Ring */
 :focus-visible {
   outline: none;
   box-shadow: var(--focus-ring);
 }
 
-/* ── WCAG AA contrast helpers ── */
+/* WCAG AA contrast */
 [data-theme="light"] .accent-text { color: hsl(var(--accent-h), var(--accent-s), calc(var(--accent-l) - 8%)); }
 [data-theme="dark"]  .accent-text { color: hsl(var(--accent-h), var(--accent-s), calc(var(--accent-l) + 10%)); }
 [data-theme="sepia"] .accent-text { color: hsl(var(--accent-h), var(--accent-s), calc(var(--accent-l) - 5%)); }
 
-/* ── @supports fallback: backdrop-filter 미지원 시 불투명 배경 ── */
+/* backdrop-filter 미지원 시 fallback */
 @supports not (backdrop-filter: blur(1px)) {
   :root, :root[data-theme="dark"] {
+    --pane-bg: rgba(15,15,30,0.95);
+    --rail-bg: rgba(10,10,25,0.95);
+    --slider-bg: rgba(15,15,30,0.95);
     --glass-bg-1: var(--bg-secondary);
     --glass-bg-2: var(--bg-tertiary);
-    --glass-bg-3: var(--bg-tertiary);
   }
   :root[data-theme="light"] {
-    --glass-bg-1: hsla(0, 45%, 92%, 0.95);
-    --glass-bg-2: hsla(0, 40%, 90%, 0.95);
-    --glass-bg-3: hsla(0, 35%, 88%, 0.95);
+    --pane-bg: rgba(245,245,250,0.95);
+    --rail-bg: rgba(240,240,248,0.95);
+    --slider-bg: rgba(245,245,250,0.95);
   }
   :root[data-theme="sepia"] {
-    --glass-bg-1: hsla(34, 26%, 87%, 0.95);
-    --glass-bg-2: hsla(32, 20%, 83%, 0.95);
-    --glass-bg-3: hsla(32, 18%, 80%, 0.95);
+    --pane-bg: rgba(245,234,214,0.95);
+    --rail-bg: rgba(240,228,208,0.95);
+    --slider-bg: rgba(245,234,214,0.95);
   }
 }
 
-/* ── Mobile: reduce blur for performance ── */
+/* 모바일: 블러 성능 최적화 */
 @media (max-width: 600px) {
   :root {
     --glass-blur-1: blur(8px);
     --glass-blur-2: blur(12px);
     --glass-blur-3: blur(16px);
+    --pane-blur: blur(14px);
+    --pane-radius: 8px;
+    --pane-gap: 2px;
   }
 }

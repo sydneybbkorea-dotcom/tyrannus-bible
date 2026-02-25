@@ -33,81 +33,66 @@
 }
 
 :root[data-theme="light"] {
-  --red:      #b81c2c;   /* 딥 레드 — 로즈 배경 위 선명 */
-  --blue:     #2968b8;   /* 딥 코발트 — 차분한 청색 */
-  --green:    #1a7a42;   /* 포레스트 그린 — 자연스러운 녹색 */
-  --purple:   #6b3dab;   /* 리갈 퍼플 — 품위있는 보라 */
+  --red:      #d32f2f;
+  --blue:     #1976d2;
+  --green:    #2e7d32;
+  --purple:   #7b1fa2;
 }
 
 :root[data-theme="sepia"] {
-  --red:      #b84535;   /* 테라코타 레드 — 양피지 위 따뜻한 톤 */
-  --blue:     #3a6d9e;   /* 뮤트 블루 — 앰버와 조화 */
-  --green:    #2a6e48;   /* 웜 세이지 — 자연 녹색 */
-  --purple:   #6b4595;   /* 더스티 플럼 — 차분한 보라 */
+  --red:      #b84535;
+  --blue:     #3a6d9e;
+  --green:    #2a6e48;
+  --purple:   #6b4595;
 }
 
-/* Theme-specific overrides for component backgrounds (glass-aware) */
-[data-theme="light"] #biblePane { background: var(--bg-surface) }
-[data-theme="light"] #bibleScroll { background: var(--bg-surface) }
-[data-theme="light"] #rightPanel { background: var(--bg-surface) }
-[data-theme="light"] .pane-inner { background: var(--bg-surface) }
+/* ── 패널 배경 (Obsidian translucent — 불투명 대신 글래스) ── */
+[data-theme="light"] .pane-inner { background: var(--pane-bg) }
+[data-theme="sepia"] .pane-inner { background: var(--pane-bg) }
+
+[data-theme="light"] #biblePane { background: transparent }
+[data-theme="light"] #bibleScroll { background: transparent }
+[data-theme="light"] #rightPanel { background: transparent }
 [data-theme="light"] .ch-head h1 { color: var(--book-hover) }
 [data-theme="light"] .vnum { color: var(--book-color) }
 [data-theme="light"] .vrow:hover { background: hsla(var(--accent-h), 40%, 60%, 0.07); border-left-color: hsla(var(--accent-h), 50%, 45%, 0.3); box-shadow: none }
 [data-theme="light"] .vrow.vfocus { background: hsla(var(--accent-h), 45%, 55%, 0.12); border-left-color: var(--accent-color) }
-[data-theme="light"] .vrow.vsel { background: hsla(var(--accent-h), 55%, 55%, 0.22) !important; border-left-color: var(--accent-color) !important; box-shadow: inset 0 1px 0 0 hsla(var(--accent-h), 60%, 80%, 0.3), inset 0 -1px 0 0 hsla(var(--accent-h), 30%, 30%, 0.06), 0 1px 3px 0 hsla(var(--accent-h), 40%, 40%, 0.08) }
+[data-theme="light"] .vrow.vsel { background: hsla(var(--accent-h), 55%, 55%, 0.18) !important; border-left-color: var(--accent-color) !important; }
 
-/* Sepia overrides */
-[data-theme="sepia"] #biblePane { background: var(--bg-surface) }
-[data-theme="sepia"] #bibleScroll { background: var(--bg-surface) }
-[data-theme="sepia"] #rightPanel { background: var(--bg-surface) }
-[data-theme="sepia"] .pane-inner { background: var(--bg-surface) }
+[data-theme="sepia"] #biblePane { background: transparent }
+[data-theme="sepia"] #bibleScroll { background: transparent }
+[data-theme="sepia"] #rightPanel { background: transparent }
 [data-theme="sepia"] .ch-head h1 { color: var(--book-hover) }
 [data-theme="sepia"] .vnum { color: var(--book-color) }
-[data-theme="sepia"] .vrow:hover { background: var(--accent-sel); border-left-color: hsla(var(--accent-h), 40%, 45%, 0.35); box-shadow: inset 0 0 0 1px hsla(var(--accent-h), 40%, 45%, 0.15) }
-[data-theme="sepia"] .vrow.vfocus { background: var(--glass-bg-2); border-left-color: var(--accent-color) }
-[data-theme="sepia"] .vrow.vsel { background: hsla(var(--accent-h), 45%, 55%, 0.15) !important; border-left-color: var(--accent-color) !important; box-shadow: inset 0 1px 0 0 hsla(var(--accent-h), 50%, 70%, 0.22), inset 0 -1px 0 0 hsla(var(--accent-h), 30%, 30%, 0.06), 0 1px 3px 0 hsla(var(--accent-h), 35%, 40%, 0.06) }
+[data-theme="sepia"] .vrow:hover { background: var(--accent-sel); border-left-color: hsla(var(--accent-h), 40%, 45%, 0.35) }
+[data-theme="sepia"] .vrow.vfocus { background: rgba(255,245,230,0.3); border-left-color: var(--accent-color) }
+[data-theme="sepia"] .vrow.vsel { background: hsla(var(--accent-h), 45%, 55%, 0.15) !important; border-left-color: var(--accent-color) !important; }
 
 :root {
   --topbar-h:   0px;
   --hlbar-h:    36px;
-  --book-sw:    110px;   /* left book sidebar */
-  --note-sw:    220px;   /* note file explorer */
+  --book-sw:    110px;
+  --note-sw:    220px;
   --note-sw-collapsed: 0px;
 }
 
 /* ═══════════════════════════════════════════════
    CONTENT TEXT — Neutral colors for reading areas
-   Bible text, notes, commentary: NOT tinted by accent
 ═══════════════════════════════════════════════ */
 
-/* Bible verse text */
-.vtxt,
-.vtxt-en-only,
-.vtxt-en-side,
-.vtxt-en-below {
+.vtxt, .vtxt-en-only, .vtxt-en-side, .vtxt-en-below {
   color: var(--content-text);
 }
 
-/* Note editor content */
 #noteContent {
   color: var(--content-text);
 }
 
-/* Commentary content */
-.comm-sec-inner,
-.comm-sec-content,
-.comm-txt,
-.comm-hl-body,
-.comm-vmemo-body,
-.comm-ch-body,
-.comm-hl-quote {
+.comm-sec-inner, .comm-sec-content, .comm-txt,
+.comm-hl-body, .comm-vmemo-body, .comm-ch-body, .comm-hl-quote {
   color: var(--content-text);
 }
 
-/* Secondary content text (English sub-text, commentary footnotes) */
-.comm-sec-ref-note .comm-sec-inner,
-.comm-ch-vtxt,
-.ol-vtxt {
+.comm-sec-ref-note .comm-sec-inner, .comm-ch-vtxt, .ol-vtxt {
   color: var(--content-text-sub);
 }
