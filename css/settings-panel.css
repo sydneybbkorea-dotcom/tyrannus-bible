@@ -224,6 +224,25 @@
   opacity:0; cursor:pointer; border:none; padding:0;
 }
 
+/* ── Custom color button (커스텀 컬러 선택 버튼) ── */
+.stp-custom-btn {
+  display:inline-flex; align-items:center; justify-content:center;
+  width:22px; height:22px; border-radius:50%;
+  background:var(--glass-bg-2); border:2px solid var(--glass-border);
+  cursor:pointer; transition:all .15s; flex-shrink:0;
+  position:relative; overflow:hidden;
+  color:var(--text3);
+}
+.stp-custom-btn i { font-size:9px; pointer-events:none; z-index:1; position:relative }
+.stp-custom-btn:hover { transform:scale(1.15); border-color:var(--text3) }
+.stp-custom-btn.stp-custom-active {
+  border-color:var(--text); box-shadow:0 0 0 2px var(--bg), 0 0 0 4px currentColor;
+  background:currentColor;
+}
+.stp-custom-btn.stp-custom-active i { color:#fff; mix-blend-mode:difference }
+/* 배경 색상용 사각형 커스텀 버튼 */
+.stp-base-dots .stp-custom-btn { border-radius:4px }
+
 /* ── Background image preview ── */
 .stp-bg-preview {
   width:100%; height:60px; border-radius:6px;

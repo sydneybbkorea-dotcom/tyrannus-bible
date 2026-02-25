@@ -12,6 +12,8 @@ var ThemeSwitcher = (function(){
   var CONTENT_COLOR_KEY = 'kjb2-content-color';
   var RAIL_ACCENT_KEY = 'kjb2-rail-accent';
   var CUSTOM_RAIL_ACCENT_KEY = 'kjb2-rail-accent-custom';
+  var LAYOUT_COLOR_KEY = 'kjb2-layout-color';
+  var CUSTOM_LAYOUT_COLOR_KEY = 'kjb2-layout-color-custom';
   var THEMES  = ['light', 'dark', 'sepia'];
   var ACCENTS = ['blue', 'red', 'orange', 'yellow', 'cyan', 'purple', 'pink', 'black'];
   var BASES   = ['blue', 'red', 'orange', 'yellow', 'cyan', 'purple', 'pink', 'black'];
@@ -232,6 +234,60 @@ var ThemeSwitcher = (function(){
     if(typeof EventBus !== 'undefined') EventBus.emit('theme:changed', { railAccent: 'custom' });
   }
 
+  // ── Layout Color (레이아웃/패널 배경색) ──
+  function getLayoutColor(){ return localStorage.getItem(LAYOUT_COLOR_KEY) || ''; }
+  function getCustomLayoutColor(){ return localStorage.getItem(CUSTOM_LAYOUT_COLOR_KEY) || ''; }
+
+  function setLayoutColor(preset){
+    var root = document.documentElement;
+    if(!preset || preset === 'default'){
+      root.style.removeProperty('--layout-bg');
+      root.style.removeProperty('--layout-bg-header');
+      localStorage.removeItem(LAYOUT_COLOR_KEY);
+      localStorage.removeItem(CUSTOM_LAYOUT_COLOR_KEY);
+    } else if(ACCENTS.indexOf(preset) !== -1){
+      var hslMap = {
+        blue:{h:214,s:30,l:12}, red:{h:0,s:25,l:10}, orange:{h:30,s:25,l:10},
+        yellow:{h:46,s:25,l:10}, cyan:{h:179,s:25,l:10}, purple:{h:256,s:25,l:12},
+        pink:{h:330,s:20,l:10}, black:{h:0,s:0,l:6}
+      };
+      var c = hslMap[preset];
+      var theme = getTheme();
+      if(theme === 'light'){
+        root.style.setProperty('--layout-bg', 'hsla('+c.h+','+clamp(c.s+20,0,60)+'%,'+clamp(c.l+82,85,98)+'%,0.65)');
+        root.style.setProperty('--layout-bg-header', 'hsla('+c.h+','+clamp(c.s+15,0,50)+'%,'+clamp(c.l+78,80,95)+'%,0.50)');
+      } else if(theme === 'sepia'){
+        root.style.setProperty('--layout-bg', 'hsla('+c.h+','+clamp(c.s+10,0,40)+'%,'+clamp(c.l+78,80,95)+'%,0.60)');
+        root.style.setProperty('--layout-bg-header', 'hsla('+c.h+','+clamp(c.s+5,0,35)+'%,'+clamp(c.l+75,78,92)+'%,0.45)');
+      } else {
+        root.style.setProperty('--layout-bg', 'hsla('+c.h+','+c.s+'%,'+c.l+'%,0.65)');
+        root.style.setProperty('--layout-bg-header', 'hsla('+c.h+','+clamp(c.s-5,0,100)+'%,'+clamp(c.l+3,0,100)+'%,0.30)');
+      }
+      localStorage.setItem(LAYOUT_COLOR_KEY, preset);
+      localStorage.removeItem(CUSTOM_LAYOUT_COLOR_KEY);
+    }
+    if(typeof EventBus !== 'undefined') EventBus.emit('theme:changed', { layoutColor: preset });
+  }
+
+  function setCustomLayoutColor(hex){
+    var hsl = hexToHSL(hex);
+    var root = document.documentElement;
+    var theme = getTheme();
+    var h=hsl.h, s=hsl.s, l=hsl.l;
+    if(theme === 'light' || theme === 'sepia'){
+      var bl = clamp(l > 50 ? l : l + 70, 80, 96);
+      root.style.setProperty('--layout-bg', 'hsla('+h+','+clamp(s,5,50)+'%,'+bl+'%,0.65)');
+      root.style.setProperty('--layout-bg-header', 'hsla('+h+','+clamp(s,5,45)+'%,'+clamp(bl-4,75,94)+'%,0.50)');
+    } else {
+      var dl = clamp(l < 30 ? l : l - 30, 3, 25);
+      root.style.setProperty('--layout-bg', 'hsla('+h+','+clamp(s,5,40)+'%,'+dl+'%,0.65)');
+      root.style.setProperty('--layout-bg-header', 'hsla('+h+','+clamp(s-5,0,35)+'%,'+clamp(dl+3,5,30)+'%,0.30)');
+    }
+    localStorage.setItem(LAYOUT_COLOR_KEY, 'custom');
+    localStorage.setItem(CUSTOM_LAYOUT_COLOR_KEY, hex);
+    if(typeof EventBus !== 'undefined') EventBus.emit('theme:changed', { layoutColor: 'custom' });
+  }
+
   function cycleTheme(){
     var cur = getTheme();
     var idx = THEMES.indexOf(cur);
@@ -275,6 +331,10 @@ var ThemeSwitcher = (function(){
     var railAcc = getRailAccent();
     if(railAcc === 'custom') setCustomRailAccent(getCustomRailAccent());
     else if(railAcc) setRailAccent(railAcc);
+    // Layout color 초기화
+    var layoutC = getLayoutColor();
+    if(layoutC === 'custom') setCustomLayoutColor(getCustomLayoutColor());
+    else if(layoutC) setLayoutColor(layoutC);
   }
 
   return {
@@ -290,6 +350,8 @@ var ThemeSwitcher = (function(){
     setBookAccent: setBookAccent, setCustomBookAccent: setCustomBookAccent,
     getRailAccent: getRailAccent, getCustomRailAccent: getCustomRailAccent,
     setRailAccent: setRailAccent, setCustomRailAccent: setCustomRailAccent,
+    getLayoutColor: getLayoutColor, getCustomLayoutColor: getCustomLayoutColor,
+    setLayoutColor: setLayoutColor, setCustomLayoutColor: setCustomLayoutColor,
     cycleTheme: cycleTheme, init: init
   };
 })();

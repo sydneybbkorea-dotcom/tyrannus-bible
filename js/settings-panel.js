@@ -62,106 +62,88 @@ function renderSettingsPanel(){
     });
     h += '</div></div>';
 
-    var curAccent = (typeof ThemeSwitcher !== 'undefined') ? ThemeSwitcher.getAccent() : 'blue';
-    h += '<div class="stp-row">';
-    h += '<div class="stp-row-head"><i class="fa fa-eye-dropper"></i> <span data-i18n="settings.accent">' + t('settings.accent', '강조 색상') + '</span></div>';
-    h += '<div class="stp-accent-dots">';
+    // ── 공통 프리셋 컬러 배열 ──
     var accents = [
       { id:'black',  color:'#a0a0a0' }, { id:'blue',   color:'#086DDD' },
       { id:'red',    color:'#E93147' }, { id:'orange', color:'#ec7500' },
       { id:'yellow', color:'#e0ac00' }, { id:'cyan',   color:'#00bfbc' },
       { id:'purple', color:'#7852EE' }, { id:'pink',   color:'#D53984' }
     ];
-    accents.forEach(function(ac){
-      var active = curAccent === ac.id ? ' stp-dot-active' : '';
-      h += '<button class="stp-accent-dot' + active + '" style="background:' + ac.color + '"'
-         + ' onclick="_stpSetAccent(\'' + ac.id + '\')" title="' + ac.id + '"></button>';
-    });
-    var customAccHex = (typeof ThemeSwitcher !== 'undefined' && ThemeSwitcher.getCustomAccent) ? ThemeSwitcher.getCustomAccent() : '#086DDD';
-    var accPickActive = curAccent === 'custom' ? ' stp-dot-active' : '';
-    var accPickBg = curAccent === 'custom' ? customAccHex : 'conic-gradient(#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)';
-    h += '<label class="stp-accent-dot stp-dot-picker' + accPickActive + '" style="background:' + accPickBg + '" title="커스텀">';
-    h += '<input type="color" class="stp-pick-input" value="' + customAccHex + '"'
-       + ' oninput="_stpPickAccentLive(this.value)" onchange="_stpPickAccent(this.value)">';
-    h += '</label>';
-    h += '</div></div>';
 
-    // ── 레일 강조 색상 (독립) ──
+    // ── 헬퍼: 프리셋 dot + 커스텀 버튼 생성 ──
+    function _colorRow(opts){
+      var r = '<div class="' + (opts.dotClass || 'stp-accent-dots') + '">';
+      // "기본" 버튼 (선택적)
+      if(opts.hasDefault){
+        var da = opts.current === '' || !opts.current ? ' stp-dot-active' : '';
+        r += '<button class="stp-txtc-dot stp-txtc-default' + da + '"'
+           + ' onclick="' + opts.defaultFn + '" title="기본">A</button>';
+      }
+      // 프리셋 dot
+      (opts.presets || accents).forEach(function(p){
+        var a = opts.current === p.id ? ' stp-dot-active' : '';
+        var cls = opts.isDot === 'square' ? 'stp-base-dot' : 'stp-accent-dot';
+        r += '<button class="' + cls + a + '" style="background:' + p.color + '"'
+           + ' onclick="' + opts.setFn + '(\'' + p.id + '\')" title="' + p.id + '"></button>';
+      });
+      // 커스텀 버튼
+      var isCustom = opts.current === 'custom';
+      var cHex = opts.customHex || '#086DDD';
+      var cColor = isCustom ? ';color:' + cHex : '';
+      r += '<label class="stp-custom-btn' + (isCustom ? ' stp-custom-active' : '') + '" style="' + cColor + '">';
+      r += '<i class="fa fa-eyedropper"></i>';
+      r += '<input type="color" class="stp-pick-input" value="' + cHex + '"'
+         + ' oninput="' + opts.liveFn + '(this.value)" onchange="' + opts.changeFn + '(this.value)">';
+      r += '</label>';
+      r += '</div>';
+      return r;
+    }
+
+    // ━━ 강조 색상 ━━
+    var curAccent = (typeof ThemeSwitcher !== 'undefined') ? ThemeSwitcher.getAccent() : 'blue';
+    var customAccHex = (typeof ThemeSwitcher !== 'undefined' && ThemeSwitcher.getCustomAccent) ? ThemeSwitcher.getCustomAccent() : '#086DDD';
+    h += '<div class="stp-row">';
+    h += '<div class="stp-row-head"><i class="fa fa-eye-dropper"></i> <span data-i18n="settings.accent">' + t('settings.accent', '강조 색상') + '</span></div>';
+    h += _colorRow({ current:curAccent, customHex:customAccHex, setFn:'_stpSetAccent', liveFn:'_stpPickAccentLive', changeFn:'_stpPickAccent' });
+    h += '</div>';
+
+    // ━━ 레일 강조 색상 ━━
     var curRailAccent = (typeof ThemeSwitcher !== 'undefined' && ThemeSwitcher.getRailAccent) ? ThemeSwitcher.getRailAccent() : '';
+    var customRailHex = (typeof ThemeSwitcher !== 'undefined' && ThemeSwitcher.getCustomRailAccent) ? ThemeSwitcher.getCustomRailAccent() : '#086DDD';
     h += '<div class="stp-row">';
     h += '<div class="stp-row-head"><i class="fa fa-bars"></i> 레일 강조 색상</div>';
-    h += '<div class="stp-accent-dots">';
-    // "기본" 버튼 (앱 accent 따라감)
-    var railDefActive = !curRailAccent ? ' stp-dot-active' : '';
-    h += '<button class="stp-txtc-dot stp-txtc-default' + railDefActive + '"'
-       + ' onclick="_stpSetRailAccent(\'\')" title="기본 (앱 accent 따라감)">A</button>';
-    accents.forEach(function(ac){
-      var active = curRailAccent === ac.id ? ' stp-dot-active' : '';
-      h += '<button class="stp-accent-dot' + active + '" style="background:' + ac.color + '"'
-         + ' onclick="_stpSetRailAccent(\'' + ac.id + '\')" title="' + ac.id + '"></button>';
-    });
-    var customRailHex = (typeof ThemeSwitcher !== 'undefined' && ThemeSwitcher.getCustomRailAccent) ? ThemeSwitcher.getCustomRailAccent() : '#086DDD';
-    var railPickActive = curRailAccent === 'custom' ? ' stp-dot-active' : '';
-    var railPickBg = curRailAccent === 'custom' ? (customRailHex || '#086DDD') : 'conic-gradient(#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)';
-    h += '<label class="stp-accent-dot stp-dot-picker' + railPickActive + '" style="background:' + railPickBg + '" title="커스텀">';
-    h += '<input type="color" class="stp-pick-input" value="' + (customRailHex || '#086DDD') + '"'
-       + ' oninput="_stpPickRailAccentLive(this.value)" onchange="_stpPickRailAccent(this.value)">';
-    h += '</label>';
-    h += '</div></div>';
+    h += _colorRow({ current:curRailAccent, customHex:customRailHex||'#086DDD', hasDefault:true, defaultFn:"_stpSetRailAccent('')", setFn:'_stpSetRailAccent', liveFn:'_stpPickRailAccentLive', changeFn:'_stpPickRailAccent' });
+    h += '</div>';
 
-    // ── 성경 글씨 색상 (Book Accent) ──
+    // ━━ 성경 글씨 색상 ━━
     var curBookAccent = (typeof ThemeSwitcher !== 'undefined' && ThemeSwitcher.getBookAccent) ? ThemeSwitcher.getBookAccent() : 'custom';
+    var customBookHex = (typeof ThemeSwitcher !== 'undefined' && ThemeSwitcher.getCustomBookAccent) ? ThemeSwitcher.getCustomBookAccent() : '#bd8a00';
     h += '<div class="stp-row">';
     h += '<div class="stp-row-head"><i class="fa fa-book-bible"></i> 성경 글씨 색상</div>';
-    h += '<div class="stp-accent-dots">';
-    var bookAccents = [
-      { id:'black',  color:'#a0a0a0' }, { id:'blue',   color:'#086DDD' },
-      { id:'red',    color:'#E93147' }, { id:'orange', color:'#ec7500' },
-      { id:'yellow', color:'#e0ac00' }, { id:'cyan',   color:'#00bfbc' },
-      { id:'purple', color:'#7852EE' }, { id:'pink',   color:'#D53984' }
-    ];
-    bookAccents.forEach(function(ba){
-      var active = curBookAccent === ba.id ? ' stp-dot-active' : '';
-      h += '<button class="stp-accent-dot' + active + '" style="background:' + ba.color + '"'
-         + ' onclick="_stpSetBookAccent(\'' + ba.id + '\')" title="' + ba.id + '"></button>';
-    });
-    var customBookHex = (typeof ThemeSwitcher !== 'undefined' && ThemeSwitcher.getCustomBookAccent) ? ThemeSwitcher.getCustomBookAccent() : '#bd8a00';
-    var bookPickActive = curBookAccent === 'custom' ? ' stp-dot-active' : '';
-    var bookPickBg = curBookAccent === 'custom' ? customBookHex : 'conic-gradient(#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)';
-    h += '<label class="stp-accent-dot stp-dot-picker' + bookPickActive + '" style="background:' + bookPickBg + '" title="커스텀">';
-    h += '<input type="color" class="stp-pick-input" value="' + customBookHex + '"'
-       + ' oninput="_stpPickBookAccentLive(this.value)" onchange="_stpPickBookAccent(this.value)">';
-    h += '</label>';
-    h += '</div></div>';
+    h += _colorRow({ current:curBookAccent, customHex:customBookHex, setFn:'_stpSetBookAccent', liveFn:'_stpPickBookAccentLive', changeFn:'_stpPickBookAccent' });
+    h += '</div>';
 
+    // ━━ 배경 색상 ━━
     var curBase = (typeof ThemeSwitcher !== 'undefined' && ThemeSwitcher.getBase) ? ThemeSwitcher.getBase() : 'blue';
+    var customBaseHex = (typeof ThemeSwitcher !== 'undefined' && ThemeSwitcher.getCustomBase) ? ThemeSwitcher.getCustomBase() : '#086DDD';
     h += '<div class="stp-row">';
     h += '<div class="stp-row-head"><i class="fa fa-fill-drip"></i> <span data-i18n="settings.base">배경 색상</span></div>';
-    h += '<div class="stp-base-dots">';
-    var bases = [
-      { id:'black',  color:'#a0a0a0' }, { id:'blue',   color:'#086DDD' },
-      { id:'red',    color:'#E93147' }, { id:'orange', color:'#ec7500' },
-      { id:'yellow', color:'#e0ac00' }, { id:'cyan',   color:'#00bfbc' },
-      { id:'purple', color:'#7852EE' }, { id:'pink',   color:'#D53984' }
-    ];
-    bases.forEach(function(bs){
-      var active = curBase === bs.id ? ' stp-dot-active' : '';
-      h += '<button class="stp-base-dot' + active + '" style="background:' + bs.color + '"'
-         + ' onclick="_stpSetBase(\'' + bs.id + '\')" title="' + bs.id + '"></button>';
-    });
-    var customBaseHex = (typeof ThemeSwitcher !== 'undefined' && ThemeSwitcher.getCustomBase) ? ThemeSwitcher.getCustomBase() : '#086DDD';
-    var basePickActive = curBase === 'custom' ? ' stp-dot-active' : '';
-    var basePickBg = curBase === 'custom' ? customBaseHex : 'conic-gradient(#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)';
-    h += '<label class="stp-base-dot stp-dot-picker' + basePickActive + '" style="background:' + basePickBg + '" title="커스텀">';
-    h += '<input type="color" class="stp-pick-input" value="' + customBaseHex + '"'
-       + ' oninput="_stpPickBaseLive(this.value)" onchange="_stpPickBase(this.value)">';
-    h += '</label>';
-    h += '</div></div>';
+    h += _colorRow({ current:curBase, customHex:customBaseHex, isDot:'square', dotClass:'stp-base-dots', setFn:'_stpSetBase', liveFn:'_stpPickBaseLive', changeFn:'_stpPickBase' });
+    h += '</div>';
+
+    // ━━ 레이아웃 (패널) 색상 ━━
+    var curLayout = (typeof ThemeSwitcher !== 'undefined' && ThemeSwitcher.getLayoutColor) ? ThemeSwitcher.getLayoutColor() : '';
+    var customLayoutHex = (typeof ThemeSwitcher !== 'undefined' && ThemeSwitcher.getCustomLayoutColor) ? ThemeSwitcher.getCustomLayoutColor() : '#1a1a2e';
+    h += '<div class="stp-row">';
+    h += '<div class="stp-row-head"><i class="fa fa-columns"></i> 레이아웃 색상</div>';
+    h += _colorRow({ current:curLayout, customHex:customLayoutHex||'#1a1a2e', hasDefault:true, defaultFn:"_stpSetLayoutColor('')", isDot:'square', dotClass:'stp-base-dots', setFn:'_stpSetLayoutColor', liveFn:'_stpPickLayoutColorLive', changeFn:'_stpPickLayoutColor' });
+    h += '</div>';
 
     var curContentColor = (typeof ThemeSwitcher !== 'undefined' && ThemeSwitcher.getContentColor) ? ThemeSwitcher.getContentColor() : '';
     var isBookDefault = !curBookAccent || curBookAccent === 'custom';
     var isRailDefault = !curRailAccent;
-    var isColorDefault = curAccent === 'blue' && curBase === 'blue' && curTheme === 'dark' && !curContentColor && isBookDefault && isRailDefault;
+    var isLayoutDefault = !curLayout;
+    var isColorDefault = curAccent === 'blue' && curBase === 'blue' && curTheme === 'dark' && !curContentColor && isBookDefault && isRailDefault && isLayoutDefault;
     if(!isColorDefault){
       h += '<button class="stp-color-reset" onclick="_stpResetColors()">'
          + '<i class="fa fa-undo"></i> 색상 초기화</button>';
@@ -206,27 +188,27 @@ function renderSettingsPanel(){
     h += '<div class="stp-row-head"><i class="fa fa-pen-fancy"></i> 텍스트 색상</div>';
     h += '<div class="stp-accent-dots">';
     var textColors = [
-      { id:'', color:'', label:'기본' },
       { id:'#EDEDED', color:'#EDEDED' }, { id:'#D4D4D4', color:'#D4D4D4' },
       { id:'#BFBFBF', color:'#BFBFBF' }, { id:'#F5E6C8', color:'#F5E6C8' },
       { id:'#C8E6C9', color:'#C8E6C9' }, { id:'#BBDEFB', color:'#BBDEFB' },
       { id:'#F8BBD0', color:'#F8BBD0' }
     ];
+    // "기본" 버튼
+    var defActive = !curContentColor ? ' stp-dot-active' : '';
+    h += '<button class="stp-txtc-dot stp-txtc-default' + defActive + '"'
+       + ' onclick="_stpSetContentColor(\'\')" title="기본">A</button>';
+    // 프리셋 dot
     textColors.forEach(function(tc){
       var active = curContentColor === tc.id ? ' stp-dot-active' : '';
-      if(tc.id === ''){
-        var defActive = !curContentColor ? ' stp-dot-active' : '';
-        h += '<button class="stp-txtc-dot stp-txtc-default' + defActive + '"'
-           + ' onclick="_stpSetContentColor(\'\')" title="기본">A</button>';
-      } else {
-        h += '<button class="stp-txtc-dot' + active + '" style="background:' + tc.color + '"'
-           + ' onclick="_stpSetContentColor(\'' + tc.id + '\')" title="' + tc.id + '"></button>';
-      }
+      h += '<button class="stp-txtc-dot' + active + '" style="background:' + tc.color + '"'
+         + ' onclick="_stpSetContentColor(\'' + tc.id + '\')" title="' + tc.id + '"></button>';
     });
+    // 커스텀 버튼
     var txtPickHex = curContentColor || '#EDEDED';
-    var txtPickActive = curContentColor && textColors.every(function(tc){ return tc.id !== curContentColor; }) ? ' stp-dot-active' : '';
-    var txtPickBg = txtPickActive ? curContentColor : 'conic-gradient(#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)';
-    h += '<label class="stp-txtc-dot stp-dot-picker' + txtPickActive + '" style="background:' + txtPickBg + '" title="커스텀">';
+    var txtIsCustom = curContentColor && textColors.every(function(tc){ return tc.id !== curContentColor; });
+    var txtCColor = txtIsCustom ? ';color:' + curContentColor : '';
+    h += '<label class="stp-custom-btn' + (txtIsCustom ? ' stp-custom-active' : '') + '" style="' + txtCColor + '">';
+    h += '<i class="fa fa-eyedropper"></i>';
     h += '<input type="color" class="stp-pick-input" value="' + txtPickHex + '"'
        + ' oninput="_stpPickContentColorLive(this.value)" onchange="_stpPickContentColor(this.value)">';
     h += '</label>';
