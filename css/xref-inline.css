@@ -1,21 +1,102 @@
-/* xref-inline.css — 교차참조 인라인 미니 바 */
+/* xref-inline.css — 교차참조 CROSS REFERENCE 카드 */
 .xref-bar {
-  display:flex; align-items:center; gap:4px; flex-wrap:wrap;
-  padding:4px 8px 4px 30px; margin-bottom:2px;
-  background:var(--bg3); border-radius:0 0 var(--radius) var(--radius);
-  animation:xrefSlide .2s ease-out;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 14px 10px 30px;
+  margin: 4px 0 4px 20px;
+  background: var(--popup-bg, rgba(15,15,30,0.90));
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--pane-border, rgba(255,255,255,0.08));
+  border-radius: 10px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  animation: xrefSlide .25s ease-out;
+  max-width: 500px;
 }
-@keyframes xrefSlide { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:none} }
+@keyframes xrefSlide { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:none} }
+
 .xref-label {
-  font-size:10px; color:var(--text3); display:flex;
-  align-items:center; gap:3px; margin-right:2px;
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--accent-color);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
-.xref-label i { font-size:9px; }
+.xref-label i { font-size: 8px; }
+
+/* 참조 구절 카드 */
+.xref-card {
+  cursor: pointer;
+  transition: background 0.15s;
+  padding: 6px 8px;
+  border-radius: 6px;
+}
+.xref-card:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.xref-card-ref {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--accent-color);
+  margin-bottom: 3px;
+}
+
+.xref-card-text {
+  font-size: 12px;
+  font-style: italic;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* 구절 칩 (더보기) */
+.xref-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 2px;
+}
 .xref-chip {
-  font-size:10px; color:var(--blue); background:rgba(74,158,240,.08);
-  border:1px solid rgba(74,158,240,.2); border-radius:10px;
-  padding:1px 7px; cursor:pointer; transition:all .15s;
-  white-space:nowrap; font-family:'JetBrains Mono',monospace;
+  font-size: 10px;
+  color: var(--accent-color);
+  background: var(--accent-dim);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  padding: 2px 8px;
+  cursor: pointer;
+  transition: all .15s;
+  white-space: nowrap;
+  font-family: 'JetBrains Mono', monospace;
 }
-.xref-chip:hover { background:rgba(74,158,240,.18); border-color:rgba(74,158,240,.4); }
-.xref-more { font-size:9px; color:var(--text3); }
+.xref-chip:hover {
+  background: var(--accent-sel);
+  border-color: var(--accent-color);
+}
+
+.xref-more {
+  font-size: 9px;
+  color: var(--text-muted);
+  padding: 2px 6px;
+}
+
+/* 라이트 테마 */
+[data-theme="light"] .xref-bar {
+  background: var(--popup-bg, rgba(245,245,252,0.96));
+  border-color: var(--popup-border);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+}
+[data-theme="light"] .xref-card:hover {
+  background: rgba(0,0,0,0.03);
+}
+
+/* 세피아 테마 */
+[data-theme="sepia"] .xref-bar {
+  background: var(--popup-bg, rgba(245,234,214,0.96));
+  border-color: var(--popup-border);
+}
+[data-theme="sepia"] .xref-card:hover {
+  background: rgba(120,80,30,0.04);
+}

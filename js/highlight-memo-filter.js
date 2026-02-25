@@ -39,7 +39,8 @@ function memoNoteSearchKey(e){
   } else if(e.key==='Escape'){
     document.getElementById('memoNoteSearchPopup').style.display='none';
     document.removeEventListener('mousedown', _closeMemoNoteSearch);
-    document.getElementById('markMemoText')?.focus();
+    var eid = window._activeMemoEditorId || 'markMemoText';
+    (document.getElementById(eid) || document.getElementById('markMemoText'))?.focus();
   }
 }
 
@@ -49,7 +50,8 @@ function insertMemoNoteLink(noteId){
   document.removeEventListener('mousedown', _closeMemoNoteSearch);
   const note = S.notes.find(n=>n.id===noteId);
   if(!note) return;
-  const ta = document.getElementById('markMemoText');
+  var editorId = window._activeMemoEditorId || 'markMemoText';
+  const ta = document.getElementById(editorId) || document.getElementById('markMemoText');
   if(!ta) return;
   ta.focus();
   const sel = window.getSelection();

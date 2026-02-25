@@ -10,6 +10,8 @@ var ThemeSwitcher = (function(){
   var BOOK_ACCENT_KEY   = 'kjb2-book-accent';
   var CUSTOM_BOOK_ACCENT_KEY = 'kjb2-book-accent-custom';
   var CONTENT_COLOR_KEY = 'kjb2-content-color';
+  var RAIL_ACCENT_KEY = 'kjb2-rail-accent';
+  var CUSTOM_RAIL_ACCENT_KEY = 'kjb2-rail-accent-custom';
   var THEMES  = ['light', 'dark', 'sepia'];
   var ACCENTS = ['blue', 'red', 'orange', 'yellow', 'cyan', 'purple', 'pink', 'black'];
   var BASES   = ['blue', 'red', 'orange', 'yellow', 'cyan', 'purple', 'pink', 'black'];
@@ -192,6 +194,44 @@ var ThemeSwitcher = (function(){
     if(typeof EventBus !== 'undefined') EventBus.emit('theme:changed', { bookAccent: 'custom' });
   }
 
+  // ── Rail Accent (레일 독립 강조색) ──
+  function getRailAccent(){ return localStorage.getItem(RAIL_ACCENT_KEY) || ''; }
+  function getCustomRailAccent(){ return localStorage.getItem(CUSTOM_RAIL_ACCENT_KEY) || ''; }
+
+  function setRailAccent(preset){
+    var root = document.documentElement;
+    if(!preset || preset === 'default'){
+      // 기본: 앱 accent 따라감
+      root.style.removeProperty('--rail-accent');
+      root.style.removeProperty('--rail-accent-dim');
+      localStorage.removeItem(RAIL_ACCENT_KEY);
+      localStorage.removeItem(CUSTOM_RAIL_ACCENT_KEY);
+    } else if(ACCENTS.indexOf(preset) !== -1){
+      // 프리셋: HSL 계산해서 인라인 적용
+      var hslMap = {
+        blue:{h:214,s:92,l:50}, red:{h:0,s:85,l:50}, orange:{h:30,s:90,l:50},
+        yellow:{h:46,s:100,l:44}, cyan:{h:179,s:100,l:37}, purple:{h:256,s:83,l:63},
+        pink:{h:330,s:65,l:53}, black:{h:0,s:0,l:65}
+      };
+      var c = hslMap[preset];
+      root.style.setProperty('--rail-accent', 'hsl('+c.h+','+c.s+'%,'+c.l+'%)');
+      root.style.setProperty('--rail-accent-dim', 'hsla('+c.h+','+c.s+'%,'+c.l+'%,0.15)');
+      localStorage.setItem(RAIL_ACCENT_KEY, preset);
+      localStorage.removeItem(CUSTOM_RAIL_ACCENT_KEY);
+    }
+    if(typeof EventBus !== 'undefined') EventBus.emit('theme:changed', { railAccent: preset });
+  }
+
+  function setCustomRailAccent(hex){
+    var hsl = hexToHSL(hex);
+    var root = document.documentElement;
+    root.style.setProperty('--rail-accent', 'hsl('+hsl.h+','+hsl.s+'%,'+hsl.l+'%)');
+    root.style.setProperty('--rail-accent-dim', 'hsla('+hsl.h+','+hsl.s+'%,'+hsl.l+'%,0.15)');
+    localStorage.setItem(RAIL_ACCENT_KEY, 'custom');
+    localStorage.setItem(CUSTOM_RAIL_ACCENT_KEY, hex);
+    if(typeof EventBus !== 'undefined') EventBus.emit('theme:changed', { railAccent: 'custom' });
+  }
+
   function cycleTheme(){
     var cur = getTheme();
     var idx = THEMES.indexOf(cur);
@@ -231,6 +271,10 @@ var ThemeSwitcher = (function(){
 
     var cc = getContentColor();
     if(cc) setContentColor(cc);
+    // Rail accent 초기화
+    var railAcc = getRailAccent();
+    if(railAcc === 'custom') setCustomRailAccent(getCustomRailAccent());
+    else if(railAcc) setRailAccent(railAcc);
   }
 
   return {
@@ -244,6 +288,8 @@ var ThemeSwitcher = (function(){
     getContentColor: getContentColor, setContentColor: setContentColor, resetContentColor: resetContentColor,
     getBookAccent: getBookAccent, getCustomBookAccent: getCustomBookAccent,
     setBookAccent: setBookAccent, setCustomBookAccent: setCustomBookAccent,
+    getRailAccent: getRailAccent, getCustomRailAccent: getCustomRailAccent,
+    setRailAccent: setRailAccent, setCustomRailAccent: setCustomRailAccent,
     cycleTheme: cycleTheme, init: init
   };
 })();

@@ -1788,8 +1788,11 @@ function _tpShowResults(){
   var skipPct = totalChars > 0 ? (skipped / totalChars * 100).toFixed(1) : 0;
   var speedPct = Math.min(100, Math.round(cpm / 600 * 100));
 
-  // 점수 = 자모 기반 CPM (한컴타자연습 방식, 오타는 점수에 영향 없음)
-  var score = cpm;
+  // 점수 = CPM × (정확도/100)^2  — 오타율이 높으면 점수 급감
+  // 예: 300 CPM × 95% acc → 300×0.9025 = 270.7
+  // 예: 300 CPM × 50% acc → 300×0.25 = 75 (오타 남발 방지)
+  var accFactor = (accuracy / 100);
+  var score = Math.round(cpm * accFactor * accFactor);
   var scorePct = Math.min(100, Math.round(score / 900 * 100));
 
   // SVG ring
@@ -2486,6 +2489,11 @@ function _tpRenderBody(){
 function _tpSubmitScore(score, cpm, accuracy, verse){
   if(!_tp.nickname || _tp.nickname.length < 2){
     console.log('[Ranking] 닉네임 미입력, 스킵');
+    return;
+  }
+  // 오타율 방지: 정확도 70% 미만이면 랭킹 등록 차단
+  if(accuracy < 70){
+    console.log('[Ranking] 정확도 ' + accuracy + '% — 70% 미만 등록 차단');
     return;
   }
   if(!window._tpRanking){

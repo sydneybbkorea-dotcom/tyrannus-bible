@@ -103,6 +103,7 @@ var PaneManager = (function(){
   // ── 내부: DOM 반영 ──
   function _applyState(){
     var container = document.getElementById('paneContainer');
+    var visibleCount = _getVisibleCount();
 
     PANE_IDS.forEach(function(id){
       var pane = document.getElementById('pane-' + id);
@@ -118,11 +119,16 @@ var PaneManager = (function(){
         pane.removeAttribute('data-maximized');
       }
 
-      // 저장된 너비 복원 (최대화 아닐 때만)
-      if(vis && !_state.maximized && _state[id].width){
-        pane.style.flex = '0 0 ' + _state[id].width + 'px';
-      } else if(vis && !_state.maximized) {
-        pane.style.flex = '';  // CSS 기본값 (flex:1)
+      if(vis && !_state.maximized){
+        // 저장된 너비가 있고 3개 패널일 때만 고정 너비 사용
+        // 패널 수가 바뀌면 균등 배분 (flex:1)
+        if(_state[id].width && visibleCount >= 3){
+          pane.style.flex = '0 0 ' + _state[id].width + 'px';
+        } else {
+          pane.style.flex = '1 1 0%';  // 균등 배분
+        }
+      } else {
+        pane.style.flex = '';
       }
     });
 

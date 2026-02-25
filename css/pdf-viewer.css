@@ -90,13 +90,20 @@
   width: 18px; height: 18px;
   border-radius: 50%;
   cursor: pointer;
-  border: 2px solid transparent;
+  border: none;
   padding: 0;
   transition: transform .12s;
   flex-shrink: 0;
 }
+.pdf-tool-flyout-side .pdf-opt-color {
+  width: 15px; height: 15px;
+}
 .pdf-opt-color:hover { transform: scale(1.18); }
-.pdf-opt-color.active { border-color: var(--text, #e8e8e8); transform: scale(1.15); }
+.pdf-opt-color.active {
+  transform: scale(1.3);
+  border-color: transparent;
+  box-shadow: 0 0 0 1.5px var(--accent-color, #bd8a00);
+}
 .pdf-opt-label {
   font-size: 10px;
   color: var(--text3, #666);
@@ -908,151 +915,152 @@
   justify-content: center;
 }
 
-/* ── 세로 펜 플라이아웃 (draw 모드) ── */
-.pdf-pen-flyout {
-  position: fixed;
+/* ── 플로팅 세로 툴바 ── */
+.pdf-float-toolbar {
+  position: absolute;
+  top: 52px;
+  left: 8px;
+  z-index: 100;
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  padding: 4px 5px 6px;
-  background: var(--glass-bg-1, rgba(22,24,30,.92));
-  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  align-items: center;
+  gap: 2px;
+  padding: 4px;
+  background: var(--bg2, rgba(22,24,30,.97));
   border: 1px solid var(--glass-border, #2a2c34);
   border-radius: 10px;
-  box-shadow: 0 6px 20px rgba(0,0,0,.35);
-  z-index: 200;
-  width: 44px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.4);
+  width: 42px;
 }
-
-/* 드래그 핸들 */
-.pdf-pen-handle {
+.pdf-float-toolbar .pdf-tool-btn {
+  width: 34px; height: 32px;
+  min-width: unset;
+}
+.pdf-float-handle {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 14px;
+  width: 100%;
+  height: 12px;
   cursor: grab;
   border-radius: 6px 6px 0 0;
   flex-shrink: 0;
 }
-.pdf-pen-handle:active { cursor: grabbing; }
-.pdf-pen-handle-grip {
+.pdf-float-handle:active { cursor: grabbing; }
+.pdf-float-grip {
   display: block;
   width: 16px;
   height: 3px;
   border-radius: 2px;
   background: var(--text3, #555);
-  opacity: .5;
+  opacity: .45;
 }
-.pdf-pen-handle:hover .pdf-pen-handle-grip { opacity: .8; }
+.pdf-float-handle:hover .pdf-float-grip { opacity: .8; }
+.pdf-float-sep {
+  width: 24px;
+  height: 1px;
+  background: var(--border, #2a2c34);
+  margin: 2px 0;
+}
 
-.pdf-pen-section {
+/* ── 도구 버튼 래퍼 (플라이아웃 앵커) ── */
+.pdf-tool-wrap {
+  position: relative;
+  display: flex;
+  width: 100%;
+}
+.pdf-tool-wrap .pdf-tool-btn {
+  width: 100%;
+}
+
+/* ── 사이드 옵션 패널 (툴바 오른쪽에 분리) ── */
+.pdf-tool-flyout-side {
+  position: absolute;
+  left: calc(100% + 6px);
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 8px 8px;
+  min-width: 120px;
+  background: var(--bg2, rgba(22,24,30,.97));
+  border: 1px solid var(--glass-border, #2a2c34);
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.4);
+  z-index: 200;
+  animation: side-in .12s ease-out;
+}
+@keyframes side-in {
+  from { opacity: 0; transform: translateX(-6px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ── 슬라이더 (라벨+값 위, 슬라이더 아래) ── */
+.pdf-flyout-slider-section {
   display: flex;
   flex-direction: column;
   gap: 1px;
+}
+.pdf-flyout-slider-header {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
 }
-.pdf-pen-divider {
-  height: 1px;
-  background: var(--border, #2a2c34);
-  margin: 1px 0;
+.pdf-flyout-slider-header label {
+  font-size: 9px;
+  color: var(--text3, #666);
 }
-.pdf-pen-type-btn {
-  width: 32px; height: 28px;
-  border: none;
-  background: none;
+.pdf-flyout-val {
+  font-size: 9px;
+  color: var(--text3, #666);
+  font-family: 'JetBrains Mono', monospace;
+}
+.pdf-flyout-slider-section input[type="range"] {
+  width: 100%;
+  accent-color: var(--accent-color, #bd8a00);
+  cursor: pointer;
+  height: 14px;
+}
+
+/* ── 색상 (3열 그리드 — 항상 펼침) ── */
+.pdf-flyout-colors {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  justify-items: center;
+  padding: 2px 0;
+}
+
+/* ── 도형/펜 종류 (2열 그리드) ── */
+.pdf-flyout-shapes,
+.pdf-flyout-pen-types {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+}
+.pdf-flyout-shape-btn {
+  height: 26px;
+  border: none; background: none;
   color: var(--text-secondary, var(--text2));
   cursor: pointer;
   border-radius: 5px;
   display: flex; align-items: center; justify-content: center;
-  font-size: 12px;
+  font-size: 11px;
   transition: all .12s;
 }
-.pdf-pen-type-btn:hover {
+.pdf-flyout-shape-btn:hover {
   background: var(--bg-tertiary, var(--bg3));
   color: var(--text-primary, var(--text));
 }
-.pdf-pen-type-btn.active {
+.pdf-flyout-shape-btn.active {
   background: var(--accent-dim, rgba(189,138,0,.15));
   color: var(--accent-color, #bd8a00);
 }
 
-/* 색상 그리드 (2열) */
-.pdf-pen-color-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+/* ── 펜 종류 행 ── */
+.pdf-flyout-pen-types {
+  display: flex;
   gap: 2px;
-  justify-items: center;
-}
-.pdf-pen-color-dot {
-  width: 15px; height: 15px;
-  border-radius: 50%;
-  cursor: pointer;
-  border: 2px solid transparent;
-  padding: 0;
-  transition: transform .12s;
-}
-.pdf-pen-color-dot:hover { transform: scale(1.2); }
-.pdf-pen-color-dot.active { border-color: var(--text, #e8e8e8); }
-
-/* 확장/접기 버튼 */
-.pdf-pen-expand-btn {
-  width: 32px; height: 22px;
-  margin: 0 auto;
-  border: none;
-  background: none;
-  color: var(--text3, #666);
-  cursor: pointer;
-  border-radius: 4px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 10px;
-  transition: all .12s;
-}
-.pdf-pen-expand-btn:hover {
-  background: var(--bg-tertiary, var(--bg3));
-  color: var(--text, #e8e8e8);
-}
-
-/* 굵기 */
-.pdf-pen-width-btn {
-  width: 32px; height: 22px;
-  border: none;
-  background: none;
-  cursor: pointer;
-  border-radius: 4px;
-  display: flex; align-items: center; justify-content: center;
-  transition: all .12s;
-}
-.pdf-pen-width-btn:hover {
-  background: var(--bg-tertiary, var(--bg3));
-}
-.pdf-pen-width-btn.active {
-  background: var(--accent-dim, rgba(189,138,0,.15));
-}
-.pdf-pen-width-preview {
-  display: block;
-  width: 18px;
-  background: var(--text, #e8e8e8);
-  border-radius: 2px;
-  min-height: 1px;
-}
-.pdf-pen-width-btn.active .pdf-pen-width-preview {
-  background: var(--accent-color, #bd8a00);
-}
-
-/* 투명도 */
-.pdf-pen-opacity-section {
-  gap: 3px;
-}
-.pdf-pen-opacity-slider {
-  width: 32px;
-  accent-color: var(--accent-color, #bd8a00);
-  cursor: pointer;
-}
-.pdf-pen-opacity-label {
-  font-size: 8px;
-  color: var(--text3, #666);
-  text-align: center;
-  font-family: 'JetBrains Mono', monospace;
 }
 
 /* ── Responsive: Mobile fullscreen ── */
@@ -1066,4 +1074,13 @@
   .pdf-toolbar { padding: 4px 6px; }
   .pdf-page-info, .pdf-zoom-info { display: none; }
   .pdf-tool-group { padding: 1px 2px; }
+  .pdf-float-toolbar {
+    width: 36px;
+    padding: 3px;
+    gap: 1px;
+  }
+  .pdf-float-toolbar .pdf-tool-btn {
+    width: 30px; height: 28px;
+  }
+  .pdf-float-toolbar .pdf-tool-btn i { font-size: 11px; }
 }

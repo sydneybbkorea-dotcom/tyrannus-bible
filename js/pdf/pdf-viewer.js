@@ -136,39 +136,78 @@ var PDFViewer = (function(){
     if(!host) return;
 
     host.innerHTML =
+      // 상단 바: 페이지 네비 + 줌
       '<div class="pdf-toolbar" id="pdfToolbar">'
-      // Nav 그룹
       + '<div class="pdf-tool-group">'
       + '<button class="pdf-tool-btn" onclick="PDFViewer.prevPage()"><i class="fa fa-chevron-left"></i></button>'
       + '<span class="pdf-page-info" id="pdfPageInfo">1 / 1</span>'
       + '<button class="pdf-tool-btn" onclick="PDFViewer.nextPage()"><i class="fa fa-chevron-right"></i></button>'
       + '</div>'
-      // Zoom 그룹
       + '<div class="pdf-tool-group">'
       + '<button class="pdf-tool-btn" onclick="PDFViewer.zoomOut()"><i class="fa fa-search-minus"></i></button>'
       + '<span class="pdf-zoom-info" id="pdfZoomInfo">100%</span>'
       + '<button class="pdf-tool-btn" onclick="PDFViewer.zoomIn()"><i class="fa fa-search-plus"></i></button>'
       + '</div>'
-      // 도구 그룹
-      + '<div class="pdf-tool-group pdf-tool-group-primary">'
-      + '<button class="pdf-tool-btn" id="pdfToolSelect" onclick="PDFTools.setTool(\'select\')" title="선택"><i class="fa fa-mouse-pointer"></i></button>'
-      + '<button class="pdf-tool-btn" id="pdfToolHL" onclick="PDFTools.setTool(\'highlight\')" title="하이라이트"><i class="fa fa-highlighter"></i></button>'
-      + '<button class="pdf-tool-btn" id="pdfToolDraw" onclick="PDFTools.setTool(\'draw\')" title="그리기"><i class="fa fa-pen-fancy"></i></button>'
-      + '<button class="pdf-tool-btn" id="pdfToolText" onclick="PDFTools.setTool(\'text\')" title="텍스트"><i class="fa fa-font"></i></button>'
-      + '<button class="pdf-tool-btn" id="pdfToolMemo" onclick="PDFTools.setTool(\'memo\')" title="메모"><i class="fa fa-sticky-note"></i></button>'
-      + '<button class="pdf-tool-btn" id="pdfToolEraser" onclick="PDFTools.setTool(\'eraser\')" title="펜 지우기"><i class="fa fa-eraser"></i></button>'
       + '</div>'
-      // 이력 그룹
-      + '<div class="pdf-tool-group">'
+      // 플로팅 세로 툴바
+      + '<div class="pdf-float-toolbar" id="pdfFloatToolbar">'
+      + '<div class="pdf-float-handle" id="pdfFloatHandle"><span class="pdf-float-grip"></span></div>'
+      + '<button class="pdf-tool-btn" id="pdfToolSelect" onclick="PDFTools.setTool(\'select\')" title="선택"><i class="fa fa-mouse-pointer"></i></button>'
+      + '<div class="pdf-tool-wrap"><button class="pdf-tool-btn" id="pdfToolHL" onclick="PDFTools.setTool(\'highlight\')" title="형광펜"><i class="fa fa-highlighter"></i></button></div>'
+      + '<div class="pdf-tool-wrap"><button class="pdf-tool-btn" id="pdfToolDraw" onclick="PDFTools.setTool(\'draw\')" title="펜"><i class="fa fa-pen-fancy"></i></button></div>'
+      + '<div class="pdf-tool-wrap"><button class="pdf-tool-btn" id="pdfToolStraight" onclick="PDFTools.setTool(\'straightLine\')" title="직선"><i class="fa fa-ruler-horizontal"></i></button></div>'
+      + '<div class="pdf-tool-wrap"><button class="pdf-tool-btn" id="pdfToolText" onclick="PDFTools.setTool(\'text\')" title="텍스트"><i class="fa fa-font"></i></button></div>'
+      + '<div class="pdf-tool-wrap"><button class="pdf-tool-btn" id="pdfToolShape" onclick="PDFTools.setTool(\'shape\')" title="도형"><i class="fa fa-shapes"></i></button></div>'
+      + '<button class="pdf-tool-btn" id="pdfToolEraser" onclick="PDFTools.setTool(\'eraser\')" title="지우개"><i class="fa fa-eraser"></i></button>'
+      + '<div class="pdf-float-sep"></div>'
       + '<button class="pdf-tool-btn" onclick="PDFTools.undo()" title="실행 취소"><i class="fa fa-rotate-left"></i></button>'
       + '<button class="pdf-tool-btn" onclick="PDFTools.redo()" title="다시 실행"><i class="fa fa-rotate-right"></i></button>'
       + '</div>'
-      + '</div>'
-      + '<div class="pdf-tool-options" id="pdfToolOptions"></div>'
       + '<div class="pdf-viewport" id="pdfViewerContainer"></div>';
 
     _container = document.getElementById('pdfViewerContainer');
     _initPanDrag();
+    _initFloatToolbarDrag();
+  }
+
+  // ── Floating Toolbar Drag ──
+  function _initFloatToolbarDrag(){
+    var toolbar = document.getElementById('pdfFloatToolbar');
+    var handle = document.getElementById('pdfFloatHandle');
+    if(!toolbar || !handle) return;
+
+    var drag = { active: false, sx: 0, sy: 0, ox: 0, oy: 0 };
+
+    handle.addEventListener('pointerdown', function(e){
+      e.stopPropagation();
+      e.preventDefault();
+      drag.active = true;
+      drag.sx = e.clientX; drag.sy = e.clientY;
+      drag.ox = toolbar.offsetLeft; drag.oy = toolbar.offsetTop;
+      handle.style.cursor = 'grabbing';
+      try { handle.setPointerCapture(e.pointerId); } catch(err){}
+    });
+    handle.addEventListener('pointermove', function(e){
+      if(!drag.active) return;
+      toolbar.style.left = (drag.ox + (e.clientX - drag.sx)) + 'px';
+      toolbar.style.top  = (drag.oy + (e.clientY - drag.sy)) + 'px';
+    });
+    var endDrag = function(e){
+      if(!drag.active) return;
+      drag.active = false;
+      handle.style.cursor = '';
+      try { handle.releasePointerCapture(e.pointerId); } catch(err){}
+      // 화면 밖 보정
+      var host = toolbar.parentElement;
+      if(!host) return;
+      var hRect = host.getBoundingClientRect();
+      var tRect = toolbar.getBoundingClientRect();
+      if(tRect.left < hRect.left + 2) toolbar.style.left = '2px';
+      if(tRect.top < 2) toolbar.style.top = '2px';
+      if(tRect.right > hRect.right - 2) toolbar.style.left = (hRect.width - tRect.width - 2) + 'px';
+      if(tRect.bottom > hRect.bottom - 2) toolbar.style.top = Math.max(2, hRect.height - tRect.height - 2) + 'px';
+    };
+    handle.addEventListener('pointerup', endDrag);
   }
 
   // ── Pan/Drag (scroll by mouse drag when zoomed) ──

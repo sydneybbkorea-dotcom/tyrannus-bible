@@ -3,15 +3,15 @@
 ═══════════════════════════════════════════════ */
 #ctxMenu {
   position:fixed !important;
-  background:var(--glass-bg-3);
-  backdrop-filter:var(--glass-blur-3); -webkit-backdrop-filter:var(--glass-blur-3);
-  border:1px solid var(--glass-border);
-  border-radius:8px;
-  box-shadow:var(--glass-shadow);
-  padding:4px;
+  background:var(--popup-bg, rgba(15,15,30,0.94));
+  backdrop-filter:blur(24px); -webkit-backdrop-filter:blur(24px);
+  border:1px solid var(--pane-border, rgba(255,255,255,0.08));
+  border-radius:10px;
+  box-shadow:0 12px 40px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.2);
+  padding:5px;
   z-index:99999 !important;
   display:none !important;
-  min-width:180px;
+  min-width:200px;
   animation:cmin .1s ease;
   pointer-events:auto !important;
 }

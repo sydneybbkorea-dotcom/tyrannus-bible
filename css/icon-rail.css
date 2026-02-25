@@ -9,15 +9,21 @@
   backdrop-filter: var(--rail-blur);
   -webkit-backdrop-filter: var(--rail-blur);
   border-right: 1px solid var(--rail-border);
+  /* 3D 입체감 */
+  box-shadow: 2px 0 20px rgba(0,0,0,0.25),
+              inset -1px 0 0 rgba(255,255,255,0.04);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 8px 0;
+  padding: 0 0 8px 0;
   z-index: 100;
   transition: width 0.3s cubic-bezier(0.4,0,0.2,1),
               opacity 0.3s ease,
               transform 0.3s cubic-bezier(0.4,0,0.2,1);
   overflow: hidden;
+  /* 레일은 paneContainer 패딩과 무관하게 전체 높이 차지 */
+  margin: 0;
+  border-radius: 0;
 }
 
 .rail-top, .rail-bottom {
@@ -50,8 +56,8 @@
 }
 
 .rail-icon.active {
-  color: var(--accent-color);
-  background: var(--accent-dim);
+  color: var(--rail-accent, var(--accent-color));
+  background: var(--rail-accent-dim, var(--accent-dim));
 }
 
 .rail-icon.active::before {
@@ -61,9 +67,9 @@
   top: 8px;
   bottom: 8px;
   width: 3px;
-  background: var(--accent-color);
+  background: var(--rail-accent, var(--accent-color));
   border-radius: 0 3px 3px 0;
-  box-shadow: 0 0 8px var(--accent-color);
+  box-shadow: 0 0 8px var(--rail-accent, var(--accent-color));
 }
 
 /* 툴팁 */
@@ -86,6 +92,37 @@
 }
 .rail-icon:hover .rail-label { display: block; }
 
+/* ── 햄버거 메뉴 버튼 (레일 맨 위) ── */
+.rail-hamburger {
+  width: 100%;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 17px;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.rail-hamburger:hover {
+  background: rgba(255,255,255,0.06);
+  color: var(--text-primary);
+}
+.rail-hamburger.open {
+  color: var(--rail-accent, var(--accent-color));
+  background: var(--rail-accent-dim, var(--accent-dim));
+}
+[data-theme="light"] .rail-hamburger:hover {
+  background: rgba(0,0,0,0.05);
+}
+[data-theme="sepia"] .rail-hamburger:hover {
+  background: rgba(120,80,30,0.06);
+}
+
 /* ── 구분선 ── */
 .rail-divider {
   width: 28px;
@@ -103,8 +140,8 @@
   font-size: 14px !important;
 }
 .rail-pane-toggle.active {
-  background: var(--accent-dim) !important;
-  color: var(--accent-color) !important;
+  background: var(--rail-accent-dim, var(--accent-dim)) !important;
+  color: var(--rail-accent, var(--accent-color)) !important;
 }
 .rail-pane-toggle.active::before {
   display: none;
@@ -126,7 +163,7 @@
   width: 32px;
   height: 32px;
   border-radius: 50%;
-  border: 2px solid var(--accent-color);
+  border: 2px solid var(--rail-accent, var(--accent-color));
   object-fit: cover;
   cursor: default;
 }
@@ -161,12 +198,12 @@
   color: var(--text-primary);
 }
 [data-theme="light"] .rail-icon.active {
-  color: var(--accent-color);
-  background: var(--accent-dim);
+  color: var(--rail-accent, var(--accent-color));
+  background: var(--rail-accent-dim, var(--accent-dim));
 }
 [data-theme="light"] .rail-icon.active::before {
-  background: var(--accent-color);
-  box-shadow: 0 0 8px var(--accent-color);
+  background: var(--rail-accent, var(--accent-color));
+  box-shadow: 0 0 8px var(--rail-accent, var(--accent-color));
 }
 [data-theme="light"] .rail-logout:hover {
   background: rgba(211,47,47,0.08);
@@ -178,8 +215,8 @@
   color: var(--text-primary);
 }
 [data-theme="sepia"] .rail-icon.active {
-  color: var(--accent-color);
-  background: var(--accent-dim);
+  color: var(--rail-accent, var(--accent-color));
+  background: var(--rail-accent-dim, var(--accent-dim));
 }
 
 /* ── 오른쪽 상단 고정 사이드바 토글 버튼 ── */

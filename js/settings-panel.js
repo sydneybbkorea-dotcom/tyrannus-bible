@@ -86,6 +86,29 @@ function renderSettingsPanel(){
     h += '</label>';
     h += '</div></div>';
 
+    // ── 레일 강조 색상 (독립) ──
+    var curRailAccent = (typeof ThemeSwitcher !== 'undefined' && ThemeSwitcher.getRailAccent) ? ThemeSwitcher.getRailAccent() : '';
+    h += '<div class="stp-row">';
+    h += '<div class="stp-row-head"><i class="fa fa-bars"></i> 레일 강조 색상</div>';
+    h += '<div class="stp-accent-dots">';
+    // "기본" 버튼 (앱 accent 따라감)
+    var railDefActive = !curRailAccent ? ' stp-dot-active' : '';
+    h += '<button class="stp-txtc-dot stp-txtc-default' + railDefActive + '"'
+       + ' onclick="_stpSetRailAccent(\'\')" title="기본 (앱 accent 따라감)">A</button>';
+    accents.forEach(function(ac){
+      var active = curRailAccent === ac.id ? ' stp-dot-active' : '';
+      h += '<button class="stp-accent-dot' + active + '" style="background:' + ac.color + '"'
+         + ' onclick="_stpSetRailAccent(\'' + ac.id + '\')" title="' + ac.id + '"></button>';
+    });
+    var customRailHex = (typeof ThemeSwitcher !== 'undefined' && ThemeSwitcher.getCustomRailAccent) ? ThemeSwitcher.getCustomRailAccent() : '#086DDD';
+    var railPickActive = curRailAccent === 'custom' ? ' stp-dot-active' : '';
+    var railPickBg = curRailAccent === 'custom' ? (customRailHex || '#086DDD') : 'conic-gradient(#f00,#ff0,#0f0,#0ff,#00f,#f0f,#f00)';
+    h += '<label class="stp-accent-dot stp-dot-picker' + railPickActive + '" style="background:' + railPickBg + '" title="커스텀">';
+    h += '<input type="color" class="stp-pick-input" value="' + (customRailHex || '#086DDD') + '"'
+       + ' oninput="_stpPickRailAccentLive(this.value)" onchange="_stpPickRailAccent(this.value)">';
+    h += '</label>';
+    h += '</div></div>';
+
     // ── 성경 글씨 색상 (Book Accent) ──
     var curBookAccent = (typeof ThemeSwitcher !== 'undefined' && ThemeSwitcher.getBookAccent) ? ThemeSwitcher.getBookAccent() : 'custom';
     h += '<div class="stp-row">';
@@ -137,7 +160,8 @@ function renderSettingsPanel(){
 
     var curContentColor = (typeof ThemeSwitcher !== 'undefined' && ThemeSwitcher.getContentColor) ? ThemeSwitcher.getContentColor() : '';
     var isBookDefault = !curBookAccent || curBookAccent === 'custom';
-    var isColorDefault = curAccent === 'blue' && curBase === 'blue' && curTheme === 'dark' && !curContentColor && isBookDefault;
+    var isRailDefault = !curRailAccent;
+    var isColorDefault = curAccent === 'blue' && curBase === 'blue' && curTheme === 'dark' && !curContentColor && isBookDefault && isRailDefault;
     if(!isColorDefault){
       h += '<button class="stp-color-reset" onclick="_stpResetColors()">'
          + '<i class="fa fa-undo"></i> 색상 초기화</button>';

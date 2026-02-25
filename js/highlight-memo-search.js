@@ -18,7 +18,9 @@ function showMemoNoteSearch(){
       <div id="memoNoteSearchList" style="max-height:200px;overflow-y:auto"></div>`;
     document.body.appendChild(popup);
   }
-  const memoPop = document.getElementById('markMemoPopup');
+  // 활성 메모 팝업 기준으로 위치 설정 (verseMemoPopup 또는 markMemoPopup)
+  var popupId = window._activeMemoPopupId || 'markMemoPopup';
+  var memoPop = document.getElementById(popupId) || document.getElementById('markMemoPopup');
   if(memoPop){
     const r = memoPop.getBoundingClientRect();
     popup.style.left = (r.left + 20) + 'px';

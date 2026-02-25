@@ -71,12 +71,7 @@
 <select id="chSel" style="display:none" onchange="onChChange()"></select>
 <input type="hidden" id="qsInput">
 
-<!-- ═══ 독립 고정 버튼 (appShell 외부) ═══ -->
-<!-- 왼쪽 상단: 오른쪽 슬라이더 메뉴 트리거 -->
-<button class="rmenu-trigger" id="rmenuTrigger" onclick="RMenu.toggle()" title="메뉴">
-  <i class="fa fa-bars"></i>
-</button>
-<!-- 오른쪽 상단: 왼쪽 사이드바(아이콘 레일) 토글 -->
+<!-- 오른쪽 상단: 왼쪽 사이드바(아이콘 레일) 토글 (독립 고정) -->
 <button class="rail-toggle-fixed" id="railToggleBtn" onclick="_toggleIconRail()" title="사이드바 열기/닫기">
   <i class="fa fa-columns" id="railToggleIcon"></i>
 </button>
@@ -92,6 +87,10 @@
 
   <!-- ── 아이콘 레일 (최상위, #bibleBody에서 이동) ── -->
   <div id="iconRail">
+    <!-- 햄버거 메뉴 버튼 (레일 맨 위) -->
+    <button class="rail-hamburger" id="rmenuTrigger" onclick="RMenu.toggle()" title="메뉴">
+      <i class="fa fa-bars"></i>
+    </button>
     <div class="rail-top">
       <!-- 패널 토글 섹션 -->
       <button class="rail-icon rail-pane-toggle" data-pane="bible" onclick="PaneManager.toggle('bible')" title="성경 패널">

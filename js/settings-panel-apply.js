@@ -68,6 +68,19 @@ function _stpPickBookAccent(hex){
   renderSettingsPanel();
 }
 
+// 레일 독립 강조 색상
+function _stpSetRailAccent(preset){
+  if(typeof ThemeSwitcher !== 'undefined' && ThemeSwitcher.setRailAccent) ThemeSwitcher.setRailAccent(preset);
+  renderSettingsPanel();
+}
+function _stpPickRailAccentLive(hex){
+  if(typeof ThemeSwitcher !== 'undefined' && ThemeSwitcher.setCustomRailAccent) ThemeSwitcher.setCustomRailAccent(hex);
+}
+function _stpPickRailAccent(hex){
+  _stpPickRailAccentLive(hex);
+  renderSettingsPanel();
+}
+
 // 본문 텍스트 색상
 function _stpSetContentColor(hex){
   if(typeof ThemeSwitcher !== 'undefined' && ThemeSwitcher.setContentColor) ThemeSwitcher.setContentColor(hex);
@@ -96,6 +109,7 @@ function _stpResetColors(){
     ThemeSwitcher.setAccent('red');
     if(ThemeSwitcher.setBase) ThemeSwitcher.setBase('red');
     if(ThemeSwitcher.setBookAccent) ThemeSwitcher.setBookAccent('red');
+    if(ThemeSwitcher.setRailAccent) ThemeSwitcher.setRailAccent('');
     if(ThemeSwitcher.resetContentColor) ThemeSwitcher.resetContentColor();
   }
   renderSettingsPanel();

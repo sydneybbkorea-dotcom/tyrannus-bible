@@ -1,19 +1,37 @@
 /* side-panel.css — 확장 사이드패널 (appShell 레벨) */
 #sidePanel {
-  width:0; overflow:hidden; flex-shrink:0;
-  background:var(--slider-bg, rgba(0,0,0,0.72));
-  backdrop-filter:var(--slider-blur, blur(24px));
-  -webkit-backdrop-filter:var(--slider-blur, blur(24px));
-  border-right:1px solid var(--slider-border, rgba(255,255,255,0.08));
-  box-shadow:var(--slider-shadow);
-  display:flex; flex-direction:column;
-  transition:width .3s cubic-bezier(.4,0,.2,1);
-  position:relative; z-index:150;
+  width: 0;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--slider-bg, rgba(0,0,0,0.72));
+  backdrop-filter: var(--slider-blur, blur(24px));
+  -webkit-backdrop-filter: var(--slider-blur, blur(24px));
+  border-right: 1px solid var(--slider-border, rgba(255,255,255,0.08));
+  box-shadow: var(--slider-shadow);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s cubic-bezier(.4,0,.2,1),
+              width 0s linear 0.3s;
+  /* 항상 오버레이 — 메인 레이아웃 안 밀림 */
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--rail-width, 56px);
+  z-index: 150;
+  transform: translateX(-100%);
 }
-/* 기본: 오버레이 (paneContainer 위에 겹침) */
-#sidePanel.open { width:260px; overflow:visible; margin-right:-260px; }
-/* 핀 고정: paneContainer를 밀어냄 */
-#sidePanel.open.sp-pinned { margin-right:0; }
+/* 열림: 슬라이드인 오버레이 */
+#sidePanel.open {
+  width: 270px;
+  overflow: visible;
+  transform: translateX(0);
+  transition: transform 0.3s cubic-bezier(.4,0,.2,1),
+              width 0s linear 0s;
+}
+/* 핀 고정도 오버레이 유지 (레이아웃 안 밀림) */
+#sidePanel.open.sp-pinned {
+  transform: translateX(0);
+}
 .sp-section { display:none; flex-direction:column; flex:1; overflow:hidden; min-width:260px; }
 .sp-section.active { display:flex; }
 .sp-head {

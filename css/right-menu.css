@@ -3,41 +3,8 @@
    오른쪽에서 슬라이드인되는 유리 패널 메뉴
 ═══════════════════════════════════════════════ */
 
-/* ── 메뉴 트리거 버튼 (왼쪽 상단에 독립 배치) ── */
-.rmenu-trigger {
-  width: 34px;
-  height: 34px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background: var(--pane-bg, rgba(0,0,0,0.65));
-  backdrop-filter: var(--pane-blur, blur(20px));
-  -webkit-backdrop-filter: var(--pane-blur, blur(20px));
-  color: var(--text-muted);
-  font-size: 15px;
-  cursor: pointer;
-  border-radius: 10px;
-  border: 1px solid var(--pane-border, rgba(255,255,255,0.08));
-  box-shadow: 0 2px 12px rgba(0,0,0,0.2);
-  transition: all 0.2s;
-  position: fixed;
-  top: 8px;
-  left: 8px;
-  z-index: 1001;
-}
-
-.rmenu-trigger:hover {
-  background: rgba(255,255,255,0.12);
-  color: var(--text-primary);
-  transform: scale(1.05);
-}
-
-.rmenu-trigger.open {
-  color: var(--accent-color);
-  background: var(--accent-dim);
-  border-color: var(--accent-color);
-}
+/* ── 메뉴 트리거 (레일 햄버거 버튼에서 호출됨) ── */
+/* .rmenu-trigger 는 이제 .rail-hamburger로 대체 */
 
 /* ── 슬라이더 패널 (오른쪽에서 슬라이드인) ── */
 .rmenu-dropdown {
@@ -216,14 +183,6 @@
 }
 
 /* ── 라이트 테마 ── */
-[data-theme="light"] .rmenu-trigger {
-  background: var(--pane-bg);
-  border-color: var(--pane-border);
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-}
-[data-theme="light"] .rmenu-trigger:hover {
-  background: rgba(0,0,0,0.05);
-}
 [data-theme="light"] .rmenu-dropdown {
   background: var(--slider-bg);
   border-left-color: var(--slider-border);
@@ -242,10 +201,6 @@
 }
 
 /* ── 세피아 테마 ── */
-[data-theme="sepia"] .rmenu-trigger {
-  background: var(--pane-bg);
-  border-color: var(--pane-border);
-}
 [data-theme="sepia"] .rmenu-dropdown {
   background: var(--slider-bg);
   border-left-color: var(--slider-border);
