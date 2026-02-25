@@ -331,12 +331,12 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
   font-family:'KoPubWorld Batang','Noto Serif KR',serif;
   font-weight: 700;
 }
-/* ── 구절 행 배경 하이라이트 ── */
-.vrow.hl-row-y { background:rgba(255,214,0,.22) !important }
-.vrow.hl-row-o { background:rgba(255,152,56,.20) !important }
-.vrow.hl-row-g { background:rgba(34,224,160,.18) !important }
-.vrow.hl-row-b { background:rgba(80,170,255,.20) !important }
-.vrow.hl-row-p { background:rgba(200,140,255,.20) !important }
+/* ── 구절 행 배경 하이라이트 — 글래스 + 좌측 테두리 ── */
+.vrow.hl-row-y { background:rgba(255,214,0,.08) !important; border-left:2px solid rgba(255,214,0,.50) }
+.vrow.hl-row-o { background:rgba(255,152,56,.08) !important; border-left:2px solid rgba(255,152,56,.48) }
+.vrow.hl-row-g { background:rgba(34,224,160,.06) !important; border-left:2px solid rgba(34,224,160,.45) }
+.vrow.hl-row-b { background:rgba(80,170,255,.08) !important; border-left:2px solid rgba(80,170,255,.48) }
+.vrow.hl-row-p { background:rgba(200,140,255,.08) !important; border-left:2px solid rgba(200,140,255,.45) }
 .vrow.hl-row-y:hover,.vrow.hl-row-o:hover,.vrow.hl-row-g:hover,.vrow.hl-row-b:hover,.vrow.hl-row-p:hover { filter:brightness(1.15) }
 
 .vindic { display:flex; flex-direction:column; gap:2px; margin-top:7px; flex-shrink:0 }
@@ -345,13 +345,11 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
 .vd-c { background:var(--green) } .vd-t { background:var(--purple) }
 
 /* ── Inline highlights (drag-selection) ─────────────────────────
-   mark 태그: 글꼴 줄높이를 본문과 동일하게 유지하고,
-   padding을 최소화하여 하이라이트 영역이 글자에 딱 맞도록 함.
-   색상: 채도 낮추고 투명도 조절 → 어두운/밝은 테마 모두 세련되게.
+   글래스 효과: 투명 배경 + 뚜렷한 테두리 라인 + 글꼴 높이에 맞춤
 ───────────────────────────────────────────────────────────────── */
-.vtxt mark.hl-active { filter: brightness(1.3) saturate(1.1); outline: none !important; }
+.vtxt mark.hl-active { filter: brightness(1.2) saturate(1.15); outline: none !important; }
 
-/* mark: 어떤 폰트 안에 있어도 줄높이 불변 */
+/* mark: 글꼴 상속 + 높이 최소화 */
 .vtxt mark,
 .vtxt .dg mark,
 .vtxt b mark,
@@ -365,8 +363,9 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
   line-height: inherit !important;
   vertical-align: baseline !important;
   display: inline;
-  padding: 0.05em 0.08em;
-  border-radius: 3px;
+  padding: 0 0.12em;
+  margin: 0 -0.02em;
+  border-radius: 4px;
   outline: none !important;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
@@ -374,33 +373,93 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
   color: inherit;
 }
 
-/* ── 다크 테마 인라인 하이라이트 — 선명하고 생생한 톤 ── */
-.vtxt mark.hl-y { background: rgba(255,220,30,.45); }   /* 밝은 옐로우 */
-.vtxt mark.hl-o { background: rgba(255,160,60,.42); }   /* 비비드 오렌지 */
-.vtxt mark.hl-g { background: rgba(40,230,160,.38); }   /* 네온 그린 */
-.vtxt mark.hl-b { background: rgba(90,175,255,.42); }   /* 스카이 블루 */
-.vtxt mark.hl-p { background: rgba(210,150,255,.40); }  /* 브라이트 퍼플 */
+/* ── 다크 테마 인라인 하이라이트 — 글래스 + 테두리 ── */
+.vtxt mark.hl-y {
+  background: rgba(255,220,30,.12);
+  border: 1px solid rgba(255,220,30,.45);
+  box-shadow: inset 0 0 6px rgba(255,220,30,.08);
+}
+.vtxt mark.hl-o {
+  background: rgba(255,160,60,.12);
+  border: 1px solid rgba(255,160,60,.42);
+  box-shadow: inset 0 0 6px rgba(255,160,60,.08);
+}
+.vtxt mark.hl-g {
+  background: rgba(40,230,160,.10);
+  border: 1px solid rgba(40,230,160,.40);
+  box-shadow: inset 0 0 6px rgba(40,230,160,.06);
+}
+.vtxt mark.hl-b {
+  background: rgba(90,175,255,.12);
+  border: 1px solid rgba(90,175,255,.42);
+  box-shadow: inset 0 0 6px rgba(90,175,255,.08);
+}
+.vtxt mark.hl-p {
+  background: rgba(210,150,255,.12);
+  border: 1px solid rgba(210,150,255,.40);
+  box-shadow: inset 0 0 6px rgba(210,150,255,.08);
+}
 
 /* vrow 전체 배경 hl (구절 전체 선택 시) */
-.hl-y { background:rgba(255,220,30,.22); border-radius:2px }
-.hl-o { background:rgba(255,160,60,.20); border-radius:2px }
-.hl-g { background:rgba(40,230,160,.18); border-radius:2px }
-.hl-b { background:rgba(90,175,255,.20); border-radius:2px }
-.hl-p { background:rgba(210,150,255,.20); border-radius:2px }
+.hl-y { background:rgba(255,220,30,.10); border-left:2px solid rgba(255,220,30,.50); border-radius:2px }
+.hl-o { background:rgba(255,160,60,.10); border-left:2px solid rgba(255,160,60,.48); border-radius:2px }
+.hl-g { background:rgba(40,230,160,.08); border-left:2px solid rgba(40,230,160,.45); border-radius:2px }
+.hl-b { background:rgba(90,175,255,.10); border-left:2px solid rgba(90,175,255,.48); border-radius:2px }
+.hl-p { background:rgba(210,150,255,.10); border-left:2px solid rgba(210,150,255,.45); border-radius:2px }
 
-/* ── 라이트 테마 하이라이트 — 선명한 워터컬러 ── */
-[data-theme="light"] .vtxt mark.hl-y { background: rgba(255,215,0,.45); }
-[data-theme="light"] .vtxt mark.hl-o { background: rgba(255,140,50,.38); }
-[data-theme="light"] .vtxt mark.hl-g { background: rgba(16,200,120,.35); }
-[data-theme="light"] .vtxt mark.hl-b { background: rgba(50,140,255,.32); }
-[data-theme="light"] .vtxt mark.hl-p { background: rgba(170,80,255,.30); }
+/* ── 라이트 테마 하이라이트 — 밝은 글래스 ── */
+[data-theme="light"] .vtxt mark.hl-y {
+  background: rgba(255,215,0,.14);
+  border: 1px solid rgba(200,170,0,.40);
+  box-shadow: inset 0 0 6px rgba(255,215,0,.06);
+}
+[data-theme="light"] .vtxt mark.hl-o {
+  background: rgba(255,140,50,.12);
+  border: 1px solid rgba(220,120,30,.38);
+  box-shadow: inset 0 0 6px rgba(255,140,50,.06);
+}
+[data-theme="light"] .vtxt mark.hl-g {
+  background: rgba(16,200,120,.10);
+  border: 1px solid rgba(10,160,90,.35);
+  box-shadow: inset 0 0 6px rgba(16,200,120,.05);
+}
+[data-theme="light"] .vtxt mark.hl-b {
+  background: rgba(50,140,255,.10);
+  border: 1px solid rgba(40,110,220,.35);
+  box-shadow: inset 0 0 6px rgba(50,140,255,.05);
+}
+[data-theme="light"] .vtxt mark.hl-p {
+  background: rgba(170,80,255,.10);
+  border: 1px solid rgba(140,60,220,.32);
+  box-shadow: inset 0 0 6px rgba(170,80,255,.05);
+}
 
-/* ── 세피아 테마 하이라이트 — 따뜻하고 또렷한 톤 ── */
-[data-theme="sepia"] .vtxt mark.hl-y { background: rgba(240,195,20,.40); }
-[data-theme="sepia"] .vtxt mark.hl-o { background: rgba(230,140,45,.36); }
-[data-theme="sepia"] .vtxt mark.hl-g { background: rgba(40,180,110,.32); }
-[data-theme="sepia"] .vtxt mark.hl-b { background: rgba(60,130,200,.32); }
-[data-theme="sepia"] .vtxt mark.hl-p { background: rgba(140,80,180,.30); }
+/* ── 세피아 테마 하이라이트 — 따뜻한 글래스 ── */
+[data-theme="sepia"] .vtxt mark.hl-y {
+  background: rgba(240,195,20,.12);
+  border: 1px solid rgba(200,160,15,.40);
+  box-shadow: inset 0 0 6px rgba(240,195,20,.06);
+}
+[data-theme="sepia"] .vtxt mark.hl-o {
+  background: rgba(230,140,45,.10);
+  border: 1px solid rgba(190,110,30,.38);
+  box-shadow: inset 0 0 6px rgba(230,140,45,.05);
+}
+[data-theme="sepia"] .vtxt mark.hl-g {
+  background: rgba(40,180,110,.08);
+  border: 1px solid rgba(30,140,80,.35);
+  box-shadow: inset 0 0 6px rgba(40,180,110,.04);
+}
+[data-theme="sepia"] .vtxt mark.hl-b {
+  background: rgba(60,130,200,.10);
+  border: 1px solid rgba(45,100,170,.35);
+  box-shadow: inset 0 0 6px rgba(60,130,200,.05);
+}
+[data-theme="sepia"] .vtxt mark.hl-p {
+  background: rgba(140,80,180,.10);
+  border: 1px solid rgba(110,60,150,.32);
+  box-shadow: inset 0 0 6px rgba(140,80,180,.04);
+}
 
 /* HL picker dots */
 .hlc-dot {
