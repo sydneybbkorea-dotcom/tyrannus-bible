@@ -134,6 +134,9 @@
   display: flex;
   align-items: center;
   gap: 2px;
+}
+
+.pane-header-title {
   margin-left: auto;
 }
 
