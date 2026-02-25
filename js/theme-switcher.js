@@ -20,9 +20,19 @@ var ThemeSwitcher = (function(){
   var DARK_DEFAULT_ACCENT  = '#bd8a00';
   var LIGHT_DEFAULT_ACCENT = '#f06f38';
 
-  // bg 인라인 오버라이드 목록
+  // bg 인라인 오버라이드 목록 (배경색 변경 시 함께 업데이트할 CSS 변수들)
   var BG_PROPS = ['--bg-primary','--bg-secondary','--bg-tertiary','--bg-surface',
-                  '--border-color','--rail-bg-color'];
+                  '--border-color','--rail-bg-color',
+                  '--pane-bg','--pane-header-bg','--pane-border',
+                  '--glass-bg-1','--glass-bg-2','--glass-bg-3','--glass-border',
+                  '--body-gradient','--popup-bg','--popup-border',
+                  '--rail-bg','--slider-bg','--slider-border'];
+
+  // 프리셋 배경색의 Hue 매핑
+  var PRESET_HUES = {
+    blue:214, red:355, orange:30, yellow:46,
+    cyan:179, purple:256, pink:330, black:0
+  };
 
   function hexToHSL(hex){
     var r = parseInt(hex.slice(1,3),16)/255;
@@ -53,7 +63,8 @@ var ThemeSwitcher = (function(){
   function getCustomAccent(){ return localStorage.getItem(CUSTOM_ACCENT_KEY) || _defaultAccent(); }
   function getCustomBase(){ return localStorage.getItem(CUSTOM_BASE_KEY) || '#04050b'; }
 
-  // 커스텀 배경 bg-* 인라인 적용/해제
+  // 커스텀/프리셋 배경 bg-* 인라인 적용/해제
+  // 패널, 글래스, 그라디언트, 팝업, 레일, 슬라이더 등 모든 배경 관련 변수 일괄 업데이트
   function _applyCustomBg(){
     var root = document.documentElement;
     var base = localStorage.getItem(BASE_KEY);
@@ -63,31 +74,85 @@ var ThemeSwitcher = (function(){
     root.style.removeProperty('--base-h');
     root.style.removeProperty('--base-s');
     root.style.removeProperty('--base-l');
-    // 커스텀 배경색 — 모든 테마 지원
+
+    var h, s, l;
+    var needOverride = false;
+
     if(base === 'custom'){
+      // 커스텀 배경색 — 사용자 직접 선택
       var hex = localStorage.getItem(CUSTOM_BASE_KEY) || '#086DDD';
       var c = hexToHSL(hex);
-      var h=c.h, s=c.s, l=c.l;
+      h = c.h; s = c.s; l = c.l;
       root.style.setProperty('--base-h', h);
       root.style.setProperty('--base-s', s + '%');
       root.style.setProperty('--base-l', l + '%');
-      if(l > 50){
-        // Light/Sepia (밝은 배경): 오프셋 아래로
-        root.style.setProperty('--bg-primary',   'hsl('+h+','+s+'%,'+l+'%)');
-        root.style.setProperty('--bg-secondary', 'hsl('+h+','+s+'%,'+clamp(l-4,0,100)+'%)');
-        root.style.setProperty('--bg-tertiary',  'hsl('+h+','+s+'%,'+clamp(l-10,0,100)+'%)');
-        root.style.setProperty('--bg-surface',   'hsl('+h+','+clamp(s+5,0,100)+'%,'+clamp(l+2,0,100)+'%)');
-        root.style.setProperty('--border-color', 'hsl('+h+','+s+'%,'+clamp(l-12,0,100)+'%)');
-        root.style.setProperty('--rail-bg-color','hsl('+h+','+s+'%,'+clamp(l-3,0,100)+'%)');
+      needOverride = true;
+    } else if(base && BASES.indexOf(base) !== -1){
+      // 프리셋 배경색
+      h = PRESET_HUES[base] || 0;
+      s = base === 'black' ? 0 : 35;
+      if(theme === 'light' || theme === 'sepia'){
+        // Light/Sepia: CSS가 var(--base-h)를 사용하지 않아 인라인 필요
+        l = 96;
+        needOverride = true;
       } else {
-        // Dark (어두운 배경): 기존 동작 (오프셋 위로)
-        root.style.setProperty('--bg-primary',   'hsl('+h+','+s+'%,'+l+'%)');
-        root.style.setProperty('--bg-secondary', 'hsl('+h+','+clamp(s-7,0,100)+'%,'+clamp(l+4,0,100)+'%)');
-        root.style.setProperty('--bg-tertiary',  'hsl('+h+','+clamp(s-13,0,100)+'%,'+clamp(l+10,0,100)+'%)');
-        root.style.setProperty('--bg-surface',   'hsl('+h+','+clamp(s-7,0,100)+'%,'+clamp(l+5,0,100)+'%)');
-        root.style.setProperty('--border-color', 'hsl('+h+','+clamp(s-13,0,100)+'%,'+clamp(l+8,0,100)+'%)');
-        root.style.setProperty('--rail-bg-color','hsl('+h+','+s+'%,'+clamp(l-1,0,100)+'%)');
+        // Dark: CSS가 var(--base-h)로 --bg-*와 --body-gradient 처리
+        // 하지만 --pane-bg, --rail-bg, --slider-bg 등은 하드코딩 → 인라인 필요
+        l = base === 'black' ? 3 : 5;
+        needOverride = true;
       }
+    }
+
+    if(!needOverride) return;
+
+    if(l > 50){
+      // ── 밝은 배경 (Light / Sepia 계열) ──
+      var sLow = clamp(s, 0, 25);
+      var sMed = clamp(s, 0, 30);
+      // 기본 배경
+      root.style.setProperty('--bg-primary',   'hsl('+h+','+sLow+'%,'+l+'%)');
+      root.style.setProperty('--bg-secondary', 'hsl('+h+','+clamp(s,0,20)+'%,'+clamp(l-4,85,97)+'%)');
+      root.style.setProperty('--bg-tertiary',  'hsl('+h+','+clamp(s,0,18)+'%,'+clamp(l-8,80,94)+'%)');
+      root.style.setProperty('--bg-surface',   'hsl('+h+','+clamp(s,0,22)+'%,'+clamp(l+1,92,100)+'%)');
+      root.style.setProperty('--border-color', 'hsla('+h+','+clamp(s,0,15)+'%,'+clamp(l-30,40,70)+'%,0.08)');
+      root.style.setProperty('--rail-bg-color','hsl('+h+','+clamp(s,0,20)+'%,'+clamp(l-2,88,97)+'%)');
+      // 패널 (글래스모피즘)
+      root.style.setProperty('--pane-bg',        'hsla('+h+','+sMed+'%,'+clamp(l,90,100)+'%,0.55)');
+      root.style.setProperty('--pane-header-bg', 'hsla('+h+','+sLow+'%,'+clamp(l,88,100)+'%,0.40)');
+      root.style.setProperty('--pane-border',    'hsla('+h+','+clamp(s,0,20)+'%,'+clamp(l-30,40,70)+'%,0.06)');
+      // 글래스
+      root.style.setProperty('--glass-bg-1',     'hsla('+h+','+sMed+'%,'+clamp(l,92,100)+'%,0.50)');
+      root.style.setProperty('--glass-bg-2',     'hsla('+h+','+sMed+'%,'+clamp(l,92,100)+'%,0.60)');
+      root.style.setProperty('--glass-bg-3',     'hsla('+h+','+sMed+'%,'+clamp(l,92,100)+'%,0.70)');
+      root.style.setProperty('--glass-border',   'hsla('+h+','+clamp(s,0,20)+'%,'+clamp(l-30,40,70)+'%,0.06)');
+      // 바디 그라디언트
+      root.style.setProperty('--body-gradient',  'linear-gradient(135deg, hsl('+h+','+clamp(s,5,40)+'%,'+clamp(l-4,85,96)+'%) 0%, hsl('+h+','+clamp(s,3,35)+'%,'+clamp(l-1,90,98)+'%) 50%, hsl('+((h+20)%360)+','+clamp(s,3,30)+'%,'+clamp(l-3,87,97)+'%) 100%)');
+      // 팝업
+      root.style.setProperty('--popup-bg',       'hsla('+h+','+clamp(s,0,20)+'%,'+clamp(l-2,90,98)+'%,0.96)');
+      root.style.setProperty('--popup-border',   'hsla('+h+','+clamp(s,0,15)+'%,'+clamp(l-25,50,75)+'%,0.08)');
+      // 레일 & 슬라이더
+      root.style.setProperty('--rail-bg',        'hsla('+h+','+sMed+'%,'+clamp(l,90,100)+'%,0.45)');
+      root.style.setProperty('--slider-bg',      'hsla('+h+','+sMed+'%,'+clamp(l,90,100)+'%,0.78)');
+      root.style.setProperty('--slider-border',  'hsla('+h+','+clamp(s,0,15)+'%,'+clamp(l-25,50,75)+'%,0.08)');
+    } else {
+      // ── 어두운 배경 (Dark 계열) ──
+      // 기본 배경
+      root.style.setProperty('--bg-primary',   'hsl('+h+','+s+'%,'+l+'%)');
+      root.style.setProperty('--bg-secondary', 'hsl('+h+','+clamp(s-7,0,100)+'%,'+clamp(l+4,0,100)+'%)');
+      root.style.setProperty('--bg-tertiary',  'hsl('+h+','+clamp(s-13,0,100)+'%,'+clamp(l+10,0,100)+'%)');
+      root.style.setProperty('--bg-surface',   'hsl('+h+','+clamp(s-7,0,100)+'%,'+clamp(l+5,0,100)+'%)');
+      root.style.setProperty('--border-color', 'hsl('+h+','+clamp(s-13,0,100)+'%,'+clamp(l+8,0,100)+'%)');
+      root.style.setProperty('--rail-bg-color','hsl('+h+','+s+'%,'+clamp(l-1,0,100)+'%)');
+      // 패널 (글래스모피즘)
+      root.style.setProperty('--pane-bg',        'hsla('+h+','+clamp(s,0,40)+'%,'+clamp(l-2,0,15)+'%,0.65)');
+      root.style.setProperty('--pane-header-bg', 'hsla('+h+','+clamp(s,0,30)+'%,'+clamp(l+5,0,20)+'%,0.15)');
+      // 바디 그라디언트
+      root.style.setProperty('--body-gradient',  'linear-gradient(135deg, hsl('+h+',30%,'+clamp(l+3,3,15)+'%) 0%, hsl('+h+',25%,'+clamp(l,2,10)+'%) 50%, hsl('+((h+20)%360)+',20%,'+clamp(l+2,3,12)+'%) 100%)');
+      // 팝업
+      root.style.setProperty('--popup-bg',       'hsla('+h+','+clamp(s,0,30)+'%,'+clamp(l+2,2,15)+'%,0.94)');
+      // 레일 & 슬라이더
+      root.style.setProperty('--rail-bg',        'hsla('+h+','+clamp(s,0,40)+'%,'+clamp(l-1,0,10)+'%,0.40)');
+      root.style.setProperty('--slider-bg',      'hsla('+h+','+clamp(s,0,40)+'%,'+clamp(l-1,0,10)+'%,0.72)');
     }
   }
 
