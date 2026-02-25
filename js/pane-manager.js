@@ -127,6 +127,13 @@ var PaneManager = (function(){
           _state[id].width = Math.max(200, Math.round(_state[id].width * ratio));
         });
       }
+      // 모든 visible 패널에 저장 너비가 있는데 합산 < 가용 폭이면 비율 확대 (빈 공간 방지)
+      if(totalFixed > 0 && totalFixed < available && fixedIds.length === visibleCount){
+        var ratioUp = available / totalFixed;
+        fixedIds.forEach(function(id){
+          _state[id].width = Math.round(_state[id].width * ratioUp);
+        });
+      }
     }
 
     PANE_IDS.forEach(function(id){

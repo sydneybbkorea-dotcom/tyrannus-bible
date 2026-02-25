@@ -291,6 +291,33 @@
   line-height: 1.5;
 }
 
+/* ── Search View (PDF 패널 내 검색) ── */
+#pdfSearchView {
+  display: none;
+  flex: 1;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+}
+#pdfSearchView > #sec-search {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
+  min-height: 0;
+}
+#pdfSearchView .search-wrap {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+#pdfSearchView #schList {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
 /* ── Context Menu ── */
 .pdf-ctx {
   position: fixed;

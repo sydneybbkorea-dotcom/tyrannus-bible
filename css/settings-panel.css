@@ -148,6 +148,16 @@
 .stp-logout-btn:hover { background:rgba(239,68,68,.1); border-color:#ef4444 }
 .stp-logout-btn i { font-size:12px }
 
+/* ── Version display ── */
+.stp-version {
+  text-align:center;
+  font-size:11px;
+  color:var(--text3);
+  padding:8px 0 4px;
+  opacity:.6;
+  letter-spacing:.02em;
+}
+
 /* ── Theme selector buttons ── */
 .stp-theme-btns {
   display:flex; gap:6px;
@@ -302,3 +312,21 @@
 }
 .stp-subpage-header:hover { color:var(--accent-color, var(--gold)) }
 .stp-subpage-header i { font-size:12px }
+
+/* ── Advanced color toggle ── */
+.stp-adv-toggle {
+  display:flex; align-items:center; gap:8px;
+  padding:10px 14px; margin-top:4px;
+  cursor:pointer; font-size:12px; font-weight:600;
+  color:var(--text3); border-radius:10px;
+  background:var(--glass-bg-1); border:1px solid var(--glass-border);
+  transition:all .15s;
+}
+.stp-adv-toggle:hover { color:var(--text); background:var(--glass-bg-2) }
+.stp-adv-arrow { font-size:10px; transition:transform .25s }
+.stp-adv-arrow.open { transform:rotate(90deg) }
+.stp-adv-body {
+  max-height:0; overflow:hidden;
+  transition:max-height .35s cubic-bezier(0.4,0,0.2,1);
+}
+.stp-adv-body.stp-adv-open { max-height:2000px; overflow:visible }

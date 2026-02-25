@@ -4,6 +4,13 @@ function _stpGoTheme(){ _stpView='theme'; renderSettingsPanel(); }
 function _stpGoTopics(){ _stpView='topics'; renderSettingsPanel(); }
 function _stpGoSharing(){ _stpView='sharing'; renderSettingsPanel(); }
 function _stpGoMain(){ _stpView='main'; renderSettingsPanel(); }
+function _stpToggleAdvanced(){
+  var body = document.getElementById('stpAdvBody');
+  var arrow = document.querySelector('.stp-adv-arrow');
+  if(!body) return;
+  var open = body.classList.toggle('stp-adv-open');
+  if(arrow) arrow.classList.toggle('open', open);
+}
 
 function renderSettingsPanel(){
   var el = document.getElementById('spSettingsBody');
@@ -44,7 +51,7 @@ function renderSettingsPanel(){
 
     // ━━━━━━ 섹션 1: 테마 & 색상 ━━━━━━
     h += '<div class="stp-section">';
-    h += '<div class="stp-sec-title"><i class="fa fa-swatchbook"></i> 테마 & 색상</div>';
+    h += '<div class="stp-sec-title"><i class="fa fa-swatchbook"></i> 테마</div>';
 
     var curTheme = (typeof ThemeSwitcher !== 'undefined') ? ThemeSwitcher.getTheme() : (document.documentElement.getAttribute('data-theme') || 'dark');
     h += '<div class="stp-row">';
@@ -61,6 +68,16 @@ function renderSettingsPanel(){
          + '<i class="fa ' + tm.icon + '"></i> ' + tm.label + '</button>';
     });
     h += '</div></div>';
+    h += '</div>'; // end 테마 섹션
+
+    // ── 색상 고급설정 토글 ──
+    h += '<div class="stp-adv-toggle" onclick="_stpToggleAdvanced()">';
+    h += '<i class="fa fa-chevron-right stp-adv-arrow"></i>';
+    h += '<span>색상 고급설정</span>';
+    h += '</div>';
+    h += '<div class="stp-adv-body" id="stpAdvBody">';
+
+    h += '<div class="stp-section">';
 
     // ── 공통 프리셋 컬러 배열 ──
     var accents = [
@@ -149,7 +166,7 @@ function renderSettingsPanel(){
          + '<i class="fa fa-undo"></i> 색상 초기화</button>';
     }
 
-    h += '</div>'; // end 섹션 1
+    h += '</div>'; // end 색상 섹션
 
     // ━━━━━━ 섹션 1.5: 배경 이미지 ━━━━━━
     var bgEnabled = localStorage.getItem('kjb2-bg-image-enabled') === '1';
@@ -222,7 +239,8 @@ function renderSettingsPanel(){
          v.lineH, 1.2, 3.0, 0.05, '');
     h += '<div class="stp-reset"><button onclick="_stpResetText()" data-i18n="settings.resetDefaults">'
        + '<i class="fa fa-undo"></i> ' + t('settings.resetDefaults', '기본값 복원') + '</button></div>';
-    h += '</div>'; // end 섹션 2
+    h += '</div>'; // end 섹션 2 (본문 설정)
+    h += '</div>'; // end stp-adv-body
 
   } else {
     // ━━━━━━ 메인 메뉴 뷰 ━━━━━━
@@ -280,6 +298,12 @@ function renderSettingsPanel(){
     h += '<div class="stp-logout" id="stpLogoutWrap" style="display:none">';
     h += '<button class="stp-logout-btn" onclick="signOutUser()">';
     h += '<i class="fa fa-sign-out-alt"></i> <span data-i18n="settings.logout">' + t('settings.logout', '로그아웃') + '</span></button></div>';
+
+    // 버전 표시
+    var ver = (typeof APP_VERSION !== 'undefined') ? APP_VERSION : '';
+    if(ver){
+      h += '<div class="stp-version">투란누스 v' + ver + '</div>';
+    }
   }
 
   h += '</div>';

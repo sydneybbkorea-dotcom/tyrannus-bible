@@ -4,6 +4,11 @@ var _spPinned = false;
 var _railHidden = false;
 
 function _toggleIconRail(){
+  // LayoutManager가 로드되었으면 레이아웃 피커로 리다이렉트
+  if(typeof LayoutManager !== 'undefined'){
+    LayoutManager.openPicker();
+    return;
+  }
   _railHidden = !_railHidden;
   var rail = document.getElementById('iconRail');
   var btn = document.getElementById('railToggleBtn');
@@ -133,6 +138,84 @@ function toggleKnowledgeGraph(){
     openPanel('notes');
     switchSub('graph');
     document.querySelector('.rail-icon[data-rail="graph"]')?.classList.add('active');
+  }
+}
+
+/* ═══ 검색 패널 토글 (PDF 패널 위치에 표시) ═══ */
+var _searchInPdf = false;
+var _searchOrigParent = null;
+var _pdfWasVisible = false;
+
+function toggleSearchPane(){
+  _closeTypingIfOpen();
+
+  var secSearch = document.getElementById('sec-search');
+  var pdfSearchView = document.getElementById('pdfSearchView');
+  var pdfLibView = document.getElementById('pdfLibraryView');
+  var pdfViewerView = document.getElementById('pdfViewerView');
+  var pdfTabBar = document.getElementById('pdfTabBar');
+  var pdfHeader = document.getElementById('pdfPaneHeader');
+  var railBtn = document.getElementById('railSearchBtn');
+
+  if(!secSearch || !pdfSearchView) return;
+
+  if(_searchInPdf){
+    // ── 검색 비활성화: 원래 위치로 복원 ──
+    if(_searchOrigParent) _searchOrigParent.appendChild(secSearch);
+    secSearch.style.display = '';
+    pdfSearchView.style.display = 'none';
+
+    // PDF 콘텐츠 복원
+    if(pdfLibView) pdfLibView.style.display = '';
+    if(pdfViewerView) pdfViewerView.style.display = '';
+
+    // PDF 헤더 복원
+    if(pdfHeader){
+      var titleEl = pdfHeader.querySelector('.pane-header-title');
+      if(titleEl) titleEl.innerHTML = '<i class="fa fa-file-pdf"></i> <span class="pane-tag">PDF</span>';
+    }
+
+    // PDF 패널이 원래 안 보이던 상태였으면 숨김
+    if(!_pdfWasVisible && typeof PaneManager !== 'undefined'){
+      PaneManager.hide('pdf');
+    }
+
+    _searchInPdf = false;
+    if(railBtn) railBtn.classList.remove('active');
+  } else {
+    // ── 검색 활성화: PDF 패널 위치에 표시 ──
+
+    // PDF 패널 원래 표시 상태 기억
+    _pdfWasVisible = typeof PaneManager !== 'undefined' && PaneManager.isVisible('pdf');
+
+    // PDF 패널 표시
+    if(typeof PaneManager !== 'undefined' && !PaneManager.isVisible('pdf')){
+      PaneManager.show('pdf');
+    }
+
+    // PDF 콘텐츠 숨김
+    if(pdfLibView) pdfLibView.style.display = 'none';
+    if(pdfViewerView) pdfViewerView.style.display = 'none';
+    if(pdfTabBar) pdfTabBar.style.display = 'none';
+
+    // #sec-search를 pdfSearchView로 이동
+    _searchOrigParent = secSearch.parentNode;
+    pdfSearchView.appendChild(secSearch);
+    secSearch.style.display = 'flex';
+    pdfSearchView.style.display = 'flex';
+
+    // PDF 헤더를 "검색"으로 변경
+    if(pdfHeader){
+      var titleEl = pdfHeader.querySelector('.pane-header-title');
+      if(titleEl) titleEl.innerHTML = '<i class="fa fa-search"></i> <span class="pane-tag">검색</span>';
+    }
+
+    _searchInPdf = true;
+    if(railBtn) railBtn.classList.add('active');
+
+    // 검색 입력에 포커스
+    var inp = document.getElementById('schInput');
+    if(inp) setTimeout(function(){ inp.focus(); }, 100);
   }
 }
 

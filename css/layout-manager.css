@@ -1,0 +1,494 @@
+/* ═══════════════════════════════════════════════
+   LAYOUT MANAGER — CSS Grid 기반 화면 분할 시스템
+   8종 프리셋 + 슬롯 스타일 + 피커 팝업
+═══════════════════════════════════════════════ */
+
+/* ── 레이아웃 모드 활성 시 기존 pane 숨김 ── */
+#paneContainer[data-layout] > .pane {
+  display: none !important;
+}
+#paneContainer[data-layout] > .pane-resize-handle {
+  display: none !important;
+}
+
+/* ── paneContainer가 Grid 모드로 전환 ── */
+#paneContainer[data-layout] {
+  display: grid !important;
+  gap: var(--pane-gap, 4px);
+  padding: var(--pane-gap, 4px);
+  flex: 1;
+  overflow: hidden;
+  min-width: 0;
+  max-width: 100%;
+  height: 100%;
+}
+
+/* ═══ 8종 Grid 프리셋 ═══ */
+
+/* 1L-2R: 좌1(tall) + 우2(상/하) */
+#paneContainer[data-layout="1L-2R"] {
+  grid-template-areas: "a b" "a c";
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+/* 2T-1B: 상2 + 하1(풀) */
+#paneContainer[data-layout="2T-1B"] {
+  grid-template-areas: "a b" "c c";
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+/* 2x2: 2×2 그리드 */
+#paneContainer[data-layout="2x2"] {
+  grid-template-areas: "a b" "c d";
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+/* 2L-1R: 좌2(상/하) + 우1(tall) */
+#paneContainer[data-layout="2L-1R"] {
+  grid-template-areas: "a c" "b c";
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+/* 1T-2B: 상1(풀) + 하2 */
+#paneContainer[data-layout="1T-2B"] {
+  grid-template-areas: "a a" "b c";
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+/* 3-col: 3열 균등 (기본) */
+#paneContainer[data-layout="3-col"] {
+  grid-template-areas: "a b c";
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr;
+}
+
+/* 3T-1B: 상3 + 하1(풀) */
+#paneContainer[data-layout="3T-1B"] {
+  grid-template-areas: "a b c" "d d d";
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+/* 1T-3B: 상1(풀) + 하3 */
+#paneContainer[data-layout="1T-3B"] {
+  grid-template-areas: "a a a" "b c d";
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+}
+
+/* ═══ 슬롯 Grid Area 매핑 ═══ */
+.layout-slot[data-area="a"] { grid-area: a; }
+.layout-slot[data-area="b"] { grid-area: b; }
+.layout-slot[data-area="c"] { grid-area: c; }
+.layout-slot[data-area="d"] { grid-area: d; }
+
+/* ═══ 슬롯 스타일 ═══ */
+.layout-slot {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-width: 0;
+  min-height: 0;
+  border-radius: var(--pane-radius, 12px);
+  border: 1px solid var(--pane-border, rgba(255,255,255,0.08));
+  box-shadow: var(--pane-shadow);
+  background: var(--layout-bg, var(--pane-bg));
+  backdrop-filter: var(--pane-blur);
+  -webkit-backdrop-filter: var(--pane-blur);
+}
+
+body.has-bg-image .layout-slot {
+  background: var(--bgi-panel) !important;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+/* ── 슬롯 헤더 ── */
+.ls-header {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  padding: 0 4px;
+  flex-shrink: 0;
+  background: var(--layout-bg-header, var(--pane-header-bg));
+  border-bottom: 1px solid var(--pane-header-border);
+  border-radius: var(--pane-radius, 12px) var(--pane-radius, 12px) 0 0;
+  gap: 2px;
+  user-select: none;
+  overflow: hidden;
+}
+
+body.has-bg-image .ls-header {
+  background: var(--bgi-bar) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* ── 기능 아이콘 바 ── */
+.ls-feat-bar {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+}
+.ls-feat-bar::-webkit-scrollbar { display: none; }
+
+/* ── 기능 선택 버튼 ── */
+.ls-feat-btn {
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--text-muted, #888);
+  font-size: 11px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all 0.15s;
+  padding: 0;
+}
+
+.ls-feat-btn:hover {
+  background: rgba(255,255,255,0.08);
+  color: var(--text-primary, #fff);
+}
+
+.ls-feat-btn.active {
+  color: var(--accent-color, #d4a853);
+  background: var(--accent-dim, rgba(212,168,83,0.12));
+}
+
+[data-theme="light"] .ls-feat-btn:hover {
+  background: rgba(0,0,0,0.06);
+  color: var(--text-primary);
+}
+[data-theme="sepia"] .ls-feat-btn:hover {
+  background: rgba(120,80,30,0.08);
+  color: var(--text-primary);
+}
+
+/* ── 스왑 버튼 ── */
+.ls-swap-btn {
+  width: 26px;
+  height: 26px;
+  min-width: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--text-muted, #888);
+  font-size: 11px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: all 0.15s;
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.ls-swap-btn:hover {
+  background: rgba(255,255,255,0.08);
+  color: var(--text-primary, #fff);
+}
+
+[data-theme="light"] .ls-swap-btn:hover {
+  background: rgba(0,0,0,0.06);
+}
+
+/* ── 슬롯 본문 ── */
+.ls-body {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  position: relative;
+}
+
+/* 마운트된 콘텐츠가 전체 채우도록 */
+.ls-body > * {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+}
+
+/* pane-inner가 슬롯 안에 들어갈 때 border-radius 제거 */
+.ls-body .pane-inner {
+  border-radius: 0;
+}
+
+/* pane-header가 슬롯 안에서는 top border-radius 제거 */
+.ls-body .pane-header {
+  border-radius: 0;
+}
+
+/* ── 플레이스홀더 ── */
+.ls-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--text3, #666);
+  font-size: 12px;
+  gap: 8px;
+  text-align: center;
+  padding: 20px;
+}
+.ls-placeholder i {
+  font-size: 28px;
+  opacity: 0.4;
+}
+
+/* ═══ 레이아웃 피커 팝업 ═══ */
+.layout-picker-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  /* 투명 배경 — 클릭만 잡기 */
+}
+
+.layout-picker {
+  position: fixed;
+  z-index: 9999;
+  background: var(--layout-bg, var(--pane-bg, #1e1e2e));
+  border: 1px solid var(--pane-border, rgba(255,255,255,0.12));
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  padding: 12px;
+  width: 280px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+body.has-bg-image .layout-picker {
+  background: var(--bgi-panel) !important;
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+.layout-picker-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary, #aaa);
+  margin-bottom: 8px;
+  padding: 0 2px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.layout-picker-title i {
+  color: var(--accent-color, #d4a853);
+  font-size: 12px;
+}
+
+/* 프리셋 그리드 (4×2) */
+.lp-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.lp-item {
+  aspect-ratio: 1.2;
+  border: 1.5px solid var(--border, rgba(255,255,255,0.1));
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  transition: all 0.15s;
+  background: transparent;
+}
+
+.lp-item:hover {
+  border-color: var(--accent-color, #d4a853);
+  background: var(--accent-dim, rgba(212,168,83,0.08));
+}
+
+.lp-item.active {
+  border-color: var(--accent-color, #d4a853);
+  background: var(--accent-dim, rgba(212,168,83,0.15));
+  box-shadow: 0 0 0 1px var(--accent-color, #d4a853);
+}
+
+/* 미니 그리드 썸네일 */
+.lp-thumb {
+  width: 100%;
+  flex: 1;
+  display: grid;
+  gap: 2px;
+  min-height: 0;
+}
+
+.lp-thumb > div {
+  background: var(--text-muted, #666);
+  opacity: 0.3;
+  border-radius: 2px;
+  min-height: 0;
+}
+
+.lp-item.active .lp-thumb > div {
+  background: var(--accent-color, #d4a853);
+  opacity: 0.5;
+}
+
+/* 프리셋 라벨 */
+.lp-label {
+  font-size: 8px;
+  color: var(--text3, #666);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.lp-item.active .lp-label {
+  color: var(--accent-color, #d4a853);
+}
+
+/* 하단 스왑 버튼 */
+.lp-swap-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 6px;
+  border-top: 1px solid var(--border, rgba(255,255,255,0.08));
+}
+
+.lp-swap-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1px solid var(--border, rgba(255,255,255,0.1));
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-secondary, #aaa);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.lp-swap-btn:hover {
+  border-color: var(--accent-color, #d4a853);
+  color: var(--accent-color, #d4a853);
+  background: var(--accent-dim, rgba(212,168,83,0.08));
+}
+
+.lp-swap-btn i {
+  font-size: 12px;
+}
+
+/* 썸네일별 grid-template */
+.lp-thumb[data-preset="1L-2R"] { grid-template: "a b" "a c" / 1fr 1fr; }
+.lp-thumb[data-preset="2T-1B"] { grid-template: "a b" "c c" / 1fr 1fr; }
+.lp-thumb[data-preset="2x2"]   { grid-template: "a b" "c d" / 1fr 1fr; }
+.lp-thumb[data-preset="2L-1R"] { grid-template: "a c" "b c" / 1fr 1fr; }
+.lp-thumb[data-preset="1T-2B"] { grid-template: "a a" "b c" / 1fr 1fr; }
+.lp-thumb[data-preset="3-col"] { grid-template: "a b c" / 1fr 1fr 1fr; }
+.lp-thumb[data-preset="3T-1B"] { grid-template: "a b c" "d d d" / 1fr 1fr 1fr; }
+.lp-thumb[data-preset="1T-3B"] { grid-template: "a a a" "b c d" / 1fr 1fr 1fr; }
+
+.lp-thumb[data-preset="1L-2R"] > :nth-child(1) { grid-area: a; }
+.lp-thumb[data-preset="1L-2R"] > :nth-child(2) { grid-area: b; }
+.lp-thumb[data-preset="1L-2R"] > :nth-child(3) { grid-area: c; }
+
+.lp-thumb[data-preset="2T-1B"] > :nth-child(1) { grid-area: a; }
+.lp-thumb[data-preset="2T-1B"] > :nth-child(2) { grid-area: b; }
+.lp-thumb[data-preset="2T-1B"] > :nth-child(3) { grid-area: c; }
+
+.lp-thumb[data-preset="2x2"] > :nth-child(1) { grid-area: a; }
+.lp-thumb[data-preset="2x2"] > :nth-child(2) { grid-area: b; }
+.lp-thumb[data-preset="2x2"] > :nth-child(3) { grid-area: c; }
+.lp-thumb[data-preset="2x2"] > :nth-child(4) { grid-area: d; }
+
+.lp-thumb[data-preset="2L-1R"] > :nth-child(1) { grid-area: a; }
+.lp-thumb[data-preset="2L-1R"] > :nth-child(2) { grid-area: b; }
+.lp-thumb[data-preset="2L-1R"] > :nth-child(3) { grid-area: c; }
+
+.lp-thumb[data-preset="1T-2B"] > :nth-child(1) { grid-area: a; }
+.lp-thumb[data-preset="1T-2B"] > :nth-child(2) { grid-area: b; }
+.lp-thumb[data-preset="1T-2B"] > :nth-child(3) { grid-area: c; }
+
+.lp-thumb[data-preset="3-col"] > :nth-child(1) { grid-area: a; }
+.lp-thumb[data-preset="3-col"] > :nth-child(2) { grid-area: b; }
+.lp-thumb[data-preset="3-col"] > :nth-child(3) { grid-area: c; }
+
+.lp-thumb[data-preset="3T-1B"] > :nth-child(1) { grid-area: a; }
+.lp-thumb[data-preset="3T-1B"] > :nth-child(2) { grid-area: b; }
+.lp-thumb[data-preset="3T-1B"] > :nth-child(3) { grid-area: c; }
+.lp-thumb[data-preset="3T-1B"] > :nth-child(4) { grid-area: d; }
+
+.lp-thumb[data-preset="1T-3B"] > :nth-child(1) { grid-area: a; }
+.lp-thumb[data-preset="1T-3B"] > :nth-child(2) { grid-area: b; }
+.lp-thumb[data-preset="1T-3B"] > :nth-child(3) { grid-area: c; }
+.lp-thumb[data-preset="1T-3B"] > :nth-child(4) { grid-area: d; }
+
+/* ═══ 테마별 스타일 ═══ */
+[data-theme="light"] .layout-picker {
+  background: var(--layout-bg, var(--pane-bg, #fff));
+  box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+}
+
+[data-theme="sepia"] .layout-picker {
+  background: var(--layout-bg, var(--pane-bg, #f5edd6));
+  box-shadow: 0 8px 32px rgba(80,60,20,0.15);
+}
+
+[data-theme="light"] .lp-item:hover,
+[data-theme="sepia"] .lp-item:hover {
+  background: var(--accent-dim, rgba(180,140,60,0.08));
+}
+
+[data-theme="light"] .layout-slot,
+[data-theme="sepia"] .layout-slot {
+  border-color: var(--pane-border, rgba(0,0,0,0.08));
+}
+
+/* ═══ 모바일: 레이아웃 비활성 ═══ */
+@media (max-width: 599px) {
+  #paneContainer[data-layout] {
+    display: flex !important;
+  }
+  #paneContainer[data-layout] > .pane {
+    display: flex !important;
+  }
+  #paneContainer[data-layout] > .layout-slot {
+    display: none !important;
+  }
+  .layout-picker {
+    left: 8px !important;
+    right: 8px !important;
+    width: auto !important;
+  }
+}
+
+/* ═══ 찬양 오버레이: 레이아웃 모드에서도 표시 ═══ */
+#paneContainer[data-layout] > #hymnsOverlay {
+  display: none;
+}
+#paneContainer[data-layout] > #hymnsOverlay[style*="display: flex"],
+#paneContainer[data-layout] > #hymnsOverlay[style*="display:flex"] {
+  display: flex !important;
+  position: absolute;
+  inset: 0;
+  z-index: 100;
+}

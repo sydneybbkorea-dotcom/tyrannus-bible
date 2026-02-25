@@ -51,6 +51,9 @@
   }
 
   function startDrag(handle, startX){
+    // 레이아웃 모드에서 드래그 리사이즈 비활성
+    if(typeof LayoutManager !== 'undefined' && LayoutManager.isActive()) return;
+
     var leftId = handle.dataset.leftPane;
     var rightId = handle.dataset.rightPane;
     var leftPane = document.getElementById('pane-' + leftId);
