@@ -119,11 +119,17 @@
    NOTE LAYOUT — Library + Tab Bar + Editor (PDF 패턴)
 ═══════════════════════════════════════════════ */
 
-/* ── Note Tab Bar (PDF tab-bar 패턴) ── */
+/* ── Note Tab Bar (pane-header 안 인라인) ── */
 .note-tab-bar {
   display:flex; align-items:center; gap:2px;
+  flex:1; min-width:0; overflow-x:auto; height:100%;
+  padding:0 4px;
+}
+.note-tab-bar:empty { display:none }
+/* pane-header 밖에서 사용 시 (레거시) */
+.rp-sec .note-tab-bar {
   padding:4px 6px; border-bottom:1px solid var(--glass-border);
-  background:var(--glass-bg-1); flex-shrink:0; overflow-x:auto; min-height:34px;
+  background:var(--glass-bg-1); flex-shrink:0; min-height:34px;
 }
 .note-tab-bar::-webkit-scrollbar { height:0 }
 

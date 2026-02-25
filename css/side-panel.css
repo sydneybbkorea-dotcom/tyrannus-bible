@@ -14,7 +14,7 @@
               width 0s linear 0.3s;
   /* 항상 오버레이 — 메인 레이아웃 안 밀림 */
   position: absolute;
-  top: 0;
+  top: 46px;
   bottom: 0;
   left: var(--rail-width, 56px);
   z-index: 150;

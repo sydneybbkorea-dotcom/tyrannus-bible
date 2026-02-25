@@ -738,6 +738,10 @@ function _tpBuildMapping(target, typed){
 
 /* ═══ Toggle ═══ */
 function toggleTypingPanel(){
+  // 성경 패널이 닫혀 있으면 먼저 열기 (타자 오버레이가 biblePane 안에 있으므로)
+  if(typeof PaneManager !== 'undefined' && !PaneManager.isVisible('bible')){
+    PaneManager.show('bible');
+  }
   var el = document.getElementById('typingOverlay');
   if(!el) return;
   var show = !el.classList.contains('tp-show');

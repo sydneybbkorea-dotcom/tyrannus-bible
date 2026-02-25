@@ -167,5 +167,8 @@ if(typeof EventBus !== 'undefined'){
       var paneId = btn.dataset.pane;
       btn.classList.toggle('active', visible.indexOf(paneId) !== -1);
     });
+    // 성경 목록 서브 버튼: 성경 패널 열림 시만 표시
+    var bibleListBtn = document.getElementById('railBibleList');
+    if(bibleListBtn) bibleListBtn.style.display = visible.indexOf('bible') !== -1 ? '' : 'none';
   });
 }

@@ -71,10 +71,7 @@
 <select id="chSel" style="display:none" onchange="onChChange()"></select>
 <input type="hidden" id="qsInput">
 
-<!-- 오른쪽 상단: 왼쪽 사이드바(아이콘 레일) 토글 (독립 고정) -->
-<button class="rail-toggle-fixed" id="railToggleBtn" onclick="_toggleIconRail()" title="사이드바 열기/닫기">
-  <i class="fa fa-columns" id="railToggleIcon"></i>
-</button>
+<!-- 레일 토글 버튼은 레일 맨 위로 이동됨 -->
 
 <!-- ══ APP SHELL ════════════════════════════════ -->
 <div id="appShell">
@@ -87,14 +84,17 @@
 
   <!-- ── 아이콘 레일 (최상위, #bibleBody에서 이동) ── -->
   <div id="iconRail">
-    <!-- 햄버거 메뉴 버튼 (레일 맨 위) -->
-    <button class="rail-hamburger" id="rmenuTrigger" onclick="RMenu.toggle()" title="메뉴">
-      <i class="fa fa-bars"></i>
+    <!-- 레일 토글 버튼 (맨 위) -->
+    <button class="rail-hamburger" id="railToggleBtn" onclick="_toggleIconRail()" title="사이드바 열기/닫기">
+      <i class="fa fa-columns" id="railToggleIcon"></i>
     </button>
     <div class="rail-top">
       <!-- 패널 토글 섹션 -->
       <button class="rail-icon rail-pane-toggle" data-pane="bible" onclick="PaneManager.toggle('bible')" title="성경 패널">
         <i class="fa fa-book-bible"></i><span class="rail-label">성경</span>
+      </button>
+      <button class="rail-icon rail-bible-list" id="railBibleList" onclick="toggleRail('bible')" title="성경 목록" style="display:none">
+        <i class="fa fa-list"></i><span class="rail-label">목록</span>
       </button>
       <button class="rail-icon rail-pane-toggle" data-pane="pdf" onclick="PaneManager.toggle('pdf')" title="PDF 패널">
         <i class="fa fa-file-pdf"></i><span class="rail-label">PDF</span>
@@ -104,9 +104,6 @@
       </button>
       <div class="rail-divider"></div>
       <!-- 섹션 버튼 (사이드패널 열기) -->
-      <button class="rail-icon" data-rail="bible" onclick="toggleRail('bible')" title="성경 검색">
-        <i class="fa fa-list"></i><span class="rail-label" data-i18n="nav.bible">목록</span>
-      </button>
       <button class="rail-icon" data-rail="dictionary" onclick="toggleDictPanel()" title="사전">
         <i class="fas fa-spell-check"></i><span class="rail-label" data-i18n="nav.dict">사전</span>
       </button>
@@ -386,6 +383,7 @@
             <button class="pane-ctrl-btn" onclick="PaneManager.toggleMaximize('notes')" title="최대화/복원"><i class="fa fa-expand"></i></button>
             <button class="pane-ctrl-btn" onclick="PaneManager.hide('notes')" title="패널 닫기"><i class="fa fa-times"></i></button>
           </div>
+          <div class="note-tab-bar" id="noteTabBar"></div>
           <div class="pane-header-title"><i class="fa fa-pen"></i> <span class="pane-tag">노트</span></div>
         </div>
     <div class="rp-tabs" id="rpTabs">
@@ -405,8 +403,6 @@
 
       <!-- NOTES TAB -->
       <div class="rp-sec act" id="sec-notes">
-        <!-- Note Tab Bar (탭 없으면 숨김) -->
-        <div class="note-tab-bar" id="noteTabBar" style="display:none"></div>
         <!-- Library View (기본 표시) -->
         <div id="noteLibraryView">
           <div class="note-lib-actions">
