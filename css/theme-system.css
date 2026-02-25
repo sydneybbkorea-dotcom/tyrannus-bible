@@ -217,10 +217,10 @@
    THEME: SEPIA — 따뜻한 양피지 유리
 ═══════════════════════════════════════════════ */
 :root[data-theme="sepia"] {
-  --bg-primary:     hsl(36, 33%, 93%);
-  --bg-secondary:   hsl(34, 26%, 87%);
-  --bg-tertiary:    hsl(32, 20%, 80%);
-  --bg-surface:     hsl(40, 40%, 96%);
+  --bg-primary:     hsl(0, 0%, 100%);
+  --bg-secondary:   hsl(0, 0%, 97%);
+  --bg-tertiary:    hsl(0, 0%, 93%);
+  --bg-surface:     hsl(0, 0%, 100%);
   --text-primary:   rgba(40,25,5,0.87);
   --text-secondary: rgba(40,25,5,0.60);
   --text-muted:     rgba(40,25,5,0.38);
@@ -228,51 +228,51 @@
   --border-color:   rgba(100,60,20,0.10);
   --shadow-color:   rgba(80,50,15,0.07);
   --hl-opacity:     0.28;
-  --rail-bg-color:  hsl(34, 24%, 85%);
+  --rail-bg-color:  hsl(0, 0%, 95%);
   --content-text:       rgba(40,25,5,0.82);
   --content-text-sub:   rgba(40,25,5,0.55);
 
   /* Glassmorphism */
-  --glass-bg-1:       rgba(255,245,230,0.40);
-  --glass-bg-2:       rgba(255,245,230,0.55);
-  --glass-bg-3:       rgba(255,245,230,0.65);
+  --glass-bg-1:       rgba(255,255,255,0.50);
+  --glass-bg-2:       rgba(255,255,255,0.65);
+  --glass-bg-3:       rgba(255,255,255,0.75);
   --glass-border:     rgba(120,80,30,0.10);
-  --glass-highlight:  inset 0 1px 0 rgba(255,250,240,0.5);
+  --glass-highlight:  inset 0 1px 0 rgba(255,255,255,0.6);
   --glass-shadow:     0 8px 32px rgba(80,50,15,0.08);
   --glass-blur-1:     blur(12px);
   --glass-blur-2:     blur(20px);
   --glass-blur-3:     blur(24px);
 
   /* 패널 카드 */
-  --pane-bg:          rgba(255,245,230,0.55);
+  --pane-bg:          rgba(255,255,255,0.65);
   --pane-blur:        blur(20px);
   --pane-border:      rgba(120,80,30,0.08);
   --pane-radius:      12px;
   --pane-gap:         4px;
   --pane-shadow:      0 2px 16px rgba(80,50,15,0.06), 0 1px 2px rgba(80,50,15,0.04);
-  --pane-header-bg:   rgba(255,245,230,0.40);
+  --pane-header-bg:   rgba(255,255,255,0.50);
   --pane-header-border: rgba(120,80,30,0.06);
 
-  --popup-bg: rgba(245,234,214,0.96);
+  --popup-bg: rgba(255,255,255,0.96);
   --popup-border: rgba(100,60,20,0.10);
   --popup-shadow: 0 12px 40px rgba(80,50,15,0.12), 0 2px 8px rgba(80,50,15,0.06);
 
   --body-gradient: linear-gradient(135deg,
-    hsl(36, 40%, 88%) 0%,
-    hsl(32, 35%, 85%) 50%,
-    hsl(28, 30%, 87%) 100%);
+    hsl(0, 0%, 100%) 0%,
+    hsl(0, 0%, 98%) 50%,
+    hsl(0, 0%, 100%) 100%);
 
-  --bgi-panel:  rgba(245,234,214,0.80);
-  --bgi-bar:    rgba(240,224,196,0.75);
-  --bgi-popup:  rgba(245,234,214,0.90);
+  --bgi-panel:  rgba(255,255,255,0.85);
+  --bgi-bar:    rgba(255,255,255,0.80);
+  --bgi-popup:  rgba(255,255,255,0.92);
 
   /* 레일 */
-  --rail-bg:      rgba(255,245,230,0.45);
+  --rail-bg:      rgba(255,255,255,0.55);
   --rail-blur:    blur(16px);
   --rail-border:  rgba(120,80,30,0.08);
 
   /* 슬라이더 메뉴 */
-  --slider-bg:      rgba(255,245,230,0.78);
+  --slider-bg:      rgba(255,255,255,0.85);
   --slider-blur:    blur(24px);
   --slider-border:  rgba(120,80,30,0.10);
   --slider-shadow:  0 8px 40px rgba(80,50,15,0.10);
