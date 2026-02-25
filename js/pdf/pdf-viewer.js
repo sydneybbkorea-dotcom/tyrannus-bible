@@ -244,27 +244,105 @@ var PDFViewer = (function(){
     });
 
     // ── iOS Safari: touchstart/touchmove 레벨에서 스크롤 차단 ──
-    // PointerEvent preventDefault()만으로는 iOS에서 스크롤을 막지 못함
+    // iOS Safari는 touch-action:none CSS 미지원 (WebKit bug #133112)
+    // touchstart에서 preventDefault() 호출이 유일한 방법
     _container.addEventListener('touchstart', function(e){
-      if(typeof PDFTools === 'undefined') return;
-      var tool = PDFTools.getTool();
+      var tool = typeof PDFTools !== 'undefined' ? PDFTools.getTool() : 'select';
+      // 2-finger: 핀치줌 처리 (select 모드에서만 허용)
+      if(e.touches.length >= 2){
+        if(tool === 'select') _pinchStart(e);
+        e.preventDefault();
+        return;
+      }
       // Apple Pencil (touchType === 'stylus') → 항상 스크롤 차단
-      var isStylus = e.touches.length === 1 && e.touches[0].touchType === 'stylus';
+      var isStylus = e.touches[0] && e.touches[0].touchType === 'stylus';
       if(isStylus){
         e.preventDefault();
         if(tool === 'select') PDFTools.setTool('draw');
         return;
       }
-      // 도구 활성 시 손가락 스크롤도 차단
+      // 도구 활성 시 손가락 스크롤도 차단 (1-finger draw)
       if(tool !== 'select') e.preventDefault();
     }, { passive: false });
 
     _container.addEventListener('touchmove', function(e){
-      if(typeof PDFTools === 'undefined') return;
-      var tool = PDFTools.getTool();
-      var isStylus = e.touches.length === 1 && e.touches[0].touchType === 'stylus';
+      var tool = typeof PDFTools !== 'undefined' ? PDFTools.getTool() : 'select';
+      // 핀치줌 진행
+      if(e.touches.length >= 2){
+        _pinchMove(e);
+        e.preventDefault();
+        return;
+      }
+      var isStylus = e.touches[0] && e.touches[0].touchType === 'stylus';
       if(isStylus || tool !== 'select') e.preventDefault();
     }, { passive: false });
+
+    _container.addEventListener('touchend', function(e){
+      if(_pinchActive) _pinchEnd(e);
+    }, { passive: false });
+
+    // Safari GestureEvent (더 부드러운 핀치줌)
+    _container.addEventListener('gesturestart', function(e){ e.preventDefault(); _gestureBaseScale = _scale; }, { passive: false });
+    _container.addEventListener('gesturechange', function(e){
+      e.preventDefault();
+      var newScale = Math.max(0.5, Math.min(4.0, _gestureBaseScale * e.scale));
+      _applyPinchPreview(newScale);
+    }, { passive: false });
+    _container.addEventListener('gestureend', function(e){
+      e.preventDefault();
+      var newScale = Math.max(0.5, Math.min(4.0, _gestureBaseScale * e.scale));
+      zoom(newScale);
+    }, { passive: false });
+  }
+
+  // ── 핀치줌 (2-finger touch) ──
+  var _pinchActive = false;
+  var _pinchStartDist = 0;
+  var _pinchBaseScale = 1;
+  var _gestureBaseScale = 1;
+
+  function _pinchStart(e){
+    if(e.touches.length < 2) return;
+    _pinchActive = true;
+    _pinchStartDist = _getTouchDist(e.touches[0], e.touches[1]);
+    _pinchBaseScale = _scale;
+  }
+  function _pinchMove(e){
+    if(!_pinchActive || e.touches.length < 2) return;
+    var dist = _getTouchDist(e.touches[0], e.touches[1]);
+    var ratio = dist / _pinchStartDist;
+    var newScale = Math.max(0.5, Math.min(4.0, _pinchBaseScale * ratio));
+    _applyPinchPreview(newScale);
+  }
+  function _pinchEnd(){
+    if(!_pinchActive) return;
+    _pinchActive = false;
+    // CSS 프리뷰 제거 후 실제 렌더
+    var pages = _container ? _container.querySelectorAll('.pdf-page-wrap') : [];
+    var previewScale = 1;
+    pages.forEach(function(p){
+      if(p.style.transform){
+        var m = p.style.transform.match(/scale\(([^)]+)\)/);
+        if(m) previewScale = parseFloat(m[1]);
+        p.style.transform = '';
+        p.style.transformOrigin = '';
+      }
+    });
+    var finalScale = Math.max(0.5, Math.min(4.0, _scale * previewScale));
+    if(Math.abs(finalScale - _scale) > 0.02) zoom(finalScale);
+  }
+  function _applyPinchPreview(newScale){
+    if(!_container) return;
+    var ratio = newScale / _scale;
+    _container.querySelectorAll('.pdf-page-wrap').forEach(function(p){
+      p.style.transformOrigin = 'center center';
+      p.style.transform = 'scale(' + ratio + ')';
+    });
+  }
+  function _getTouchDist(t1, t2){
+    var dx = t1.clientX - t2.clientX;
+    var dy = t1.clientY - t2.clientY;
+    return Math.sqrt(dx * dx + dy * dy);
   }
 
   function _updatePannable(){

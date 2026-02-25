@@ -18,6 +18,13 @@ var InputManager = (function(){
     } else {
       _setMode('mouse');
     }
+
+    // PC: 우클릭 컨텍스트 메뉴 차단 (성경 영역만 허용)
+    document.addEventListener('contextmenu', function(e){
+      // 성경 pane 내부는 허용 (텍스트 복사 등)
+      if(e.target.closest('#biblePane') || e.target.closest('#bibleScroll')) return;
+      e.preventDefault();
+    });
   }
 
   function _onPointerDown(e){

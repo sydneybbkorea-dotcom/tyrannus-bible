@@ -352,16 +352,27 @@
 }
 .pdf-annot-layer.interactive {
   pointer-events: auto;
-  touch-action: none;        /* 터치 드래그 시 스크롤 방지 */
+  touch-action: none;        /* 비-Safari 브라우저용 */
   cursor: crosshair;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
 }
 /* 펜 입력 시 annotation 레이어가 항상 이벤트 수신 (auto-switch 지원) */
 [data-input="pen"] .pdf-annot-layer {
   pointer-events: auto;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
-/* 도구 활성 시 뷰포트 스크롤 차단 (iPad Safari touch-action 전파) */
+/* 도구 활성 시 뷰포트 스크롤 차단 */
 .pdf-viewport.pdf-tool-active {
   touch-action: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+}
+/* 핀치줌 프리뷰 시 페이지 전환 부드럽게 */
+.pdf-page-wrap {
+  transition: none;
 }
 
 /* Annotation types */

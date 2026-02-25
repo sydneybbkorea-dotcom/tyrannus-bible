@@ -283,6 +283,31 @@ var PDFTools = (function(){
       var c = layerEl.querySelector('.pdf-text-cursor');
       if(c) c.remove();
     });
+
+    // ── iOS Safari: annotation 레이어에 직접 touch 이벤트 방지 ──
+    // iOS Safari는 touch-action:none CSS를 지원하지 않음 (WebKit bug #133112)
+    // 반드시 touchstart에서 preventDefault()를 호출해야 스크롤 차단됨
+    layerEl.addEventListener('touchstart', function(e){
+      if(_currentTool === 'select'){
+        // select 모드라도 Apple Pencil이면 차단 (auto-switch 대비)
+        var isStylus = e.touches.length === 1 && e.touches[0].touchType === 'stylus';
+        if(isStylus) e.preventDefault();
+        return;
+      }
+      e.preventDefault();
+    }, { passive: false });
+
+    layerEl.addEventListener('touchmove', function(e){
+      if(_currentTool !== 'select') e.preventDefault();
+      else {
+        var isStylus = e.touches.length === 1 && e.touches[0].touchType === 'stylus';
+        if(isStylus) e.preventDefault();
+      }
+    }, { passive: false });
+
+    layerEl.addEventListener('touchend', function(e){
+      if(_currentTool !== 'select') e.preventDefault();
+    }, { passive: false });
   }
 
   // ══════════════════════════════════════════════
