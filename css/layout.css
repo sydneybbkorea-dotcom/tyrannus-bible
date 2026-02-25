@@ -56,8 +56,7 @@ body.has-bg-image .cp-drop {
   backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
 }
 body.has-bg-image #pdfPanel {
-  background: var(--bgi-panel) !important;
-  backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px);
+  background: transparent !important;
 }
 body.has-bg-image .pdf-toolbar,
 body.has-bg-image .pdf-tab-bar,
