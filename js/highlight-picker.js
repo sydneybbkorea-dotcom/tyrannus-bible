@@ -3,7 +3,9 @@
 // 모바일: 터치 지원, 선택 영역 기준 위치, OS 팝업과 충돌 회피
 
 let _lastSel = null;
-const _isTouchDevice = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+let _lastInputWasTouch = false;
+document.addEventListener('touchstart', ()=>{ _lastInputWasTouch = true; }, {passive:true,capture:true});
+document.addEventListener('mousedown', (e)=>{ if(e.sourceCapabilities && e.sourceCapabilities.firesTouchEvents) return; _lastInputWasTouch = false; }, {passive:true,capture:true});
 
 /* ── 선택 감지 (mouse + touch) ── */
 function _onSelectionEnd(e){
@@ -96,7 +98,7 @@ function showHLPicker(rect, vn){
   p.querySelectorAll('.hlp-icon-wrap').forEach(w => w.classList.remove('open'));
 
   /* 모바일: 펜 드롭다운 바로 열기 */
-  if(_isTouchDevice){
+  if(_lastInputWasTouch){
     p.querySelector('#hlPenWrap').classList.add('open');
   }
 
@@ -108,7 +110,7 @@ function showHLPicker(rect, vn){
   _hlUpdateBmkList();
 
   clearTimeout(p._t);
-  p._t = setTimeout(hideHLPicker, _isTouchDevice ? 8000 : 5000);
+  p._t = setTimeout(hideHLPicker, _lastInputWasTouch ? 8000 : 5000);
 }
 
 /* ── 드롭다운 호버/클릭 설정 ── */
@@ -125,7 +127,7 @@ function _hlSetupDropdown(wrap){
     wrap.classList.add('open');
     /* 자동닫기 타이머 리셋 */
     const p = document.getElementById('hlPicker');
-    if(p){ clearTimeout(p._t); p._t = setTimeout(hideHLPicker, _isTouchDevice ? 8000 : 5000); }
+    if(p){ clearTimeout(p._t); p._t = setTimeout(hideHLPicker, _lastInputWasTouch ? 8000 : 5000); }
   }
   function close(){
     timer = setTimeout(()=> wrap.classList.remove('open'), 250);
