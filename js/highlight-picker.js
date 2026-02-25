@@ -48,103 +48,130 @@ function showHLPicker(rect, vn){
     p.id = 'hlPicker';
     p.style.cssText = 'position:fixed;z-index:9998;';
     p.innerHTML = `
-      <div id="hlTrigger" style="
-        width:30px;height:30px;border-radius:50%;
-        background:var(--bg3);border:1px solid var(--border2);
-        display:flex;align-items:center;justify-content:center;
-        cursor:pointer;box-shadow:var(--shadow);transition:all .18s;
-        color:var(--gold);font-size:13px;
-      "><i class="fa fa-highlighter"></i></div>
-      <div id="hlColors" style="
-        position:absolute;left:0;top:0;
-        display:flex;gap:5px;align-items:center;
-        background:var(--bg3);border:1px solid var(--border2);border-radius:20px;
-        padding:5px 10px;box-shadow:var(--shadow);
-        opacity:0;pointer-events:none;transform:scale(.8);
-        transition:opacity .15s,transform .15s;white-space:nowrap;
-      ">
-        <i class="fa fa-highlighter" style="font-size:11px;color:var(--gold);margin-right:2px"></i>
-        <div class="hlc-dot" style="background:#FACC15" onclick="applyDragHL('Y')" title="노랑"></div>
-        <div class="hlc-dot" style="background:#FB923C" onclick="applyDragHL('O')" title="주황"></div>
-        <div class="hlc-dot" style="background:#34D399" onclick="applyDragHL('G')" title="초록"></div>
-        <div class="hlc-dot" style="background:#60A5FA" onclick="applyDragHL('B')" title="파랑"></div>
-        <div class="hlc-dot" style="background:#C084FC" onclick="applyDragHL('P')" title="보라"></div>
-        <div class="hlc-dot hlc-erase" onclick="applyDragHL('E')" title="지우기">✕</div>
+      <div class="hlp-bar">
+        <div class="hlp-icon-wrap" id="hlPenWrap">
+          <div class="hlp-icon" id="hlPenBtn"><i class="fa fa-highlighter"></i></div>
+          <div class="hlp-dropdown hlp-colors" id="hlColors">
+            <div class="hlc-dot" style="background:#FACC15" onclick="applyDragHL('Y')" title="노랑"></div>
+            <div class="hlc-dot" style="background:#FB923C" onclick="applyDragHL('O')" title="주황"></div>
+            <div class="hlc-dot" style="background:#34D399" onclick="applyDragHL('G')" title="초록"></div>
+            <div class="hlc-dot" style="background:#60A5FA" onclick="applyDragHL('B')" title="파랑"></div>
+            <div class="hlc-dot" style="background:#C084FC" onclick="applyDragHL('P')" title="보라"></div>
+            <div class="hlc-dot hlc-erase" onclick="applyDragHL('E')" title="지우기">✕</div>
+          </div>
+        </div>
+        <div class="hlp-icon-wrap" id="hlBmkWrap">
+          <div class="hlp-icon" id="hlBmkBtn"><i class="fa fa-bookmark"></i></div>
+          <div class="hlp-dropdown hlp-bmk-list" id="hlBmkList"></div>
+        </div>
       </div>
-      <div id="hlTopicArea" style="position:absolute;left:0;top:100%;"></div>
     `;
     document.body.appendChild(p);
 
-    /* 데스크톱: 호버로 색상 팔레트 열기 */
-    const trigger = p.querySelector('#hlTrigger');
-    const colors = p.querySelector('#hlColors');
-    let _hoverTimeout = null;
-
-    function showColors(){
-      clearTimeout(_hoverTimeout);
-      trigger.style.opacity='0'; trigger.style.pointerEvents='none';
-      colors.style.opacity='1'; colors.style.pointerEvents='auto'; colors.style.transform='scale(1)';
-    }
-    function hideColors(){
-      _hoverTimeout = setTimeout(()=>{
-        colors.style.opacity='0'; colors.style.pointerEvents='none'; colors.style.transform='scale(.8)';
-        trigger.style.opacity='1'; trigger.style.pointerEvents='auto';
-      }, 300);
-    }
-
-    trigger.addEventListener('mouseenter', showColors);
-    trigger.addEventListener('click', showColors);
-    colors.addEventListener('mouseenter', ()=> clearTimeout(_hoverTimeout));
-    colors.addEventListener('mouseleave', hideColors);
-    p.addEventListener('mouseleave', hideColors);
+    /* 호버/클릭으로 드롭다운 열기 */
+    _hlSetupDropdown(p.querySelector('#hlPenWrap'));
+    _hlSetupDropdown(p.querySelector('#hlBmkWrap'));
 
     /* 모바일: 터치로 dot 선택 시 touchend 전파 방지 */
-    colors.addEventListener('touchend', e=> e.stopPropagation(), {passive:false});
+    p.querySelector('#hlColors').addEventListener('touchend', e=> e.stopPropagation(), {passive:false});
+    p.querySelector('#hlBmkList').addEventListener('touchend', e=> e.stopPropagation(), {passive:false});
   }
 
   /* ── 위치 계산: 선택 영역 위쪽 우선, 공간 없으면 아래쪽 ── */
-  const pickerH = 40;   // 피커 높이 (대략)
-  const pickerW = 230;   // 색상 팔레트 폭 (대략)
-  const gap = 8;         // 선택 영역과의 간격
+  const pickerH = 40;
+  const pickerW = 90;
+  const gap = 8;
 
-  /* 수평: 선택 영역 중앙 기준, 화면 밖으로 안 나가게 */
   const cx = rect.left + rect.width / 2;
   let lx = Math.max(8, Math.min(cx - pickerW / 2, window.innerWidth - pickerW - 8));
 
-  /* 수직: 선택 영역 위쪽 우선 (OS 팝업은 보통 아래쪽에 뜸) */
   let ly;
   if(rect.top - pickerH - gap > 10){
-    ly = rect.top - pickerH - gap;          // 위쪽 배치
+    ly = rect.top - pickerH - gap;
   } else {
-    ly = rect.bottom + gap;                 // 공간 없으면 아래쪽
+    ly = rect.bottom + gap;
   }
 
-  /* 리셋: 트리거/색상 상태 초기화 */
-  const trigger = p.querySelector('#hlTrigger');
-  const colors = p.querySelector('#hlColors');
+  /* 드롭다운 닫기 */
+  p.querySelectorAll('.hlp-icon-wrap').forEach(w => w.classList.remove('open'));
 
+  /* 모바일: 펜 드롭다운 바로 열기 */
   if(_isTouchDevice){
-    /* 모바일: 트리거 건너뛰고 바로 색상 팔레트 표시 */
-    trigger.style.opacity='0'; trigger.style.pointerEvents='none';
-    colors.style.opacity='1'; colors.style.pointerEvents='auto'; colors.style.transform='scale(1)';
-  } else {
-    /* 데스크톱: 트리거 아이콘 먼저 표시 */
-    trigger.style.opacity='1'; trigger.style.pointerEvents='auto';
-    colors.style.opacity='0'; colors.style.pointerEvents='none'; colors.style.transform='scale(.8)';
+    p.querySelector('#hlPenWrap').classList.add('open');
   }
 
   p.style.left = lx + 'px';
   p.style.top = ly + 'px';
   p.style.display = 'block';
 
-  // 주제 칩 업데이트
-  const topicArea = p.querySelector('#hlTopicArea');
-  if(topicArea && typeof _htRenderTopicPicker === 'function'){
-    topicArea.innerHTML = _htRenderTopicPicker();
-  }
+  /* 북마크(주제) 목록 업데이트 */
+  _hlUpdateBmkList();
 
   clearTimeout(p._t);
   p._t = setTimeout(hideHLPicker, _isTouchDevice ? 8000 : 5000);
+}
+
+/* ── 드롭다운 호버/클릭 설정 ── */
+function _hlSetupDropdown(wrap){
+  if(!wrap) return;
+  let timer = null;
+
+  function open(){
+    clearTimeout(timer);
+    /* 다른 드롭다운은 닫기 */
+    wrap.closest('.hlp-bar').querySelectorAll('.hlp-icon-wrap').forEach(w=>{
+      if(w !== wrap) w.classList.remove('open');
+    });
+    wrap.classList.add('open');
+    /* 자동닫기 타이머 리셋 */
+    const p = document.getElementById('hlPicker');
+    if(p){ clearTimeout(p._t); p._t = setTimeout(hideHLPicker, _isTouchDevice ? 8000 : 5000); }
+  }
+  function close(){
+    timer = setTimeout(()=> wrap.classList.remove('open'), 250);
+  }
+
+  wrap.querySelector('.hlp-icon').addEventListener('mouseenter', open);
+  wrap.querySelector('.hlp-icon').addEventListener('click', open);
+  wrap.querySelector('.hlp-dropdown').addEventListener('mouseenter', ()=> clearTimeout(timer));
+  wrap.querySelector('.hlp-dropdown').addEventListener('mouseleave', close);
+  wrap.addEventListener('mouseleave', close);
+}
+
+/* ── 북마크(주제) 목록 렌더 ── */
+function _hlUpdateBmkList(){
+  const list = document.getElementById('hlBmkList');
+  if(!list) return;
+  const topics = S.hlTopics || [{id:'default',name:'기본',visible:true}];
+  if(topics.length <= 1){
+    /* 주제 1개면 북마크 아이콘 숨김 */
+    const wrap = document.getElementById('hlBmkWrap');
+    if(wrap) wrap.style.display = 'none';
+    return;
+  }
+  const wrap = document.getElementById('hlBmkWrap');
+  if(wrap) wrap.style.display = '';
+
+  let h = '';
+  topics.forEach(t=>{
+    const cls = t.id === S.activeHlTopic ? ' hlp-bmk-active' : '';
+    h += '<div class="hlp-bmk-item' + cls + '" onclick="_hlPickBmk(\'' + t.id + '\')">';
+    h += '<i class="fa fa-bookmark" style="font-size:9px"></i> ';
+    h += (typeof _escHtml === 'function' ? _escHtml(t.name) : t.name);
+    h += '</div>';
+  });
+  list.innerHTML = h;
+}
+
+/* ── 북마크 선택 ── */
+function _hlPickBmk(id){
+  if(typeof _htSetActive === 'function') _htSetActive(id);
+  /* 드롭다운 닫기 */
+  const wrap = document.getElementById('hlBmkWrap');
+  if(wrap) wrap.classList.remove('open');
+  /* 선택 완료 토스트 */
+  const t = (S.hlTopics||[]).find(t=>t.id===id);
+  if(t && typeof toast === 'function') toast('주제: ' + t.name);
 }
 
 /* ── 드래그 해제 시 피커 숨김 (피커 위 호버 중이면 유지) ── */

@@ -49,34 +49,4 @@
   color:var(--text); font-size:13px; cursor:pointer;
 }
 
-/* ── 피커 내 주제 드롭다운 ── */
-.ht-topic-picker {
-  display:flex; align-items:center;
-  padding:3px 8px; border-radius:12px;
-  background:var(--bg2); border:1px solid var(--border2);
-  font-size:11px; color:var(--text2); cursor:pointer;
-  margin-top:6px; width:fit-content;
-  transition:background .15s;
-}
-.ht-topic-picker:hover { background:var(--bg3); }
-
-.ht-picker-dropdown {
-  position:absolute; left:0; bottom:100%;
-  display:flex; flex-wrap:wrap; gap:4px;
-  padding:6px 8px; margin-bottom:4px;
-  background:var(--bg3); border:1px solid var(--border2);
-  border-radius:10px; box-shadow:var(--shadow);
-  z-index:10;
-}
-.ht-topic-chip {
-  padding:3px 10px; border-radius:10px;
-  font-size:11px; cursor:pointer;
-  background:var(--bg2); color:var(--text2);
-  border:1px solid transparent;
-  transition:all .15s;
-}
-.ht-topic-chip:hover { border-color:var(--accent); color:var(--text); }
-.ht-topic-chip-active {
-  background:var(--accent); color:#fff;
-  border-color:var(--accent);
-}
+/* 피커 내 주제 드롭다운 → bible.css .hlp-bmk-* 으로 이동 */

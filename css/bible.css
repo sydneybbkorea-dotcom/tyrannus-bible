@@ -461,7 +461,57 @@ body.panel-open .vrow-parallel .vindic { position:absolute; right:4px; top:4px; 
   box-shadow: inset 0 0 6px rgba(140,80,180,.08);
 }
 
-/* HL picker dots */
+/* ── HL picker bar (펜 + 북마크 아이콘) ── */
+.hlp-bar {
+  display:flex; gap:4px; align-items:center;
+}
+.hlp-icon-wrap {
+  position:relative;
+}
+.hlp-icon {
+  width:32px; height:32px; border-radius:50%;
+  background:var(--bg3); border:1px solid var(--border2);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; color:var(--gold); font-size:13px;
+  box-shadow:var(--shadow); transition:all .18s;
+}
+.hlp-icon:hover {
+  background:var(--bg4); transform:scale(1.08);
+}
+/* 드롭다운 공통 */
+.hlp-dropdown {
+  position:absolute; bottom:calc(100% + 6px); left:50%; transform:translateX(-50%) scale(.85);
+  background:var(--bg3); border:1px solid var(--border2); border-radius:14px;
+  padding:5px 8px; box-shadow:var(--shadow);
+  opacity:0; pointer-events:none;
+  transition:opacity .15s, transform .15s;
+  white-space:nowrap;
+}
+.hlp-icon-wrap.open .hlp-dropdown {
+  opacity:1; pointer-events:auto; transform:translateX(-50%) scale(1);
+}
+/* 색상 드롭다운 */
+.hlp-colors {
+  display:flex; gap:5px; align-items:center;
+}
+/* 북마크 드롭다운 */
+.hlp-bmk-list {
+  display:flex; flex-direction:column; gap:2px;
+  min-width:80px; padding:4px 6px;
+}
+.hlp-bmk-item {
+  padding:4px 10px; border-radius:8px;
+  font-size:11px; cursor:pointer; color:var(--text2);
+  display:flex; align-items:center; gap:4px;
+  transition:all .12s; white-space:nowrap;
+}
+.hlp-bmk-item:hover { background:var(--bg4); color:var(--text); }
+.hlp-bmk-item.hlp-bmk-active {
+  background:var(--accent-dim, var(--gold-dim)); color:var(--accent-color, var(--gold));
+  font-weight:600;
+}
+
+/* HL color dots */
 .hlc-dot {
   width:20px; height:20px; border-radius:50%; cursor:pointer;
   border:2px solid transparent; transition:all .12s;
