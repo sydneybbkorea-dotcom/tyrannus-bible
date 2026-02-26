@@ -466,3 +466,50 @@
 [data-theme="sepia"] .adv-ref-chip:hover {
     color: hsl(var(--accent-h), var(--accent-s), calc(var(--accent-l) - 5%))
 }
+
+/* 검색 결과 임시 반짝임 하이라이트 — 금색 언더라인 글로우 */
+.sch-flash {
+    background: transparent;
+    border-bottom: 2px solid rgba(212, 175, 55, .9);
+    border-radius: 2px;
+    padding-bottom: 1px;
+    pointer-events: none;
+    animation: schFlash 2s ease-out forwards;
+}
+
+@keyframes schFlash {
+    0% {
+        border-bottom-color: rgba(212, 175, 55, .9);
+        box-shadow: 0 2px 8px rgba(212, 175, 55, .5);
+    }
+
+    15% {
+        border-bottom-color: rgba(212, 175, 55, .2);
+        box-shadow: none;
+    }
+
+    30% {
+        border-bottom-color: rgba(212, 175, 55, .8);
+        box-shadow: 0 2px 6px rgba(212, 175, 55, .4);
+    }
+
+    45% {
+        border-bottom-color: rgba(212, 175, 55, .2);
+        box-shadow: none;
+    }
+
+    60% {
+        border-bottom-color: rgba(212, 175, 55, .6);
+        box-shadow: 0 2px 4px rgba(212, 175, 55, .3);
+    }
+
+    75% {
+        border-bottom-color: rgba(212, 175, 55, .1);
+        box-shadow: none;
+    }
+
+    100% {
+        border-bottom-color: transparent;
+        box-shadow: none;
+    }
+}
