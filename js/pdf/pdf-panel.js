@@ -213,10 +213,5 @@ var PDFPanel = (function () {
 
 // Global toggle function for icon-rail onclick
 function togglePdfPanel() {
-  // 검색이 PDF 패널을 빌려 표시 중이면, PDF를 끄지 않고 검색만 해제
-  if (window._searchInPdf && typeof toggleSearchPane === 'function') {
-    toggleSearchPane(); // 검색 해제 → PDF 원래 상태로 복원
-    return;
-  }
   PDFPanel.toggle();
 }
