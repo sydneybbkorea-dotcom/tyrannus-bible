@@ -12,12 +12,15 @@
 html,
 body {
   height: 100%;
-  height: 100vh;
-  height: -webkit-fill-available;
   width: 100%;
   overflow: hidden;
   overscroll-behavior: none;
   -webkit-overflow-scrolling: auto;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 body {
@@ -60,6 +63,8 @@ body.has-bg-image #rightPanel {
   background: var(--bgi-panel) !important;
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
 }
 
 body.has-bg-image #noteContent {
@@ -72,6 +77,8 @@ body.has-bg-image .pane-header {
   background: var(--bgi-bar) !important;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
 }
 
 body.has-bg-image #bibleScroll {
@@ -83,6 +90,8 @@ body.has-bg-image .cp-drop {
   background: var(--bgi-popup) !important;
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
 }
 
 body.has-bg-image #pdfPanel {
@@ -95,6 +104,8 @@ body.has-bg-image .pdf-lib-actions {
   background: var(--bgi-bar) !important;
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
 }
 
 /* ── 레거시 #main + #appShell ── */
@@ -103,9 +114,14 @@ body.has-bg-image .pdf-lib-actions {
 }
 
 #appShell {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
-  flex: 1;
-  overflow: hidden
+  overflow: hidden;
+  overscroll-behavior: none;
 }
 
 /* 레거시 bookNav 숨김 */
