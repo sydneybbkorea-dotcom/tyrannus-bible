@@ -264,12 +264,12 @@
 }
 
 .adv-hl {
-    background: rgba(255, 210, 0, .35);
-    color: #ffe066;
+    background: rgba(0, 187, 204, .3);
+    color: #0bc;
     border-radius: 3px;
     padding: 1px 3px;
     font-weight: 700;
-    text-shadow: 0 0 6px rgba(255, 210, 0, .4)
+    text-shadow: 0 0 6px rgba(0, 187, 204, .3)
 }
 
 /* 참조 칩 그리드 */
@@ -385,10 +385,10 @@
     font-family: 'JetBrains Mono', monospace
 }
 
-/* 라이트 테마 — 선명한 하이라이트 */
+/* 라이트 테마 — 시안 하이라이트 */
 [data-theme="light"] .adv-hl {
-    background: hsla(var(--accent-h), 80%, 60%, .28);
-    color: hsl(var(--accent-h), var(--accent-s), calc(var(--accent-l) - 12%));
+    background: rgba(0, 170, 187, .18);
+    color: #0099aa;
     font-weight: 700;
     text-shadow: none
 }
@@ -456,10 +456,10 @@
     border-color: var(--glass-border)
 }
 
-/* 세피아 테마 — 따뜻한 하이라이트 */
+/* 세피아 테마 — 시안 하이라이트 */
 [data-theme="sepia"] .adv-hl {
-    background: hsla(var(--accent-h), 70%, 50%, .25);
-    color: hsl(var(--accent-h), var(--accent-s), calc(var(--accent-l) - 10%));
+    background: rgba(0, 170, 187, .18);
+    color: #0099aa;
     font-weight: 700;
     text-shadow: none
 }
