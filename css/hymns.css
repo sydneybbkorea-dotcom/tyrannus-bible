@@ -238,6 +238,13 @@
   overflow-x: hidden;
   position: relative;
   padding-bottom: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.hymns-body>#hymViewDetail {
+  flex: 1;
+  min-height: 0;
 }
 
 .hym-view {
@@ -380,12 +387,9 @@
   background: var(--accent-dim);
 }
 
-/* ── Full Player (glass island, sticky at bottom of scroll) ── */
+/* ── Full Player (glass island, always at bottom via flex) ── */
 .hym-full-player {
-  position: sticky;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  flex-shrink: 0;
   z-index: 10;
   padding: 10px 14px 8px;
   border-radius: 16px;
@@ -397,7 +401,7 @@
   -webkit-backdrop-filter: var(--glass-blur-2);
   border: 1px solid var(--glass-border);
   box-shadow: 0 2px 16px rgba(0, 0, 0, .12);
-  margin: 0 auto;
+  margin: 0 auto 4px;
 }
 
 .hym-fp-title-row {
