@@ -5,20 +5,21 @@
 /* ── Overlay container (paneContainer 직속 자식, 성경 독립) ── */
 .hymns-overlay {
   position: absolute;
-  top: var(--pane-gap, 4px);
-  left: var(--pane-gap, 4px);
-  right: var(--pane-gap, 4px);
-  bottom: var(--pane-gap, 4px);
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 50%;
+  min-width: 320px;
   z-index: 200;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border-radius: var(--pane-radius, 12px);
+  border-radius: 0 var(--pane-radius, 12px) var(--pane-radius, 12px) 0;
   background: var(--pane-bg, var(--bg));
   backdrop-filter: var(--pane-blur, blur(20px));
   -webkit-backdrop-filter: var(--pane-blur, blur(20px));
   border: 1px solid var(--glass-border);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, .2);
+  box-shadow: 4px 0 24px rgba(0, 0, 0, .2);
 }
 
 /* ── Header (overlay detail view) ── */
@@ -383,21 +384,19 @@
 /* ── Full Player (glass island, sticky at bottom of scroll) ── */
 .hym-full-player {
   position: sticky;
-  bottom: 8px;
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: 0;
   z-index: 10;
   padding: 10px 14px 8px;
-  border-radius: 16px;
-  width: calc(50% - 8px);
-  min-width: 220px;
-  max-width: 320px;
+  border-radius: 16px 16px 0 0;
+  width: 100%;
+  max-width: none;
   background: var(--glass-bg-2);
   backdrop-filter: var(--glass-blur-2);
   -webkit-backdrop-filter: var(--glass-blur-2);
   border: 1px solid var(--glass-border);
-  box-shadow: 0 2px 16px rgba(0, 0, 0, .12);
-  margin: 0 auto;
+  border-bottom: none;
+  box-shadow: 0 -2px 16px rgba(0, 0, 0, .12);
+  box-sizing: border-box;
 }
 
 .hym-fp-title-row {
@@ -538,10 +537,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 32px 20px;
+  justify-content: flex-start;
+  padding: 32px 20px 80px;
   text-align: center;
   min-height: 200px;
+  overflow-y: auto;
 }
 
 .hym-lyrics-title {
