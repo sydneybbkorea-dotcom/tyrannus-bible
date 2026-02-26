@@ -234,8 +234,7 @@
 /* ── Body / Views ── */
 .hymns-body {
   flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
   position: relative;
   padding-bottom: 0;
   display: flex;
@@ -245,6 +244,8 @@
 .hymns-body>#hymViewDetail {
   flex: 1;
   min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .hym-view {
