@@ -1,43 +1,43 @@
 // pdf-panel.js — PDF 패널 open/close/toggle, 탭 시스템, 뷰 전환 (library ↔ viewer)
 
-var PDFPanel = (function(){
+var PDFPanel = (function () {
   var _tabs = [];          // [{id, name, page}]  — 열린 PDF 탭 목록
   var _activeTabId = null; // 현재 활성 탭 ID (null = 라이브러리 표시)
 
   // ── Panel Toggle ──
-  function toggle(){
+  function toggle() {
     var panel = document.getElementById('pdfPanel');
-    if(!panel) return;
-    if(panel.classList.contains('pdf-panel-hide')) open();
+    if (!panel) return;
+    if (panel.classList.contains('pdf-panel-hide')) open();
     else close();
   }
 
-  function open(){
+  function open() {
     var panel = document.getElementById('pdfPanel');
-    if(!panel) return;
+    if (!panel) return;
     panel.classList.remove('pdf-panel-hide');
     document.body.classList.add('pdf-open');
     // PaneManager로 PDF pane 표시
-    if(typeof PaneManager !== 'undefined') PaneManager.show('pdf');
+    if (typeof PaneManager !== 'undefined') PaneManager.show('pdf');
     var btn = document.querySelector('.rail-icon[data-rail="pdf"]');
-    if(btn) btn.classList.add('active');
-    if(!_activeTabId) showLibrary();
+    if (btn) btn.classList.add('active');
+    if (!_activeTabId) showLibrary();
   }
 
-  function close(){
+  function close() {
     var panel = document.getElementById('pdfPanel');
-    if(!panel) return;
+    if (!panel) return;
     panel.classList.add('pdf-panel-hide');
     document.body.classList.remove('pdf-open');
     // PaneManager로 PDF pane 숨기기
-    if(typeof PaneManager !== 'undefined') PaneManager.hide('pdf');
+    if (typeof PaneManager !== 'undefined') PaneManager.hide('pdf');
     var btn = document.querySelector('.rail-icon[data-rail="pdf"]');
-    if(btn) btn.classList.remove('active');
+    if (btn) btn.classList.remove('active');
   }
 
   // Header X button: viewer→라이브러리, library→패널 닫기
-  function headerClose(){
-    if(_activeTabId){
+  function headerClose() {
+    if (_activeTabId) {
       showLibrary();
     } else {
       close();
@@ -45,35 +45,35 @@ var PDFPanel = (function(){
   }
 
   // ── Library View ──
-  function showLibrary(){
+  function showLibrary() {
     _activeTabId = null;
     _updateViews();
     _renderTabBar();
-    if(typeof PDFLibrary !== 'undefined') PDFLibrary.render();
+    if (typeof PDFLibrary !== 'undefined') PDFLibrary.render();
   }
 
   // ── Open PDF in tab ──
-  function showViewer(pdfId){
+  function showViewer(pdfId) {
     // 이미 열린 탭이면 활성화만
     var existing = null;
-    for(var i = 0; i < _tabs.length; i++){
-      if(_tabs[i].id === pdfId){ existing = _tabs[i]; break; }
+    for (var i = 0; i < _tabs.length; i++) {
+      if (_tabs[i].id === pdfId) { existing = _tabs[i]; break; }
     }
 
-    if(existing){
+    if (existing) {
       _activeTabId = pdfId;
       _updateViews();
       _renderTabBar();
       _updateTitle();
       _updateCloseIcon();
-      if(typeof PDFViewer !== 'undefined') PDFViewer.open(pdfId, existing.page);
+      if (typeof PDFViewer !== 'undefined') PDFViewer.open(pdfId, existing.page);
       return;
     }
 
     // 새 탭 생성
-    var file = S.pdfFiles.find(function(f){ return f.id === pdfId; });
+    var file = S.pdfFiles.find(function (f) { return f.id === pdfId; });
     var tabName = file ? file.name.replace(/\.pdf$/i, '') : 'PDF';
-    if(tabName.length > 18) tabName = tabName.substr(0, 18) + '…';
+    if (tabName.length > 18) tabName = tabName.substr(0, 18) + '…';
 
     _tabs.push({ id: pdfId, name: tabName, page: 1 });
     _activeTabId = pdfId;
@@ -83,15 +83,15 @@ var PDFPanel = (function(){
     _updateTitle();
     _updateCloseIcon();
 
-    if(typeof PDFViewer !== 'undefined') PDFViewer.open(pdfId);
+    if (typeof PDFViewer !== 'undefined') PDFViewer.open(pdfId);
   }
 
   // ── Close Tab ──
-  function closeTab(tabId){
-    _tabs = _tabs.filter(function(t){ return t.id !== tabId; });
+  function closeTab(tabId) {
+    _tabs = _tabs.filter(function (t) { return t.id !== tabId; });
 
-    if(_activeTabId === tabId){
-      if(_tabs.length > 0){
+    if (_activeTabId === tabId) {
+      if (_tabs.length > 0) {
         // 마지막 탭으로 전환
         var last = _tabs[_tabs.length - 1];
         _activeTabId = last.id;
@@ -99,7 +99,7 @@ var PDFPanel = (function(){
         _renderTabBar();
         _updateTitle();
         _updateCloseIcon();
-        if(typeof PDFViewer !== 'undefined') PDFViewer.open(last.id, last.page);
+        if (typeof PDFViewer !== 'undefined') PDFViewer.open(last.id, last.page);
       } else {
         showLibrary();
       }
@@ -109,8 +109,8 @@ var PDFPanel = (function(){
   }
 
   // PDFViewer.close() 가 호출할 함수
-  function closeActiveTab(){
-    if(_activeTabId){
+  function closeActiveTab() {
+    if (_activeTabId) {
       closeTab(_activeTabId);
     } else {
       showLibrary();
@@ -118,25 +118,25 @@ var PDFPanel = (function(){
   }
 
   // ── View Switching ──
-  function _updateViews(){
+  function _updateViews() {
     var libView = document.getElementById('pdfLibraryView');
     var viewerView = document.getElementById('pdfViewerView');
 
-    if(_activeTabId){
-      if(libView) libView.classList.add('pdf-view-hide');
-      if(viewerView) viewerView.classList.add('pdf-view-active');
+    if (_activeTabId) {
+      if (libView) libView.classList.add('pdf-view-hide');
+      if (viewerView) viewerView.classList.add('pdf-view-active');
     } else {
-      if(libView) libView.classList.remove('pdf-view-hide');
-      if(viewerView) viewerView.classList.remove('pdf-view-active');
+      if (libView) libView.classList.remove('pdf-view-hide');
+      if (viewerView) viewerView.classList.remove('pdf-view-active');
     }
   }
 
   // ── Tab Bar Rendering ──
-  function _renderTabBar(){
+  function _renderTabBar() {
     var bar = document.getElementById('pdfTabBar');
-    if(!bar) return;
+    if (!bar) return;
 
-    if(_tabs.length === 0){
+    if (_tabs.length === 0) {
       bar.style.display = 'none';
       return;
     }
@@ -149,11 +149,11 @@ var PDFPanel = (function(){
     homeBtn.className = 'pdf-tab-home' + (!_activeTabId ? ' active' : '');
     homeBtn.innerHTML = '<i class="fa fa-home"></i>';
     homeBtn.title = 'PDF 도서관';
-    homeBtn.onclick = function(){ showLibrary(); };
+    homeBtn.onclick = function () { showLibrary(); };
     bar.appendChild(homeBtn);
 
     // 탭들
-    _tabs.forEach(function(tab){
+    _tabs.forEach(function (tab) {
       var tabEl = document.createElement('div');
       tabEl.className = 'pdf-tab' + (tab.id === _activeTabId ? ' active' : '');
 
@@ -161,14 +161,14 @@ var PDFPanel = (function(){
       nameSpan.className = 'pdf-tab-name';
       nameSpan.textContent = tab.name;
       nameSpan.title = tab.name;
-      nameSpan.onclick = function(){
-        if(_activeTabId !== tab.id){
+      nameSpan.onclick = function () {
+        if (_activeTabId !== tab.id) {
           _activeTabId = tab.id;
           _updateViews();
           _renderTabBar();
           _updateTitle();
           _updateCloseIcon();
-          if(typeof PDFViewer !== 'undefined') PDFViewer.open(tab.id, tab.page);
+          if (typeof PDFViewer !== 'undefined') PDFViewer.open(tab.id, tab.page);
         }
       };
 
@@ -176,7 +176,7 @@ var PDFPanel = (function(){
       closeBtn.className = 'pdf-tab-close';
       closeBtn.innerHTML = '&times;';
       closeBtn.title = '탭 닫기';
-      closeBtn.onclick = function(e){
+      closeBtn.onclick = function (e) {
         e.stopPropagation();
         closeTab(tab.id);
       };
@@ -187,15 +187,15 @@ var PDFPanel = (function(){
     });
   }
 
-  function _updateTitle(){}
-  function _updateCloseIcon(){}
+  function _updateTitle() { }
+  function _updateCloseIcon() { }
 
-  function isOpen(){
+  function isOpen() {
     var panel = document.getElementById('pdfPanel');
     return panel && !panel.classList.contains('pdf-panel-hide');
   }
 
-  function isInViewer(){ return !!_activeTabId; }
+  function isInViewer() { return !!_activeTabId; }
 
   return {
     toggle: toggle,
@@ -212,6 +212,11 @@ var PDFPanel = (function(){
 })();
 
 // Global toggle function for icon-rail onclick
-function togglePdfPanel(){
+function togglePdfPanel() {
+  // 검색이 PDF 패널을 빌려 표시 중이면, PDF를 끄지 않고 검색만 해제
+  if (window._searchInPdf && typeof toggleSearchPane === 'function') {
+    toggleSearchPane(); // 검색 해제 → PDF 원래 상태로 복원
+    return;
+  }
   PDFPanel.toggle();
 }
