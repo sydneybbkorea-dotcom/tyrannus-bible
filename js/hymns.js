@@ -961,3 +961,15 @@ function _hymReopenLast() {
   var id = _hym.lastViewedId || _hym.currentId;
   if (id) _hymOpenDetail(id);
 }
+
+/* ── Close detail + exit fullscreen ── */
+function _hymCloseDetailAndExitFs() {
+  var fsEl = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+  if (fsEl) {
+    if (document.exitFullscreen) document.exitFullscreen().catch(function () { });
+    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+    else if (document.msExitFullscreen) document.msExitFullscreen();
+  }
+  _hymCloseDetail();
+}
+window._hymCloseDetailAndExitFs = _hymCloseDetailAndExitFs;
