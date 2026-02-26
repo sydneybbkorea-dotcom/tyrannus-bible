@@ -46,12 +46,12 @@ function renderBible() {
       }
     }
 
-    // 통검/고급검색 결과 자동 하이라이트 처리
+    // 통검/고급검색 결과 자동 하이라이트 처리 (일시적 반짝임)
     if (S.schHighlightQuery && S.schHighlightKey === key) {
       const q = S.schHighlightQuery;
       const safe = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       try {
-        displayTxt = displayTxt.replace(new RegExp(safe, 'gi'), '<mark class="adv-hl">$&</mark>');
+        displayTxt = displayTxt.replace(new RegExp(safe, 'gi'), '<mark class="sch-flash">$&</mark>');
       } catch (e) { }
     }
 
@@ -88,4 +88,17 @@ function renderBible() {
     restoreHL();
     if (typeof _svApplySharedHighlights === 'function') _svApplySharedHighlights();
   });
+
+  // 검색 하이라이트 반짝임 자동 제거 (2초 후)
+  if (S.schHighlightQuery) {
+    setTimeout(() => {
+      document.querySelectorAll('.sch-flash').forEach(m => {
+        const parent = m.parentNode;
+        while (m.firstChild) parent.insertBefore(m.firstChild, m);
+        parent.removeChild(m);
+      });
+    }, 2000);
+    S.schHighlightQuery = '';
+    S.schHighlightKey = '';
+  }
 }
