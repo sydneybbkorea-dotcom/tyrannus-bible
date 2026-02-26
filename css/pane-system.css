@@ -9,6 +9,8 @@
   flex: 1;
   overflow: hidden;
   height: 100%;
+  /* iOS: flex 레이아웃 높이 넘침 방지 */
+  min-height: 0;
 }
 
 /* ── Pane Container ── */
@@ -189,15 +191,16 @@
   left: 0;
   width: 100%;
   border-radius: 2px;
-  background: transparent;
-  transition: background 0.2s;
+  background: var(--text-muted, rgba(150, 150, 150, 0.5));
+  opacity: 0.3;
+  transition: all 0.2s;
 }
 
 .pane-resize-handle:hover::after,
 .pane-resize-handle.active::after {
   background: var(--handle-hover-color, var(--accent-color));
   height: 60px;
-  opacity: 0.6;
+  opacity: 1.0;
 }
 
 /* 드래그 중 */

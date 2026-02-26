@@ -178,6 +178,7 @@ var PDFViewer = (function(){
 
     var drag = { active: false, sx: 0, sy: 0, ox: 0, oy: 0 };
 
+    // 펜/터치/마우스 모두 드래그 가능하도록 통합 처리
     handle.addEventListener('pointerdown', function(e){
       e.stopPropagation();
       e.preventDefault();
@@ -189,6 +190,7 @@ var PDFViewer = (function(){
     });
     handle.addEventListener('pointermove', function(e){
       if(!drag.active) return;
+      e.preventDefault();
       toolbar.style.left = (drag.ox + (e.clientX - drag.sx)) + 'px';
       toolbar.style.top  = (drag.oy + (e.clientY - drag.sy)) + 'px';
     });
@@ -208,12 +210,25 @@ var PDFViewer = (function(){
       if(tRect.bottom > hRect.bottom - 2) toolbar.style.top = Math.max(2, hRect.height - tRect.height - 2) + 'px';
     };
     handle.addEventListener('pointerup', endDrag);
+    handle.addEventListener('pointercancel', endDrag);
+
+    // iOS Safari: 툴바 핸들 터치 이벤트도 차단 (스크롤 방지)
+    handle.addEventListener('touchstart', function(e){ e.preventDefault(); e.stopPropagation(); }, { passive: false });
+    handle.addEventListener('touchmove', function(e){ e.preventDefault(); e.stopPropagation(); }, { passive: false });
+    handle.addEventListener('touchend', function(e){ e.stopPropagation(); }, { passive: false });
+
+    // 플로팅 툴바 전체: 펜/터치 버블링 차단 (뷰포트의 pen 가로채기 방지)
+    toolbar.addEventListener('touchstart', function(e){ e.stopPropagation(); }, { passive: false });
+    toolbar.addEventListener('touchmove', function(e){ e.stopPropagation(); }, { passive: false });
+    toolbar.addEventListener('touchend', function(e){ e.stopPropagation(); }, { passive: false });
   }
 
   // ── Pan/Drag (scroll by mouse drag when zoomed) ──
   function _initPanDrag(){
     var isDragging = false, startX, startY, scrollL, scrollT;
     _container.addEventListener('pointerdown', function(e){
+      // 플로팅 툴바 내부 이벤트는 무시 (펜 드래그 등)
+      if(e.target.closest('.pdf-float-toolbar')) return;
       // 펜 입력은 뷰포트 드래그 안 함 — 어노테이션 레이어가 처리
       if(e.pointerType === 'pen'){
         e.preventDefault();
@@ -247,6 +262,8 @@ var PDFViewer = (function(){
     // iOS Safari는 touch-action:none CSS 미지원 (WebKit bug #133112)
     // touchstart에서 preventDefault() 호출이 유일한 방법
     _container.addEventListener('touchstart', function(e){
+      // 플로팅 툴바 내부 터치는 무시 (펜으로 툴바 드래그 허용)
+      if(e.target.closest('.pdf-float-toolbar')) return;
       var tool = typeof PDFTools !== 'undefined' ? PDFTools.getTool() : 'select';
       // 2-finger: 핀치줌 처리 (select 모드에서만 허용)
       if(e.touches.length >= 2){
@@ -266,6 +283,8 @@ var PDFViewer = (function(){
     }, { passive: false });
 
     _container.addEventListener('touchmove', function(e){
+      // 플로팅 툴바 내부 터치는 무시
+      if(e.target.closest('.pdf-float-toolbar')) return;
       var tool = typeof PDFTools !== 'undefined' ? PDFTools.getTool() : 'select';
       // 핀치줌 진행
       if(e.touches.length >= 2){
@@ -282,16 +301,28 @@ var PDFViewer = (function(){
     }, { passive: false });
 
     // Safari GestureEvent (더 부드러운 핀치줌)
-    _container.addEventListener('gesturestart', function(e){ e.preventDefault(); _gestureBaseScale = _scale; }, { passive: false });
+    _container.addEventListener('gesturestart', function(e){ e.preventDefault(); e.stopPropagation(); _gestureBaseScale = _scale; }, { passive: false });
     _container.addEventListener('gesturechange', function(e){
-      e.preventDefault();
+      e.preventDefault(); e.stopPropagation();
       var newScale = Math.max(0.5, Math.min(4.0, _gestureBaseScale * e.scale));
       _applyPinchPreview(newScale);
     }, { passive: false });
     _container.addEventListener('gestureend', function(e){
-      e.preventDefault();
+      e.preventDefault(); e.stopPropagation();
       var newScale = Math.max(0.5, Math.min(4.0, _gestureBaseScale * e.scale));
       zoom(newScale);
+    }, { passive: false });
+
+    // iOS Safari: document 레벨 gesture 이벤트도 차단 (네이티브 줌 완전 방지)
+    document.addEventListener('gesturestart', function(e){
+      if(e.target.closest && (e.target.closest('.pdf-viewport') || e.target.closest('#pdfViewerHost'))){
+        e.preventDefault();
+      }
+    }, { passive: false });
+    document.addEventListener('gesturechange', function(e){
+      if(e.target.closest && (e.target.closest('.pdf-viewport') || e.target.closest('#pdfViewerHost'))){
+        e.preventDefault();
+      }
     }, { passive: false });
   }
 
@@ -317,27 +348,27 @@ var PDFViewer = (function(){
   function _pinchEnd(){
     if(!_pinchActive) return;
     _pinchActive = false;
-    // CSS 프리뷰 제거 후 실제 렌더
-    var pages = _container ? _container.querySelectorAll('.pdf-page-wrap') : [];
+    // CSS 프리뷰 제거 후 실제 렌더 (현재 페이지만)
+    var curPage = _container ? document.getElementById('pdf-page-' + _currentPage) : null;
     var previewScale = 1;
-    pages.forEach(function(p){
-      if(p.style.transform){
-        var m = p.style.transform.match(/scale\(([^)]+)\)/);
-        if(m) previewScale = parseFloat(m[1]);
-        p.style.transform = '';
-        p.style.transformOrigin = '';
-      }
-    });
+    if(curPage && curPage.style.transform){
+      var m = curPage.style.transform.match(/scale\(([^)]+)\)/);
+      if(m) previewScale = parseFloat(m[1]);
+      curPage.style.transform = '';
+      curPage.style.transformOrigin = '';
+    }
     var finalScale = Math.max(0.5, Math.min(4.0, _scale * previewScale));
     if(Math.abs(finalScale - _scale) > 0.02) zoom(finalScale);
   }
   function _applyPinchPreview(newScale){
     if(!_container) return;
     var ratio = newScale / _scale;
-    _container.querySelectorAll('.pdf-page-wrap').forEach(function(p){
-      p.style.transformOrigin = 'center center';
-      p.style.transform = 'scale(' + ratio + ')';
-    });
+    // 현재 페이지만 핀치 프리뷰 적용 (다른 페이지/PDF 영향 없음)
+    var curPage = document.getElementById('pdf-page-' + _currentPage);
+    if(curPage){
+      curPage.style.transformOrigin = 'center center';
+      curPage.style.transform = 'scale(' + ratio + ')';
+    }
   }
   function _getTouchDist(t1, t2){
     var dx = t1.clientX - t2.clientX;

@@ -1,1084 +1,1233 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>투란누스 — 표준킹제임스성경 온라인</title>
-<meta name="description" content="투란누스 - 표준킹제임스성경(KJPBS) 온라인 성경 읽기. 한영 대조, 주석, 노트, 검색, 사전 기능 제공.">
-<meta name="keywords" content="투란누스, Tyrannus, 표준킹제임스성경, KJPBS, 성경, 온라인 성경, Bible, 킹제임스, 한영성경">
-<meta name="robots" content="noindex, nofollow">
-<meta name="google-site-verification" content="5L-9vRIIWmhWJboVk_3zNkjgjMqXHuqhByK8WkaHooc" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover">
+  <title>투란누스 — 표준킹제임스성경 온라인</title>
+  <meta name="description" content="투란누스 - 표준킹제임스성경(KJPBS) 온라인 성경 읽기. 한영 대조, 주석, 노트, 검색, 사전 기능 제공.">
+  <meta name="keywords" content="투란누스, Tyrannus, 표준킹제임스성경, KJPBS, 성경, 온라인 성경, Bible, 킹제임스, 한영성경">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="google-site-verification" content="5L-9vRIIWmhWJboVk_3zNkjgjMqXHuqhByK8WkaHooc" />
 
-<!-- Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/fonts.css?v=13">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=JetBrains+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="css/fonts.css?v=13">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<!-- App CSS (모듈화) -->
-<link rel="stylesheet" href="css/theme-system.css?v=19">
-<link rel="stylesheet" href="css/variables.css?v=27">
-<link rel="stylesheet" href="css/pane-system.css?v=4">
-<link rel="stylesheet" href="css/layout.css?v=30">
-<link rel="stylesheet" href="css/icon-rail.css?v=20">
-<link rel="stylesheet" href="css/side-panel.css?v=20">
-<link rel="stylesheet" href="css/right-menu.css?v=2">
-<link rel="stylesheet" href="css/topbar.css?v=17">
-<link rel="stylesheet" href="css/bible.css?v=29">
-<link rel="stylesheet" href="css/notes.css?v=28">
-<link rel="stylesheet" href="css/commentary.css?v=19">
-<link rel="stylesheet" href="css/search.css?v=16">
-<link rel="stylesheet" href="css/ui.css?v=16">
-<link rel="stylesheet" href="css/nav-picker.css?v=18">
-<link rel="stylesheet" href="css/book-grid.css?v=19">
-<link rel="stylesheet" href="css/bookmark.css?v=16">
-<link rel="stylesheet" href="css/word-study.css?v=15">
-<link rel="stylesheet" href="css/xref-inline.css?v=15">
-<link rel="stylesheet" href="css/passage-guide.css?v=17">
-<link rel="stylesheet" href="css/visual-filter.css?v=15">
-<link rel="stylesheet" href="css/reading-plan.css?v=15">
-<link rel="stylesheet" href="css/adv-search.css?v=17">
-<link rel="stylesheet" href="css/bug-report.css">
-<link rel="stylesheet" href="css/dict.css?v=19">
-<link rel="stylesheet" href="css/sync.css?v=15">
-<link rel="stylesheet" href="css/settings-panel.css?v=25">
-<link rel="stylesheet" href="css/highlight-topics.css?v=1">
-<link rel="stylesheet" href="css/typing.css?v=10">
-<link rel="stylesheet" href="css/hymns.css?v=2">
-<link rel="stylesheet" href="css/admin.css?v=1">
-<link rel="stylesheet" href="css/responsive.css?v=3">
-<link rel="stylesheet" href="css/pdf-panel.css?v=7">
-<link rel="stylesheet" href="css/pdf-viewer.css?v=8">
-<link rel="stylesheet" href="css/knowledge-graph.css?v=4">
-<link rel="stylesheet" href="css/share.css?v=1">
-<link rel="stylesheet" href="css/pdf-live.css?v=1">
-<link rel="stylesheet" href="css/pdf-presenter-bar.css?v=1">
-<link rel="stylesheet" href="css/layout-manager.css?v=1">
+  <!-- App CSS (모듈화) -->
+  <link rel="stylesheet" href="css/theme-system.css?v=19">
+  <link rel="stylesheet" href="css/variables.css?v=27">
+  <link rel="stylesheet" href="css/pane-system.css?v=5">
+  <link rel="stylesheet" href="css/layout.css?v=31">
+  <link rel="stylesheet" href="css/icon-rail.css?v=20">
+  <link rel="stylesheet" href="css/side-panel.css?v=20">
+  <link rel="stylesheet" href="css/right-menu.css?v=2">
+  <link rel="stylesheet" href="css/topbar.css?v=17">
+  <link rel="stylesheet" href="css/bible.css?v=29">
+  <link rel="stylesheet" href="css/notes.css?v=28">
+  <link rel="stylesheet" href="css/commentary.css?v=19">
+  <link rel="stylesheet" href="css/search.css?v=16">
+  <link rel="stylesheet" href="css/ui.css?v=16">
+  <link rel="stylesheet" href="css/nav-picker.css?v=18">
+  <link rel="stylesheet" href="css/book-grid.css?v=19">
+  <link rel="stylesheet" href="css/bookmark.css?v=16">
+  <link rel="stylesheet" href="css/word-study.css?v=15">
+  <link rel="stylesheet" href="css/xref-inline.css?v=15">
+  <link rel="stylesheet" href="css/passage-guide.css?v=17">
+  <link rel="stylesheet" href="css/visual-filter.css?v=15">
+  <link rel="stylesheet" href="css/reading-plan.css?v=15">
+  <link rel="stylesheet" href="css/adv-search.css?v=17">
+  <link rel="stylesheet" href="css/bug-report.css">
+  <link rel="stylesheet" href="css/dict.css?v=19">
+  <link rel="stylesheet" href="css/sync.css?v=15">
+  <link rel="stylesheet" href="css/settings-panel.css?v=25">
+  <link rel="stylesheet" href="css/highlight-topics.css?v=1">
+  <link rel="stylesheet" href="css/typing.css?v=10">
+  <link rel="stylesheet" href="css/hymns.css?v=2">
+  <link rel="stylesheet" href="css/admin.css?v=1">
+  <link rel="stylesheet" href="css/responsive.css?v=3">
+  <link rel="stylesheet" href="css/pdf-panel.css?v=7">
+  <link rel="stylesheet" href="css/pdf-viewer.css?v=8">
+  <link rel="stylesheet" href="css/knowledge-graph.css?v=4">
+  <link rel="stylesheet" href="css/share.css?v=1">
+  <link rel="stylesheet" href="css/pdf-live.css?v=1">
+  <link rel="stylesheet" href="css/pdf-presenter-bar.css?v=1">
+  <link rel="stylesheet" href="css/layout-manager.css?v=1">
 
-<!-- PDF.js (UMD — sets window.pdfjsLib) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <!-- PDF.js (UMD — sets window.pdfjsLib) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 
-<!-- Firebase (ES module — 병렬 로드) -->
-<script type="module" src="js/firebase.js"></script>
-<!-- 타자 연습 랭킹 (ES module) -->
-<script type="module" src="js/typing-ranking-firebase.js"></script>
-<!-- 라이브 강의 동기화 (ES module) -->
-<script type="module" src="js/pdf-live-sync.js"></script>
+  <!-- Firebase (ES module — 병렬 로드) -->
+  <script type="module" src="js/firebase.js"></script>
+  <!-- 타자 연습 랭킹 (ES module) -->
+  <script type="module" src="js/typing-ranking-firebase.js"></script>
+  <!-- 라이브 강의 동기화 (ES module) -->
+  <script type="module" src="js/pdf-live-sync.js"></script>
 </head>
 
 <body data-input="mouse">
 
-<div id="bgImageLayer"></div>
+  <div id="bgImageLayer"></div>
 
-<!-- 숨겨진 호환용 요소들 -->
-<select id="bookSel" style="display:none" onchange="onBookChange()"></select>
-<select id="chSel" style="display:none" onchange="onChChange()"></select>
-<input type="hidden" id="qsInput">
+  <!-- 숨겨진 호환용 요소들 -->
+  <select id="bookSel" style="display:none" onchange="onBookChange()"></select>
+  <select id="chSel" style="display:none" onchange="onChChange()"></select>
+  <input type="hidden" id="qsInput">
 
-<!-- 레일 토글 버튼은 레일 맨 위로 이동됨 -->
+  <!-- 레일 토글 버튼은 레일 맨 위로 이동됨 -->
 
-<!-- ══ APP SHELL ════════════════════════════════ -->
-<div id="appShell">
+  <!-- ══ APP SHELL ════════════════════════════════ -->
+  <div id="appShell">
 
-  <!-- 레거시 요소 (숨김) -->
-  <div id="bookNav" style="display:none"><div id="bookNavTab"></div></div>
-  <div id="bookNavOverlay" style="display:none"></div>
-  <!-- 레거시 호환: #main alias -->
-  <div id="main" style="display:none"></div>
-
-  <!-- ── 아이콘 레일 (최상위, #bibleBody에서 이동) ── -->
-  <div id="iconRail">
-    <!-- 사이드바 토글 버튼 (독립 영역) -->
-    <button class="rail-toggle-btn" id="railToggleBtn" onclick="LayoutManager.openPicker()" title="레이아웃 분할">
-      <i class="fa fa-grip" id="railToggleIcon"></i>
-    </button>
-    <!-- 메뉴 영역 (별도 둥근 배경) -->
-    <div class="rail-menu-wrap">
-      <div class="rail-top">
-        <!-- 패널 토글 섹션 -->
-        <button class="rail-icon rail-pane-toggle" data-pane="bible" onclick="PaneManager.toggle('bible')" title="성경 패널">
-          <i class="fa fa-book-bible"></i><span class="rail-label">성경</span>
-        </button>
-        <button class="rail-icon rail-pane-toggle" data-pane="pdf" onclick="PaneManager.toggle('pdf')" title="PDF 패널">
-          <i class="fa fa-file-pdf"></i><span class="rail-label">PDF</span>
-        </button>
-        <button class="rail-icon rail-pane-toggle" data-pane="notes" onclick="PaneManager.toggle('notes')" title="노트 패널">
-          <i class="fa fa-pen"></i><span class="rail-label">노트</span>
-        </button>
-        <div class="rail-divider"></div>
-        <!-- 검색 (PDF 패널 위치에 표시) -->
-        <button class="rail-icon" id="railSearchBtn" data-rail="search-pane" onclick="toggleSearchPane()" title="검색">
-          <i class="fa fa-search"></i><span class="rail-label">검색</span>
-        </button>
-        <!-- 섹션 버튼 (사이드패널 열기) -->
-        <button class="rail-icon" data-rail="bible" onclick="toggleRail('bible')" title="성경 목록">
-          <i class="fa fa-list"></i><span class="rail-label">목록</span>
-        </button>
-        <button class="rail-icon" data-rail="dictionary" onclick="toggleDictPanel()" title="사전">
-          <i class="fas fa-spell-check"></i><span class="rail-label" data-i18n="nav.dict">사전</span>
-        </button>
-        <button class="rail-icon" data-rail="library" onclick="toggleRail('library')" title="도서관">
-          <i class="fa fa-book-open-reader"></i><span class="rail-label" data-i18n="nav.library">도서관</span>
-        </button>
-        <button class="rail-icon" data-rail="qna" onclick="toggleRail('qna')" title="Q&A">
-          <i class="fa fa-comments"></i><span class="rail-label" data-i18n="nav.qna">Q&A</span>
-        </button>
-        <button class="rail-icon" data-rail="graph" onclick="toggleKnowledgeGraph()" title="지식 그래프">
-          <i class="fa fa-project-diagram"></i><span class="rail-label">그래프</span>
-        </button>
-        <button class="rail-icon" data-rail="reading" onclick="toggleRail('reading')" title="읽기 계획">
-          <i class="fa fa-calendar-check"></i><span class="rail-label" data-i18n="nav.reading">읽기</span>
-        </button>
-        <button class="rail-icon" data-rail="typing" onclick="toggleTypingPanel()" title="타자 연습">
-          <i class="fa fa-keyboard"></i><span class="rail-label">타자</span>
-        </button>
-        <button class="rail-icon" data-rail="hymns" onclick="toggleRail('hymns')" title="찬양">
-          <i class="fa fa-music"></i><span class="rail-label">찬양</span>
-        </button>
-        <button class="rail-icon" data-rail="live" onclick="toggleRail('live')" title="라이브 강의">
-          <i class="fa-solid fa-tower-broadcast"></i><span class="rail-label">라이브</span>
-        </button>
-      </div>
-      <div class="rail-bottom">
-        <button class="rail-icon" data-rail="bugreport" onclick="toggleRail('bugreport')" title="버그 리포트">
-          <i class="fa fa-bug"></i><span class="rail-label" data-i18n="nav.bugreport">버그</span>
-        </button>
-        <div id="railUser">
-          <button id="loginBtn" class="rail-icon" onclick="signInWithGoogle()" title="로그인">
-            <i class="fa fa-sign-in-alt"></i>
-          </button>
-          <div id="userBar" class="rail-user-info" style="display:none">
-            <img id="userAvatar" class="rail-avatar" src="" title="프로필">
-          </div>
-        </div>
-        <button class="rail-icon" data-rail="settings" onclick="toggleRail('settings')" title="설정">
-          <i class="fa fa-cog"></i><span class="rail-label" data-i18n="nav.settings">설정</span>
-        </button>
-      </div>
+    <!-- 레거시 요소 (숨김) -->
+    <div id="bookNav" style="display:none">
+      <div id="bookNavTab"></div>
     </div>
-  </div>
+    <div id="bookNavOverlay" style="display:none"></div>
+    <!-- 레거시 호환: #main alias -->
+    <div id="main" style="display:none"></div>
 
-  <!-- ── 사이드패널 (최상위, #bibleBody에서 이동) ── -->
-  <div id="sidePanel">
-        <div class="sp-section" id="sp-bible">
-          <div class="sp-head"><i class="fa fa-book-bible"></i> <span data-i18n="bible.bibleList">성경 목록</span><button class="sp-pin-btn" id="spPinBtn" onclick="_spTogglePin()" title="고정"><i class="fa fa-thumbtack"></i></button></div>
-          <div class="sp-body" id="bookList"></div>
+    <!-- ── 아이콘 레일 (최상위, #bibleBody에서 이동) ── -->
+    <div id="iconRail">
+      <!-- 사이드바 토글 버튼 (독립 영역) -->
+      <button class="rail-toggle-btn" id="railToggleBtn" onclick="LayoutManager.openPicker()" title="레이아웃 분할">
+        <i class="fa fa-grip" id="railToggleIcon"></i>
+      </button>
+      <!-- 메뉴 영역 (별도 둥근 배경) -->
+      <div class="rail-menu-wrap">
+        <div class="rail-top">
+          <!-- 패널 토글 섹션 -->
+          <button class="rail-icon rail-pane-toggle" data-pane="bible" onclick="PaneManager.toggle('bible')"
+            title="성경 패널">
+            <i class="fa fa-book-bible"></i><span class="rail-label">성경</span>
+          </button>
+          <button class="rail-icon rail-pane-toggle" data-pane="pdf" onclick="PaneManager.toggle('pdf')" title="PDF 패널">
+            <i class="fa fa-file-pdf"></i><span class="rail-label">PDF</span>
+          </button>
+          <button class="rail-icon rail-pane-toggle" data-pane="notes" onclick="PaneManager.toggle('notes')"
+            title="노트 패널">
+            <i class="fa fa-pen"></i><span class="rail-label">노트</span>
+          </button>
+          <div class="rail-divider"></div>
+          <!-- 검색 (PDF 패널 위치에 표시) -->
+          <button class="rail-icon" id="railSearchBtn" data-rail="search-pane" onclick="toggleSearchPane()" title="검색">
+            <i class="fa fa-search"></i><span class="rail-label">검색</span>
+          </button>
+          <!-- 섹션 버튼 (사이드패널 열기) -->
+          <button class="rail-icon" data-rail="bible" onclick="toggleRail('bible')" title="성경 목록">
+            <i class="fa fa-list"></i><span class="rail-label">목록</span>
+          </button>
+          <button class="rail-icon" data-rail="dictionary" onclick="toggleDictPanel()" title="사전">
+            <i class="fas fa-spell-check"></i><span class="rail-label" data-i18n="nav.dict">사전</span>
+          </button>
+          <button class="rail-icon" data-rail="library" onclick="toggleRail('library')" title="도서관">
+            <i class="fa fa-book-open-reader"></i><span class="rail-label" data-i18n="nav.library">도서관</span>
+          </button>
+          <button class="rail-icon" data-rail="qna" onclick="toggleRail('qna')" title="Q&A">
+            <i class="fa fa-comments"></i><span class="rail-label" data-i18n="nav.qna">Q&A</span>
+          </button>
+          <button class="rail-icon" data-rail="graph" onclick="toggleKnowledgeGraph()" title="지식 그래프">
+            <i class="fa fa-project-diagram"></i><span class="rail-label">그래프</span>
+          </button>
+          <button class="rail-icon" data-rail="reading" onclick="toggleRail('reading')" title="읽기 계획">
+            <i class="fa fa-calendar-check"></i><span class="rail-label" data-i18n="nav.reading">읽기</span>
+          </button>
+          <button class="rail-icon" data-rail="typing" onclick="toggleTypingPanel()" title="타자 연습">
+            <i class="fa fa-keyboard"></i><span class="rail-label">타자</span>
+          </button>
+          <button class="rail-icon" data-rail="hymns" onclick="toggleRail('hymns')" title="찬양">
+            <i class="fa fa-music"></i><span class="rail-label">찬양</span>
+          </button>
+          <button class="rail-icon" data-rail="live" onclick="toggleRail('live')" title="라이브 강의">
+            <i class="fa-solid fa-tower-broadcast"></i><span class="rail-label">라이브</span>
+          </button>
         </div>
-        <div class="sp-section" id="sp-bookmark">
-          <div class="sp-head"><i class="fa fa-bookmark"></i> <span data-i18n="bookmark.title">북마크</span></div>
-          <div class="sp-body" id="spBookmarkList"></div>
-        </div>
-        <div class="sp-section" id="sp-reading">
-          <div class="sp-head"><i class="fa fa-calendar-check"></i> <span data-i18n="reading.title">읽기 계획</span></div>
-          <div class="sp-body" id="spReadingContent">
-            <div style="padding:20px;text-align:center;color:var(--text3);font-size:12px"><i class="fa fa-calendar-check" style="font-size:24px;margin-bottom:8px;display:block;opacity:.4"></i>준비 중입니다</div>
-          </div>
-        </div>
-        <div class="sp-section" id="sp-library">
-          <div class="sp-head"><i class="fa fa-book-open-reader"></i> <span data-i18n="library.title">도서관</span></div>
-          <div class="sp-body" id="spLibraryBody">
-            <div style="padding:20px;text-align:center;color:var(--text3);font-size:12px"><i class="fa fa-book-open-reader" style="font-size:24px;margin-bottom:8px;display:block;opacity:.4"></i>준비 중입니다</div>
-          </div>
-        </div>
-        <div class="sp-section" id="sp-qna">
-          <div class="sp-head"><i class="fa fa-comments"></i> <span data-i18n="qna.title">Q&A</span></div>
-          <div class="sp-body" id="spQnaBody">
-            <div style="padding:20px;text-align:center;color:var(--text3);font-size:12px"><i class="fa fa-comments" style="font-size:24px;margin-bottom:8px;display:block;opacity:.4"></i>준비 중입니다</div>
-          </div>
-        </div>
-        <div class="sp-section" id="sp-dictionary">
-          <div class="sp-head"><i class="fas fa-spell-check"></i> <span data-i18n="nav.dict">사전</span></div>
-          <div class="sp-body" id="spDictBody">
-            <div class="sp-dict-tabs" id="spDictTabs">
-              <button class="sp-dict-tab active" data-dict="dict-strongs" onclick="_spSwitchDict('dict-strongs')"><i class="fa fa-language"></i> 스트롱</button>
-              <button class="sp-dict-tab" data-dict="dict-webster" onclick="_spSwitchDict('dict-webster')"><i class="fa fa-spell-check"></i> 웹스터</button>
-              <button class="sp-dict-tab" data-dict="dict-enko" onclick="_spSwitchDict('dict-enko')"><i class="fa fa-exchange-alt"></i> 영한</button>
-              <button class="sp-dict-tab" data-dict="dict-korean" onclick="_spSwitchDict('dict-korean')"><i class="fa fa-font"></i> 국어</button>
-            </div>
-            <div class="sp-dict-content" id="spDictContent">
-              <div style="padding:20px;text-align:center;color:var(--text3);font-size:12px"><i class="fas fa-spell-check" style="font-size:24px;margin-bottom:8px;display:block;opacity:.4"></i>단어를 검색하세요</div>
-            </div>
-          </div>
-        </div>
-        <div class="sp-section" id="sp-bugreport">
-          <div class="sp-head"><i class="fa fa-bug"></i> <span data-i18n="nav.bugreport">버그 리포트</span></div>
-          <div class="sp-body" id="spBugBody" style="display:flex;flex-direction:column;overflow:hidden"></div>
-        </div>
-        <div class="sp-section" id="sp-settings">
-          <div class="sp-head"><i class="fa fa-cog"></i> <span data-i18n="settings.title">설정</span></div>
-          <div class="sp-body" id="spSettingsBody"></div>
-        </div>
-        <div class="sp-section" id="sp-hymns">
-          <div class="sp-head"><i class="fa fa-music"></i> 찬양</div>
-          <div class="sp-body" id="spHymnsBody" style="display:flex;flex-direction:column;overflow:hidden">
-            <div class="hym-sp-toolbar" id="hymToolbar">
-              <div class="hym-sp-search">
-                <i class="fa fa-search hym-search-icon"></i>
-                <input class="hym-search" id="hymSearch" placeholder="번호 또는 제목 검색..." oninput="_hymOnSearch(this.value)">
-              </div>
-              <div class="hym-sp-filters">
-                <button class="hym-filter-btn hym-filter-active" data-filter="all" onclick="_hymSetFilter('all')">전체</button>
-                <button class="hym-filter-btn" data-filter="fav" onclick="_hymSetFilter('fav')"><i class="fa fa-heart"></i></button>
-                <button class="hym-filter-btn" data-filter="playlists" onclick="_hymSetFilter('playlists')"><i class="fa fa-list"></i></button>
-                <button class="hym-lang-btn" id="hymLangBtn" onclick="_hymToggleTitleLang()" title="한/영 전환">한</button>
-              </div>
-            </div>
-            <div id="hymContent" style="flex:1;overflow-y:auto">
-              <div id="hymViewList"></div>
-              <div id="hymViewPlaylists" style="display:none"></div>
-              <div id="hymViewPlaylistDetail" style="display:none"></div>
-            </div>
-            <div class="hym-sp-player" id="hymSpPlayer" style="display:none">
-              <div class="hym-spp-info" onclick="_hymOpenCurrentDetail()">
-                <span class="hym-spp-title" id="hymSppTitle"></span>
-              </div>
-              <div class="hym-spp-controls">
-                <button class="hym-spp-btn" onclick="_hymPrev()"><i class="fa fa-step-backward"></i></button>
-                <button class="hym-spp-btn" id="hymSppPlayBtn" onclick="_hymTogglePlay()"><i class="fa fa-play"></i></button>
-                <button class="hym-spp-btn" onclick="_hymNext()"><i class="fa fa-step-forward"></i></button>
-              </div>
-              <div class="hym-spp-progress">
-                <div class="hym-spp-track" id="hymSppTrack" onmousedown="_hymSeekStart(event,'sp')" ontouchstart="_hymSeekStart(event,'sp')"><div class="hym-spp-fill" id="hymSppFill"></div></div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="sp-section" id="sp-live">
-          <div class="sp-head"><i class="fa fa-tower-broadcast"></i> 라이브 강의</div>
-          <div class="sp-body" id="liveSpBody"></div>
-        </div>
-      </div>
-
-  <!-- ══ PANE CONTAINER (3-Pane 유연 레이아웃) ════════ -->
-  <div id="paneContainer">
-
-    <!-- ══ PANE: 성경 ══ -->
-    <div class="pane" id="pane-bible" data-visible="true">
-      <div class="pane-inner" id="biblePane">
-        <!-- 1행: 컨트롤 + 탭 + 태그 -->
-        <div class="pane-header" id="biblePaneHeader">
-          <div class="pane-controls">
-            <button class="pane-ctrl-btn" onclick="PaneManager.toggleMaximize('bible')" title="최대화/복원"><i class="fa fa-expand"></i></button>
-          </div>
-          <div id="bibleTabBar">
-            <div id="bibleTabList"></div>
-            <button class="tb-pin" id="bibleTabAdd" onclick="addBibleTab()" title="새 탭"><i class="fa fa-plus"></i></button>
-          </div>
-          <div class="pane-header-title"><i class="fa fa-book-bible"></i> <span class="pane-tag">성경</span></div>
-        </div>
-        <!-- 2행: 책/장 선택 + 뷰 옵션 -->
-        <div id="bibleViewBar">
-          <div class="vb-left">
-            <button class="nav-picker-btn" id="navPickerBtn" onclick="toggleNavPicker()">
-              <span id="navPickerLabel">창세기 1장</span>
-              <i class="fa fa-chevron-down nav-picker-arrow"></i>
+        <div class="rail-bottom">
+          <button class="rail-icon" data-rail="bugreport" onclick="toggleRail('bugreport')" title="버그 리포트">
+            <i class="fa fa-bug"></i><span class="rail-label" data-i18n="nav.bugreport">버그</span>
+          </button>
+          <div id="railUser">
+            <button id="loginBtn" class="rail-icon" onclick="signInWithGoogle()" title="로그인">
+              <i class="fa fa-sign-in-alt"></i>
             </button>
-            <button class="vb-arrow" onclick="prevCh()" title="이전 장"><i class="fa fa-chevron-left"></i></button>
-            <button class="vb-arrow" onclick="nextCh()" title="다음 장"><i class="fa fa-chevron-right"></i></button>
-            <div id="navPickerPopup" class="nav-picker-popup"></div>
-          </div>
-          <div class="vb-search">
-            <i class="fa fa-search vb-sch-icon"></i>
-            <input type="text" id="vbSchInput" placeholder="검색..." onkeydown="vbSchKey(event)">
-          </div>
-          <div class="vb-right">
-            <button class="vb-btn vb-on" id="vbKorean" onclick="toggleLang('kr')" title="한글 본문">한</button>
-            <button class="vb-btn" id="vbEnglish" onclick="toggleLang('en')" title="영어 본문">영</button>
-            <span class="vb-sep"></span>
-            <button class="vb-btn" id="vbRed" onclick="toggleRedLetter()" title="예수님 말씀"><svg class="vb-svg" viewBox="0 0 100 100" width="15" height="15"><text x="10" y="72" font-family="serif" font-size="75" font-weight="700" font-style="italic" fill="currentColor">&#x0391;</text><text x="56" y="95" font-family="serif" font-size="60" font-weight="700" font-style="italic" fill="currentColor">&#x03A9;</text></svg></button>
-            <button class="vb-btn" id="vbStrong" onclick="toggleStrongCodes()" title="원어 코드"><i class="fa fa-code"></i></button>
-            <button class="vb-btn" id="vbECode" onclick="toggleECodes()" title="영어 단어 E코드" style="font-family:monospace;font-size:11px;font-weight:700;letter-spacing:-.5px">E#</button>
-            <button class="vb-btn vb-on" id="vbHL" onclick="toggleHighlight()" title="형광펜 표시"><i class="fa fa-highlighter"></i></button>
-            <span class="vb-sep"></span>
-            <button class="vb-btn" id="vbComm" onclick="toggleCommentaryBtn()" title="주석"><i class="fa fa-scroll"></i></button>
-            <span class="vb-sep"></span>
-            <span class="vb-info" id="vbVerseCount"></span>
-          </div>
-        </div>
-        <!-- 본문 영역 (아이콘레일/사이드패널 제거됨) -->
-        <div id="bibleBody">
-          <!-- 성경 본문 스크롤 -->
-          <div id="bibleScroll">
-            <div class="ch-head">
-              <h1 id="chTitle">창세기 1장</h1>
-              <p id="chSub">Genesis</p>
+            <div id="userBar" class="rail-user-info" style="display:none">
+              <img id="userAvatar" class="rail-avatar" src="" title="프로필">
             </div>
-            <div id="vCont"></div>
-            <div class="ch-nav">
-              <button class="chnav" onclick="prevCh()"><i class="fa fa-chevron-left"></i> 이전 장</button>
-              <span style="font-size:11px;color:var(--text3)" id="chNavLbl"></span>
-              <button class="chnav" onclick="nextCh()">다음 장 <i class="fa fa-chevron-right"></i></button>
-            </div>
-          </div><!-- /bibleScroll -->
-          <!-- 타자 연습 -->
-          <div id="typingOverlay" class="tp-overlay" style="display:none">
-            <div class="tp-header">
-              <span class="tp-title"><i class="fa fa-keyboard"></i> 타자 연습</span>
-              <div class="tp-header-right">
-                <div class="tp-lang-group">
-                  <button class="tp-lang active" id="tpLangKr" onclick="_tpSetLang('kr')">Korean</button>
-                  <button class="tp-lang" id="tpLangEn" onclick="_tpSetLang('en')">English</button>
-                </div>
-                <button class="tp-rank-btn" onclick="_tpShowRanking()" title="Ranking"><i class="fa fa-trophy"></i></button>
-                <button class="tp-theme-btn" id="tpThemeBtn" onclick="_tpToggleTheme()" title="Light Mode"><i class="fa fa-sun"></i></button>
-                <button class="tp-close" onclick="PaneManager.toggleMaximize('bible')" title="전체화면"><i class="fa fa-expand"></i></button>
-                <button class="tp-close" onclick="toggleTypingPanel()" title="닫기"><i class="fa fa-times"></i></button>
-              </div>
-            </div>
-            <div class="tp-settings" id="tpSettings"></div>
-            <div class="tp-body" id="tpBody"></div>
           </div>
-        </div><!-- /bibleBody -->
-      </div><!-- /pane-inner (biblePane) -->
-    </div><!-- /pane-bible -->
-
-    <!-- 리사이즈 핸들은 JS(PaneManager)가 동적 생성 -->
-
-    <!-- ══ PANE: PDF ══ -->
-    <div class="pane" id="pane-pdf" data-visible="false">
-      <div class="pane-inner">
-        <!-- 패널 헤더 (PDF) -->
-        <div class="pane-header" id="pdfPaneHeader">
-          <div class="pane-controls">
-            <button class="pane-ctrl-btn" onclick="PaneManager.toggleMaximize('pdf')" title="최대화/복원"><i class="fa fa-expand"></i></button>
-            <button class="pane-ctrl-btn" onclick="PaneManager.hide('pdf')" title="패널 닫기"><i class="fa fa-times"></i></button>
-          </div>
-          <div class="pane-header-title"><i class="fa fa-file-pdf"></i> <span class="pane-tag">PDF</span></div>
+          <button class="rail-icon" data-rail="settings" onclick="toggleRail('settings')" title="설정">
+            <i class="fa fa-cog"></i><span class="rail-label" data-i18n="nav.settings">설정</span>
+          </button>
         </div>
-        <div id="pdfPanel">
-          <!-- Tab Bar (열린 PDF 탭 목록) -->
-          <div class="pdf-tab-bar" id="pdfTabBar" style="display:none"></div>
-          <!-- Library View (default) -->
-          <div id="pdfLibraryView">
-            <div class="pdf-lib-actions">
-              <button class="pdf-lib-btn pdf-lib-btn-primary" onclick="PDFLibrary.uploadPdf()"><i class="fa fa-upload"></i> PDF 업로드</button>
-              <button class="pdf-lib-btn" onclick="PDFLibrary.newFolder()"><i class="fa fa-folder-plus"></i> 새 폴더</button>
-            </div>
-            <div class="pdf-folder-tree" id="pdfFolderTree"></div>
-          </div>
-          <!-- Viewer View -->
-          <div id="pdfViewerView">
-            <div id="pdfViewerHost"></div>
-          </div>
-          <!-- Search View (검색 아이콘 클릭 시 표시) -->
-          <div id="pdfSearchView"></div>
-        </div>
-      </div><!-- /pane-inner -->
-    </div><!-- /pane-pdf -->
-
-    <!-- 리사이즈 핸들은 JS(PaneManager)가 동적 생성 -->
-
-    <!-- ══ PANE: 노트 ══ -->
-    <div class="pane" id="pane-notes" data-visible="false">
-      <div class="pane-inner" id="rightPanel">
-        <!-- 패널 헤더 (노트) -->
-        <div class="pane-header" id="notesPaneHeader">
-          <div class="pane-controls">
-            <button class="pane-ctrl-btn" onclick="PaneManager.toggleMaximize('notes')" title="최대화/복원"><i class="fa fa-expand"></i></button>
-            <button class="pane-ctrl-btn" onclick="PaneManager.hide('notes')" title="패널 닫기"><i class="fa fa-times"></i></button>
-          </div>
-          <div class="note-tab-bar" id="noteTabBar"></div>
-          <div class="pane-header-title"><i class="fa fa-pen"></i> <span class="pane-tag">노트</span></div>
-        </div>
-    <div class="rp-tabs" id="rpTabs">
-      <div class="rp-subtabs" id="subtabs-dict" style="display:none">
-        <div class="rp-tab act" data-sub="dict-ecode" onclick="switchSub('dict-ecode')" style="color:#0bc"><i class="fa fa-book-open"></i> KJB 성구 사전</div>
-        <div class="rp-tab" data-sub="dict-enko" onclick="switchSub('dict-enko')"><i class="fa fa-exchange-alt"></i> <span data-i18n="panel.enkoDict">영한</span></div>
-        <div class="rp-tab" data-sub="dict-webster" onclick="switchSub('dict-webster')"><i class="fa fa-spell-check"></i> <span data-i18n="panel.websterDict">웹스터</span></div>
-        <div class="rp-tab" data-sub="dict-korean" onclick="switchSub('dict-korean')"><i class="fa fa-font"></i> <span data-i18n="panel.koreanDict">표준국어</span></div>
-        <div class="rp-tab" data-sub="dict-strongs" onclick="switchSub('dict-strongs')"><i class="fa fa-language"></i> <span data-i18n="panel.strongDict">스트롱</span></div>
-        <button class="rp-ico-btn rp-close-btn" onclick="togglePanel('dictionary')" title="패널 닫기"><i class="fa fa-times"></i></button>
-      </div>
-      <div class="rp-subtabs" id="subtabs-search" style="display:none">
-        <div class="rp-tab act" data-sub="search" onclick="switchSub('search')"><i class="fa fa-search"></i> 검색결과</div>
-        <button class="rp-ico-btn rp-close-btn" onclick="togglePanel('search')" title="패널 닫기"><i class="fa fa-times"></i></button>
       </div>
     </div>
-    <div class="rp-body">
 
-      <!-- NOTES TAB -->
-      <div class="rp-sec act" id="sec-notes">
-        <!-- Library View (기본 표시) -->
-        <div id="noteLibraryView">
-          <div class="note-lib-actions">
-            <button class="pdf-lib-btn pdf-lib-btn-primary" onclick="newNote()"><i class="fa fa-file-circle-plus"></i> 새 노트</button>
-            <button class="pdf-lib-btn" onclick="newFolder()"><i class="fa fa-folder-plus"></i> 새 폴더</button>
-            <button class="pdf-lib-btn" onclick="_ftCollapseAll()" title="모두 접기"><i class="fa fa-compress-alt"></i></button>
-          </div>
-          <div id="folderTree"></div>
+    <!-- ── 사이드패널 (최상위, #bibleBody에서 이동) ── -->
+    <div id="sidePanel">
+      <div class="sp-section" id="sp-bible">
+        <div class="sp-head"><i class="fa fa-book-bible"></i> <span data-i18n="bible.bibleList">성경 목록</span><button
+            class="sp-pin-btn" id="spPinBtn" onclick="_spTogglePin()" title="고정"><i
+              class="fa fa-thumbtack"></i></button></div>
+        <div class="sp-body" id="bookList"></div>
+      </div>
+      <div class="sp-section" id="sp-bookmark">
+        <div class="sp-head"><i class="fa fa-bookmark"></i> <span data-i18n="bookmark.title">북마크</span></div>
+        <div class="sp-body" id="spBookmarkList"></div>
+      </div>
+      <div class="sp-section" id="sp-reading">
+        <div class="sp-head"><i class="fa fa-calendar-check"></i> <span data-i18n="reading.title">읽기 계획</span></div>
+        <div class="sp-body" id="spReadingContent">
+          <div style="padding:20px;text-align:center;color:var(--text3);font-size:12px"><i class="fa fa-calendar-check"
+              style="font-size:24px;margin-bottom:8px;display:block;opacity:.4"></i>준비 중입니다</div>
         </div>
-        <!-- Editor View (기본 숨김) -->
-        <div id="noteEditorView" style="display:none">
-          <div id="noteEditor">
-            <div class="rte-bar">
-              <div class="rte-row">
-                <select class="rte-sel" onchange="cmd('formatBlock',this.value);this.value=''">
-                  <option value="">단락</option>
-                  <option value="h1">H1</option>
-                  <option value="h2">H2</option>
-                  <option value="h3">H3</option>
-                  <option value="p">본문</option>
-                  <option value="blockquote">인용</option>
-                </select>
-                <select class="rte-sel rte-fontsize" title="글꼴 크기" onchange="setFontSize(this.value);this.value=''">
-                  <option value="">크기</option>
-                  <option value="10">10</option><option value="12">12</option><option value="14">14</option>
-                  <option value="16">16</option><option value="18">18</option><option value="20">20</option>
-                  <option value="24">24</option><option value="28">28</option><option value="32">32</option>
-                </select>
-                <div class="rte-sep"></div>
-                <button class="rte-btn" title="굵게 (Ctrl+B)" onmousedown="event.preventDefault()" onclick="cmd('bold')"><b>B</b></button>
-                <button class="rte-btn" title="기울임 (Ctrl+I)" onmousedown="event.preventDefault()" onclick="cmd('italic')"><i>I</i></button>
-                <button class="rte-btn" title="밑줄 (Ctrl+U)" onmousedown="event.preventDefault()" onclick="cmd('underline')"><u>U</u></button>
-                <button class="rte-btn" title="취소선" onmousedown="event.preventDefault()" onclick="cmd('strikeThrough')"><s>S</s></button>
-                <div class="rte-sep"></div>
-                <button class="rte-btn" title="텍스트 색상" onclick="openColorPalette(this,'fore')" onmousedown="event.preventDefault()"><i class="fa fa-font" style="color:var(--gold)"></i></button>
-                <button class="rte-btn" title="배경 하이라이트" onclick="openColorPalette(this,'bg')" onmousedown="event.preventDefault()"><i class="fa fa-fill-drip"></i></button>
-                <div class="rte-sep"></div>
-                <button class="rte-btn" title="글머리 목록" onmousedown="event.preventDefault()" onclick="cmd('insertUnorderedList')"><i class="fa fa-list-ul"></i></button>
-                <button class="rte-btn" title="번호 목록" onmousedown="event.preventDefault()" onclick="cmd('insertOrderedList')"><i class="fa fa-list-ol"></i></button>
-                <div class="rte-sep"></div>
-                <button class="rte-btn" title="왼쪽 정렬" onmousedown="event.preventDefault()" onclick="cmd('justifyLeft')"><i class="fa fa-align-left"></i></button>
-                <button class="rte-btn" title="가운데 정렬" onmousedown="event.preventDefault()" onclick="cmd('justifyCenter')"><i class="fa fa-align-center"></i></button>
-                <button class="rte-btn" title="오른쪽 정렬" onmousedown="event.preventDefault()" onclick="cmd('justifyRight')"><i class="fa fa-align-right"></i></button>
-                <div class="rte-sep"></div>
-                <button class="rte-btn" title="표 삽입" onclick="insertTable()"><i class="fa fa-table"></i></button>
-                <button class="rte-btn" title="구분선" onmousedown="event.preventDefault()" onclick="cmd('insertHorizontalRule')"><i class="fa fa-minus"></i></button>
-                <div class="rte-sep"></div>
-                <button class="rte-btn" title="실행 취소" onmousedown="event.preventDefault()" onclick="cmd('undo')"><i class="fa fa-undo"></i></button>
-                <button class="rte-btn" title="다시 실행" onmousedown="event.preventDefault()" onclick="cmd('redo')"><i class="fa fa-redo"></i></button>
-                <div class="rte-sep"></div>
-                <button class="rte-btn" title="들여쓰기" onmousedown="event.preventDefault()" onclick="cmd('indent')"><i class="fa fa-indent"></i></button>
-                <button class="rte-btn" title="내어쓰기" onmousedown="event.preventDefault()" onclick="cmd('outdent')"><i class="fa fa-outdent"></i></button>
-              </div>
-              <div class="rte-row rte-row2">
-                <span class="rte-row-label">삽입</span>
-                <div class="rte-sep"></div>
-                <button class="rte-btn rte-insert" onclick="openNoteLink()" title="노트 링크 삽입"><i class="fa fa-link"></i><span class="rte-lbl">노트</span></button>
-                <button class="rte-btn rte-insert" onclick="openVersePick()" title="구절 링크 삽입"><i class="fa fa-book-open"></i><span class="rte-lbl">구절</span></button>
-                <button class="rte-btn rte-insert" onclick="openUrlEmbed(this)" title="외부 링크 삽입"><i class="fa fa-globe"></i><span class="rte-lbl">링크</span></button>
-                <button class="rte-btn rte-insert" onclick="openYoutubeEmbed(this)" title="유튜브 삽입"><i class="fab fa-youtube"></i><span class="rte-lbl">유튜브</span></button>
-                <button class="rte-btn rte-insert" onclick="openFileAttach()" title="파일/이미지 첨부"><i class="fa fa-paperclip"></i><span class="rte-lbl">파일</span></button>
-                <div class="rte-sep"></div>
-                <button class="rte-btn" onmousedown="event.preventDefault()" onclick="insertCallout('info')" title="정보 박스"><i class="fa fa-info-circle" style="color:#4a9eff"></i></button>
-                <button class="rte-btn" onmousedown="event.preventDefault()" onclick="insertCallout('warn')" title="경고 박스"><i class="fa fa-exclamation-triangle" style="color:#f0a500"></i></button>
-                <button class="rte-btn" onmousedown="event.preventDefault()" onclick="insertCallout('pray')" title="아이디어/묵상 박스"><i class="fa fa-lightbulb" style="color:var(--gold)"></i></button>
-                <div class="rte-sep"></div>
-                <button class="rte-btn rte-insert" onmousedown="event.preventDefault()" onclick="insertCheckbox()" title="체크박스 삽입"><i class="fa fa-check-square"></i><span class="rte-lbl">체크</span></button>
-                <button class="rte-btn rte-insert" onmousedown="event.preventDefault()" onclick="insertDateStamp()" title="날짜 삽입"><i class="fa fa-calendar-day"></i><span class="rte-lbl">날짜</span></button>
+      </div>
+      <div class="sp-section" id="sp-library">
+        <div class="sp-head"><i class="fa fa-book-open-reader"></i> <span data-i18n="library.title">도서관</span></div>
+        <div class="sp-body" id="spLibraryBody">
+          <div style="padding:20px;text-align:center;color:var(--text3);font-size:12px"><i
+              class="fa fa-book-open-reader" style="font-size:24px;margin-bottom:8px;display:block;opacity:.4"></i>준비
+            중입니다</div>
+        </div>
+      </div>
+      <div class="sp-section" id="sp-qna">
+        <div class="sp-head"><i class="fa fa-comments"></i> <span data-i18n="qna.title">Q&A</span></div>
+        <div class="sp-body" id="spQnaBody">
+          <div style="padding:20px;text-align:center;color:var(--text3);font-size:12px"><i class="fa fa-comments"
+              style="font-size:24px;margin-bottom:8px;display:block;opacity:.4"></i>준비 중입니다</div>
+        </div>
+      </div>
+      <div class="sp-section" id="sp-dictionary">
+        <div class="sp-head"><i class="fas fa-spell-check"></i> <span data-i18n="nav.dict">사전</span></div>
+        <div class="sp-body" id="spDictBody">
+          <div class="sp-dict-tabs" id="spDictTabs">
+            <button class="sp-dict-tab active" data-dict="dict-strongs" onclick="_spSwitchDict('dict-strongs')"><i
+                class="fa fa-language"></i> 스트롱</button>
+            <button class="sp-dict-tab" data-dict="dict-webster" onclick="_spSwitchDict('dict-webster')"><i
+                class="fa fa-spell-check"></i> 웹스터</button>
+            <button class="sp-dict-tab" data-dict="dict-enko" onclick="_spSwitchDict('dict-enko')"><i
+                class="fa fa-exchange-alt"></i> 영한</button>
+            <button class="sp-dict-tab" data-dict="dict-korean" onclick="_spSwitchDict('dict-korean')"><i
+                class="fa fa-font"></i> 국어</button>
+          </div>
+          <div class="sp-dict-content" id="spDictContent">
+            <div style="padding:20px;text-align:center;color:var(--text3);font-size:12px"><i class="fas fa-spell-check"
+                style="font-size:24px;margin-bottom:8px;display:block;opacity:.4"></i>단어를 검색하세요</div>
+          </div>
+        </div>
+      </div>
+      <div class="sp-section" id="sp-bugreport">
+        <div class="sp-head"><i class="fa fa-bug"></i> <span data-i18n="nav.bugreport">버그 리포트</span></div>
+        <div class="sp-body" id="spBugBody" style="display:flex;flex-direction:column;overflow:hidden"></div>
+      </div>
+      <div class="sp-section" id="sp-settings">
+        <div class="sp-head"><i class="fa fa-cog"></i> <span data-i18n="settings.title">설정</span></div>
+        <div class="sp-body" id="spSettingsBody"></div>
+      </div>
+      <div class="sp-section" id="sp-hymns">
+        <div class="sp-head"><i class="fa fa-music"></i> 찬양</div>
+        <div class="sp-body" id="spHymnsBody" style="display:flex;flex-direction:column;overflow:hidden">
+          <div class="hym-sp-toolbar" id="hymToolbar">
+            <div class="hym-sp-search">
+              <i class="fa fa-search hym-search-icon"></i>
+              <input class="hym-search" id="hymSearch" placeholder="번호 또는 제목 검색..." oninput="_hymOnSearch(this.value)">
+            </div>
+            <div class="hym-sp-filters">
+              <button class="hym-filter-btn hym-filter-active" data-filter="all"
+                onclick="_hymSetFilter('all')">전체</button>
+              <button class="hym-filter-btn" data-filter="fav" onclick="_hymSetFilter('fav')"><i
+                  class="fa fa-heart"></i></button>
+              <button class="hym-filter-btn" data-filter="playlists" onclick="_hymSetFilter('playlists')"><i
+                  class="fa fa-list"></i></button>
+              <button class="hym-lang-btn" id="hymLangBtn" onclick="_hymToggleTitleLang()" title="한/영 전환">한</button>
+            </div>
+          </div>
+          <div id="hymContent" style="flex:1;overflow-y:auto">
+            <div id="hymViewList"></div>
+            <div id="hymViewPlaylists" style="display:none"></div>
+            <div id="hymViewPlaylistDetail" style="display:none"></div>
+          </div>
+          <div class="hym-sp-player" id="hymSpPlayer" style="display:none">
+            <div class="hym-spp-info" onclick="_hymOpenCurrentDetail()">
+              <span class="hym-spp-title" id="hymSppTitle"></span>
+            </div>
+            <div class="hym-spp-controls">
+              <button class="hym-spp-btn" onclick="_hymPrev()"><i class="fa fa-step-backward"></i></button>
+              <button class="hym-spp-btn" id="hymSppPlayBtn" onclick="_hymTogglePlay()"><i
+                  class="fa fa-play"></i></button>
+              <button class="hym-spp-btn" onclick="_hymNext()"><i class="fa fa-step-forward"></i></button>
+            </div>
+            <div class="hym-spp-progress">
+              <div class="hym-spp-track" id="hymSppTrack" onmousedown="_hymSeekStart(event,'sp')"
+                ontouchstart="_hymSeekStart(event,'sp')">
+                <div class="hym-spp-fill" id="hymSppFill"></div>
               </div>
             </div>
-            <div id="noteContent" contenteditable="true" data-ph="제목을 입력하세요..."></div>
-            <div class="backlink-panel" id="backlinkPanel" style="display:none">
-              <div class="backlink-head" onclick="toggleBacklinks()">
-                <i class="fa fa-link"></i>&nbsp;백링크&nbsp;<span id="backlinkCount" style="color:var(--gold)"></span>
-                <i class="fa fa-chevron-down" id="blChevron" style="margin-left:auto;transition:transform .2s;font-size:9px"></i>
-              </div>
-              <div id="backlinkList"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sp-section" id="sp-live">
+        <div class="sp-head"><i class="fa fa-tower-broadcast"></i> 라이브 강의</div>
+        <div class="sp-body" id="liveSpBody"></div>
+      </div>
+    </div>
+
+    <!-- ══ PANE CONTAINER (3-Pane 유연 레이아웃) ════════ -->
+    <div id="paneContainer">
+
+      <!-- ══ PANE: 성경 ══ -->
+      <div class="pane" id="pane-bible" data-visible="true">
+        <div class="pane-inner" id="biblePane">
+          <!-- 1행: 컨트롤 + 탭 + 태그 -->
+          <div class="pane-header" id="biblePaneHeader">
+            <div class="pane-controls">
+              <button class="pane-ctrl-btn" onclick="PaneManager.toggleMaximize('bible')" title="최대화/복원"><i
+                  class="fa fa-expand"></i></button>
             </div>
-            <div class="note-nav-bar" id="noteNavBar" style="display:none">
-              <button class="nav-back-btn" id="backBtn" onclick="goBack()" title="이전 노트로 돌아가기" style="display:none">
-                <i class="fa fa-arrow-left"></i>
+            <div id="bibleTabBar">
+              <div id="bibleTabList"></div>
+              <button class="tb-pin" id="bibleTabAdd" onclick="addBibleTab()" title="새 탭"><i
+                  class="fa fa-plus"></i></button>
+            </div>
+            <div class="pane-header-title"><i class="fa fa-book-bible"></i> <span class="pane-tag">성경</span></div>
+          </div>
+          <!-- 2행: 책/장 선택 + 뷰 옵션 -->
+          <div id="bibleViewBar">
+            <div class="vb-left">
+              <button class="nav-picker-btn" id="navPickerBtn" onclick="toggleNavPicker()">
+                <span id="navPickerLabel">창세기 1장</span>
+                <i class="fa fa-chevron-down nav-picker-arrow"></i>
               </button>
-              <div class="nav-path" id="navPath"></div>
-              <div id="nedBreadcrumb" class="ned-breadcrumb"></div>
+              <button class="vb-arrow" onclick="prevCh()" title="이전 장"><i class="fa fa-chevron-left"></i></button>
+              <button class="vb-arrow" onclick="nextCh()" title="다음 장"><i class="fa fa-chevron-right"></i></button>
+              <div id="navPickerPopup" class="nav-picker-popup"></div>
             </div>
-            <div class="note-footer">
-              <span class="nfooter-label">🏷</span>
-              <div class="tag-row" id="tagRow">
-                <input class="tag-inp" id="tagInp" placeholder="태그..." onkeydown="addTag(event)">
+            <div class="vb-search">
+              <i class="fa fa-search vb-sch-icon"></i>
+              <input type="text" id="vbSchInput" placeholder="검색..." onkeydown="vbSchKey(event)">
+            </div>
+            <div class="vb-right">
+              <button class="vb-btn vb-on" id="vbKorean" onclick="toggleLang('kr')" title="한글 본문">한</button>
+              <button class="vb-btn" id="vbEnglish" onclick="toggleLang('en')" title="영어 본문">영</button>
+              <span class="vb-sep"></span>
+              <button class="vb-btn" id="vbRed" onclick="toggleRedLetter()" title="예수님 말씀"><svg class="vb-svg"
+                  viewBox="0 0 100 100" width="15" height="15"><text x="10" y="72" font-family="serif" font-size="75"
+                    font-weight="700" font-style="italic" fill="currentColor">&#x0391;</text><text x="56" y="95"
+                    font-family="serif" font-size="60" font-weight="700" font-style="italic"
+                    fill="currentColor">&#x03A9;</text></svg></button>
+              <button class="vb-btn" id="vbStrong" onclick="toggleStrongCodes()" title="원어 코드"><i
+                  class="fa fa-code"></i></button>
+              <button class="vb-btn" id="vbECode" onclick="toggleECodes()" title="영어 단어 E코드"
+                style="font-family:monospace;font-size:11px;font-weight:700;letter-spacing:-.5px">E#</button>
+              <button class="vb-btn vb-on" id="vbHL" onclick="toggleHighlight()" title="형광펜 표시"><i
+                  class="fa fa-highlighter"></i></button>
+              <span class="vb-sep"></span>
+              <button class="vb-btn" id="vbComm" onclick="toggleCommentaryBtn()" title="주석"><i
+                  class="fa fa-scroll"></i></button>
+              <span class="vb-sep"></span>
+              <span class="vb-info" id="vbVerseCount"></span>
+            </div>
+          </div>
+          <!-- 본문 영역 (아이콘레일/사이드패널 제거됨) -->
+          <div id="bibleBody">
+            <!-- 성경 본문 스크롤 -->
+            <div id="bibleScroll">
+              <div class="ch-head">
+                <h1 id="chTitle">창세기 1장</h1>
+                <p id="chSub">Genesis</p>
               </div>
-              <select id="noteFolderSel" style="display:none"></select>
+              <div id="vCont"></div>
+              <div class="ch-nav">
+                <button class="chnav" onclick="prevCh()"><i class="fa fa-chevron-left"></i> 이전 장</button>
+                <span style="font-size:11px;color:var(--text3)" id="chNavLbl"></span>
+                <button class="chnav" onclick="nextCh()">다음 장 <i class="fa fa-chevron-right"></i></button>
+              </div>
+            </div><!-- /bibleScroll -->
+            <!-- 타자 연습 -->
+            <div id="typingOverlay" class="tp-overlay" style="display:none">
+              <div class="tp-header">
+                <span class="tp-title"><i class="fa fa-keyboard"></i> 타자 연습</span>
+                <div class="tp-header-right">
+                  <div class="tp-lang-group">
+                    <button class="tp-lang active" id="tpLangKr" onclick="_tpSetLang('kr')">Korean</button>
+                    <button class="tp-lang" id="tpLangEn" onclick="_tpSetLang('en')">English</button>
+                  </div>
+                  <button class="tp-rank-btn" onclick="_tpShowRanking()" title="Ranking"><i
+                      class="fa fa-trophy"></i></button>
+                  <button class="tp-theme-btn" id="tpThemeBtn" onclick="_tpToggleTheme()" title="Light Mode"><i
+                      class="fa fa-sun"></i></button>
+                  <button class="tp-close" onclick="PaneManager.toggleMaximize('bible')" title="전체화면"><i
+                      class="fa fa-expand"></i></button>
+                  <button class="tp-close" onclick="toggleTypingPanel()" title="닫기"><i class="fa fa-times"></i></button>
+                </div>
+              </div>
+              <div class="tp-settings" id="tpSettings"></div>
+              <div class="tp-body" id="tpBody"></div>
+            </div>
+          </div><!-- /bibleBody -->
+        </div><!-- /pane-inner (biblePane) -->
+      </div><!-- /pane-bible -->
+
+      <!-- 리사이즈 핸들은 JS(PaneManager)가 동적 생성 -->
+
+      <!-- ══ PANE: PDF ══ -->
+      <div class="pane" id="pane-pdf" data-visible="false">
+        <div class="pane-inner">
+          <!-- 패널 헤더 (PDF) -->
+          <div class="pane-header" id="pdfPaneHeader">
+            <div class="pane-controls">
+              <button class="pane-ctrl-btn" onclick="PaneManager.toggleMaximize('pdf')" title="최대화/복원"><i
+                  class="fa fa-expand"></i></button>
+              <button class="pane-ctrl-btn" onclick="PaneManager.hide('pdf')" title="패널 닫기"><i
+                  class="fa fa-times"></i></button>
+            </div>
+            <div class="pane-header-title"><i class="fa fa-file-pdf"></i> <span class="pane-tag">PDF</span></div>
+          </div>
+          <div id="pdfPanel">
+            <!-- Tab Bar (열린 PDF 탭 목록) -->
+            <div class="pdf-tab-bar" id="pdfTabBar" style="display:none"></div>
+            <!-- Library View (default) -->
+            <div id="pdfLibraryView">
+              <div class="pdf-lib-actions">
+                <button class="pdf-lib-btn pdf-lib-btn-primary" onclick="PDFLibrary.uploadPdf()"><i
+                    class="fa fa-upload"></i> PDF 업로드</button>
+                <button class="pdf-lib-btn" onclick="PDFLibrary.newFolder()"><i class="fa fa-folder-plus"></i> 새
+                  폴더</button>
+              </div>
+              <div class="pdf-folder-tree" id="pdfFolderTree"></div>
+            </div>
+            <!-- Viewer View -->
+            <div id="pdfViewerView">
+              <div id="pdfViewerHost"></div>
+            </div>
+            <!-- Search View (검색 아이콘 클릭 시 표시) -->
+            <div id="pdfSearchView"></div>
+          </div>
+        </div><!-- /pane-inner -->
+      </div><!-- /pane-pdf -->
+
+      <!-- 리사이즈 핸들은 JS(PaneManager)가 동적 생성 -->
+
+      <!-- ══ PANE: 노트 ══ -->
+      <div class="pane" id="pane-notes" data-visible="false">
+        <div class="pane-inner" id="rightPanel">
+          <!-- 패널 헤더 (노트) -->
+          <div class="pane-header" id="notesPaneHeader">
+            <div class="pane-controls">
+              <button class="pane-ctrl-btn" onclick="PaneManager.toggleMaximize('notes')" title="최대화/복원"><i
+                  class="fa fa-expand"></i></button>
+              <button class="pane-ctrl-btn" onclick="PaneManager.hide('notes')" title="패널 닫기"><i
+                  class="fa fa-times"></i></button>
+            </div>
+            <div class="note-tab-bar" id="noteTabBar"></div>
+            <div class="pane-header-title"><i class="fa fa-pen"></i> <span class="pane-tag">노트</span></div>
+          </div>
+          <div class="rp-tabs" id="rpTabs">
+            <div class="rp-subtabs" id="subtabs-dict" style="display:none">
+              <div class="rp-tab act" data-sub="dict-ecode" onclick="switchSub('dict-ecode')" style="color:#0bc"><i
+                  class="fa fa-book-open"></i> KJB 성구 사전</div>
+              <div class="rp-tab" data-sub="dict-enko" onclick="switchSub('dict-enko')"><i
+                  class="fa fa-exchange-alt"></i> <span data-i18n="panel.enkoDict">영한</span></div>
+              <div class="rp-tab" data-sub="dict-webster" onclick="switchSub('dict-webster')"><i
+                  class="fa fa-spell-check"></i> <span data-i18n="panel.websterDict">웹스터</span></div>
+              <div class="rp-tab" data-sub="dict-korean" onclick="switchSub('dict-korean')"><i class="fa fa-font"></i>
+                <span data-i18n="panel.koreanDict">표준국어</span></div>
+              <div class="rp-tab" data-sub="dict-strongs" onclick="switchSub('dict-strongs')"><i
+                  class="fa fa-language"></i> <span data-i18n="panel.strongDict">스트롱</span></div>
+              <button class="rp-ico-btn rp-close-btn" onclick="togglePanel('dictionary')" title="패널 닫기"><i
+                  class="fa fa-times"></i></button>
+            </div>
+            <div class="rp-subtabs" id="subtabs-search" style="display:none">
+              <div class="rp-tab act" data-sub="search" onclick="switchSub('search')"><i class="fa fa-search"></i> 검색결과
+              </div>
+              <button class="rp-ico-btn rp-close-btn" onclick="togglePanel('search')" title="패널 닫기"><i
+                  class="fa fa-times"></i></button>
             </div>
           </div>
-        </div>
-      </div>
+          <div class="rp-body">
 
-      <!-- COMMENTARY SUB-TAB -->
-      <div class="rp-sec" id="sec-commentary">
-        <div class="comm-mode-bar">
-          <button class="comm-mode-btn comm-mode-active" id="commModeVerse" onclick="setCommMode('verse')">
-            <i class="fa fa-crosshairs"></i> 구절별
-          </button>
-          <button class="comm-mode-btn" id="commModeChapter" onclick="setCommMode('chapter')">
-            <i class="fa fa-list"></i> 장별
-          </button>
-        </div>
-        <div class="comm-body-wrap" id="commentaryContent">
-          <div class="comm-empty"><div class="comm-empty-icon"><i class="fa fa-scroll"></i></div><div class="comm-empty-msg">구절을 클릭하면<br>주석을 볼 수 있어요</div></div>
-        </div>
-      </div>
-
-      <!-- GRAPH SUB-TAB -->
-      <div class="rp-sec" id="sec-graph">
-        <div id="kgInlineHost" class="kg-inline-host"></div>
-      </div>
-
-      <!-- DICTIONARY TAB -->
-      <div class="rp-sec" id="sec-dictionary">
-        <div class="rp-sec act" id="sec-dict-strongs" style="display:flex">
-          <div style="padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:6px;align-items:center">
-            <input type="text" id="strongsSearchInput" placeholder="스트롱 번호 (H1, G3056) 또는 원어 검색..."
-              style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:6px 10px;font-size:12px;color:var(--text);outline:none;"
-              onkeydown="if(event.key==='Enter')searchStrongs()">
-            <button onclick="searchStrongs()" style="padding:6px 12px;border-radius:5px;font-size:11px;font-weight:700;background:var(--gold);color:var(--bg);border:none;cursor:pointer;flex-shrink:0"><i class="fa fa-search"></i></button>
-          </div>
-          <div class="comm-body-wrap" id="dictStrongs" style="overflow-y:auto;flex:1">
-            <div class="comm-hint"><i class="fa fa-language"></i> Strong's Concordance<br>원어 코드를 검색하거나<br>구절의 원어 코드를 클릭하세요<br><br><span style="font-size:10px;color:var(--text3)">H = 히브리어 (구약) · G = 그리스어 (신약)</span></div>
-          </div>
-        </div>
-        <div class="rp-sec" id="sec-dict-webster" style="display:none;flex-direction:column">
-          <div style="padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:6px;align-items:center">
-            <input type="text" id="websterSearchInput" placeholder="English word (e.g., grace, faith)..."
-              style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:6px 10px;font-size:12px;color:var(--text);outline:none;"
-              onkeydown="if(event.key==='Enter')searchWebster()">
-            <button onclick="searchWebster()" style="padding:6px 12px;border-radius:5px;font-size:11px;font-weight:700;background:var(--gold);color:var(--bg);border:none;cursor:pointer;flex-shrink:0"><i class="fa fa-search"></i></button>
-          </div>
-          <div class="comm-body-wrap" id="dictWebster" style="overflow-y:auto;flex:1">
-            <div class="comm-hint"><i class="fa fa-spell-check"></i> English Dictionary<br>영어 단어의 정의를 검색하세요<br><br><span style="font-size:10px;color:var(--text3)">발음 · 품사 · 정의 · 예문 · 동의어</span></div>
-          </div>
-        </div>
-        <div class="rp-sec" id="sec-dict-enko" style="display:none;flex-direction:column">
-          <div style="padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:6px;align-items:center">
-            <input type="text" id="enkoSearchInput" placeholder="영한 검색 (e.g., salvation, mercy)..."
-              style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:6px 10px;font-size:12px;color:var(--text);outline:none;"
-              onkeydown="if(event.key==='Enter')searchEnko()">
-            <button onclick="searchEnko()" style="padding:6px 12px;border-radius:5px;font-size:11px;font-weight:700;background:var(--gold);color:var(--bg);border:none;cursor:pointer;flex-shrink:0"><i class="fa fa-search"></i></button>
-          </div>
-          <div class="comm-body-wrap" id="dictEnko" style="overflow-y:auto;flex:1">
-            <div class="comm-hint"><i class="fa fa-exchange-alt"></i> English-Korean Dictionary<br>영어 단어를 한국어와 함께 검색하세요<br><br><span style="font-size:10px;color:var(--text3)">영어 정의 + 한국어 번역</span></div>
-          </div>
-        </div>
-        <div class="rp-sec" id="sec-dict-korean" style="display:none;flex-direction:column">
-          <div style="padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:6px;align-items:center">
-            <input type="text" id="koreanSearchInput" placeholder="국어사전 검색..."
-              style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:6px 10px;font-size:12px;color:var(--text);outline:none;"
-              onkeydown="if(event.key==='Enter')searchKorean()">
-            <button onclick="searchKorean()" style="padding:6px 12px;border-radius:5px;font-size:11px;font-weight:700;background:var(--gold);color:var(--bg);border:none;cursor:pointer;flex-shrink:0"><i class="fa fa-search"></i></button>
-          </div>
-          <div class="comm-body-wrap" id="dictKorean" style="overflow-y:auto;flex:1">
-            <div class="comm-hint"><i class="fa fa-font"></i> 표준국어사전<br>한국어 단어의 뜻을 검색하세요<br><br><span style="font-size:10px;color:var(--text3)">명사 · 동사 · 형용사 · 부사 · 관련어</span></div>
-          </div>
-        </div>
-        <div class="rp-sec" id="sec-dict-ecode" style="display:none;flex-direction:column">
-          <div style="padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:6px;align-items:center">
-            <input type="text" id="ecodeSearchInput" placeholder="영어 단어 검색 (e.g., grace, faith)..."
-              style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:6px 10px;font-size:12px;color:var(--text);outline:none;"
-              onkeydown="if(event.key==='Enter')searchECode()">
-            <button onclick="searchECode()" style="padding:6px 12px;border-radius:5px;font-size:11px;font-weight:700;background:#0bc;color:#000;border:none;cursor:pointer;flex-shrink:0"><i class="fa fa-search"></i></button>
-          </div>
-          <div class="comm-body-wrap" id="dictECode" style="overflow-y:auto;flex:1;padding:12px 16px">
-            <div class="comm-hint"><i class="fa fa-book-open" style="color:#0bc"></i> KJB 영어 성구 사전<br>영어 단어를 검색하거나<br>구절의 E코드를 클릭하세요<br><br><span style="font-size:10px;color:var(--text3)">12,557 영어 단어 · KJV 전권</span></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- SEARCH TAB (통합 검색: 기본 + 고급) -->
-      <div class="rp-sec" id="sec-search">
-        <div class="search-wrap">
-          <!-- 검색 입력 -->
-          <div class="sch-row">
-            <input type="text" id="schInput" placeholder="검색어 입력... (한글/영어/H1234)" onkeydown="if(event.key==='Enter')uniSearch()">
-            <button onclick="uniSearch()"><i class="fa fa-search"></i></button>
-            <button class="sch-adv-btn" id="schAdvToggle" onclick="schToggleAdv()" title="고급 검색"><i class="fa fa-sliders-h"></i></button>
-          </div>
-          <!-- 고급 검색 패널 (접힘) -->
-          <div class="sch-adv-panel" id="schAdvPanel" style="display:none">
-            <div class="sch-filters">
-              <button class="sf-chip on" data-f="all" onclick="sfToggle(this)">전체</button>
-              <button class="sf-chip on" data-f="OT" onclick="sfToggle(this)">구약</button>
-              <button class="sf-chip on" data-f="NT" onclick="sfToggle(this)">신약</button>
-              <select class="sf-book-sel" id="sfBookSel" onchange="sfBookChange()">
-                <option value="">책 선택...</option>
-              </select>
-              <button class="sf-chip on" data-f="notes" onclick="sfToggle(this)">노트</button>
-              <button class="sf-chip on" data-f="commentary" onclick="sfToggle(this)">주석</button>
-              <button class="sf-chip on" data-f="files" onclick="sfToggle(this)">파일</button>
+            <!-- NOTES TAB -->
+            <div class="rp-sec act" id="sec-notes">
+              <!-- Library View (기본 표시) -->
+              <div id="noteLibraryView">
+                <div class="note-lib-actions">
+                  <button class="pdf-lib-btn pdf-lib-btn-primary" onclick="newNote()"><i
+                      class="fa fa-file-circle-plus"></i> 새 노트</button>
+                  <button class="pdf-lib-btn" onclick="newFolder()"><i class="fa fa-folder-plus"></i> 새 폴더</button>
+                  <button class="pdf-lib-btn" onclick="_ftCollapseAll()" title="모두 접기"><i
+                      class="fa fa-compress-alt"></i></button>
+                </div>
+                <div id="folderTree"></div>
+              </div>
+              <!-- Editor View (기본 숨김) -->
+              <div id="noteEditorView" style="display:none">
+                <div id="noteEditor">
+                  <div class="rte-bar">
+                    <div class="rte-row">
+                      <select class="rte-sel" onchange="cmd('formatBlock',this.value);this.value=''">
+                        <option value="">단락</option>
+                        <option value="h1">H1</option>
+                        <option value="h2">H2</option>
+                        <option value="h3">H3</option>
+                        <option value="p">본문</option>
+                        <option value="blockquote">인용</option>
+                      </select>
+                      <select class="rte-sel rte-fontsize" title="글꼴 크기"
+                        onchange="setFontSize(this.value);this.value=''">
+                        <option value="">크기</option>
+                        <option value="10">10</option>
+                        <option value="12">12</option>
+                        <option value="14">14</option>
+                        <option value="16">16</option>
+                        <option value="18">18</option>
+                        <option value="20">20</option>
+                        <option value="24">24</option>
+                        <option value="28">28</option>
+                        <option value="32">32</option>
+                      </select>
+                      <div class="rte-sep"></div>
+                      <button class="rte-btn" title="굵게 (Ctrl+B)" onmousedown="event.preventDefault()"
+                        onclick="cmd('bold')"><b>B</b></button>
+                      <button class="rte-btn" title="기울임 (Ctrl+I)" onmousedown="event.preventDefault()"
+                        onclick="cmd('italic')"><i>I</i></button>
+                      <button class="rte-btn" title="밑줄 (Ctrl+U)" onmousedown="event.preventDefault()"
+                        onclick="cmd('underline')"><u>U</u></button>
+                      <button class="rte-btn" title="취소선" onmousedown="event.preventDefault()"
+                        onclick="cmd('strikeThrough')"><s>S</s></button>
+                      <div class="rte-sep"></div>
+                      <button class="rte-btn" title="텍스트 색상" onclick="openColorPalette(this,'fore')"
+                        onmousedown="event.preventDefault()"><i class="fa fa-font"
+                          style="color:var(--gold)"></i></button>
+                      <button class="rte-btn" title="배경 하이라이트" onclick="openColorPalette(this,'bg')"
+                        onmousedown="event.preventDefault()"><i class="fa fa-fill-drip"></i></button>
+                      <div class="rte-sep"></div>
+                      <button class="rte-btn" title="글머리 목록" onmousedown="event.preventDefault()"
+                        onclick="cmd('insertUnorderedList')"><i class="fa fa-list-ul"></i></button>
+                      <button class="rte-btn" title="번호 목록" onmousedown="event.preventDefault()"
+                        onclick="cmd('insertOrderedList')"><i class="fa fa-list-ol"></i></button>
+                      <div class="rte-sep"></div>
+                      <button class="rte-btn" title="왼쪽 정렬" onmousedown="event.preventDefault()"
+                        onclick="cmd('justifyLeft')"><i class="fa fa-align-left"></i></button>
+                      <button class="rte-btn" title="가운데 정렬" onmousedown="event.preventDefault()"
+                        onclick="cmd('justifyCenter')"><i class="fa fa-align-center"></i></button>
+                      <button class="rte-btn" title="오른쪽 정렬" onmousedown="event.preventDefault()"
+                        onclick="cmd('justifyRight')"><i class="fa fa-align-right"></i></button>
+                      <div class="rte-sep"></div>
+                      <button class="rte-btn" title="표 삽입" onclick="insertTable()"><i class="fa fa-table"></i></button>
+                      <button class="rte-btn" title="구분선" onmousedown="event.preventDefault()"
+                        onclick="cmd('insertHorizontalRule')"><i class="fa fa-minus"></i></button>
+                      <div class="rte-sep"></div>
+                      <button class="rte-btn" title="실행 취소" onmousedown="event.preventDefault()"
+                        onclick="cmd('undo')"><i class="fa fa-undo"></i></button>
+                      <button class="rte-btn" title="다시 실행" onmousedown="event.preventDefault()"
+                        onclick="cmd('redo')"><i class="fa fa-redo"></i></button>
+                      <div class="rte-sep"></div>
+                      <button class="rte-btn" title="들여쓰기" onmousedown="event.preventDefault()"
+                        onclick="cmd('indent')"><i class="fa fa-indent"></i></button>
+                      <button class="rte-btn" title="내어쓰기" onmousedown="event.preventDefault()"
+                        onclick="cmd('outdent')"><i class="fa fa-outdent"></i></button>
+                    </div>
+                    <div class="rte-row rte-row2">
+                      <span class="rte-row-label">삽입</span>
+                      <div class="rte-sep"></div>
+                      <button class="rte-btn rte-insert" onclick="openNoteLink()" title="노트 링크 삽입"><i
+                          class="fa fa-link"></i><span class="rte-lbl">노트</span></button>
+                      <button class="rte-btn rte-insert" onclick="openVersePick()" title="구절 링크 삽입"><i
+                          class="fa fa-book-open"></i><span class="rte-lbl">구절</span></button>
+                      <button class="rte-btn rte-insert" onclick="openUrlEmbed(this)" title="외부 링크 삽입"><i
+                          class="fa fa-globe"></i><span class="rte-lbl">링크</span></button>
+                      <button class="rte-btn rte-insert" onclick="openYoutubeEmbed(this)" title="유튜브 삽입"><i
+                          class="fab fa-youtube"></i><span class="rte-lbl">유튜브</span></button>
+                      <button class="rte-btn rte-insert" onclick="openFileAttach()" title="파일/이미지 첨부"><i
+                          class="fa fa-paperclip"></i><span class="rte-lbl">파일</span></button>
+                      <div class="rte-sep"></div>
+                      <button class="rte-btn" onmousedown="event.preventDefault()" onclick="insertCallout('info')"
+                        title="정보 박스"><i class="fa fa-info-circle" style="color:#4a9eff"></i></button>
+                      <button class="rte-btn" onmousedown="event.preventDefault()" onclick="insertCallout('warn')"
+                        title="경고 박스"><i class="fa fa-exclamation-triangle" style="color:#f0a500"></i></button>
+                      <button class="rte-btn" onmousedown="event.preventDefault()" onclick="insertCallout('pray')"
+                        title="아이디어/묵상 박스"><i class="fa fa-lightbulb" style="color:var(--gold)"></i></button>
+                      <div class="rte-sep"></div>
+                      <button class="rte-btn rte-insert" onmousedown="event.preventDefault()" onclick="insertCheckbox()"
+                        title="체크박스 삽입"><i class="fa fa-check-square"></i><span class="rte-lbl">체크</span></button>
+                      <button class="rte-btn rte-insert" onmousedown="event.preventDefault()"
+                        onclick="insertDateStamp()" title="날짜 삽입"><i class="fa fa-calendar-day"></i><span
+                          class="rte-lbl">날짜</span></button>
+                    </div>
+                  </div>
+                  <div id="noteContent" contenteditable="true" data-ph="제목을 입력하세요..."></div>
+                  <div class="backlink-panel" id="backlinkPanel" style="display:none">
+                    <div class="backlink-head" onclick="toggleBacklinks()">
+                      <i class="fa fa-link"></i>&nbsp;백링크&nbsp;<span id="backlinkCount"
+                        style="color:var(--gold)"></span>
+                      <i class="fa fa-chevron-down" id="blChevron"
+                        style="margin-left:auto;transition:transform .2s;font-size:9px"></i>
+                    </div>
+                    <div id="backlinkList"></div>
+                  </div>
+                  <div class="note-nav-bar" id="noteNavBar" style="display:none">
+                    <button class="nav-back-btn" id="backBtn" onclick="goBack()" title="이전 노트로 돌아가기"
+                      style="display:none">
+                      <i class="fa fa-arrow-left"></i>
+                    </button>
+                    <div class="nav-path" id="navPath"></div>
+                    <div id="nedBreadcrumb" class="ned-breadcrumb"></div>
+                  </div>
+                  <div class="note-footer">
+                    <span class="nfooter-label">🏷</span>
+                    <div class="tag-row" id="tagRow">
+                      <input class="tag-inp" id="tagInp" placeholder="태그..." onkeydown="addTag(event)">
+                    </div>
+                    <select id="noteFolderSel" style="display:none"></select>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div class="sch-adv-opts">
-              <button class="sch-opt-btn" id="schCaseBtn" onclick="schToggleCase()" title="대소문자 구분 (영어)">Aa</button>
-              <span class="sch-sep"></span>
-              <button class="sch-scope-btn on" data-scope="verse" onclick="schSetScope('verse')">절</button>
-              <button class="sch-scope-btn" data-scope="chapter" onclick="schSetScope('chapter')">장</button>
-              <button class="sch-scope-btn" data-scope="book" onclick="schSetScope('book')">권</button>
-              <span class="sch-sep"></span>
-              <button class="sch-vm-btn on" data-vm="list" onclick="schSetView('list')" title="목록"><i class="fa fa-list"></i></button>
-              <button class="sch-vm-btn" data-vm="ref" onclick="schSetView('ref')" title="참조"><i class="fa fa-th"></i></button>
-              <button class="sch-vm-btn" data-vm="tree" onclick="schSetView('tree')" title="트리"><i class="fa fa-sitemap"></i></button>
+
+            <!-- COMMENTARY SUB-TAB -->
+            <div class="rp-sec" id="sec-commentary">
+              <div class="comm-mode-bar">
+                <button class="comm-mode-btn comm-mode-active" id="commModeVerse" onclick="setCommMode('verse')">
+                  <i class="fa fa-crosshairs"></i> 구절별
+                </button>
+                <button class="comm-mode-btn" id="commModeChapter" onclick="setCommMode('chapter')">
+                  <i class="fa fa-list"></i> 장별
+                </button>
+              </div>
+              <div class="comm-body-wrap" id="commentaryContent">
+                <div class="comm-empty">
+                  <div class="comm-empty-icon"><i class="fa fa-scroll"></i></div>
+                  <div class="comm-empty-msg">구절을 클릭하면<br>주석을 볼 수 있어요</div>
+                </div>
+              </div>
             </div>
-            <div class="sch-adv-help" onclick="uniHelp()"><i class="fa fa-info-circle"></i> 검색 도움말</div>
+
+            <!-- GRAPH SUB-TAB -->
+            <div class="rp-sec" id="sec-graph">
+              <div id="kgInlineHost" class="kg-inline-host"></div>
+            </div>
+
+            <!-- DICTIONARY TAB -->
+            <div class="rp-sec" id="sec-dictionary">
+              <div class="rp-sec act" id="sec-dict-strongs" style="display:flex">
+                <div
+                  style="padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:6px;align-items:center">
+                  <input type="text" id="strongsSearchInput" placeholder="스트롱 번호 (H1, G3056) 또는 원어 검색..."
+                    style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:6px 10px;font-size:12px;color:var(--text);outline:none;"
+                    onkeydown="if(event.key==='Enter')searchStrongs()">
+                  <button onclick="searchStrongs()"
+                    style="padding:6px 12px;border-radius:5px;font-size:11px;font-weight:700;background:var(--gold);color:var(--bg);border:none;cursor:pointer;flex-shrink:0"><i
+                      class="fa fa-search"></i></button>
+                </div>
+                <div class="comm-body-wrap" id="dictStrongs" style="overflow-y:auto;flex:1">
+                  <div class="comm-hint"><i class="fa fa-language"></i> Strong's Concordance<br>원어 코드를 검색하거나<br>구절의 원어
+                    코드를 클릭하세요<br><br><span style="font-size:10px;color:var(--text3)">H = 히브리어 (구약) · G = 그리스어
+                      (신약)</span></div>
+                </div>
+              </div>
+              <div class="rp-sec" id="sec-dict-webster" style="display:none;flex-direction:column">
+                <div
+                  style="padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:6px;align-items:center">
+                  <input type="text" id="websterSearchInput" placeholder="English word (e.g., grace, faith)..."
+                    style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:6px 10px;font-size:12px;color:var(--text);outline:none;"
+                    onkeydown="if(event.key==='Enter')searchWebster()">
+                  <button onclick="searchWebster()"
+                    style="padding:6px 12px;border-radius:5px;font-size:11px;font-weight:700;background:var(--gold);color:var(--bg);border:none;cursor:pointer;flex-shrink:0"><i
+                      class="fa fa-search"></i></button>
+                </div>
+                <div class="comm-body-wrap" id="dictWebster" style="overflow-y:auto;flex:1">
+                  <div class="comm-hint"><i class="fa fa-spell-check"></i> English Dictionary<br>영어 단어의 정의를
+                    검색하세요<br><br><span style="font-size:10px;color:var(--text3)">발음 · 품사 · 정의 · 예문 · 동의어</span></div>
+                </div>
+              </div>
+              <div class="rp-sec" id="sec-dict-enko" style="display:none;flex-direction:column">
+                <div
+                  style="padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:6px;align-items:center">
+                  <input type="text" id="enkoSearchInput" placeholder="영한 검색 (e.g., salvation, mercy)..."
+                    style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:6px 10px;font-size:12px;color:var(--text);outline:none;"
+                    onkeydown="if(event.key==='Enter')searchEnko()">
+                  <button onclick="searchEnko()"
+                    style="padding:6px 12px;border-radius:5px;font-size:11px;font-weight:700;background:var(--gold);color:var(--bg);border:none;cursor:pointer;flex-shrink:0"><i
+                      class="fa fa-search"></i></button>
+                </div>
+                <div class="comm-body-wrap" id="dictEnko" style="overflow-y:auto;flex:1">
+                  <div class="comm-hint"><i class="fa fa-exchange-alt"></i> English-Korean Dictionary<br>영어 단어를 한국어와 함께
+                    검색하세요<br><br><span style="font-size:10px;color:var(--text3)">영어 정의 + 한국어 번역</span></div>
+                </div>
+              </div>
+              <div class="rp-sec" id="sec-dict-korean" style="display:none;flex-direction:column">
+                <div
+                  style="padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:6px;align-items:center">
+                  <input type="text" id="koreanSearchInput" placeholder="국어사전 검색..."
+                    style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:6px 10px;font-size:12px;color:var(--text);outline:none;"
+                    onkeydown="if(event.key==='Enter')searchKorean()">
+                  <button onclick="searchKorean()"
+                    style="padding:6px 12px;border-radius:5px;font-size:11px;font-weight:700;background:var(--gold);color:var(--bg);border:none;cursor:pointer;flex-shrink:0"><i
+                      class="fa fa-search"></i></button>
+                </div>
+                <div class="comm-body-wrap" id="dictKorean" style="overflow-y:auto;flex:1">
+                  <div class="comm-hint"><i class="fa fa-font"></i> 표준국어사전<br>한국어 단어의 뜻을 검색하세요<br><br><span
+                      style="font-size:10px;color:var(--text3)">명사 · 동사 · 형용사 · 부사 · 관련어</span></div>
+                </div>
+              </div>
+              <div class="rp-sec" id="sec-dict-ecode" style="display:none;flex-direction:column">
+                <div
+                  style="padding:8px 12px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;gap:6px;align-items:center">
+                  <input type="text" id="ecodeSearchInput" placeholder="영어 단어 검색 (e.g., grace, faith)..."
+                    style="flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:6px 10px;font-size:12px;color:var(--text);outline:none;"
+                    onkeydown="if(event.key==='Enter')searchECode()">
+                  <button onclick="searchECode()"
+                    style="padding:6px 12px;border-radius:5px;font-size:11px;font-weight:700;background:#0bc;color:#000;border:none;cursor:pointer;flex-shrink:0"><i
+                      class="fa fa-search"></i></button>
+                </div>
+                <div class="comm-body-wrap" id="dictECode" style="overflow-y:auto;flex:1;padding:12px 16px">
+                  <div class="comm-hint"><i class="fa fa-book-open" style="color:#0bc"></i> KJB 영어 성구 사전<br>영어 단어를
+                    검색하거나<br>구절의 E코드를 클릭하세요<br><br><span style="font-size:10px;color:var(--text3)">12,557 영어 단어 · KJV
+                      전권</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- SEARCH TAB (통합 검색: 기본 + 고급) -->
+            <div class="rp-sec" id="sec-search">
+              <div class="search-wrap">
+                <!-- 검색 입력 -->
+                <div class="sch-row">
+                  <input type="text" id="schInput" placeholder="검색어 입력... (한글/영어/H1234)"
+                    onkeydown="if(event.key==='Enter')uniSearch()">
+                  <button onclick="uniSearch()"><i class="fa fa-search"></i></button>
+                  <button class="sch-adv-btn" id="schAdvToggle" onclick="schToggleAdv()" title="고급 검색"><i
+                      class="fa fa-sliders-h"></i></button>
+                </div>
+                <!-- 고급 검색 패널 (접힘) -->
+                <div class="sch-adv-panel" id="schAdvPanel" style="display:none">
+                  <div class="sch-filters">
+                    <button class="sf-chip on" data-f="all" onclick="sfToggle(this)">전체</button>
+                    <button class="sf-chip on" data-f="OT" onclick="sfToggle(this)">구약</button>
+                    <button class="sf-chip on" data-f="NT" onclick="sfToggle(this)">신약</button>
+                    <select class="sf-book-sel" id="sfBookSel" onchange="sfBookChange()">
+                      <option value="">책 선택...</option>
+                    </select>
+                    <button class="sf-chip on" data-f="notes" onclick="sfToggle(this)">노트</button>
+                    <button class="sf-chip on" data-f="commentary" onclick="sfToggle(this)">주석</button>
+                    <button class="sf-chip on" data-f="files" onclick="sfToggle(this)">파일</button>
+                  </div>
+                  <div class="sch-adv-opts">
+                    <button class="sch-opt-btn" id="schCaseBtn" onclick="schToggleCase()"
+                      title="대소문자 구분 (영어)">Aa</button>
+                    <span class="sch-sep"></span>
+                    <button class="sch-scope-btn on" data-scope="verse" onclick="schSetScope('verse')">절</button>
+                    <button class="sch-scope-btn" data-scope="chapter" onclick="schSetScope('chapter')">장</button>
+                    <button class="sch-scope-btn" data-scope="book" onclick="schSetScope('book')">권</button>
+                    <span class="sch-sep"></span>
+                    <button class="sch-vm-btn on" data-vm="list" onclick="schSetView('list')" title="목록"><i
+                        class="fa fa-list"></i></button>
+                    <button class="sch-vm-btn" data-vm="ref" onclick="schSetView('ref')" title="참조"><i
+                        class="fa fa-th"></i></button>
+                    <button class="sch-vm-btn" data-vm="tree" onclick="schSetView('tree')" title="트리"><i
+                        class="fa fa-sitemap"></i></button>
+                  </div>
+                  <div class="sch-adv-help" onclick="uniHelp()"><i class="fa fa-info-circle"></i> 검색 도움말</div>
+                </div>
+                <!-- 통계 + 결과 수 -->
+                <div id="schStatsArea"></div>
+                <div class="sch-count" id="schCount"></div>
+                <div id="schList"></div>
+              </div>
+            </div>
+
           </div>
-          <!-- 통계 + 결과 수 -->
-          <div id="schStatsArea"></div>
-          <div class="sch-count" id="schCount"></div>
-          <div id="schList"></div>
+        </div><!-- /pane-inner (rightPanel) -->
+        <!-- 노트 패널 헤더 (상단 삽입) -->
+      </div><!-- /pane-notes -->
+
+      <!-- ══ 찬양 오버레이 (paneContainer 직속, 성경 독립) ══ -->
+      <div id="hymnsOverlay" class="hymns-overlay" style="display:none">
+        <div class="hymns-header" id="hymnsHeader">
+          <div class="hym-hdr-left">
+            <button class="hym-back-btn" id="hymBackBtn" onclick="_hymCloseDetail()">
+              <i class="fa fa-arrow-left"></i></button>
+            <span class="hym-title" id="hymTitle">찬양</span>
+          </div>
+          <div class="hym-hdr-tabs" id="hymHdrTabs">
+            <button class="hym-ht-btn active" data-tab="lyrics" onclick="_hymSwitchTab('lyrics')">가사</button>
+            <button class="hym-ht-btn" data-tab="sheet" onclick="_hymSwitchTab('sheet')">악보</button>
+          </div>
+          <div class="hym-hdr-right">
+            <button class="hym-fav-btn" id="hymHdrFavBtn" onclick="_hymToggleFavCurrent()" title="즐겨찾기"
+              style="display:none"><i class="far fa-heart"></i></button>
+            <button class="hym-btn-fs" onclick="_hymToggleFullscreen()" title="전체화면"><i
+                class="fa fa-expand"></i></button>
+            <button class="hymns-close" onclick="_hymCloseDetail()" title="닫기"><i class="fa fa-times"></i></button>
+          </div>
+        </div>
+        <div class="hymns-body" id="hymnsBody">
+          <div id="hymViewDetail"></div>
+        </div>
+        <div class="hym-player-bar" id="hymPlayerBar" style="display:none">
+          <div class="hym-pb-info" onclick="_hymOpenCurrentDetail()">
+            <span class="hym-pb-title" id="hymPbTitle"></span>
+          </div>
+          <div class="hym-pb-controls">
+            <button class="hym-pb-btn" onclick="_hymPrev()"><i class="fa fa-step-backward"></i></button>
+            <button class="hym-pb-btn hym-pb-play" id="hymPbPlayBtn" onclick="_hymTogglePlay()"><i
+                class="fa fa-play"></i></button>
+            <button class="hym-pb-btn" onclick="_hymNext()"><i class="fa fa-step-forward"></i></button>
+          </div>
+          <div class="hym-pb-progress">
+            <div class="hym-pb-track" id="hymPbTrack" onmousedown="_hymSeekStart(event,'mini')"
+              ontouchstart="_hymSeekStart(event,'mini')">
+              <div class="hym-pb-fill" id="hymPbFill"></div>
+            </div>
+            <span class="hym-pb-time" id="hymPbTime">0:00</span>
+          </div>
         </div>
       </div>
 
-    </div>
-      </div><!-- /pane-inner (rightPanel) -->
-      <!-- 노트 패널 헤더 (상단 삽입) -->
-    </div><!-- /pane-notes -->
+    </div><!-- /paneContainer -->
 
-    <!-- ══ 찬양 오버레이 (paneContainer 직속, 성경 독립) ══ -->
-    <div id="hymnsOverlay" class="hymns-overlay" style="display:none">
-      <div class="hymns-header" id="hymnsHeader">
-        <div class="hym-hdr-left">
-          <button class="hym-back-btn" id="hymBackBtn" onclick="_hymCloseDetail()">
-            <i class="fa fa-arrow-left"></i></button>
-          <span class="hym-title" id="hymTitle">찬양</span>
-        </div>
-        <div class="hym-hdr-tabs" id="hymHdrTabs">
-          <button class="hym-ht-btn active" data-tab="lyrics" onclick="_hymSwitchTab('lyrics')">가사</button>
-          <button class="hym-ht-btn" data-tab="sheet" onclick="_hymSwitchTab('sheet')">악보</button>
-        </div>
-        <div class="hym-hdr-right">
-          <button class="hym-fav-btn" id="hymHdrFavBtn" onclick="_hymToggleFavCurrent()" title="즐겨찾기" style="display:none"><i class="far fa-heart"></i></button>
-          <button class="hym-btn-fs" onclick="_hymToggleFullscreen()" title="전체화면"><i class="fa fa-expand"></i></button>
-          <button class="hymns-close" onclick="_hymCloseDetail()" title="닫기"><i class="fa fa-times"></i></button>
-        </div>
+  </div><!-- /appShell -->
+
+  <!-- ══ RIGHT SLIDER MENU ════════════════════ -->
+  <div class="rmenu-backdrop" id="rmenuBackdrop"></div>
+  <div class="rmenu-dropdown" id="rmenuDropdown">
+    <div class="rmenu-header">
+      <span class="rmenu-header-title">메뉴</span>
+      <button class="rmenu-close" onclick="RMenu.close()"><i class="fa fa-times"></i></button>
+    </div>
+    <div class="rmenu-section">레이아웃</div>
+    <div class="rmenu-item" data-pane-toggle="bible" onclick="RMenu.togglePane('bible')">
+      <i class="fa fa-book-bible"></i>
+      <span class="rmenu-item-label">성경</span>
+      <div class="rmenu-toggle on"></div>
+    </div>
+    <div class="rmenu-item" data-pane-toggle="pdf" onclick="RMenu.togglePane('pdf')">
+      <i class="fa fa-file-pdf"></i>
+      <span class="rmenu-item-label">PDF</span>
+      <div class="rmenu-toggle"></div>
+    </div>
+    <div class="rmenu-item" data-pane-toggle="notes" onclick="RMenu.togglePane('notes')">
+      <i class="fa fa-pen"></i>
+      <span class="rmenu-item-label">노트</span>
+      <div class="rmenu-toggle"></div>
+    </div>
+    <div class="rmenu-divider"></div>
+    <div class="rmenu-section">도구</div>
+    <div class="rmenu-item" onclick="toggleKnowledgeGraph();RMenu.close()">
+      <i class="fa fa-project-diagram"></i>
+      <span class="rmenu-item-label">지식 그래프</span>
+    </div>
+    <div class="rmenu-item" onclick="toggleTypingPanel();RMenu.close()">
+      <i class="fa fa-keyboard"></i>
+      <span class="rmenu-item-label">타자 연습</span>
+    </div>
+    <div class="rmenu-item" onclick="toggleRail('hymns');RMenu.close()">
+      <i class="fa fa-music"></i>
+      <span class="rmenu-item-label">찬송가</span>
+    </div>
+    <div class="rmenu-item" onclick="toggleRail('live');RMenu.close()">
+      <i class="fa fa-tower-broadcast"></i>
+      <span class="rmenu-item-label">라이브 강의</span>
+    </div>
+    <div class="rmenu-divider"></div>
+    <div class="rmenu-section">기타</div>
+    <div class="rmenu-item" onclick="toggleRail('reading');RMenu.close()">
+      <i class="fa fa-calendar-check"></i>
+      <span class="rmenu-item-label">읽기 계획</span>
+    </div>
+    <div class="rmenu-item" onclick="toggleRail('bugreport');RMenu.close()">
+      <i class="fa fa-bug"></i>
+      <span class="rmenu-item-label">버그 리포트</span>
+    </div>
+    <div class="rmenu-item" onclick="toggleRail('settings');RMenu.close()">
+      <i class="fa fa-cog"></i>
+      <span class="rmenu-item-label">설정</span>
+    </div>
+  </div>
+
+  <!-- ══ CONTEXT MENU ════════════════════════════ -->
+  <div id="ctxMenu">
+    <div class="citem" onclick="ctxHL()"><i class="fa fa-highlighter"></i> <span data-i18n="ctx.highlight">형광펜 적용 (드래그
+        선택 후)</span></div>
+    <div class="citem" onclick="ctxClearHL()" id="ctxClearHLItem" style="display:none"><i class="fa fa-eraser"></i>
+      <span data-i18n="ctx.clearHL">형광펜 지우기</span></div>
+    <div class="citem" onclick="ctxVerseMemo()"><i class="fa fa-comment-dots"></i> <span data-i18n="ctx.verseMemo">주석
+        작성</span></div>
+    <div class="citem" onclick="ctxNote()"><i class="fa fa-pen"></i> <span data-i18n="ctx.newNote">새 노트 작성</span></div>
+    <div class="citem" onclick="ctxLinkNote()"><i class="fa fa-link"></i> <span data-i18n="ctx.linkNote">노트 연결</span>
+    </div>
+    <div class="citem" onclick="ctxDict()"><i class="fa fa-book"></i> <span data-i18n="ctx.viewDict">사전 보기</span></div>
+    <div class="cdiv"></div>
+    <div class="citem" onclick="addBookmark()"><i class="fa fa-bookmark"></i> <span data-i18n="ctx.addBookmark">북마크
+        추가/제거</span></div>
+    <div class="citem" onclick="ctxCopy()"><i class="fa fa-copy"></i> <span data-i18n="ctx.copyVerse">구절 복사</span></div>
+    <div class="citem" onclick="ctxCopyRef()"><i class="fa fa-quote-right"></i> <span data-i18n="ctx.copyRef">참조 형식
+        복사</span></div>
+    <div class="cdiv"></div>
+    <div class="citem" onclick="ctxInsertLink()"><i class="fa fa-link"></i> <span data-i18n="ctx.insertLink">노트에 구절 링크
+        삽입</span></div>
+  </div>
+
+  <!-- ══ MODALS ══════════════════════════════════ -->
+  <div class="modal-bg" id="mQuota">
+    <div class="modal-box">
+      <div class="modal-title"><i class="fa fa-database"></i> 저장 공간</div>
+      <div id="quotaDetail"></div>
+      <div class="modal-btns">
+        <button class="mbtn mbtn-cancel" onclick="closeM('mQuota')">닫기</button>
+        <button class="mbtn mbtn-ok" onclick="showUpgradeMsg()"><i class="fa fa-arrow-up"></i> 업그레이드</button>
       </div>
-      <div class="hymns-body" id="hymnsBody">
-        <div id="hymViewDetail"></div>
-      </div>
-      <div class="hym-player-bar" id="hymPlayerBar" style="display:none">
-        <div class="hym-pb-info" onclick="_hymOpenCurrentDetail()">
-          <span class="hym-pb-title" id="hymPbTitle"></span>
-        </div>
-        <div class="hym-pb-controls">
-          <button class="hym-pb-btn" onclick="_hymPrev()"><i class="fa fa-step-backward"></i></button>
-          <button class="hym-pb-btn hym-pb-play" id="hymPbPlayBtn" onclick="_hymTogglePlay()"><i class="fa fa-play"></i></button>
-          <button class="hym-pb-btn" onclick="_hymNext()"><i class="fa fa-step-forward"></i></button>
-        </div>
-        <div class="hym-pb-progress">
-          <div class="hym-pb-track" id="hymPbTrack" onmousedown="_hymSeekStart(event,'mini')" ontouchstart="_hymSeekStart(event,'mini')"><div class="hym-pb-fill" id="hymPbFill"></div></div>
-          <span class="hym-pb-time" id="hymPbTime">0:00</span>
-        </div>
+    </div>
+  </div>
+
+  <div class="modal-bg" id="mFolder">
+    <div class="modal-box">
+      <div class="modal-title"><i class="fa fa-folder-plus"></i> 새 폴더 만들기</div>
+      <input type="text" class="modal-inp" id="mFolderName" placeholder="폴더 이름 (예: 로마서 연구, 매일 묵상...)">
+      <div class="modal-btns">
+        <button class="mbtn mbtn-cancel" onclick="closeM('mFolder')">취소</button>
+        <button class="mbtn mbtn-ok" onclick="createFolder()">만들기</button>
       </div>
     </div>
+  </div>
 
-  </div><!-- /paneContainer -->
-
-</div><!-- /appShell -->
-
-<!-- ══ RIGHT SLIDER MENU ════════════════════ -->
-<div class="rmenu-backdrop" id="rmenuBackdrop"></div>
-<div class="rmenu-dropdown" id="rmenuDropdown">
-  <div class="rmenu-header">
-    <span class="rmenu-header-title">메뉴</span>
-    <button class="rmenu-close" onclick="RMenu.close()"><i class="fa fa-times"></i></button>
-  </div>
-  <div class="rmenu-section">레이아웃</div>
-  <div class="rmenu-item" data-pane-toggle="bible" onclick="RMenu.togglePane('bible')">
-    <i class="fa fa-book-bible"></i>
-    <span class="rmenu-item-label">성경</span>
-    <div class="rmenu-toggle on"></div>
-  </div>
-  <div class="rmenu-item" data-pane-toggle="pdf" onclick="RMenu.togglePane('pdf')">
-    <i class="fa fa-file-pdf"></i>
-    <span class="rmenu-item-label">PDF</span>
-    <div class="rmenu-toggle"></div>
-  </div>
-  <div class="rmenu-item" data-pane-toggle="notes" onclick="RMenu.togglePane('notes')">
-    <i class="fa fa-pen"></i>
-    <span class="rmenu-item-label">노트</span>
-    <div class="rmenu-toggle"></div>
-  </div>
-  <div class="rmenu-divider"></div>
-  <div class="rmenu-section">도구</div>
-  <div class="rmenu-item" onclick="toggleKnowledgeGraph();RMenu.close()">
-    <i class="fa fa-project-diagram"></i>
-    <span class="rmenu-item-label">지식 그래프</span>
-  </div>
-  <div class="rmenu-item" onclick="toggleTypingPanel();RMenu.close()">
-    <i class="fa fa-keyboard"></i>
-    <span class="rmenu-item-label">타자 연습</span>
-  </div>
-  <div class="rmenu-item" onclick="toggleRail('hymns');RMenu.close()">
-    <i class="fa fa-music"></i>
-    <span class="rmenu-item-label">찬송가</span>
-  </div>
-  <div class="rmenu-item" onclick="toggleRail('live');RMenu.close()">
-    <i class="fa fa-tower-broadcast"></i>
-    <span class="rmenu-item-label">라이브 강의</span>
-  </div>
-  <div class="rmenu-divider"></div>
-  <div class="rmenu-section">기타</div>
-  <div class="rmenu-item" onclick="toggleRail('reading');RMenu.close()">
-    <i class="fa fa-calendar-check"></i>
-    <span class="rmenu-item-label">읽기 계획</span>
-  </div>
-  <div class="rmenu-item" onclick="toggleRail('bugreport');RMenu.close()">
-    <i class="fa fa-bug"></i>
-    <span class="rmenu-item-label">버그 리포트</span>
-  </div>
-  <div class="rmenu-item" onclick="toggleRail('settings');RMenu.close()">
-    <i class="fa fa-cog"></i>
-    <span class="rmenu-item-label">설정</span>
-  </div>
-</div>
-
-<!-- ══ CONTEXT MENU ════════════════════════════ -->
-<div id="ctxMenu">
-  <div class="citem" onclick="ctxHL()"><i class="fa fa-highlighter"></i> <span data-i18n="ctx.highlight">형광펜 적용 (드래그 선택 후)</span></div>
-  <div class="citem" onclick="ctxClearHL()" id="ctxClearHLItem" style="display:none"><i class="fa fa-eraser"></i> <span data-i18n="ctx.clearHL">형광펜 지우기</span></div>
-  <div class="citem" onclick="ctxVerseMemo()"><i class="fa fa-comment-dots"></i> <span data-i18n="ctx.verseMemo">주석 작성</span></div>
-  <div class="citem" onclick="ctxNote()"><i class="fa fa-pen"></i> <span data-i18n="ctx.newNote">새 노트 작성</span></div>
-  <div class="citem" onclick="ctxLinkNote()"><i class="fa fa-link"></i> <span data-i18n="ctx.linkNote">노트 연결</span></div>
-  <div class="citem" onclick="ctxDict()"><i class="fa fa-book"></i> <span data-i18n="ctx.viewDict">사전 보기</span></div>
-  <div class="cdiv"></div>
-  <div class="citem" onclick="addBookmark()"><i class="fa fa-bookmark"></i> <span data-i18n="ctx.addBookmark">북마크 추가/제거</span></div>
-  <div class="citem" onclick="ctxCopy()"><i class="fa fa-copy"></i> <span data-i18n="ctx.copyVerse">구절 복사</span></div>
-  <div class="citem" onclick="ctxCopyRef()"><i class="fa fa-quote-right"></i> <span data-i18n="ctx.copyRef">참조 형식 복사</span></div>
-  <div class="cdiv"></div>
-  <div class="citem" onclick="ctxInsertLink()"><i class="fa fa-link"></i> <span data-i18n="ctx.insertLink">노트에 구절 링크 삽입</span></div>
-</div>
-
-<!-- ══ MODALS ══════════════════════════════════ -->
-<div class="modal-bg" id="mQuota">
-  <div class="modal-box">
-    <div class="modal-title"><i class="fa fa-database"></i> 저장 공간</div>
-    <div id="quotaDetail"></div>
-    <div class="modal-btns">
-      <button class="mbtn mbtn-cancel" onclick="closeM('mQuota')">닫기</button>
-      <button class="mbtn mbtn-ok" onclick="showUpgradeMsg()"><i class="fa fa-arrow-up"></i> 업그레이드</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-bg" id="mFolder">
-  <div class="modal-box">
-    <div class="modal-title"><i class="fa fa-folder-plus"></i> 새 폴더 만들기</div>
-    <input type="text" class="modal-inp" id="mFolderName" placeholder="폴더 이름 (예: 로마서 연구, 매일 묵상...)">
-    <div class="modal-btns">
-      <button class="mbtn mbtn-cancel" onclick="closeM('mFolder')">취소</button>
-      <button class="mbtn mbtn-ok" onclick="createFolder()">만들기</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-bg" id="mVerse">
-  <div class="modal-box">
-    <div class="modal-title"><i class="fa fa-bible"></i> 성경 구절 링크 삽입</div>
-    <div style="display:flex;gap:6px;margin-bottom:10px">
-      <select id="vlB" class="modal-inp" style="flex:1;margin:0" onchange="vlChBuild()"></select>
-      <select id="vlC" class="modal-inp" style="width:80px;margin:0" onchange="vlPrev()"></select>
-      <input type="number" id="vlV" class="modal-inp" style="width:68px;margin:0" placeholder="절" min="1" max="200" oninput="vlPrev()">
-    </div>
-    <div style="font-size:12px;color:var(--text3);margin-bottom:12px">미리보기: <span id="vlPrev" style="color:var(--gold);font-family:'JetBrains Mono',monospace"></span></div>
-    <div class="modal-btns">
-      <button class="mbtn mbtn-cancel" onclick="closeM('mVerse')">취소</button>
-      <button class="mbtn mbtn-ok" onclick="confirmVL()">삽입</button>
-    </div>
-  </div>
-</div>
-
-<div class="modal-bg" id="mNoteLink">
-  <div class="modal-box">
-    <div class="modal-title"><i class="fa fa-link"></i> 노트 링크 삽입</div>
-    <input type="text" class="modal-inp" id="nlSearch" placeholder="노트 제목 검색..." oninput="filterNoteLinks(this.value)">
-    <div id="notePicker"></div>
-    <div class="modal-btns">
-      <button class="mbtn mbtn-cancel" onclick="closeM('mNoteLink')">취소</button>
-    </div>
-  </div>
-</div>
-
-
-<!-- ── 공유 다이얼로그 모달 ── -->
-<div class="modal-bg" id="mShare">
-  <div class="modal-box">
-    <div class="modal-title"><i class="fa fa-link"></i> 공유 링크</div>
-    <div class="share-dlg-label" id="mShareLabel"></div>
-    <div class="share-url-row">
-      <input type="text" class="share-url-input" id="mShareUrl" readonly>
-      <button class="share-copy-btn" onclick="_shareCopyLink()" title="복사"><i class="fa fa-copy"></i></button>
-    </div>
-    <div class="share-info"><i class="fa fa-info-circle"></i> 링크를 아는 로그인 사용자만 열람 가능</div>
-    <div class="share-code-label">코드: <span id="mShareCode"></span></div>
-
-    <!-- 허용 이메일 관리 -->
-    <div class="share-email-section">
-      <div class="share-email-title"><i class="fa fa-user-shield"></i> 허용된 사용자</div>
-      <div class="share-email-list" id="shareEmailList"></div>
-      <div class="share-email-row">
-        <input type="email" class="share-email-input" id="shareEmailInput"
-               placeholder="이메일 입력..." onkeydown="if(event.key==='Enter')_shareAddEmail()">
-        <button class="share-email-add-btn" onclick="_shareAddEmail()">추가</button>
+  <div class="modal-bg" id="mVerse">
+    <div class="modal-box">
+      <div class="modal-title"><i class="fa fa-bible"></i> 성경 구절 링크 삽입</div>
+      <div style="display:flex;gap:6px;margin-bottom:10px">
+        <select id="vlB" class="modal-inp" style="flex:1;margin:0" onchange="vlChBuild()"></select>
+        <select id="vlC" class="modal-inp" style="width:80px;margin:0" onchange="vlPrev()"></select>
+        <input type="number" id="vlV" class="modal-inp" style="width:68px;margin:0" placeholder="절" min="1" max="200"
+          oninput="vlPrev()">
       </div>
-      <div class="share-email-hint"><i class="fa fa-info-circle"></i> 비어있으면 링크를 아는 모든 로그인 사용자가 접근 가능</div>
-    </div>
-
-    <div class="modal-btns">
-      <button class="share-revoke-btn" onclick="_shareRevokeConfirm(document.getElementById('mShare').dataset.code)"><i class="fa fa-lock-open"></i> 공유 해제</button>
-      <button class="mbtn mbtn-cancel" onclick="closeM('mShare')">닫기</button>
-    </div>
-  </div>
-</div>
-
-<!-- ── 공유 가입 프롬프트 모달 ── -->
-<div class="modal-bg" id="mShareJoin">
-  <div class="modal-box">
-    <div class="msj-title"><i class="fa fa-user-plus"></i> 공유 초대</div>
-    <div class="msj-info"><span id="msjOwner"></span>님이 공유한</div>
-    <div class="msj-info"><span id="msjType"></span>: <span id="msjName" class="msj-name"></span></div>
-    <div class="msj-btns">
-      <button class="mbtn mbtn-cancel" onclick="closeM('mShareJoin')">거절</button>
-      <button class="mbtn mbtn-ok" onclick="_shareAcceptJoin()">수락</button>
+      <div style="font-size:12px;color:var(--text3);margin-bottom:12px">미리보기: <span id="vlPrev"
+          style="color:var(--gold);font-family:'JetBrains Mono',monospace"></span></div>
+      <div class="modal-btns">
+        <button class="mbtn mbtn-cancel" onclick="closeM('mVerse')">취소</button>
+        <button class="mbtn mbtn-ok" onclick="confirmVL()">삽입</button>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- Verse Tooltip -->
-<div id="vtip"><div id="vtip-ref"></div><div id="vtip-txt"></div></div>
-<!-- Toast -->
-<div id="toast"></div>
-<!-- Hymn Audio -->
-<audio id="hymAudio" preload="none"></audio>
-
-<!-- Global Mini Player (floating circle, expands on hover) -->
-<div id="hymGlobalPlayer" class="hym-gp-fab" style="display:none">
-  <div class="hym-gp-fab-circle" onclick="_hymTogglePlay()">
-    <i class="fa fa-music" id="hymGpFabIcon"></i>
-    <svg class="hym-gp-fab-ring" viewBox="0 0 40 40"><circle cx="20" cy="20" r="18" id="hymGpRing"/></svg>
-  </div>
-  <div class="hym-gp-fab-panel">
-    <span class="hym-gp-fab-title" id="hymGpTitle" onclick="_hymOpenCurrentDetail()"></span>
-    <div class="hym-gp-fab-btns">
-      <button class="hym-gp-fab-btn" onclick="_hymPrev()" title="이전"><i class="fa fa-backward-step"></i></button>
-      <button class="hym-gp-fab-btn hym-gp-fab-play" id="hymGpPlayBtn" onclick="_hymTogglePlay()"><i class="fa fa-play"></i></button>
-      <button class="hym-gp-fab-btn" onclick="_hymNext()" title="다음"><i class="fa fa-forward-step"></i></button>
-      <button class="hym-gp-fab-btn" onclick="_hymOpenCurrentDetail()" title="열기"><i class="fa fa-up-right-from-square"></i></button>
+  <div class="modal-bg" id="mNoteLink">
+    <div class="modal-box">
+      <div class="modal-title"><i class="fa fa-link"></i> 노트 링크 삽입</div>
+      <input type="text" class="modal-inp" id="nlSearch" placeholder="노트 제목 검색..."
+        oninput="filterNoteLinks(this.value)">
+      <div id="notePicker"></div>
+      <div class="modal-btns">
+        <button class="mbtn mbtn-cancel" onclick="closeM('mNoteLink')">취소</button>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- ═══════════════════════════════════════════════
+
+  <!-- ── 공유 다이얼로그 모달 ── -->
+  <div class="modal-bg" id="mShare">
+    <div class="modal-box">
+      <div class="modal-title"><i class="fa fa-link"></i> 공유 링크</div>
+      <div class="share-dlg-label" id="mShareLabel"></div>
+      <div class="share-url-row">
+        <input type="text" class="share-url-input" id="mShareUrl" readonly>
+        <button class="share-copy-btn" onclick="_shareCopyLink()" title="복사"><i class="fa fa-copy"></i></button>
+      </div>
+      <div class="share-info"><i class="fa fa-info-circle"></i> 링크를 아는 로그인 사용자만 열람 가능</div>
+      <div class="share-code-label">코드: <span id="mShareCode"></span></div>
+
+      <!-- 허용 이메일 관리 -->
+      <div class="share-email-section">
+        <div class="share-email-title"><i class="fa fa-user-shield"></i> 허용된 사용자</div>
+        <div class="share-email-list" id="shareEmailList"></div>
+        <div class="share-email-row">
+          <input type="email" class="share-email-input" id="shareEmailInput" placeholder="이메일 입력..."
+            onkeydown="if(event.key==='Enter')_shareAddEmail()">
+          <button class="share-email-add-btn" onclick="_shareAddEmail()">추가</button>
+        </div>
+        <div class="share-email-hint"><i class="fa fa-info-circle"></i> 비어있으면 링크를 아는 모든 로그인 사용자가 접근 가능</div>
+      </div>
+
+      <div class="modal-btns">
+        <button class="share-revoke-btn"
+          onclick="_shareRevokeConfirm(document.getElementById('mShare').dataset.code)"><i class="fa fa-lock-open"></i>
+          공유 해제</button>
+        <button class="mbtn mbtn-cancel" onclick="closeM('mShare')">닫기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 공유 가입 프롬프트 모달 ── -->
+  <div class="modal-bg" id="mShareJoin">
+    <div class="modal-box">
+      <div class="msj-title"><i class="fa fa-user-plus"></i> 공유 초대</div>
+      <div class="msj-info"><span id="msjOwner"></span>님이 공유한</div>
+      <div class="msj-info"><span id="msjType"></span>: <span id="msjName" class="msj-name"></span></div>
+      <div class="msj-btns">
+        <button class="mbtn mbtn-cancel" onclick="closeM('mShareJoin')">거절</button>
+        <button class="mbtn mbtn-ok" onclick="_shareAcceptJoin()">수락</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Verse Tooltip -->
+  <div id="vtip">
+    <div id="vtip-ref"></div>
+    <div id="vtip-txt"></div>
+  </div>
+  <!-- Toast -->
+  <div id="toast"></div>
+  <!-- Hymn Audio -->
+  <audio id="hymAudio" preload="none"></audio>
+
+  <!-- Global Mini Player (floating circle, expands on hover) -->
+  <div id="hymGlobalPlayer" class="hym-gp-fab" style="display:none">
+    <div class="hym-gp-fab-circle" onclick="_hymTogglePlay()">
+      <i class="fa fa-music" id="hymGpFabIcon"></i>
+      <svg class="hym-gp-fab-ring" viewBox="0 0 40 40">
+        <circle cx="20" cy="20" r="18" id="hymGpRing" />
+      </svg>
+    </div>
+    <div class="hym-gp-fab-panel">
+      <span class="hym-gp-fab-title" id="hymGpTitle" onclick="_hymOpenCurrentDetail()"></span>
+      <div class="hym-gp-fab-btns">
+        <button class="hym-gp-fab-btn" onclick="_hymPrev()" title="이전"><i class="fa fa-backward-step"></i></button>
+        <button class="hym-gp-fab-btn hym-gp-fab-play" id="hymGpPlayBtn" onclick="_hymTogglePlay()"><i
+            class="fa fa-play"></i></button>
+        <button class="hym-gp-fab-btn" onclick="_hymNext()" title="다음"><i class="fa fa-forward-step"></i></button>
+        <button class="hym-gp-fab-btn" onclick="_hymOpenCurrentDetail()" title="열기"><i
+            class="fa fa-up-right-from-square"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
      SCRIPTS (모듈화된 JS)
 ═══════════════════════════════════════════════ -->
 
-<!-- Firebase UI (전역 함수, 모듈보다 먼저) -->
-<script src="js/firebase-ui.js"></script>
-<script src="js/firebase-quota-ui.js"></script>
+  <!-- Firebase UI (전역 함수, 모듈보다 먼저) -->
+  <script src="js/firebase-ui.js"></script>
+  <script src="js/firebase-quota-ui.js"></script>
 
-<!-- 데이터 (작은 파일, 동기 로드) -->
-<script src="data/books.js"></script>
+  <!-- 데이터 (작은 파일, 동기 로드) -->
+  <script src="data/books.js"></script>
 
-<!-- 코어 모듈 (의존성 없음, 먼저 로드) -->
-<script src="js/core/event-bus.js?v=1"></script>
-<script src="js/core/uri.js?v=1"></script>
-<script src="js/core/idb-store.js?v=1"></script>
-<script src="js/core/storage-adapter.js?v=1"></script>
-<script src="js/core/link-registry.js?v=1"></script>
-<script src="js/core/nav-router.js?v=1"></script>
-<script src="js/core/backlink-panel.js?v=1"></script>
-<script src="js/core/link-picker.js?v=1"></script>
-<script src="js/core/i18n.js?v=1"></script>
-<script src="js/core/input-manager.js?v=1"></script>
-<script src="js/core/virtual-scroll.js?v=1"></script>
-<script src="js/theme-switcher.js?v=11"></script>
-<script src="js/data-loader.js"></script>
-<script src="js/state.js?v=2"></script>
-<script src="js/theme.js?v=2"></script>
-<script src="js/storage.js?v=2"></script>
-<script src="js/ui-utils.js"></script>
+  <!-- 코어 모듈 (의존성 없음, 먼저 로드) -->
+  <script src="js/core/event-bus.js?v=1"></script>
+  <script src="js/core/uri.js?v=1"></script>
+  <script src="js/core/idb-store.js?v=1"></script>
+  <script src="js/core/storage-adapter.js?v=1"></script>
+  <script src="js/core/link-registry.js?v=1"></script>
+  <script src="js/core/nav-router.js?v=1"></script>
+  <script src="js/core/backlink-panel.js?v=1"></script>
+  <script src="js/core/link-picker.js?v=1"></script>
+  <script src="js/core/i18n.js?v=1"></script>
+  <script src="js/core/input-manager.js?v=1"></script>
+  <script src="js/core/virtual-scroll.js?v=1"></script>
+  <script src="js/theme-switcher.js?v=11"></script>
+  <script src="js/data-loader.js"></script>
+  <script src="js/state.js?v=2"></script>
+  <script src="js/theme.js?v=2"></script>
+  <script src="js/storage.js?v=2"></script>
+  <script src="js/ui-utils.js"></script>
 
-<!-- 비주얼 필터 -->
-<script src="js/visual-filter.js"></script>
+  <!-- 비주얼 필터 -->
+  <script src="js/visual-filter.js"></script>
 
-<!-- 성경 관련 -->
-<script src="js/bible-renderer.js?v=4"></script>
-<script src="js/bible-renderer-hl.js"></script>
-<script src="js/book-nav.js"></script>
-<script src="js/book-nav-actions.js"></script>
-<script src="js/book-names-en.js"></script>
-<script src="js/nav-picker.js"></script>
-<script src="js/nav-picker-ui.js"></script>
-<script src="js/nav-picker-render.js"></script>
-<script src="js/nav-picker-actions.js"></script>
-<script src="js/bible-tabs.js"></script>
-<script src="js/bible-tabs-render.js"></script>
-<script src="js/bible-view-bar.js"></script>
-<script src="js/ch-picker.js"></script>
-<script src="js/ch-picker-render.js"></script>
-<script src="js/ch-picker-grid.js"></script>
+  <!-- 성경 관련 -->
+  <script src="js/bible-renderer.js?v=4"></script>
+  <script src="js/bible-renderer-hl.js"></script>
+  <script src="js/book-nav.js"></script>
+  <script src="js/book-nav-actions.js"></script>
+  <script src="js/book-names-en.js"></script>
+  <script src="js/nav-picker.js"></script>
+  <script src="js/nav-picker-ui.js"></script>
+  <script src="js/nav-picker-render.js"></script>
+  <script src="js/nav-picker-actions.js"></script>
+  <script src="js/bible-tabs.js"></script>
+  <script src="js/bible-tabs-render.js"></script>
+  <script src="js/bible-view-bar.js"></script>
+  <script src="js/ch-picker.js"></script>
+  <script src="js/ch-picker-render.js"></script>
+  <script src="js/ch-picker-grid.js"></script>
 
-<!-- 하이라이트 & 절 선택 -->
-<script src="js/highlight.js"></script>
-<script src="js/highlight-picker.js"></script>
-<script src="js/highlight-apply.js"></script>
-<script src="js/highlight-memo.js"></script>
-<script src="js/highlight-memo-data.js"></script>
-<script src="js/highlight-memo-verse.js"></script>
-<script src="js/highlight-memo-parse.js"></script>
-<script src="js/highlight-memo-notelink.js"></script>
-<script src="js/highlight-memo-search.js"></script>
-<script src="js/highlight-memo-filter.js"></script>
-<script src="js/highlight-memo-tags.js"></script>
-<script src="js/highlight-memo-save.js"></script>
-<script src="js/highlight-topics.js"></script>
-<script src="js/verse-select.js?v=5"></script>
+  <!-- 하이라이트 & 절 선택 -->
+  <script src="js/highlight.js"></script>
+  <script src="js/highlight-picker.js"></script>
+  <script src="js/highlight-apply.js"></script>
+  <script src="js/highlight-memo.js"></script>
+  <script src="js/highlight-memo-data.js"></script>
+  <script src="js/highlight-memo-verse.js"></script>
+  <script src="js/highlight-memo-parse.js"></script>
+  <script src="js/highlight-memo-notelink.js"></script>
+  <script src="js/highlight-memo-search.js"></script>
+  <script src="js/highlight-memo-filter.js"></script>
+  <script src="js/highlight-memo-tags.js"></script>
+  <script src="js/highlight-memo-save.js"></script>
+  <script src="js/highlight-topics.js"></script>
+  <script src="js/verse-select.js?v=5"></script>
 
-<!-- 주석 & 사전 -->
-<script src="js/commentary-verse.js"></script>
-<script src="js/commentary-chapter.js"></script>
-<script src="js/commentary.js"></script>
-<script src="js/data-loader-strongs.js"></script>
-<script src="js/strongs-book-group.js"></script>
-<script src="js/strongs-load-helpers.js"></script>
-<script src="js/strongs-ui.js"></script>
-<script src="js/e-code-renderer.js"></script>
-<script src="js/strongs-ui-def.js"></script>
-<script src="js/strongs-ui-search.js"></script>
-<script src="js/bible-renderer-strongs.js"></script>
-<script src="js/word-study.js"></script>
-<script src="js/word-study-paginate.js"></script>
-<script src="js/word-study-en.js"></script>
-<script src="js/adv-search-engine.js"></script>
-<script src="js/adv-search-match.js"></script>
-<script src="js/adv-search-filter.js"></script>
-<script src="js/adv-search-stats.js"></script>
-<script src="js/adv-search-bookmap.js"></script>
-<script src="js/adv-search-exec.js"></script>
-<script src="js/adv-search-exec-en.js"></script>
-<script src="js/adv-search-results.js"></script>
-<script src="js/adv-search-views.js"></script>
-<script src="js/adv-search-nav.js"></script>
-<script src="js/adv-search-ui.js"></script>
-<script src="js/adv-search-ui-html.js"></script>
-<script src="js/adv-search-panel.js"></script>
-<script src="js/adv-search-ctrl.js"></script>
+  <!-- 주석 & 사전 -->
+  <script src="js/commentary-verse.js"></script>
+  <script src="js/commentary-chapter.js"></script>
+  <script src="js/commentary.js"></script>
+  <script src="js/data-loader-strongs.js"></script>
+  <script src="js/strongs-book-group.js"></script>
+  <script src="js/strongs-load-helpers.js"></script>
+  <script src="js/strongs-ui.js"></script>
+  <script src="js/e-code-renderer.js"></script>
+  <script src="js/strongs-ui-def.js"></script>
+  <script src="js/strongs-ui-search.js"></script>
+  <script src="js/bible-renderer-strongs.js"></script>
+  <script src="js/word-study.js"></script>
+  <script src="js/word-study-paginate.js"></script>
+  <script src="js/word-study-en.js"></script>
+  <script src="js/adv-search-engine.js"></script>
+  <script src="js/adv-search-match.js"></script>
+  <script src="js/adv-search-filter.js"></script>
+  <script src="js/adv-search-stats.js"></script>
+  <script src="js/adv-search-bookmap.js"></script>
+  <script src="js/adv-search-exec.js"></script>
+  <script src="js/adv-search-exec-en.js"></script>
+  <script src="js/adv-search-results.js"></script>
+  <script src="js/adv-search-views.js"></script>
+  <script src="js/adv-search-nav.js"></script>
+  <script src="js/adv-search-ui.js"></script>
+  <script src="js/adv-search-ui-html.js"></script>
+  <script src="js/adv-search-panel.js"></script>
+  <script src="js/adv-search-ctrl.js"></script>
 
-<!-- 사전 (웹스터/영한/국어) -->
-<script src="js/webster-api.js"></script>
-<script src="js/webster-ui.js"></script>
-<script src="js/webster-search.js"></script>
-<script src="js/enko-api.js"></script>
-<script src="js/enko-ui.js"></script>
-<script src="js/enko-search.js"></script>
-<script src="js/enko-translate.js"></script>
-<script src="js/korean-api.js"></script>
-<script src="js/korean-ui.js"></script>
-<script src="js/korean-search.js"></script>
+  <!-- 사전 (웹스터/영한/국어) -->
+  <script src="js/webster-api.js"></script>
+  <script src="js/webster-ui.js"></script>
+  <script src="js/webster-search.js"></script>
+  <script src="js/enko-api.js"></script>
+  <script src="js/enko-ui.js"></script>
+  <script src="js/enko-search.js"></script>
+  <script src="js/enko-translate.js"></script>
+  <script src="js/korean-api.js"></script>
+  <script src="js/korean-ui.js"></script>
+  <script src="js/korean-search.js"></script>
 
-<!-- 노트 시스템 -->
-<script src="js/note-panel.js?v=1"></script>
-<script src="js/notes-autosave.js"></script>
-<script src="js/notes-editor.js"></script>
-<script src="js/notes-editor-insert.js"></script>
-<script src="js/notes-editor-inline.js"></script>
-<script src="js/notes-manager.js"></script>
-<script src="js/notes-manager-save.js"></script>
-<script src="js/notes-manager-ui.js"></script>
-<script src="js/notes-folders.js"></script>
-<script src="js/notes-folders-render.js"></script>
-<script src="js/notes-folders-ctx.js"></script>
-<script src="js/notes-folders-crud.js"></script>
-<script src="js/notes-folders-new.js"></script>
-<script src="js/notes-links.js"></script>
-<script src="js/notes-links-notelink.js"></script>
-<script src="js/notes-links-embed.js"></script>
-<script src="js/notes-links-url.js"></script>
-<script src="js/notes-links-youtube.js"></script>
-<script src="js/notes-links-file.js"></script>
-<script src="js/notes-links-verse.js"></script>
-<script src="js/notes-links-vtip.js"></script>
+  <!-- 노트 시스템 -->
+  <script src="js/note-panel.js?v=1"></script>
+  <script src="js/notes-autosave.js"></script>
+  <script src="js/notes-editor.js"></script>
+  <script src="js/notes-editor-insert.js"></script>
+  <script src="js/notes-editor-inline.js"></script>
+  <script src="js/notes-manager.js"></script>
+  <script src="js/notes-manager-save.js"></script>
+  <script src="js/notes-manager-ui.js"></script>
+  <script src="js/notes-folders.js"></script>
+  <script src="js/notes-folders-render.js"></script>
+  <script src="js/notes-folders-ctx.js"></script>
+  <script src="js/notes-folders-crud.js"></script>
+  <script src="js/notes-folders-new.js"></script>
+  <script src="js/notes-links.js"></script>
+  <script src="js/notes-links-notelink.js"></script>
+  <script src="js/notes-links-embed.js"></script>
+  <script src="js/notes-links-url.js"></script>
+  <script src="js/notes-links-youtube.js"></script>
+  <script src="js/notes-links-file.js"></script>
+  <script src="js/notes-links-verse.js"></script>
+  <script src="js/notes-links-vtip.js"></script>
 
-<!-- 교차참조 & Passage Guide -->
-<script src="js/xref-extract.js"></script>
-<script src="js/xref-inline.js"></script>
-<script src="js/passage-guide.js"></script>
+  <!-- 교차참조 & Passage Guide -->
+  <script src="js/xref-extract.js"></script>
+  <script src="js/xref-inline.js"></script>
+  <script src="js/passage-guide.js"></script>
 
-<!-- 아이콘 레일 & 사이드패널 -->
-<script src="js/icon-rail.js?v=4"></script>
-<script src="js/side-notes.js"></script>
-<script src="js/bookmark-panel.js"></script>
-<script src="js/side-search.js"></script>
+  <!-- 아이콘 레일 & 사이드패널 -->
+  <script src="js/icon-rail.js?v=4"></script>
+  <script src="js/side-notes.js"></script>
+  <script src="js/bookmark-panel.js"></script>
+  <script src="js/side-search.js"></script>
 
-<!-- 설정 패널 -->
-<script src="js/settings-panel.js?v=11"></script>
-<script src="js/settings-panel-ctrl.js?v=5"></script>
-<script src="js/settings-panel-apply.js?v=14"></script>
-<script src="js/settings-panel-sync.js"></script>
+  <!-- 설정 패널 -->
+  <script src="js/settings-panel.js?v=11"></script>
+  <script src="js/settings-panel-ctrl.js?v=5"></script>
+  <script src="js/settings-panel-apply.js?v=14"></script>
+  <script src="js/settings-panel-sync.js"></script>
 
-<!-- 공유 기능 -->
-<script src="js/share-ui.js?v=1"></script>
-<script src="js/share-viewer.js?v=1"></script>
+  <!-- 공유 기능 -->
+  <script src="js/share-ui.js?v=1"></script>
+  <script src="js/share-viewer.js?v=1"></script>
 
-<!-- 컨텍스트 메뉴 & 패널 -->
-<script src="js/context-menu.js"></script>
-<script src="js/context-menu-notelink.js"></script>
-<script src="js/context-menu-versememo.js"></script>
-<script src="js/context-menu-actions.js"></script>
-<script src="js/context-menu-copy.js"></script>
-<script src="js/panels.js?v=2"></script>
-<script src="js/panel-tabs.js?v=2"></script>
-<script src="js/panel-tabs-sub.js?v=4"></script>
-<script src="js/panel-nav.js?v=2"></script>
-<script src="js/outline.js"></script>
-<script src="js/outline-note.js"></script>
-<script src="js/outline-note-ui.js"></script>
-<script src="js/search.js"></script>
-<script src="js/search-detect.js"></script>
-<script src="js/search-kr.js"></script>
-<script src="js/search-en.js"></script>
-<script src="js/search-extra.js"></script>
-<script src="js/search-exec.js"></script>
-<script src="js/search-render.js"></script>
-<script src="js/search-views.js"></script>
-<script src="js/search-item.js"></script>
-<script src="js/search-stats.js"></script>
-<script src="js/search-ctrl.js"></script>
-<script src="js/search-quick.js"></script>
-<script src="js/vb-search.js"></script>
-<script src="js/search-filter-init.js"></script>
-<script src="js/bug-report-ui.js"></script>
-<script src="js/bug-report-file.js"></script>
-<script src="js/bug-report-submit.js"></script>
-<script src="js/bug-report-api.js"></script>
-<script src="js/bug-report-history.js"></script>
-<script src="js/read-mode.js"></script>
+  <!-- 컨텍스트 메뉴 & 패널 -->
+  <script src="js/context-menu.js"></script>
+  <script src="js/context-menu-notelink.js"></script>
+  <script src="js/context-menu-versememo.js"></script>
+  <script src="js/context-menu-actions.js"></script>
+  <script src="js/context-menu-copy.js"></script>
+  <script src="js/panels.js?v=2"></script>
+  <script src="js/panel-tabs.js?v=2"></script>
+  <script src="js/panel-tabs-sub.js?v=4"></script>
+  <script src="js/panel-nav.js?v=2"></script>
+  <script src="js/outline.js"></script>
+  <script src="js/outline-note.js"></script>
+  <script src="js/outline-note-ui.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/search-detect.js"></script>
+  <script src="js/search-kr.js"></script>
+  <script src="js/search-en.js"></script>
+  <script src="js/search-extra.js"></script>
+  <script src="js/search-exec.js"></script>
+  <script src="js/search-render.js"></script>
+  <script src="js/search-views.js"></script>
+  <script src="js/search-item.js"></script>
+  <script src="js/search-stats.js"></script>
+  <script src="js/search-ctrl.js"></script>
+  <script src="js/search-quick.js"></script>
+  <script src="js/vb-search.js"></script>
+  <script src="js/search-filter-init.js"></script>
+  <script src="js/bug-report-ui.js"></script>
+  <script src="js/bug-report-file.js"></script>
+  <script src="js/bug-report-submit.js"></script>
+  <script src="js/bug-report-api.js"></script>
+  <script src="js/bug-report-history.js"></script>
+  <script src="js/read-mode.js"></script>
 
-<!-- 읽기 계획 -->
-<script src="js/reading-plan-data.js"></script>
-<script src="js/reading-plan-gen.js"></script>
-<script src="js/reading-plan.js"></script>
-<script src="js/reading-plan-ui.js"></script>
-<script src="js/reading-plan-render.js"></script>
+  <!-- 읽기 계획 -->
+  <script src="js/reading-plan-data.js"></script>
+  <script src="js/reading-plan-gen.js"></script>
+  <script src="js/reading-plan.js"></script>
+  <script src="js/reading-plan-ui.js"></script>
+  <script src="js/reading-plan-render.js"></script>
 
-<!-- PDF 시스템 -->
-<script src="js/pdf/pdf-library.js?v=2"></script>
-<script src="js/pdf/pdf-panel.js?v=2"></script>
-<script src="js/pdf/pdf-viewer.js?v=2"></script>
-<script src="js/pdf/pdf-annotations.js?v=3"></script>
-<script src="js/pdf/pdf-tools.js?v=3"></script>
-<script src="js/pdf/pdf-drag-to-note.js?v=2"></script>
-<script src="js/pdf/pdf-live.js?v=1"></script>
-<script src="js/pdf/pdf-presenter-bar.js?v=1"></script>
+  <!-- PDF 시스템 -->
+  <script src="js/pdf/pdf-library.js?v=2"></script>
+  <script src="js/pdf/pdf-panel.js?v=2"></script>
+  <script src="js/pdf/pdf-viewer.js?v=2"></script>
+  <script src="js/pdf/pdf-annotations.js?v=3"></script>
+  <script src="js/pdf/pdf-tools.js?v=3"></script>
+  <script src="js/pdf/pdf-drag-to-note.js?v=2"></script>
+  <script src="js/pdf/pdf-live.js?v=1"></script>
+  <script src="js/pdf/pdf-presenter-bar.js?v=1"></script>
 
-<!-- 지식 그래프 -->
-<script src="js/graph/knowledge-graph.js?v=6"></script>
-<script src="js/graph/graph-filter.js?v=2"></script>
+  <!-- 지식 그래프 -->
+  <script src="js/graph/knowledge-graph.js?v=6"></script>
+  <script src="js/graph/graph-filter.js?v=2"></script>
 
-<!-- 타자 연습 -->
-<script src="js/typing-practice.js?v=8"></script>
+  <!-- 타자 연습 -->
+  <script src="js/typing-practice.js?v=8"></script>
 
-<!-- 찬양 -->
-<script src="js/hymns.js?v=3"></script>
+  <!-- 찬양 -->
+  <script src="js/hymns.js?v=3"></script>
 
-<!-- 관리자 패널 -->
-<script src="js/admin.js?v=1"></script>
+  <!-- 관리자 패널 -->
+  <script src="js/admin.js?v=1"></script>
 
-<!-- Layout Manager (Grid 분할) -->
-<script src="js/layout-manager.js?v=1"></script>
+  <!-- Layout Manager (Grid 분할) -->
+  <script src="js/layout-manager.js?v=1"></script>
 
-<!-- Pane Manager & Right Menu -->
-<script src="js/pane-manager.js?v=1"></script>
-<script src="js/right-menu.js?v=1"></script>
+  <!-- Pane Manager & Right Menu -->
+  <script src="js/pane-manager.js?v=1"></script>
+  <script src="js/right-menu.js?v=1"></script>
 
-<!-- 초기화 (반드시 마지막) -->
-<script src="js/panel-resize.js?v=2"></script>
-<script src="js/app-paste.js"></script>
-<script src="js/app.js?v=4"></script>
+  <!-- 초기화 (반드시 마지막) -->
+  <script src="js/panel-resize.js?v=2"></script>
+  <script src="js/app-paste.js"></script>
+  <script src="js/app.js?v=4"></script>
 
 </body>
+
 </html>

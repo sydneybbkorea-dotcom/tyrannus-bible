@@ -35,6 +35,8 @@ var PaneManager = (function(){
     _syncLegacyClasses();
     _saveState();
     _emitChange();
+    // PDF pane 표시 시 라이브러리 트리 렌더링 보장
+    if(id === 'pdf' && typeof PDFLibrary !== 'undefined') PDFLibrary.render();
   }
 
   // ── 패널 숨기기 ──

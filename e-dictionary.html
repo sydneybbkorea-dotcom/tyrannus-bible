@@ -140,13 +140,20 @@ function filterWords() {
 
 function applyFilter() {
   var q = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+  // 검색어가 있으면 알파벳 필터 무시 → 전체에서 검색
+  var useAlpha = _alphaFilter && !q;
   _filtered = _dict.filter(function(item) {
-    if (_alphaFilter && !item.w.startsWith(_alphaFilter)) return false;
+    if (useAlpha && !item.w.startsWith(_alphaFilter)) return false;
     if (!q) return true;
     if (item.e.toLowerCase().indexOf(q) !== -1) return true;
     if (item.w.indexOf(q) !== -1) return true;
     return false;
   });
+  // 검색어 입력 시 알파벳 버튼 ALL로 표시
+  if (q) {
+    document.querySelectorAll('.alpha-btn').forEach(function(b, i){ b.classList.toggle('active', i === 0); });
+    _alphaFilter = '';
+  }
   applySort();
   renderStats();
   renderTable();
