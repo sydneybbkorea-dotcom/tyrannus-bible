@@ -46,14 +46,7 @@ function renderBible() {
       }
     }
 
-    // 통검/고급검색 결과 자동 하이라이트 처리 (일시적 반짝임)
-    if (S.schHighlightQuery && S.schHighlightKey === key) {
-      const q = S.schHighlightQuery;
-      const safe = q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      try {
-        displayTxt = displayTxt.replace(new RegExp(safe, 'gi'), '<mark class="sch-flash">$&</mark>');
-      } catch (e) { }
-    }
+    // 통검/고급검색 — 인라인 마크업 대신 렌더 후 행 flash로 처리 (아래 setTimeout)
 
     const rl = (typeof isRedLetter === 'function') && isRedLetter(key) ? ' red-letter' : '';
     const wantEN = !!S.showEnglish;
@@ -89,16 +82,29 @@ function renderBible() {
     if (typeof _svApplySharedHighlights === 'function') _svApplySharedHighlights();
   });
 
-  // 검색 하이라이트 반짝임 자동 제거 (2초 후)
+  // 검색 결과 행 flash + 단어 하이라이트 (E코드와 동일한 방식)
   if (S.schHighlightQuery) {
-    setTimeout(() => {
-      document.querySelectorAll('.sch-flash').forEach(m => {
-        const parent = m.parentNode;
-        while (m.firstChild) parent.insertBefore(m.firstChild, m);
-        parent.removeChild(m);
-      });
-    }, 2000);
+    const _q = S.schHighlightQuery;
+    const _v = S.selV;
     S.schHighlightQuery = '';
     S.schHighlightKey = '';
+    setTimeout(() => {
+      const row = document.querySelector('.vrow[data-v="' + _v + '"]');
+      if (!row) return;
+      // 행 전체 flash (E코드와 동일)
+      row.classList.add('e-row-flash');
+      setTimeout(() => row.classList.remove('e-row-flash'), 1800);
+      // 검색어 단어 하이라이트
+      const vtxt = row.querySelector('.vtxt');
+      if (vtxt && _q) {
+        const safe = _q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        try {
+          vtxt.innerHTML = vtxt.innerHTML.replace(new RegExp(safe, 'gi'), '<mark class="e-word-hl">$&</mark>');
+        } catch (e) { }
+        setTimeout(() => {
+          vtxt.querySelectorAll('mark.e-word-hl').forEach(m => m.replaceWith(document.createTextNode(m.textContent)));
+        }, 2500);
+      }
+    }, 250);
   }
 }
