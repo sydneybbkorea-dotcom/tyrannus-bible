@@ -1,7 +1,7 @@
-// pane-swap.js — 패널 헤더를 드래그하여 순서 교환
+// pane-swap.js — 패널 헤더 드래그로 순서 교환 (슬라이드 애니메이션)
 (function () {
     'use strict';
-    var _drag = null; // { pane, startX, startY, ghost, dropTarget }
+    var _drag = null;
 
     function init() {
         var container = document.getElementById('paneContainer');
@@ -10,25 +10,31 @@
         container.addEventListener('touchstart', onDown, { passive: false });
     }
 
+    function getClientXY(e) {
+        return {
+            x: e.touches ? e.touches[0].clientX : e.clientX,
+            y: e.touches ? e.touches[0].clientY : e.clientY
+        };
+    }
+
     function onDown(e) {
-        // .pane-header 또는 .pane-header-title 클릭인지 확인
         var header = e.target.closest('.pane-header');
         if (!header) return;
-        // 버튼/입력 클릭은 무시
         if (e.target.closest('button,input,select,a,.pane-ctrl-btn,.tb-pin,#bibleTabList')) return;
         var pane = header.closest('.pane');
         if (!pane || pane.getAttribute('data-visible') !== 'true') return;
 
-        var clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        var clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        var pt = getClientXY(e);
+        var rect = pane.getBoundingClientRect();
 
         _drag = {
             pane: pane,
-            startX: clientX,
-            startY: clientY,
+            startX: pt.x,
+            offsetX: pt.x - rect.left,
             started: false,
-            ghost: null,
-            dropTarget: null
+            dropTarget: null,
+            paneRect: rect,
+            origTransform: pane.style.transform || ''
         };
 
         document.addEventListener('mousemove', onMove);
@@ -39,25 +45,18 @@
 
     function onMove(e) {
         if (!_drag) return;
-        var clientX = e.touches ? e.touches[0].clientX : e.clientX;
-        var clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        var pt = getClientXY(e);
 
-        // 최소 이동 거리 체크 (5px)
         if (!_drag.started) {
-            var dx = Math.abs(clientX - _drag.startX);
-            var dy = Math.abs(clientY - _drag.startY);
-            if (dx < 5 && dy < 5) return;
+            if (Math.abs(pt.x - _drag.startX) < 8) return;
             _drag.started = true;
-            startDrag(_drag.pane, clientX, clientY);
+            beginDrag();
         }
-
         if (e.preventDefault) e.preventDefault();
 
-        // 고스트 이동
-        if (_drag.ghost) {
-            _drag.ghost.style.left = (clientX - _drag.ghostOffX) + 'px';
-            _drag.ghost.style.top = (clientY - _drag.ghostOffY) + 'px';
-        }
+        // 드래그 중인 패널 이동
+        var dx = pt.x - _drag.startX;
+        _drag.pane.style.transform = 'translateX(' + dx + 'px)';
 
         // 드롭 대상 탐색
         var container = document.getElementById('paneContainer');
@@ -65,28 +64,34 @@
         var found = null;
         for (var i = 0; i < panes.length; i++) {
             if (panes[i] === _drag.pane) continue;
-            var rect = panes[i].getBoundingClientRect();
-            if (clientX >= rect.left && clientX <= rect.right &&
-                clientY >= rect.top && clientY <= rect.bottom) {
+            var r = panes[i].getBoundingClientRect();
+            var cx = r.left + r.width / 2;
+            // 드래그 중인 패널의 현재 중심이 다른 패널 영역에 있으면
+            var dragCX = _drag.paneRect.left + _drag.paneRect.width / 2 + dx;
+            if (dragCX > r.left && dragCX < r.right) {
                 found = panes[i];
                 break;
             }
         }
 
-        // 이전 드롭 대상 해제
+        // 이전 대상 해제
         if (_drag.dropTarget && _drag.dropTarget !== found) {
+            _drag.dropTarget.style.transform = '';
             _drag.dropTarget.classList.remove('pane-swap-target');
         }
-        // 새 드롭 대상 표시
+
+        // 새 대상: 반대 방향으로 밀어내기 표시
         if (found) {
             found.classList.add('pane-swap-target');
+            var dir = _drag.paneRect.left < found.getBoundingClientRect().left ? -1 : 1;
+            found.style.transform = 'translateX(' + (dir * _drag.paneRect.width * 0.15) + 'px)';
             _drag.dropTarget = found;
         } else {
             _drag.dropTarget = null;
         }
     }
 
-    function onUp(e) {
+    function onUp() {
         if (!_drag) return;
         document.removeEventListener('mousemove', onMove);
         document.removeEventListener('mouseup', onUp);
@@ -94,83 +99,98 @@
         document.removeEventListener('touchend', onUp);
 
         if (_drag.started && _drag.dropTarget) {
-            swapPanes(_drag.pane, _drag.dropTarget);
+            animateSwap(_drag.pane, _drag.dropTarget);
+        } else {
+            // 취소: 원위치로 되돌리기
+            endDrag();
         }
+    }
 
-        // 정리
-        if (_drag.ghost) _drag.ghost.remove();
-        if (_drag.dropTarget) _drag.dropTarget.classList.remove('pane-swap-target');
-        _drag.pane.classList.remove('pane-dragging');
-        _drag.pane.style.opacity = '';
+    function beginDrag() {
+        _drag.pane.style.zIndex = '500';
+        _drag.pane.style.transition = 'none';
+        _drag.pane.classList.add('pane-dragging');
+    }
+
+    function endDrag() {
+        if (!_drag) return;
+        var pane = _drag.pane;
+        pane.style.transition = 'transform .25s ease';
+        pane.style.transform = '';
+        pane.style.zIndex = '';
+        pane.classList.remove('pane-dragging');
+        if (_drag.dropTarget) {
+            _drag.dropTarget.style.transform = '';
+            _drag.dropTarget.style.transition = '';
+            _drag.dropTarget.classList.remove('pane-swap-target');
+        }
+        setTimeout(function () {
+            pane.style.transition = '';
+        }, 260);
         _drag = null;
     }
 
-    function startDrag(pane, x, y) {
-        var rect = pane.getBoundingClientRect();
+    function animateSwap(a, b) {
+        var rectA = a.getBoundingClientRect();
+        var rectB = b.getBoundingClientRect();
+        var dxA = rectB.left - rectA.left;
+        var dxB = rectA.left - rectB.left;
 
-        // 원본 반투명
-        pane.classList.add('pane-dragging');
-        pane.style.opacity = '0.4';
+        // 즉시 transform 제거하고 최종 위치로 애니메이션
+        a.style.transition = 'none';
+        b.style.transition = 'none';
+        a.style.transform = 'translateX(' + dxA + 'px)';
+        b.style.transform = 'translateX(' + dxB + 'px)';
+        a.style.zIndex = '500';
+        b.style.zIndex = '499';
 
-        // 고스트 생성
-        var ghost = document.createElement('div');
-        ghost.className = 'pane-swap-ghost';
-        var header = pane.querySelector('.pane-header');
-        var titleEl = header ? header.querySelector('.pane-header-title') : null;
-        ghost.innerHTML = '<i class="fa fa-arrows-alt" style="margin-right:6px"></i>' +
-            (titleEl ? titleEl.textContent : pane.id);
-        ghost.style.left = (x - 60) + 'px';
-        ghost.style.top = (y - 18) + 'px';
-        document.body.appendChild(ghost);
-
-        _drag.ghost = ghost;
-        _drag.ghostOffX = 60;
-        _drag.ghostOffY = 18;
-    }
-
-    function swapPanes(a, b) {
+        // DOM 순서 교환 (transform 상태에서)
         var container = a.parentNode;
-        // DOM 순서에서 a, b의 위치를 교환
         var aNext = a.nextSibling;
         var bNext = b.nextSibling;
         if (aNext === b) {
-            // a 바로 뒤에 b가 있는 경우
             container.insertBefore(b, a);
         } else if (bNext === a) {
-            // b 바로 뒤에 a가 있는 경우
             container.insertBefore(a, b);
         } else {
-            // 떨어져 있는 경우
             container.insertBefore(b, aNext);
             container.insertBefore(a, bNext);
         }
 
-        // 리사이즈 핸들 재생성 + 상태 반영
-        if (typeof PaneManager !== 'undefined') {
-            // 너비 교환
-            var aId = a.id.replace('pane-', '');
-            var bId = b.id.replace('pane-', '');
-            var aW = PaneManager.getWidth(aId);
-            var bW = PaneManager.getWidth(bId);
-            if (aW || bW) {
-                PaneManager.setWidth(aId, bW || null);
-                PaneManager.setWidth(bId, aW || null);
-            }
-        }
+        // DOM 교환 후 새 위치에서 transform을 0으로 애니메이션
+        requestAnimationFrame(function () {
+            requestAnimationFrame(function () {
+                a.style.transition = 'transform .35s cubic-bezier(.4,0,.2,1)';
+                b.style.transition = 'transform .35s cubic-bezier(.4,0,.2,1)';
+                a.style.transform = '';
+                b.style.transform = '';
+                a.classList.remove('pane-dragging');
+                b.classList.remove('pane-swap-target');
 
-        // 스왑 애니메이션
-        a.classList.add('pane-swap-anim');
-        b.classList.add('pane-swap-anim');
-        setTimeout(function () {
-            a.classList.remove('pane-swap-anim');
-            b.classList.remove('pane-swap-anim');
-        }, 300);
+                setTimeout(function () {
+                    a.style.transition = '';
+                    b.style.transition = '';
+                    a.style.zIndex = '';
+                    b.style.zIndex = '';
 
-        // 패널 순서 저장
-        savePaneOrder();
+                    // 너비 교환 (각 패널이 새 위치 크기 채택)
+                    if (typeof PaneManager !== 'undefined') {
+                        var aId = a.id.replace('pane-', '');
+                        var bId = b.id.replace('pane-', '');
+                        var aW = PaneManager.getWidth(aId);
+                        var bW = PaneManager.getWidth(bId);
+                        PaneManager.setWidth(aId, bW || null);
+                        PaneManager.setWidth(bId, aW || null);
+                        PaneManager.refreshHandles();
+                    }
+                    savePaneOrder();
+                }, 360);
+            });
+        });
+
+        _drag = null;
     }
 
-    // 패널 순서 저장/복원
     function savePaneOrder() {
         var container = document.getElementById('paneContainer');
         if (!container) return;
@@ -188,21 +208,16 @@
         var saved = null;
         try { saved = JSON.parse(localStorage.getItem('kjb2-pane-order')); } catch (e) { }
         if (!saved || !Array.isArray(saved)) return;
-        // 현재 패널들
         var paneMap = {};
         var panes = container.querySelectorAll('.pane');
         for (var i = 0; i < panes.length; i++) {
             paneMap[panes[i].id.replace('pane-', '')] = panes[i];
         }
-        // 리사이즈 핸들 제외하고 패널만 재정렬
         saved.forEach(function (id) {
-            if (paneMap[id]) {
-                container.appendChild(paneMap[id]);
-            }
+            if (paneMap[id]) container.appendChild(paneMap[id]);
         });
     }
 
-    // DOMContentLoaded 시 초기화
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', function () { init(); restorePaneOrder(); });
     } else {
